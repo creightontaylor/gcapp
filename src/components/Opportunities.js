@@ -64,7 +64,7 @@ class Opportunities extends Component {
   render() {
     return (
       <View style={styles.tableView}>
-        <Text>We're in opportunities!</Text>
+        <Text>We're in opportunities!!!</Text>
       </View>
     )
   }
