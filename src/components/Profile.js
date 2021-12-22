@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, ScrollView , Picker, AsyncStorage, Platform, Switch } from 'react-native';
 import { Card, CardSection, Button } from './common';
-//var ImagePicker = require('react-native-image-picker');
+import { Style } from './css';
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 //import PushNotification from 'react-native-push-notification';
@@ -1608,6 +1608,7 @@ class Profile extends Component {
   }
 
   render() {
+    // console.log('show style: ', Style)
     return (
       <ScrollView>
         <View style={styles.containerStyle} >

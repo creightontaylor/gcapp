@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 // import Router from './src/Router';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -163,19 +163,37 @@ export default class App extends Component<Props> {
               tabBarIcon: ({ color, size }) => (
                 <Icon name="home" size={size} color={color} />
               ),
+
+              headerTitle: () => (
+                <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
+              ),
               headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="notifications" size={25} color='black' />
-                  </View>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row'}}>
+                  <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+                    <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                      <Icon name="notifications" size={25} color='black' />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
+                    <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                      <Icon name="chatbubbles" size={25} color='black' />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               ),
               headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="chatbubbles" size={25} color='black' />
-                  </View>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row'}}>
+                  <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                    <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                      <Icon name="search" size={25} color='black' />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
+                    <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                      <Icon name="add-circle-outline" size={25} color='black' />
+                    </View>
+                  </TouchableOpacity>
+                </View>
               ),
             }}/>
             <Tab.Screen name="Community" component={Community} options={{
@@ -183,17 +201,59 @@ export default class App extends Component<Props> {
               tabBarIcon: ({ color, size }) => (
                 <Icon name="people" size={size} color={color} />
               ),
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
+                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                  </View>
+                </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Icon name="search" size={25} color='black' />
+                  </View>
+                </TouchableOpacity>
+              ),
             }}/>
             <Tab.Screen name="Paths" component={Paths} options={{
               tabBarLabel: 'Paths',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="compass" size={size} color={color} />
               ),
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
+                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                  </View>
+                </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Icon name="search" size={25} color='black' />
+                  </View>
+                </TouchableOpacity>
+              ),
             }}/>
             <Tab.Screen name="Opportunities" component={Opportunities} options={{
               tabBarLabel: 'Opportunities',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="briefcase" size={size} color={color} />
+              ),
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
+                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                  </View>
+                </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Icon name="search" size={25} color='black' />
+                  </View>
+                </TouchableOpacity>
               ),
             }}/>
             <Tab.Screen name="Profile" component={Profile} options={{
@@ -203,7 +263,7 @@ export default class App extends Component<Props> {
               ),
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Icon name="settings" size={25} color='black' />
                   </View>
                 </TouchableOpacity>

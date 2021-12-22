@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform } from 'react-native';
 import { Card, CardSection } from './common';
+const styles = require('./css/style');
 import Axios from 'axios';
-//import PushNotification from 'react-native-push-notification';
+// const styles = require('./css/style');
+import NewsFeed from './subcomponents/NewsFeed';
 //import { configurePushNotifications } from '../services/PushNotifications';
 import Icon from 'react-native-vector-icons/Ionicons';
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
@@ -13,12 +15,9 @@ class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        futureData: null,
-        badgeNumber: 2
     }
 
     this.retrieveData = this.retrieveData.bind(this)
-    this.segueToDetails = this.segueToDetails.bind(this)
     this.countUnreadNotifications = this.countUnreadNotifications.bind(this)
 
   }
@@ -210,21 +209,11 @@ class Home extends Component {
      }
   }
 
-  segueToDetails(data, index) {
-    console.log('button pressed');
-
-    this.props.navigation.navigate('FutureDetails', {
-      data, index
-    })
-
-  }
-
   render() {
+    // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
-        <View>
-          <Text>We're in Home!!!</Text>
-        </View>
+        <NewsFeed />
       </ScrollView>
     );
   }
@@ -233,69 +222,69 @@ class Home extends Component {
 
 export default Home;
 
-var styles = StyleSheet.create({
-  titleText: {
-    fontSize: 20,
-    fontWeight:'bold',
-  },
-  sourceText: {
-    fontSize: 14
-  },
-  baseText: {
-    fontSize: 14,
-    marginBottom: 20
-  },
-  baseValues: {
-    fontSize: 14,
-    marginBottom: 20,
-    textAlign: 'right'
-  },
-  textWrapper: {
-    flexWrap: 'wrap',
-    width: '100%'
-  },
-  seeAllStyling: {
-    textAlign: 'right',
-    height: 60,
-  },
-  listContainer: {
-    flexDirection: 'row'
-  },
-  listTitlesContainer: {
-    flex: 0.8
-  },
-  listValuesContainer: {
-    flex: 0.2
-  },
-  navContainer: {
-    marginLeft: 20,
-    marginRight: 20
-  },
-  badgeAndIconView:{
-      position:'relative',
-      padding:5,
-      alignItems: 'center',
-      justifyContent: 'center'
-  },
-  badgeView: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position:'absolute',
-    zIndex:10,
-    top:1,
-    right:1,
-    padding:1,
-    backgroundColor:'#E67650',
-    width: 16,
-    height: 16,
-    borderRadius:8,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    overflow: 'hidden'
-
-  },
-  badgeText:{
-    color:'#fff',
-    fontSize: 11
-  }
-})
+// var styles = StyleSheet.create({
+//   titleText: {
+//     fontSize: 20,
+//     fontWeight:'bold',
+//   },
+//   sourceText: {
+//     fontSize: 14
+//   },
+//   baseText: {
+//     fontSize: 14,
+//     marginBottom: 20
+//   },
+//   baseValues: {
+//     fontSize: 14,
+//     marginBottom: 20,
+//     textAlign: 'right'
+//   },
+//   textWrapper: {
+//     flexWrap: 'wrap',
+//     width: '100%'
+//   },
+//   seeAllStyling: {
+//     textAlign: 'right',
+//     height: 60,
+//   },
+//   listContainer: {
+//     flexDirection: 'row'
+//   },
+//   listTitlesContainer: {
+//     flex: 0.8
+//   },
+//   listValuesContainer: {
+//     flex: 0.2
+//   },
+//   navContainer: {
+//     marginLeft: 20,
+//     marginRight: 20
+//   },
+//   badgeAndIconView:{
+//       position:'relative',
+//       padding:5,
+//       alignItems: 'center',
+//       justifyContent: 'center'
+//   },
+//   badgeView: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     position:'absolute',
+//     zIndex:10,
+//     top:1,
+//     right:1,
+//     padding:1,
+//     backgroundColor:'#E67650',
+//     width: 16,
+//     height: 16,
+//     borderRadius:8,
+//     borderWidth: 1,
+//     borderColor: 'transparent',
+//     overflow: 'hidden'
+//
+//   },
+//   badgeText:{
+//     color:'#fff',
+//     fontSize: 11
+//   }
+// })
