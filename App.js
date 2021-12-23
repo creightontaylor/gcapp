@@ -16,7 +16,7 @@ import Home from './src/components/Home';
 import Community from './src/components/Community';
 import Paths from './src/components/Paths';
 import Opportunities from './src/components/Opportunities';
-import Profile from './src/components/Profile';
+import EditProfile from './src/components/EditProfile';
 import Settings from './src/components/Settings';
 import Notifications from './src/components/Notifications';
 import Messages from './src/components/Messages';
@@ -256,7 +256,7 @@ export default class App extends Component<Props> {
                 </TouchableOpacity>
               ),
             }}/>
-            <Tab.Screen name="Profile" component={Profile} options={{
+            <Tab.Screen name="EditPofile" component={EditProfile} options={{
               tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="person" size={size} color={color} />

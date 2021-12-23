@@ -9,7 +9,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 Icon.loadFont()
 
-class Profile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -2241,7 +2241,7 @@ class Profile extends Component {
   }
 }
 
-export default Profile;
+export default EditProfile;
 
 var styles = StyleSheet.create({
   profilePhoto: {

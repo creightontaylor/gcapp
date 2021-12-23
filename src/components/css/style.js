@@ -51,6 +51,9 @@ module.exports = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto'
   },
+  centerItem: {
+    margin: 'auto',
+  },
   fullSpace: {
     width: '100%',
     height: '100%'
@@ -77,6 +80,10 @@ module.exports = StyleSheet.create({
     height: 11,
     width: 11
   },
+  square12: {
+    height: 12,
+    width: 12
+  },
   square15: {
     height: 15,
     width: 15
@@ -96,6 +103,10 @@ module.exports = StyleSheet.create({
   square25: {
     height: 25,
     width: 25
+  },
+  square30: {
+    height: 30,
+    width: 30
   },
   square40: {
     height: 40,
@@ -121,11 +132,17 @@ module.exports = StyleSheet.create({
     height: 100,
     width: 100
   },
+  profileThumbnail25: {
+    height: 25,
+    width: 25,
+    objectFit: 'contain',
+    borderRadius: (25/2)
+  },
   profileThumbnail40: {
     height: 40,
     width: 40,
     objectFit: 'contain',
-    borderRadius: (43/2)
+    borderRadius: (40/2)
   },
   profileThumbnail43: {
     height: 43,
@@ -139,11 +156,11 @@ module.exports = StyleSheet.create({
     objectFit: 'contain',
     borderRadius: (50/2)
   },
-  profileThumbnail25: {
-    height: 25,
-    width: 25,
+  profileThumbnail80: {
+    height: 80,
+    width: 80,
     objectFit: 'contain',
-    borderRadius: (25/2)
+    borderRadius: (80/2)
   },
   horizontalLine: {
     borderBottomColor: 'black',
@@ -157,6 +174,10 @@ module.exports = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     padding: 30,
+    boxShadow: '3px 3px 10px rgba(0,0,0,0.2)'
+  },
+  cardClearPadding: {
+    backgroundColor: 'white',
     boxShadow: '3px 3px 10px rgba(0,0,0,0.2)'
   },
   topMargin: {
@@ -179,6 +200,9 @@ module.exports = StyleSheet.create({
   },
   leftMargin67: {
     marginLeft: 67
+  },
+  bottomMargin20: {
+    marginBottom: 20
   },
   verticalMargin10: {
     marginTop: 10,
@@ -222,6 +246,9 @@ module.exports = StyleSheet.create({
   },
   padding20: {
     padding: 20
+  },
+  padding30: {
+    padding: 30
   },
   horizontalPadding5: {
     paddingLeft: 5,
@@ -375,11 +402,17 @@ module.exports = StyleSheet.create({
   rowDirection: {
     flexDirection: 'row'
   },
+  flex15: {
+    flex: 15
+  },
   flex33: {
     flex: 33
   },
   flex50: {
     flex: 50
+  },
+  flex70: {
+    flex: 70
   },
   standardBorder: {
     border: '1px solid ' + faintColor
