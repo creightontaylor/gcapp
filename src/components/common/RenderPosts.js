@@ -280,16 +280,15 @@ class RenderPosts extends Component {
                       <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
                     )}
                   </View>
-                  <View style={styles.flexGrow} className="calc-column-offset-70">
-                    <View className="calc-column-offset-25">
+                  <View style={[styles.flexGrow,styles.rowDirection]} >
+                    <View style={styles.flexGrow}>
                       <Text style={[styles.headingText5, styles.boldText]}>{value.firstName} {value.lastName}</Text>
                     </View>
                     {(value.pinned) && (
-                      <View className="fixed-column-25 top-padding-5 left-padding">
+                      <View style={[styles.width25,styles.topPadding5,styles.leftPadding]}>
                         <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} alt="GC" />
                       </View>
                     )}
-                    <View className="clear" />
 
                     <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
 
@@ -448,7 +447,7 @@ class RenderPosts extends Component {
                                 <View style={[styles.width40, styles.rightText]} >
                                   <Text style={styles.descriptionText2}>{this.calculateWidth(value, 'b')}</Text>
                                 </View>
-                                <View className="clear" />
+
                               </View>
                             </View>
                           </View>
@@ -599,7 +598,7 @@ class RenderPosts extends Component {
                           </View>
                         )}
 
-                        <View className="clear" />
+
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -607,28 +606,28 @@ class RenderPosts extends Component {
               )}
 
               {(value.tags && value.tags.length > 0) && (
-                <View style={[styles.bottomPadding]}>
+                <View style={[styles.bottomPadding,styles.rowDirection]}>
                   {value.tags.map((item2, index2) =>
-                    <View key={index2} className="float-left right-padding top-padding">
-                      <View className="tag-container-thin">
+                    <View key={index2} style={[styles.rightPadding,styles.topPadding]}>
+                      <View style={styles.tagContainerThin}>
                         <Text style={[styles.descriptionText4]}>{item2}</Text>
                       </View>
                     </View>
                   )}
-                  <View className="clear" />
+
                 </View>
               )}
 
               {(value.entityTags && value.entityTags.length > 0) && (
-                <View style={[styles.topPadding]}>
+                <View style={[styles.topPadding, styles.rowDirection]}>
                   {value.entityTags.map((value2, optionIndex2) =>
-                    <View key={value2} className="float-left right-padding">
+                    <View key={value2} style={styles.rightPadding}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username})}>
                         <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.profileThumbnail25]} />
                       </TouchableOpacity>
                     </View>
                   )}
-                  <View className="clear" />
+
                 </View>
               )}
 
@@ -640,7 +639,7 @@ class RenderPosts extends Component {
 
               {(value.upvotes || (value.comments && value.comments.length > 0)) && (
                 <View style={[styles.bottomPadding5]}>
-                  <View className="fixed-column-160">
+                  <View style={styles.width160}>
                     <TouchableOpacity onClick={() => this.retrieveLikes(index)}>
                       <Text style={[styles.descriptionText4]}>{(value.upvotes) ? value.upvotes.length : 0} Upvotes</Text>
                     </TouchableOpacity>
@@ -649,9 +648,6 @@ class RenderPosts extends Component {
                       <Text style={[styles.descriptionText4]}>{(value.commentCount) ? value.commentCount : 0} Comments</Text>
                     </TouchableOpacity>
                   </View>
-
-                  <View className="clear" />
-
                 </View>
               )}
 
@@ -659,56 +655,52 @@ class RenderPosts extends Component {
               <View style={styles.horizontalLine} />
 
               {(!inModal) && (
-                <View style={[styles.topPadding]}>
-                  <View className="float-left">
-                    <TouchableOpacity onClick={(e) => this.voteOnItem(e, value, 'up', index) }>
-                      <View className="float-left right-padding-8">
+                <View style={[styles.topPadding,styles.rowDirection]}>
+                  <View>
+                    <TouchableOpacity style={styles.rowDirection} onClick={(e) => this.voteOnItem(e, value, 'up', index) }>
+                      <View style={styles.rightPadding8}>
                         <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
                       </View>
-                      <View className="float-left right-padding-20">
-                        <Text className={(value.upvotes.includes(this.state.emailId)) ? "description-text-2 cta-color bold-text" : "description-text-2"}>{(value.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
+                      <View style={styles.rightPadding20}>
+                        <Text style={(value.upvotes.includes(this.state.emailId)) ? [styles.descriptionText2,styles.ctaColor,styles.boldText] : [styles.descriptionText2]}>{(value.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
                       </View>
-                      <View className="clear" />
                     </TouchableOpacity>
                   </View>
 
-                  <View className="float-left">
-                    <TouchableOpacity onClick={() => this.retrieveComments(index)} disabled={this.state.isLoading}>
-                      <View className="float-left right-padding-8">
+                  <View>
+                    <TouchableOpacity style={styles.rowDirection} onClick={() => this.retrieveComments(index)} disabled={this.state.isLoading}>
+                      <View style={styles.rightPadding8}>
                         <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
                         <Image source={{ uri: commentIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
                       </View>
-                      <View className="float-left right-padding-20">
+                      <View style={styles.rightPadding20}>
                         <Text style={[styles.descriptionText2]}>Comment</Text>
                       </View>
-                      <View className="clear" />
+
                     </TouchableOpacity>
                   </View>
-                  <View className="float-left">
-                    <TouchableOpacity onClick={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
-                      <View className="float-left right-padding-8">
+                  <View>
+                    <TouchableOpacity style={styles.rowDirection} onClick={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
+                      <View style={styles.rightPadding8}>
                         <Image source={{ uri: shareIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
                       </View>
-                      <View className="float-left right-padding-20">
+                      <View style={styles.rightPadding20}>
                         <Text style={[styles.descriptionText2]}>Share</Text>
                       </View>
-                      <View className="clear" />
+
                     </TouchableOpacity>
                   </View>
 
-                  <View className="float-left">
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { generalPost: value })}>
-                      <View className="float-left right-padding-8">
+                  <View>
+                    <TouchableOpacity style={styles.rowDirection} onPress={() => this.props.navigation.navigate('Messages', { generalPost: value })}>
+                      <View style={styles.rightPadding8}>
                         <Image source={{uri: sendIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
                       </View>
-                      <View className="float-left right-padding-20">
+                      <View style={styles.rightPadding20}>
                         <Text style={[styles.descriptionText2]}>Send</Text>
                       </View>
-                      <View className="clear" />
                     </TouchableOpacity>
                   </View>
-
-                  <View className="clear" />
                 </View>
               )}
             </View>
@@ -741,19 +733,18 @@ class RenderPosts extends Component {
       return (
         <View key="originalPost">
           <View>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate(profileLink)} style={[styles.flexGrow]}>
-              <View className="fixed-column-55">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate(profileLink)} style={[styles.flexGrow,styles.rowDirection]}>
+              <View style={styles.width55}>
                 {(value.originalPost.roleName === 'Admin') ? (
                   <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40]} alt="GC" />
                 ) : (
                   <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail43]} alt="GC" />
                 )}
               </View>
-              <View className="calc-column-offset-55">
-                <View className="calc-column-offset-25">
-                  <Text className="description-text-1 bold-text">{value.originalPost.firstName} {value.originalPost.lastName}</Text>
+              <View style={styles.flexGrow}>
+                <View style={styles.flexGrow}>
+                  <Text style={[styles.descriptionText1,styles.boldText]}>{value.originalPost.firstName} {value.originalPost.lastName}</Text>
                 </View>
-                <View className="clear" />
 
                 <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
 
@@ -780,10 +771,10 @@ class RenderPosts extends Component {
               </View>
             </TouchableOpacity>
 
-            <View className="fixed-column-30">
+            <View style={styles.width30}>
 
             </View>
-            <View className="clear" />
+
           </View>
 
           <View style={[styles.row10]}>
@@ -815,7 +806,7 @@ class RenderPosts extends Component {
 
               </View>
 
-              <View className="clear" />
+
               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
             </View>
           )}
@@ -847,7 +838,7 @@ class RenderPosts extends Component {
                       )}
 
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -874,7 +865,7 @@ class RenderPosts extends Component {
                       )}
 
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -898,7 +889,7 @@ class RenderPosts extends Component {
                       )}
 
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -913,7 +904,7 @@ class RenderPosts extends Component {
                     <View style={[styles.width60]}>
                       <Image source={(value.originalPost.trendTags[0].imageURL) ? { uri: value.originalPost.trendTags[0].imageURL} : { uri: trendsIconDark}} alt="GC" style={[styles.square50]} />
                     </View>
-                    <View className="calc-column-offset-120">
+                    <View style={styles.flexGrow}>
                       <Text>{value.originalPost.trendTags[0].name}</Text>
                       <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{value.originalPost.trendTags[0].category}</Text>
                     </View>
@@ -925,7 +916,7 @@ class RenderPosts extends Component {
                       </View>
                     )}
 
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -933,28 +924,28 @@ class RenderPosts extends Component {
           )}
 
           {(value.originalPost.tags && value.originalPost.tags.length > 0) && (
-            <View style={[styles.bottomPadding]}>
+            <View style={[styles.bottomPadding,styles.rowDirection]}>
               {value.originalPost.tags.map((item2, index2) =>
-                <View key={index2} className="float-left right-padding top-padding">
-                  <View className="tag-container-thin">
+                <View key={index2} style={[styles.rightPadding,styles.topPadding]}>
+                  <View style={styles.tagContainerThin}>
                     <Text style={[styles.descriptionText4]}>{item2}</Text>
                   </View>
                 </View>
               )}
-              <View className="clear" />
+
             </View>
           )}
 
           {(value.originalPost.entityTags && value.originalPost.entityTags.length > 0) && (
-            <View style={[styles.topPadding]}>
+            <View style={[styles.topPadding,styles.rowDirection]}>
               {value.originalPost.entityTags.map((value2, optionIndex2) =>
-                <View key={value2} className="float-left right-padding">
+                <View key={value2} style={styles.rightPadding}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })}>
                     <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
               )}
-              <View className="clear" />
+
             </View>
           )}
 
@@ -1335,15 +1326,15 @@ class RenderPosts extends Component {
 
         return (
           <View key="taggedProjectItem">
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { objectId: itemObject._id })} style={[styles.fullWidth]}>
-              <View className="calc-column-offset-80">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { objectId: itemObject._id })} style={[styles.fullWidth,styles.rowDirection]}>
+              <View style={styles.flexGrow}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={styles.width80}>
                 {(answer === 'a') ? (
                   <View>
                     {(item.aValue) && (
@@ -1358,7 +1349,7 @@ class RenderPosts extends Component {
                   </View>
                 )}
               </View>
-              <View className="clear" />
+
             </TouchableOpacity>
 
             <View style={[styles.row5]}>
@@ -1373,7 +1364,7 @@ class RenderPosts extends Component {
                         <Text>{itemObject.name}</Text>
                         <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{itemObject.category} | {itemObject.hours} Hours</Text>
                       </View>
-                      <View className="clear" />
+
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -1384,32 +1375,32 @@ class RenderPosts extends Component {
       } else if (type === 'work') {
         return (
           <View key="taggedWorkItem">
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { objectId: itemObject._id })} style={[styles.padding20,styles.fullWidth]}>
-              <View className="calc-column-offset-80">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { objectId: itemObject._id })} style={[styles.padding20,styles.fullWidth,styles.rowDirection]}>
+              <View style={styles.flexGrow}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={styles.width80}>
                 {(answer === 'a') ? (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
+
             </TouchableOpacity>
 
             <View style={[styles.row5]}>
               <View style={[styles.ctaBorder]}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails',  { objectId: itemObject._id })} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
-                    <View className="fixed-column-50">
+                    <View style={styles.width50}>
                       <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL } : { uri: defaultProfileItemIcon}} alt="GC" style={[styles.square40]} />
                     </View>
-                    <View className="calc-column-offset-50">
+                    <View style={styles.flexGrow}>
                       {(itemObject.title) ? (
                         <Text>{itemObject.title}</Text>
                       ) : (
@@ -1421,7 +1412,7 @@ class RenderPosts extends Component {
                       )}
 
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -1431,22 +1422,22 @@ class RenderPosts extends Component {
       } else if (type === 'career') {
         return (
           <View key="taggedCareerItem">
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: itemObject.name })} style={[styles.padding20,styles.fullWidth]}>
-              <View className="calc-column-offset-80">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: itemObject.name })} style={[styles.padding20,styles.fullWidth, styles.rowDirection]}>
+              <View style={styles.flexGrow}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={styles.width80}>
                 {(answer === 'a') ? (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
+
             </TouchableOpacity>
 
             <View style={[styles.bottomPadding]}>
@@ -1464,7 +1455,7 @@ class RenderPosts extends Component {
                         <Text style={[styles.descriptionText3, styles.descriptionTextColor]}> | ${Number(itemObject.marketData.pay).toLocaleString()} avg pay</Text>
                       )}
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </TouchableOpacity>
               </View>
@@ -1474,22 +1465,22 @@ class RenderPosts extends Component {
       } else if (type === 'competency') {
         return (
           <View key="taggedCompetencyItem">
-            <View style={[styles.bottomPadding]}>
-              <View className="calc-column-offset-80">
+            <View style={[styles.bottomPadding,styles.rowDirection]}>
+              <View style={styles.flexGrow}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={styles.width80}>
                 {(answer === 'a') ? (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
                   <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
+
             </View>
 
             <View style={[styles.bottomPadding]}>
@@ -1505,12 +1496,12 @@ class RenderPosts extends Component {
 
                       {(itemObject.description) && (
                         <View>
-                          <View className="clear" />
+
                           <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{itemObject.description}</Text>
                         </View>
                       )}
                     </View>
-                    <View className="clear" />
+
                   </View>
                 </View>
               </View>
@@ -1562,25 +1553,9 @@ class RenderPosts extends Component {
               <View>
                 {this.state.posts.map((value, index) =>
                   <View key={index}>
-                    {(this.props.pageSource === 'externalProfile') ? (
-                      <View>
-
-                        <View className="relative-column-33">
-                          {(this.props.limit && (this.props.limit < (index + 1))) ? (
-                            <View />
-                          ) : (
-                            <View>
-                              {this.renderPost(value, index)}
-                            </View>
-                          )}
-                        </View>
-                        <View className="clear" />
-                      </View>
-                    ) : (
-                      <View>
-                        {this.renderPost(value, index)}
-                      </View>
-                    )}
+                    <View>
+                      {this.renderPost(value, index)}
+                    </View>
                   </View>
                 )}
               </View>
@@ -1658,8 +1633,8 @@ class RenderPosts extends Component {
                        <View style={[styles.spacer]} />
 
                        {this.state.adjustFeedPreferenceOptions.map((item2, index2) =>
-                         <View key={index2} style={[styles.row5]}>
-                           <View className="fixed-column-40">
+                         <View key={index2} style={[styles.row5, styles.rowDirection]}>
+                           <View style={styles.width40}>
                              {(this.state.selectedPreferences && this.state.selectedPreferences.includes(item2)) ? (
                                <TouchableOpacity onClick={() => this.itemClicked(item2,'adjustFeedPreferences') }>
                                  <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
@@ -1670,10 +1645,10 @@ class RenderPosts extends Component {
                                </TouchableOpacity>
                              )}
                            </View>
-                           <View className="calc-column-offset-40">
+                           <View style={styles.flexGrow}>
                              <Text style={[styles.descriptionText2]}>{item2}</Text>
                            </View>
-                           <View className="clear" />
+
                          </View>
                        )}
 
@@ -1704,7 +1679,7 @@ class RenderPosts extends Component {
 
                        {this.state.reportOptions.map((item2, index2) =>
                          <View key={index2} style={[styles.row5]}>
-                           <View className="fixed-column-40">
+                           <View style={styles.width40}>
                              {(this.state.selectedReportReasons && this.state.selectedReportReasons.includes(item2)) ? (
                                <TouchableOpacity onClick={() => this.itemClicked(item2,'report') }>
                                  <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
@@ -1715,10 +1690,9 @@ class RenderPosts extends Component {
                                </TouchableOpacity>
                              )}
                            </View>
-                           <View className="calc-column-offset-40">
+                           <View style={styles.flexGrow}>
                              <Text style={[styles.descriptionText2]}>{item2}</Text>
                            </View>
-                           <View className="clear" />
                          </View>
                        )}
 
@@ -1751,10 +1725,10 @@ class RenderPosts extends Component {
                       <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
                       <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>
-                        <View>
-                          <View className="float-left top-padding-5"><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon }} /></View>
-                          <View className="float-left left-padding">Close View</View>
-                          <View className="clear" />
+                        <View style={styles.rowDirection}>
+                          <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon }} /></View>
+                          <View style={styles.leftPadding}>Close View</View>
+
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -1772,14 +1746,14 @@ class RenderPosts extends Component {
                        <View style={[styles.topPadding]}>
                          {this.state.upvotes.map((value, optionIndex) =>
                            <View key={"upvote|" + optionIndex}>
-                             <View>
+                             <View style={styles.rowDirection}>
                                <View style={[styles.width60]}>
-                                 <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-2" />
+                                 <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} alt="GC" style={styles.profileThumbnail50} />
                                </View>
-                               <View className="calc-column-offset-60 left-padding top-padding-5">
+                               <View style={[styles.flexGrow, styles.leftPadding, styles.topPadding5]}>
                                  <Text style={[styles.headingText4]}>{value.firstName} {value.lastName}</Text>
                                </View>
-                               <View className="clear" />
+
                              </View>
                            </View>
                          )}
@@ -1803,10 +1777,10 @@ class RenderPosts extends Component {
                       <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
                       <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>
-                        <View>
-                          <View className="float-left top-padding-5"><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon}} /></View>
-                          <View className="float-left left-padding">Close View</View>
-                          <View className="clear" />
+                        <View style={styles.rowDirection}>
+                          <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon}} /></View>
+                          <View style={styles.leftPadding}>Close View</View>
+
                         </View>
                       </TouchableOpacity>
                     </View>

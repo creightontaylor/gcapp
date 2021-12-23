@@ -139,6 +139,9 @@ module.exports = StyleSheet.create({
   rightMargin: {
     marginRight: 10
   },
+  leftMargin67: {
+    marginLeft: 67
+  },
   topPadding: {
     paddingTop: 10
   },
@@ -154,14 +157,23 @@ module.exports = StyleSheet.create({
   bottomPadding: {
     paddingBottom: 10
   },
+  rightPadding8: {
+    paddingRight: 8
+  },
   rightPadding: {
     paddingRight: 10
+  },
+  rightPadding20: {
+    paddingRight: 20
   },
   leftPadding: {
     paddingLeft: 10
   },
   padding7: {
     padding: 7
+  },
+  padding10: {
+    padding: 10
   },
   padding20: {
     padding: 20
@@ -230,8 +242,20 @@ module.exports = StyleSheet.create({
   boldText: {
     fontWeight: 'bold'
   },
+  width25: {
+    width: 25
+  },
+  width30: {
+    width: 30
+  },
   width40: {
     width: 40
+  },
+  width50: {
+    width: 50
+  },
+  width55: {
+    width: 55
   },
   width60: {
     width: 60
@@ -241,6 +265,9 @@ module.exports = StyleSheet.create({
   },
   width80: {
     width: 80
+  },
+  width160: {
+    width: 160
   },
   flexGrow: {
     flexGrow: 1
@@ -253,6 +280,9 @@ module.exports = StyleSheet.create({
   },
   ctaBorder: {
     border: '1px solid ' + primaryColor
+  },
+  transparentBorder: {
+    border: '1px solid transparent'
   },
   roundedCorners: {
     borderRadius: 10
@@ -342,6 +372,18 @@ module.exports = StyleSheet.create({
   },
   errorBackgroundColor: {
     backgroundColor: errorColor
-  }
+  },
+  tagContainerThin: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderRadius: 2,
+    border: '1px solid transparent',
+    backgroundColor: 'rgba(230,230,230,1)'
+  },
+  borderRadius10: {
+    borderRadius: 10
+  },
 
 });
