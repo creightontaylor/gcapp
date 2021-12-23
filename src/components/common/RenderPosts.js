@@ -11,30 +11,30 @@ const styles = require('../css/style');
 //   EmailIcon,FacebookIcon,LinkedinIcon, PinterestIcon,RedditIcon,TwitterIcon,WhatsappIcon, WorkplaceIcon
 // } from "react-share";
 
-const experienceIcon = ''
-const educationIcon = ''
-const favoritesIconDark = ''
-const trendsIconDark = ''
-const likeIconBlue = ''
-const likeIconDark = ''
-const commentIconDark = ''
-const shareIconDark = ''
-const sendIconDark = ''
-const opportunitiesIconDark = ''
-const careerMatchesIconDark = ''
-const projectsIconDark = ''
-const menuIconDark = ''
-const reportIconDark = ''
-const hideIconDark = ''
-const checkboxEmpty = ''
-const checkboxChecked = ''
-const closeIcon = ''
-const dropdownArrow = ''
-const targetIcon = ''
-const profileIconDark = ''
-const pinIcon = ''
-const upvoteIconBlue = ''
-const upvoteIconGrey = ''
+const experienceIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/experience-icon.png'
+const educationIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/education-icon.png'
+const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png'
+const trendsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/trends-icon-dark.png'
+const likeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/like-icon-blue.png'
+const likeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/like-icon-dark.png'
+const commentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/comment-icon-dark.png'
+const shareIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/share-icon-dark.png'
+const sendIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/send-icon-dark.png'
+const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png'
+const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png'
+const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png'
+const menuIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/menu-icon-dark.png'
+const reportIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/report-icon-dark.png'
+const hideIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/hide-icon-dark.png'
+const checkboxEmpty = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkbox-empty.png'
+const checkboxChecked = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkbox-checked.png'
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/drowdown-arrow.png'
+const targetIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon.png'
+const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
+const pinIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/pin-icon.png'
+const upvoteIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-blue.png'
+const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-grey.png'
 
 import SubComments from '../common/Comments';
 import SubCreatePost from '../common/CreatePost';
@@ -272,43 +272,48 @@ class RenderPosts extends Component {
           <View key={value + index}>
             <View style={(!inModal) && [styles.card, styles.topMargin20]}>
               <View style={styles.rowDirection}>
-                <TouchableOpacity onPress={() => console.log('go to profile')} style={[styles.rowDirection, styles.flexGrow]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.username })} style={[styles.rowDirection, styles.flexGrow]}>
                   <View style={[styles.width70, styles.rightPadding]}>
                     <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
                   </View>
                   <View style={[styles.flexGrow,styles.rowDirection]} >
                     <View style={styles.flexGrow}>
-                      <Text style={[styles.headingText5, styles.boldText]}>{value.firstName} {value.lastName}</Text>
-                    </View>
-                    {(value.pinned) && (
-                      <View style={[styles.width25,styles.topPadding5,styles.leftPadding]}>
-                        <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} alt="GC" />
-                      </View>
-                    )}
-
-                    <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-
-                    {(value.headline && value.headline !== '') ? (
-                      <View>
-                        <Text style={[styles.descriptionText3]}>{value.headline}</Text>
-                      </View>
-                    ) : (
-                      <View>
-                        {(value.education && value.education[0] && value.education[0].name && value.education[0].isContinual) ? (
-                          <View>
-                            {console.log('show edu: ', value.education)}
-                            <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>Student @ {value.education[0].name}</Text>
-                          </View>
-                        ) : (
-                          <View>
-                            <View>
-                              <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{this.state.orgName} Member</Text>
-                            </View>
+                      <View style={styles.rowDirection}>
+                        <Text style={[styles.headingText5, styles.boldText,styles.flexGrow]}>{value.firstName} {value.lastName}</Text>
+                        {(value.pinned) && (
+                          <View style={[styles.width25,styles.topPadding5,styles.leftPadding]}>
+                            <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} alt="GC" />
                           </View>
                         )}
+
+                        <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.width60]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
                       </View>
-                    )}
-                    <Text style={[styles.descriptionText4,styles.descriptionTextColor]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+
+
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+
+                      {(value.headline && value.headline !== '') ? (
+                        <View>
+                          <Text style={[styles.descriptionText3]}>{value.headline}</Text>
+                        </View>
+                      ) : (
+                        <View>
+                          {(value.education && value.education[0] && value.education[0].name && value.education[0].isContinual) ? (
+                            <View>
+                              {console.log('show edu: ', value.education)}
+                              <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>Student @ {value.education[0].name}</Text>
+                            </View>
+                          ) : (
+                            <View>
+                              <View>
+                                <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{this.state.orgName} Member</Text>
+                              </View>
+                            </View>
+                          )}
+                        </View>
+                      )}
+                    </View>
+
                   </View>
                 </TouchableOpacity>
 

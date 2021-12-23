@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import { Text, TextInput, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
 
-const profileIconBig = ''
-const thumbsUpIconGrey = ''
-const thumbsUpIconBlue = ''
-const commentIconGrey = ''
-const editIconGrey = ''
+const profileIconBig = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-big.png'
+const thumbsUpIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-up-icon-grey.png'
+const thumbsUpIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-up-icon-blue.png'
+const commentIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/comment-icon-grey.png'
+const editIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/edit-icon-grey.png'
 
 class Comments extends Component {
     constructor(props) {

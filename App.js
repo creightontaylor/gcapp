@@ -204,7 +204,7 @@ export default class App extends Component<Props> {
               headerLeft: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Match')}>
                   <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
+                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
                   </View>
                 </TouchableOpacity>
               ),

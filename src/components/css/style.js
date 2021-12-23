@@ -65,6 +65,10 @@ module.exports = StyleSheet.create({
     height: 8,
     width: 8
   },
+  square9: {
+    height: 9,
+    width: 9
+  },
   square10: {
     height: 10,
     width: 10
@@ -85,6 +89,10 @@ module.exports = StyleSheet.create({
     height: 20,
     width: 20
   },
+  square22: {
+    height: 22,
+    width: 22
+  },
   square25: {
     height: 25,
     width: 25
@@ -104,6 +112,10 @@ module.exports = StyleSheet.create({
   square80: {
     height: 80,
     width: 80
+  },
+  square100: {
+    height: 100,
+    width: 100
   },
   profileThumbnail40: {
     height: 40,
@@ -143,6 +155,9 @@ module.exports = StyleSheet.create({
     padding: 30,
     boxShadow: '3px 3px 10px rgba(0,0,0,0.2)'
   },
+  topMargin: {
+    marginTop: 10
+  },
   topMargin20: {
     marginTop: 20
   },
@@ -160,6 +175,10 @@ module.exports = StyleSheet.create({
   },
   leftMargin67: {
     marginLeft: 67
+  },
+  verticalMargin10: {
+    marginTop: 10,
+    marginBottom: 10
   },
   topPadding: {
     paddingTop: 10
@@ -215,6 +234,10 @@ module.exports = StyleSheet.create({
   row5: {
     paddingTop: 5,
     paddingRight: 5
+  },
+  row7: {
+    paddingTop: 7,
+    paddingRight: 7
   },
   row10: {
     paddingTop: 10,
@@ -300,11 +323,20 @@ module.exports = StyleSheet.create({
   rowDirection: {
     flexDirection: 'row'
   },
+  flex33: {
+    flex: 33
+  },
+  flex50: {
+    flex: 50
+  },
   standardBorder: {
     border: '1px solid ' + faintColor
   },
   ctaBorder: {
     border: '1px solid ' + primaryColor
+  },
+  errorBorder: {
+    border: '1px solid ' + errorColor
   },
   transparentBorder: {
     border: '1px solid transparent'
@@ -413,6 +445,21 @@ module.exports = StyleSheet.create({
   },
   errorBackgroundColor: {
     backgroundColor: errorColor
+  },
+  darkBackground: {
+    backgroundColor: 'rgba(90,90,90,1)'
+  },
+  darkishBackground: {
+    backgroundColor: 'rgba(150,150,150,1)'
+  },
+  mediumBackground: {
+    backgroundColor: slightFaintColor
+  },
+  faintBackground: {
+    backgroundColor: faintColor
+  },
+  lightBackground: {
+    backgroundColor: extremelyFaintColor
   },
   tagContainerThin: {
     paddingTop: 4,
