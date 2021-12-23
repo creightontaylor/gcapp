@@ -109,6 +109,10 @@ module.exports = StyleSheet.create({
     height: 60,
     width: 60
   },
+  square70: {
+    height: 70,
+    width: 70
+  },
   square80: {
     height: 80,
     width: 80
@@ -314,8 +318,56 @@ module.exports = StyleSheet.create({
   width100: {
     width: 100
   },
+  width120: {
+    width: 120
+  },
+  width140: {
+    width: 140
+  },
   width160: {
     width: 160
+  },
+  width190: {
+    width: 190
+  },
+  calcColumn100: {
+    width: Dimensions.get('window').width - 100
+  },
+  calcColumn105: {
+    width: Dimensions.get('window').width - 105
+  },
+  calcColumn108: {
+    width: Dimensions.get('window').width - 108
+  },
+  calcColumn110: {
+    width: Dimensions.get('window').width - 110
+  },
+  calcColumn118: {
+    width: Dimensions.get('window').width - 118
+  },
+  calcColumn120: {
+    width: Dimensions.get('window').width - 120
+  },
+  calcColumn130: {
+    width: Dimensions.get('window').width - 130
+  },
+  calcColumn140: {
+    width: Dimensions.get('window').width - 140
+  },
+  calcColumn150: {
+    width: Dimensions.get('window').width - 150
+  },
+  calcColumn160: {
+    width: Dimensions.get('window').width - 160
+  },
+  calcColumn190: {
+    width: Dimensions.get('window').width - 190
+  },
+  calcColumn200: {
+    width: Dimensions.get('window').width - 200
+  },
+  calcColumn208: {
+    width: Dimensions.get('window').width - 200
   },
   flexGrow: {
     flexGrow: 1
@@ -345,6 +397,9 @@ module.exports = StyleSheet.create({
     borderRadius: 10
   },
   fullWidth: {
+    width: null
+  },
+  fullScreenWidth: {
     width: Dimensions.get('window').width
   },
   progressBar: {

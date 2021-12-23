@@ -236,7 +236,7 @@ class Comments extends Component {
                 <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail50}/>
               </View>
 
-              <View style={[styles.flexGrow,styles.commentBubble2,commentBackgroundColor]}>
+              <View style={[styles.calcColumn118,styles.commentBubble2,commentBackgroundColor]}>
                 <View style={styles.fullWidth}>
                   <label style={styles.descriptionText1}>{this.state.comments[i - 1].firstName} {this.state.comments[i - 1].lastName}</label>
 
@@ -356,7 +356,7 @@ class Comments extends Component {
             <View style={styles.spacer} />
             <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail40} />
           </View>
-          <View style={[styles.flexGrow,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
+          <View style={[styles.calcColumn110,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
             <TextInput
               style={styles.editComment}
               onChangeText={(text) => this.formChangeHandler("reply|" + index)}
@@ -409,8 +409,8 @@ class Comments extends Component {
                   <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail40} />
                 </View>
 
-                <View style={[styles.flexGrow,styles.commentBubble2,commentBackgroundColor]}>
-                  <View style={styles.flexGrow}>
+                <View style={[styles.calColumn108,styles.commentBubble2,commentBackgroundColor]}>
+                  <View style={styles.calcColumn208}>
                     <label style={[styles.descriptionText2,styles.boldText]}>{replies[i - 1].firstName} {replies[i - 1].lastName}</label>
 
                     <label style={styles.descriptionText3}>{replies[i - 1].roleName}</label>
@@ -746,7 +746,7 @@ class Comments extends Component {
                       <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail50} />
                     </View>
                   </View>
-                  <View style={[styles.flexGrow,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
+                  <View style={[styles.calColumn118,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
 
                     <TextInput
                       style={styles.commentTextField}

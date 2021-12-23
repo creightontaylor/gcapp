@@ -995,7 +995,7 @@ class CreatePost extends Component {
       return (
         <View key="originalPost">
           <View style={styles.rowDirection}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.username})} style={[styles.rowDirection,styles.flexGrow]}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.username})} style={[styles.rowDirection,styles.fullScreenWidth]}>
               <View style={styles.width55}>
                 {(value.originalPost.roleName === 'Admin') ? (
                   <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain]} alt="GC" />
@@ -1003,8 +1003,8 @@ class CreatePost extends Component {
                   <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail43]} alt="GC" />
                 )}
               </View>
-              <View style={[styles.flexGrow,styles.rowDirection]}>
-                <View style={styles.flexGrow}>
+              <View style={[styles.calcColumn105,styles.rowDirection]}>
+                <View style={styles.calcColumn105}>
                   <Text style={[styles.descriptionText1,styles.boldText]}>{value.originalPost.firstName} {value.originalPost.lastName}</Text>
                 </View>
 
@@ -1032,10 +1032,6 @@ class CreatePost extends Component {
                 <Text style={[styles.descriptionText4,styles.descriptionTextColor]}>{convertDateToString(value.originalPost.createdAt,"daysAgo")}</Text>
               </View>
             </TouchableOpacity>
-
-            <View style={styles.width30}>
-
-            </View>
 
           </View>
 
@@ -1081,7 +1077,7 @@ class CreatePost extends Component {
                     <View style={styles.width60}>
                       <Image source={(value.originalPost.profileItem.imageURL) ? { uri: value.originalPost.profileItem.imageURL} : { uri: defaultProfileItemIcon }} style={[styles.square50,styles.contain]} />
                     </View>
-                    <View style={styles.flexGrow}>
+                    <View style={styles.calcColumn140}>
                       <Text>{value.originalPost.profileItem.name}</Text>
                       {(value.originalPost.profileItem.category === 'Project') && (
                         <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.category} | {value.originalPost.profileItem.hours} Hours</Text>
@@ -1115,7 +1111,7 @@ class CreatePost extends Component {
                     <View style={styles.width60}>
                       <Image source={(value.originalPost.opportunityTags[0].imageURL) ? { uri: value.originalPost.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} alt="GC" style={[styles.square50,styles.contain]} />
                     </View>
-                    <View style={styles.flexGrow}>
+                    <View style={styles.calcColumn140}>
                       {(value.originalPost.opportunityTags[0].title) ? (
                         <Text>{value.originalPost.opportunityTags[0].title}</Text>
                       ) : (
@@ -1432,7 +1428,7 @@ class CreatePost extends Component {
                        <View style={[styles.halfSpacer]} />
 
                        <View style={styles.rowDirection}>
-                         <View style={styles.flexGrow}>
+                         <View style={styles.calcColumn130}>
                            <input type="text"style={[styles.descriptionText3]} placeholder="Search a person or org..." name="searchEntities" value={this.state.searchEntities} onChange={this.formChangeHandler}/>
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
@@ -1474,7 +1470,7 @@ class CreatePost extends Component {
                                            <View style={styles.miniSpacer} />
                                            <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-25" />
                                          </View>
-                                         <View style={styles.flexGrow}>
+                                         <View style={styles.calcColumn100}>
                                            <Text style={[styles.ctaColor,styles.headingText6]}>{value.firstName} {value.lastName}</Text>
                                          </View>
                                        </View>
@@ -1650,7 +1646,7 @@ class CreatePost extends Component {
                                            <View style={styles.miniSpacer} />
                                            <Image source={{ uri: opportunitiesIconDark}} style={[styles.square22,styles.contain]} />
                                          </View>
-                                         <View style={styles.flexGrow}>
+                                         <View style={styles.calcColumn100}>
                                            <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
                                          </View>
                                        </View>
@@ -1718,7 +1714,7 @@ class CreatePost extends Component {
                                            <View style={styles.miniSpacer} />
                                            <Image source={{ uri: careerMatchesIconDark}} style={[styles.square22,styles.contain]} />
                                          </View>
-                                         <View style={styles.flexGrow}>
+                                         <View style={styles.calcColumn100}>
                                            <Text style={[styles.ctaColor]}>{value.name}</Text>
                                          </View>
                                        </View>
@@ -1747,7 +1743,7 @@ class CreatePost extends Component {
                        <View style={[styles.halfSpacer]} />
 
                        <View style={styles.rowDirection}>
-                         <View style={styles.flexGrow}>
+                         <View style={styles.calcColumn130}>
                            <input type="text"style={[styles.descriptionText3]} placeholder="Search labor market trends..." name="searchTrends" value={this.state.searchTrends} onChange={this.formChangeHandler}/>
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
@@ -1790,7 +1786,7 @@ class CreatePost extends Component {
                                            <View style={styles.miniSpacer} />
                                            <Image source={{ uri: trendsIconDark}} alt="GC" style={[styles.square22,styles.contain]} />
                                          </View>
-                                         <View style={styles.flexGrow}>
+                                         <View style={styles.calcColumn100}>
                                            <Text>{value.name}</Text>
                                          </View>
                                          {(value.percentChange && Number(value.percentChange)) && (
