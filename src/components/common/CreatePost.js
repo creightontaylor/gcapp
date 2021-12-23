@@ -760,7 +760,7 @@ class CreatePost extends Component {
 
                   <View className="close-button-container-1" >
                     <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
                     </TouchableOpacity>
                   </View>
 
@@ -789,7 +789,7 @@ class CreatePost extends Component {
 
                   <View className="close-button-container-1" >
                     <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
@@ -817,7 +817,7 @@ class CreatePost extends Component {
 
                   <View className="close-button-container-1" >
                     <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
@@ -845,7 +845,7 @@ class CreatePost extends Component {
 
                   <View className="close-button-container-1" >
                     <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
@@ -999,9 +999,9 @@ class CreatePost extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.username})} className="background-button standard-color profile-container-right calc-column-offset-30">
               <View className="fixed-column-55">
                 {(value.originalPost.roleName === 'Admin') ? (
-                  <Image src={(value.originalPost.pictureURL) ? value.originalPost.pictureURL : profileIconDark} className="image-40-fit" alt="GC" />
+                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} className="image-40-fit" alt="GC" />
                 ) : (
-                  <Image src={(value.originalPost.pictureURL) ? value.originalPost.pictureURL : profileIconDark} className="profile-thumbnail-43" alt="GC" />
+                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} className="profile-thumbnail-43" alt="GC" />
                 )}
               </View>
               <View className="calc-column-offset-55">
@@ -1050,7 +1050,7 @@ class CreatePost extends Component {
           </View>
           {(value.originalPost.imageURL) && (
             <View className="row-10">
-              <Image src={value.originalPost.imageURL} alt="GC" className="image-full-auto" />
+              <Image source={{ uri: value.originalPost.imageURL}} alt="GC" className="image-full-auto" />
             </View>
           )}
 
@@ -1081,7 +1081,7 @@ class CreatePost extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.profileItem.objectId})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
                     <View className="fixed-column-60">
-                      <Image src={(value.originalPost.profileItem.imageURL) ? value.originalPost.profileItem.imageURL : defaultProfileItemIcon} alt="GC" className="image-50-fit" />
+                      <Image source={(value.originalPost.profileItem.imageURL) ? { uri: value.originalPost.profileItem.imageURL} : { uri: defaultProfileItemIcon }} alt="GC" className="image-50-fit" />
                     </View>
                     <View className="calc-column-offset-60">
                       <Text>{value.originalPost.profileItem.name}</Text>
@@ -1115,7 +1115,7 @@ class CreatePost extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { username: value.originalPost.opportunityTags[0]._id})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
                     <View className="fixed-column-60">
-                      <Image src={(value.originalPost.opportunityTags[0].imageURL) ? value.originalPost.opportunityTags[0].imageURL : opportunitiesIconDark} alt="GC" className="image-50-fit" />
+                      <Image source={(value.originalPost.opportunityTags[0].imageURL) ? { uri: value.originalPost.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} alt="GC" className="image-50-fit" />
                     </View>
                     <View className="calc-column-offset-60">
                       {(value.originalPost.opportunityTags[0].title) ? (
@@ -1142,7 +1142,7 @@ class CreatePost extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: value.originalPost.careerTags[0].name})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
                     <View className="fixed-column-60">
-                      <Image src={(value.originalPost.careerTags[0].imageURL) ? value.originalPost.careerTags[0].imageURL : careerMatchesIconDark} alt="GC" className="image-50-fit" />
+                      <Image source={(value.originalPost.careerTags[0].imageURL) ? { uri: value.originalPost.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} alt="GC" className="image-50-fit" />
                     </View>
                     <View className="calc-column-offset-60">
                       <Text>{value.originalPost.careerTags[0].name}</Text>
@@ -1166,7 +1166,7 @@ class CreatePost extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
                     <View className="fixed-column-60">
-                      <Image src={(value.originalPost.trendTags[0].imageURL) ? value.originalPost.trendTags[0].imageURL : trendsIconDark} alt="GC" className="image-50-fit" />
+                      <Image source={(value.originalPost.trendTags[0].imageURL) ? { uri: value.originalPost.trendTags[0].imageURL} : { uri: trendsIconDark}} alt="GC" className="image-50-fit" />
                     </View>
                     <View className="calc-column-offset-120">
                       <Text>{value.originalPost.trendTags[0].name}</Text>
@@ -1205,7 +1205,7 @@ class CreatePost extends Component {
               {value.originalPost.entityTags.map((value2, optionIndex2) =>
                 <View key={value2} className="float-left right-padding">
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username})}  className="background-button standard-color">
-                    <Image src={(value2.pictureURL) ? value2.pictureURL : profileIconDark} alt="GC" className="image-auto-20" />
+                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" className="image-auto-20" />
                   </TouchableOpacity>
                 </View>
               )}
@@ -1324,7 +1324,7 @@ class CreatePost extends Component {
             <View key="showPost" className="full-width padding-20">
                <View className="row-10">
                  <View className="fixed-column-60 right-padding">
-                   <Image src={(this.state.pictureURL) ? this.state.pictureURL : profileIconDark} alt="GC" className="profile-thumbnail-1 standard-border" />
+                   <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-1 standard-border" />
                  </View>
                  <View className="calc-column-offset-90 top-padding-5">
                    <View>
@@ -1333,7 +1333,7 @@ class CreatePost extends Component {
                  </View>
                  <View className="fixed-column-30 right-padding">
                    <TouchableOpacity className="background-button" onClick={(this.state.showTips) ? () => this.setState({ showTips: false }) : () => this.setState({ showTips: true })}>
-                     <Image src={infoIcon} className="image-auto-20" alt="GC" />
+                     <Image source={{ uri: infoIcon}} className="image-auto-20" alt="GC" />
                    </TouchableOpacity>
                  </View>
                  <View className="clear" />
@@ -1379,28 +1379,28 @@ class CreatePost extends Component {
                    <View className="row-10">
                      <View className="float-left">
                        <TouchableOpacity className="background-button" onClick={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
-                         <Image src={(this.state.showPeople) ? addPeopleIconBlue : addPeopleIconDark} className="image-auto-20" alt="GC" />
+                         <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} className="image-auto-20" alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
-                         <Image src={(this.state.showLink) ? linkIconBlue : linkIcon} className="image-auto-20" alt="GC"/>
+                         <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} className="image-auto-20" alt="GC"/>
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showImage) ? () => this.setState({ showImage: false }) : () => this.setState({ showImage: true })}>
-                         <Image src={(this.state.showImage) ? imageIconBlue : imageIconDark} className="image-auto-20" alt="GC" />
+                         <Image source={(this.state.showImage) ? { uri: imageIconBlue} : { uri: imageIconDark}} className="image-auto-20" alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showVideo) ? () => this.setState({ showVideo: false }) : () => this.setState({ showVideo: true })}>
-                         <Image src={(this.state.showVideo) ? videoIconBlue : videoIconDark} className="image-auto-20" alt="GC" />
+                         <Image source={(this.state.showVideo) ? { uri: videoIconBlue} : { uri: videoIconDark}} className="image-auto-20" alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
-                         <Image src={(this.state.showProfileItems) ? profileIconBlue : profileIconDark} className="image-auto-20 float-left" alt="GC" />
-                         <Image src={(this.state.showProfileItems) ? tagIconBlue : tagIconDark} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC"/>
+                         <Image source={(this.state.showProfileItems) ? { uri: profileIconBlue} : { uri: profileIconDark}} className="image-auto-20 float-left" alt="GC" />
+                         <Image source={(this.state.showProfileItems) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC"/>
                          <View className="clear" />
 
                        </TouchableOpacity>
@@ -1408,23 +1408,23 @@ class CreatePost extends Component {
 
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showOpportunity) ? () => this.setState({ showOpportunity: false }) : () => this.setState({ showOpportunity: true })}>
-                         <Image src={(this.state.showOpportunity) ? opportunitiesIconBlue : opportunitiesIconDark} className="image-auto-20 float-left" alt="GC" />
-                         <Image src={(this.state.showOpportunity) ? tagIconBlue : tagIconDark} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
+                         <Image source={(this.state.showOpportunity) ? { uri: opportunitiesIconBlue} : { uri: opportunitiesIconDark}} className="image-auto-20 float-left" alt="GC" />
+                         <Image source={(this.state.showOpportunity) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
                        </TouchableOpacity>
                      </View>
 
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })}>
-                         <Image src={(this.state.showPaths) ? pathsIconBlue : pathsIconDark} className="image-auto-20 float-left" alt="GC" />
-                         <Image src={(this.state.showPaths) ? tagIconBlue : tagIconDark} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
+                         <Image source={(this.state.showPaths) ? { uri: pathsIconBlue} : { uri: pathsIconDark}} className="image-auto-20 float-left" alt="GC" />
+                         <Image source={(this.state.showPaths) ? { uri: tagIconBlue } : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
                        <TouchableOpacity className="background-button" onClick={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
-                         <Image src={(this.state.showTrends) ? trendsIconBlue : trendsIconDark} className="image-auto-20 float-left" alt="GC" />
-                         <Image src={(this.state.showTrends) ? tagIconBlue : tagIconDark} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
+                         <Image source={(this.state.showTrends) ? { uri: trendsIconBlue} : { uri: trendsIconDark}} className="image-auto-20 float-left" alt="GC" />
+                         <Image source={(this.state.showTrends) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
                        </TouchableOpacity>
                      </View>
@@ -1480,7 +1480,7 @@ class CreatePost extends Component {
                                        <View className="full-width">
                                          <View className="fixed-column-40">
                                            <View className="mini-spacer" />
-                                           <Image src={(value.pictureURL) ? value.pictureURL : profileIconDark} alt="GC" className="profile-thumbnail-25" />
+                                           <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-25" />
                                          </View>
                                          <View className="calc-column-offset-40">
                                            <Text className="cta-color heading-text-6">{value.firstName} {value.lastName}</Text>
@@ -1525,11 +1525,11 @@ class CreatePost extends Component {
                        <View className="row-10">
                          {(this.state.postImage) ? (
                            <View>
-                             <Image src={
-                               this.state.postImage ? ( this.state.postImage )
-                               : this.state.imageURL ? ( this.state.imageURL )
-                               : this.state.profilePicPath ? ( this.state.profilePicPath )
-                               : ( profileIconDark)}
+                             <Image source={
+                               this.state.postImage ? ( { uri: this.state.postImage} )
+                               : this.state.imageURL ? ( { uri: this.state.imageURL} )
+                               : this.state.profilePicPath ? ( { uri: this.state.profilePicPath} )
+                               : ( { uri: profileIconDark})}
                              alt="GC" for="postImage" className="image-auto-100"/>
                            </View>
                          ) : (
@@ -1659,7 +1659,7 @@ class CreatePost extends Component {
                                        <View className="full-width">
                                          <View className="fixed-column-40">
                                            <View className="mini-spacer" />
-                                           <Image src={opportunitiesIconDark} alt="Compass employer icon icon" className="image-auto-22" />
+                                           <Image source={{ uri: opportunitiesIconDark}} alt="Compass employer icon icon" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-40">
                                            <Text className="cta-color">{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
@@ -1730,7 +1730,7 @@ class CreatePost extends Component {
                                        <View className="full-width">
                                          <View className="fixed-column-40">
                                            <View className="mini-spacer" />
-                                           <Image src={careerMatchesIconDark} alt="Compass employer icon icon" className="image-auto-22" />
+                                           <Image source={{ uri: careerMatchesIconDark}} alt="Compass employer icon icon" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-40">
                                            <Text className="cta-color">{value.name}</Text>
@@ -1802,7 +1802,7 @@ class CreatePost extends Component {
                                        <View className="full-width">
                                          <View className="fixed-column-40">
                                            <View className="mini-spacer" />
-                                           <Image src={trendsIconDark} alt="GC" className="image-auto-22" />
+                                           <Image source={{ uri: trendsIconDark}} alt="GC" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-100">
                                            <Text className="">{value.name}</Text>

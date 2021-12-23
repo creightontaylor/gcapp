@@ -242,7 +242,7 @@ class Comments extends Component {
           <View key={i}>
             <View className="spacer" />
             <View className="float-left right-padding-8">
-              <Image src={(this.state.comments[i - 1].pictureURL) ? this.state.comments[i - 1].pictureURL : profileIconBig} alt="img" className="profile-thumbnail-2"/>
+              <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-2"/>
             </View>
 
             <View className={"comment-bubble-2 calc-column-offset-58 " + commentBackgroundColor}>
@@ -264,7 +264,7 @@ class Comments extends Component {
                 {(showEditOption) && (
                   <View className="float-left left-margin">
                     <TouchableOpacity className="btn background-button" onClick={() => this.editComment(index,'posting',true) }>
-                      <Image src={editIconGrey} alt="img" className="image-auto-11" />
+                      <Image source={{ uri: editIconGrey}} alt="img" className="image-auto-11" />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -310,7 +310,7 @@ class Comments extends Component {
             <View className="left-margin-58">
               <View className="float-left right-margin">
                 <TouchableOpacity className="btn background-button" disabled={this.state.savingLike} onClick={() => this.likeItem(index,'posting') }>
-                  <Image src={this.state.comments[index].likes.includes(this.state.emailId) ? thumbsUpIconBlue : thumbsUpIconGrey} alt="Thumbs up icon logo" className="image-auto-25" />
+                  <Image source={this.state.comments[index].likes.includes(this.state.emailId) ? { uri: thumbsUpIconBlue} : { uri: thumbsUpIconGrey}} alt="Thumbs up icon logo" className="image-auto-25" />
                 </TouchableOpacity>
               </View>
               <View className="float-left right-margin">
@@ -321,7 +321,7 @@ class Comments extends Component {
 
               <View className="float-left left-margin right-margin">
                 <TouchableOpacity className="btn background-button" onClick={() => this.showReplies(index,'posting') }>
-                  <Image src={commentIconGrey} alt="Thumbs up icon logo" className="image-auto-25" />
+                  <Image source={{ uri: commentIconGrey}} alt="Thumbs up icon logo" className="image-auto-25" />
                 </TouchableOpacity>
               </View>
               <View className="float-left">
@@ -371,13 +371,13 @@ class Comments extends Component {
           <View className="float-left right-margin-8">
             <View className="spacer" />
             {(window.location.pathname.includes('/organizations')) ? (
-              <Image src={(this.state.orgLogo) ? this.state.orgLogo : profileIconBig} alt="img" className="image-40-fit" />
+              <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: profileIconBig}} alt="img" className="image-40-fit" />
             ) : (
               <View>
                 {(window.location.pathname.includes('/employers')) ? (
-                  <Image src={(this.state.employerLogo) ? this.state.employerLogo : profileIconBig} alt="img" className="image-40-fit" />
+                  <Image source={(this.state.employerLogo) ? { uri: this.state.employerLogo} : { uri: profileIconBig}} alt="img" className="image-40-fit" />
                 ) : (
-                  <Image src={(this.state.pictureURL) ? this.state.pictureURL : profileIconBig} alt="img" className="profile-thumbnail-1" />
+                  <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-1" />
                 )}
               </View>
             )}
@@ -430,7 +430,7 @@ class Comments extends Component {
             <View key={i}>
               <View className="spacer" />
               <View className="float-left right-padding-8">
-                <Image src={(replies[i - 1].pictureURL) ? replies[i - 1].pictureURL : profileIconBig} alt="img" className="profile-thumbnail-1" />
+                <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-1" />
               </View>
 
               <View className={"comment-bubble-2 calc-column-offset-48 " + commentBackgroundColor}>
@@ -767,17 +767,13 @@ class Comments extends Component {
                 <View>
                   <View className="float-left right-padding-8">
                     <View className="spacer" />
-                    {(window.location.pathname.includes('/organizations')) ? (
-                      <Image src={(this.state.orgLogo) ? this.state.orgLogo : profileIconBig} alt="img" className="image-50-fit" />
-                    ) : (
-                      <View>
-                        {(window.location.pathname.includes('/employers')) ? (
-                          <Image src={(this.state.employerLogo) ? this.state.employerLogo : profileIconBig} alt="img" className="image-50-fit" />
-                        ) : (
-                          <Image src={(this.state.pictureURL) ? this.state.pictureURL : profileIconBig} alt="img" className="profile-thumbnail-2" />
-                        )}
-                      </View>
-                    )}
+                    <View>
+                      {(window.location.pathname.includes('/employers')) ? (
+                        <Image source={(this.state.employerLogo) ? { uri: this.state.employerLogo} : { uri: profileIconBig}} alt="img" className="image-50-fit" />
+                      ) : (
+                        <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-2" />
+                      )}
+                    </View>
                   </View>
                   <View className="comment-container" >
                     <TextInput

@@ -112,7 +112,7 @@ class NewsFeed extends Component {
                      console.log('got the posts? ')
                      self.setState({ posts, postsAreLoading: false })
 
-                     if (passedPostId) {
+                     if (self.props.passedPostId) {
 
                        Axios.get(baseURL + '/api/group-posts/byid', { params: { _id: passedPostId } })
                        .then((response) => {
@@ -322,13 +322,13 @@ class NewsFeed extends Component {
             )}*/}
 
             {(this.state.postsAreLoading) ? (
-              <View style={styles.flexCenter, styles.fullSpace}>
+              <View style={[styles.flexCenter, styles.fullSpace]}>
                 <View>
                  <ActivityIndicator
                     animating = {this.state.animating}
                     color = '#87CEFA'
                     size = "large"
-                    style={styles.square80, styles.centerHorizontally}/>
+                    style={[styles.square80, styles.centerHorizontally]}/>
                   <View style={{ height: 10 }}/>
                   <Text style={{ fontSize: 26, color: '#87CEFA', textAlign: 'center' }}>Saving results and calculating matches...</Text>
                 </View>
