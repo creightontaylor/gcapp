@@ -274,11 +274,7 @@ class RenderPosts extends Component {
               <View style={styles.rowDirection}>
                 <TouchableOpacity onPress={() => console.log('go to profile')} style={[styles.rowDirection, styles.flexGrow]}>
                   <View style={[styles.width70, styles.rightPadding]}>
-                    {(value.roleName === 'Admin') ? (
-                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square60]} alt="GC" />
-                    ) : (
-                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
-                    )}
+                    <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
                   </View>
                   <View style={[styles.flexGrow,styles.rowDirection]} >
                     <View style={styles.flexGrow}>

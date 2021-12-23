@@ -194,15 +194,15 @@ class Comments extends Component {
 
         const index = i - 1
 
-        let commentBackgroundColor = "comment-background-student"
+        let commentBackgroundColor =  styles.commentBackgroundStudent
         if (this.state.comments[i - 1].roleName === 'Mentor') {
-          commentBackgroundColor = "comment-background-mentor"
+          commentBackgroundColor = styles.commentBackgroundMentor
         } else if (this.state.comments[i - 1].roleName === 'Teacher') {
-          commentBackgroundColor = "comment-background-teacher"
+          commentBackgroundColor = styles.commentBackgroundTeacher
         } else if (this.state.comments[i - 1].roleName === 'Admin') {
-          commentBackgroundColor = "comment-background-admin"
+          commentBackgroundColor = styles.commentBackgroundAdmin
         } else if (this.state.comments[i - 1].roleName === 'Employer') {
-          commentBackgroundColor = "comment-background-employer"
+          commentBackgroundColor = styles.commentBackgroundEmployer
         }
 
         let dateString = ''
@@ -212,25 +212,14 @@ class Comments extends Component {
 
         let showEditOption = false
 
-        let mainClass = 'calc-column-offset-100'
-
-        let smallClass = "fixed-column-100"
+        let mainClass = "full-width"
+        let smallClass = "full-width"
         if (this.state.comments[i - 1].email === this.state.emailId) {
           showEditOption = true
 
           mainClass = 'calc-column-offset-121'
 
           smallClass = "fixed-column-121"
-        }
-
-        if (this.state.onMobile) {
-          mainClass = "full-width"
-          smallClass = "full-width"
-        }
-
-        let commentClass = 'calc-column-offset-160'
-        if (this.state.onMobile) {
-          commentClass = "full-width"
         }
 
         let disabled = true
@@ -241,86 +230,87 @@ class Comments extends Component {
         rows.push(
           <View key={i}>
             <View style={styles.spacer} />
-            <View className="float-left right-padding-8">
-              <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-2"/>
-            </View>
 
-            <View className={"comment-bubble-2 calc-column-offset-58 " + commentBackgroundColor}>
-              <View className={mainClass}>
-                <label style={styles.descriptionText1}>{this.state.comments[i - 1].firstName} {this.state.comments[i - 1].lastName}</label>
-
-                <label style={styles.descriptionText2}>{this.state.comments[i - 1].roleName}</label>
-
+            <View style={styles.rowDirection}>
+              <View style={styles.rightPadding8}>
+                <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail50}/>
               </View>
 
-              <View className={smallClass}>
-                <View className="float-left">
-                  <label style={styles.descriptionText3}>{dateString}</label>
+              <View style={[styles.flexGrow,styles.commentBubble2,commentBackgroundColor]}>
+                <View style={styles.fullWidth}>
+                  <label style={styles.descriptionText1}>{this.state.comments[i - 1].firstName} {this.state.comments[i - 1].lastName}</label>
+
+                  <label style={styles.descriptionText2}>{this.state.comments[i - 1].roleName}</label>
+
                 </View>
-                {(showEditOption) && (
-                  <View className="float-left left-margin">
-                    <TouchableOpacity className="btn background-button" onClick={() => this.editComment(index,'posting',true) }>
-                      <Image source={{ uri: editIconGrey}} alt="img" style={[styles.square11,styles.contain]} />
-                    </TouchableOpacity>
+
+                <View style={[styles.fullWidth,styles.rowDirection]}>
+                  <View>
+                    <label style={styles.descriptionText3}>{dateString}</label>
+                  </View>
+                  {(showEditOption) && (
+                    <View style={styles.leftMargin}>
+                      <TouchableOpacity onClick={() => this.editComment(index,'posting',true) }>
+                        <Image source={{ uri: editIconGrey}} alt="img" style={[styles.square11,styles.contain]} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+
+                <View style={styles.spacer} /><View style={styles.halfSpacer} />
+
+                <View style={styles.fullWidth}>
+                  {(this.state.editComments[index]) ? (
+                    <TextInput
+                      style={styles.commentTextField}
+                      onChangeText={(text) => this.formChangeHandler('myEditedComment')}
+                      value={this.state.myEditedComment}
+                      placeholder="Change comment..."
+                      placeholderTextColor="grey"
+                    />
+                  ) : (
+                    <label style={styles.descriptionText1}>{this.state.comments[i - 1].comment}</label>
+                  )}
+
+                </View>
+
+                {(this.state.editComments[index]) && (
+                  <View style={[styles.width160,styles.rowDirection]}>
+                    <View>
+                      <TouchableOpacity style={[styles.btnSmall,styles.descriptionText1,styles.ctaColor]} onClick={() => this.editComment(index,'posting',false)}>Cancel</TouchableOpacity>
+                    </View>
+                    <View style={styles.leftPadding15}>
+                      <TouchableOpacity style={(this.state.myEditedComment) ? [styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor] : [styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor,styles.washOut2]} disabled={disabled} onClick={() => this.postComment(index, 'posting')}>Post</TouchableOpacity>
+                    </View>
                   </View>
                 )}
+
+
+                <View style={styles.spacer} />
               </View>
-
-
-              <View style={styles.spacer} /><View style={styles.halfSpacer} />
-
-              <View className={commentClass}>
-                {(this.state.editComments[index]) ? (
-                  <TextInput
-                    className="text-field comment-text-field"
-                    onChangeText={(text) => this.formChangeHandler('myEditedComment')}
-                    value={this.state.myEditedComment}
-                    placeholder="Change comment..."
-                    placeholderTextColor="grey"
-                  />
-                ) : (
-                  <label style={styles.descriptionText1}>{this.state.comments[i - 1].comment}</label>
-                )}
-
-              </View>
-
-              {(this.state.editComments[index]) && (
-                <View className="fixed-column-160">
-                  <View className="float-left">
-                    <TouchableOpacity className="btn btn-small clear-border transparent-background cta-color" onClick={() => this.editComment(index,'posting',false)}>Cancel</TouchableOpacity>
-                  </View>
-                  <View className="float-left left-padding-15">
-                    <TouchableOpacity className={(this.state.myEditedComment) ? "btn btn-small" : "btn btn-small wash-out-2"} disabled={disabled} onClick={() => this.postComment(index, 'posting')}>Post</TouchableOpacity>
-                  </View>
-                </View>
-              )}
-
-
-              <View style={styles.spacer} />
             </View>
-
 
             <View style={styles.spacer} />
 
-            <View className="left-margin-58">
-              <View className="float-left right-margin">
-                <TouchableOpacity className="btn background-button" disabled={this.state.savingLike} onClick={() => this.likeItem(index,'posting') }>
-                  <Image source={this.state.comments[index].likes.includes(this.state.emailId) ? { uri: thumbsUpIconBlue} : { uri: thumbsUpIconGrey}} alt="Thumbs up icon logo" className="image-auto-25" />
+            <View style={[styles.leftMargin58,styles.rowDirection]}>
+              <View style={styles.rightMargin}>
+                <TouchableOpacity disabled={this.state.savingLike} onClick={() => this.likeItem(index,'posting') }>
+                  <Image source={this.state.comments[index].likes.includes(this.state.emailId) ? { uri: thumbsUpIconBlue} : { uri: thumbsUpIconGrey}} alt="Thumbs up icon logo" style={[styles.square25,styles.contain]} />
                 </TouchableOpacity>
               </View>
-              <View className="float-left right-margin">
+              <View style={styles.rightMargin}>
                 <label>{this.state.comments[i - 1].likes.length} Likes</label>
               </View>
 
-              <View className="vertical-separator" />
+              <View style={styles.verticalSeparator} />
 
-              <View className="float-left left-margin right-margin">
-                <TouchableOpacity className="btn background-button" onClick={() => this.showReplies(index,'posting') }>
-                  <Image source={{ uri: commentIconGrey}} alt="Thumbs up icon logo" className="image-auto-25" />
+              <View style={[styles.leftMargin,styles.rightMargin]}>
+                <TouchableOpacity onClick={() => this.showReplies(index,'posting') }>
+                  <Image source={{ uri: commentIconGrey}} alt="Thumbs up icon logo" style={[styles.square25,styles.contain]} />
                 </TouchableOpacity>
               </View>
-              <View className="float-left">
-                <TouchableOpacity className="btn background-button" onClick={() => this.showReplies(index,'posting') }>
+              <View>
+                <TouchableOpacity onClick={() => this.showReplies(index,'posting') }>
                   <label>{this.state.comments[i - 1].replies.length} Replies</label>
                 </TouchableOpacity>
               </View>
@@ -328,7 +318,7 @@ class Comments extends Component {
             </View>
             <View style={styles.spacer} />
             {(this.state.comments[i - 1].showReplies) && (
-              <View className="left-margin-58">
+              <View style={styles.leftMargin58}>
                 {this.renderReplies(index,'posting')}
               </View>
             )}
@@ -361,25 +351,14 @@ class Comments extends Component {
       }
 
       rows.push(
-        <View key={0}>
-
-          <View className="float-left right-margin-8">
+        <View key={0} style={styles.rowDirection}>
+          <View style={styles.width50}>
             <View style={styles.spacer} />
-            {(window.location.pathname.includes('/organizations')) ? (
-              <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: profileIconBig}} alt="img" className="image-40-fit" />
-            ) : (
-              <View>
-                {(window.location.pathname.includes('/employers')) ? (
-                  <Image source={(this.state.employerLogo) ? { uri: this.state.employerLogo} : { uri: profileIconBig}} alt="img" className="image-40-fit" />
-                ) : (
-                  <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-1" />
-                )}
-              </View>
-            )}
+            <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail40} />
           </View>
-          <View className="comment-container">
+          <View style={[styles.flexGrow,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
             <TextInput
-              className="edit-comment"
+              style={styles.editComment}
               onChangeText={(text) => this.formChangeHandler("reply|" + index)}
               value={myReply}
               placeholder="Add a reply..."
@@ -388,8 +367,8 @@ class Comments extends Component {
           </View>
 
           {(this.state.myReplies[index] !== '') && (
-            <View className="left-margin-67">
-              <TouchableOpacity className="btn btn-small" onClick={() => this.postComment(index,postType)}>Reply</TouchableOpacity>
+            <View style={[styles.leftMargin67]}>
+              <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onClick={() => this.postComment(index,postType)}>Reply</TouchableOpacity>
             </View>
           )}
 
@@ -424,29 +403,30 @@ class Comments extends Component {
           rows.push(
             <View key={i}>
               <View style={styles.spacer} />
-              <View className="float-left right-padding-8">
-                <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-1" />
-              </View>
 
-              <View className={"comment-bubble-2 calc-column-offset-48 " + commentBackgroundColor}>
-                <View className="calc-column-offset-100">
-                  <label className="description-text-2 bold-text">{replies[i - 1].firstName} {replies[i - 1].lastName}</label>
-
-                  <label style={styles.descriptionText3}>{replies[i - 1].roleName}</label>
-
+              <View style={styles.rowDirection}>
+                <View style={styles.rightPadding8}>
+                  <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail40} />
                 </View>
-                <View className="fixed-column-100">
-                  <View className="float-left">
-                    <label style={styles.descriptionText3}>{dateString}</label>
+
+                <View style={[styles.flexGrow,styles.commentBubble2,commentBackgroundColor]}>
+                  <View style={styles.flexGrow}>
+                    <label style={[styles.descriptionText2,styles.boldText]}>{replies[i - 1].firstName} {replies[i - 1].lastName}</label>
+
+                    <label style={styles.descriptionText3}>{replies[i - 1].roleName}</label>
+
+                  </View>
+                  <View style={[styles.width100,styles.rowDirection]}>
+                    <View>
+                      <label style={styles.descriptionText3}>{dateString}</label>
+                    </View>
+
                   </View>
 
+                  <View style={styles.spacer} />
+                  <label style={styles.descriptionText2}>{replies[i - 1].comment}</label>
+
                 </View>
-
-
-
-                <View style={styles.spacer} />
-                <label style={styles.descriptionText2}>{replies[i - 1].comment}</label>
-
               </View>
 
 
@@ -760,20 +740,16 @@ class Comments extends Component {
             <View>
               <View>
                 <View style={styles.rowDirection}>
-                  <View className="float-left right-padding-8">
+                  <View style={styles.rightPadding8}>
                     <View style={styles.spacer} />
                     <View>
-                      {(window.location.pathname.includes('/employers')) ? (
-                        <Image source={(this.state.employerLogo) ? { uri: this.state.employerLogo} : { uri: profileIconBig}} alt="img" className="image-50-fit" />
-                      ) : (
-                        <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" className="profile-thumbnail-2" />
-                      )}
+                      <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail50} />
                     </View>
                   </View>
-                  <View style={[styles.flexGrow,styles.borderRadius10,styles.transparentBorder,styles.padding10]} className="comment-container" >
+                  <View style={[styles.flexGrow,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
 
                     <TextInput
-                      className="text-field comment-text-field"
+                      style={styles.commentTextField}
                       onChangeText={(text) => this.formChangeHandler('comment')}
                       value={this.state.myComment}
                       placeholder="Add a comment..."
@@ -782,8 +758,8 @@ class Comments extends Component {
                   </View>
 
                   {(this.state.myComment !== '') && (
-                    <View style={styles.leftMargin67} className="left-margin-67">
-                      <TouchableOpacity className="btn btn-primary" disabled={this.state.disableSubmit} onClick={() => this.postComment(null,'posting')}>Post</TouchableOpacity>
+                    <View style={styles.leftMargin67} style={[styles.leftMargin67]}>
+                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} disabled={this.state.disableSubmit} onClick={() => this.postComment(null,'posting')}>Post</TouchableOpacity>
                     </View>
                   )}
                   <View style={styles.spacer} /><View style={styles.spacer} />
@@ -793,7 +769,7 @@ class Comments extends Component {
             </View>
           ) : (
             <View>
-              <Text className="error-message">There was an error</Text>
+              <Text style={styles.errorColor}>There was an error</Text>
             </View>
           )}
 

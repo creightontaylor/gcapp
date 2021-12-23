@@ -754,22 +754,22 @@ class CreatePost extends Component {
 
           return (
             <View key={"selectedCareers"}>
-              <View className="spacer" />
+              <View style={styles.spacer} />
               {selectedCareers.map((value, optionIndex) =>
                 <View key={"career|" + optionIndex} className="float-left">
 
                   <View className="close-button-container-1" >
-                    <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
+                    <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
 
                   <View className="background-button float-left right-padding-5">
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                     <View className={(this.state.selectedCareer === value) ? "tag-container-active" : "tag-container-inactive"}>
-                      <Text className="description-text-2">{value}</Text>
+                      <Text style={[styles.descriptionText2]}>{value}</Text>
                     </View>
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                   </View>
 
                 </View>
@@ -783,21 +783,21 @@ class CreatePost extends Component {
 
           return (
             <View key={"selectedOpportunities"}>
-              <View className="spacer" />
+              <View style={styles.spacer} />
               {selectedOpportunities.map((value, optionIndex) =>
                 <View key={"career|" + optionIndex} className="float-left">
 
                   <View className="close-button-container-1" >
-                    <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
+                    <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                     <View className={(this.state.selectedOpportunity === value) ? "tag-container-active" : "tag-container-inactive"}>
-                      <Text className="description-text-2">{value}</Text>
+                      <Text style={[styles.descriptionText2]}>{value}</Text>
                     </View>
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                   </View>
 
                 </View>
@@ -811,21 +811,21 @@ class CreatePost extends Component {
 
           return (
             <View key={"selectedEntities"}>
-              <View className="spacer" />
+              <View style={styles.spacer} />
               {selectedEntities.map((value, optionIndex) =>
                 <View key={"entity|" + optionIndex} className="float-left">
 
                   <View className="close-button-container-1" >
-                    <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
+                    <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                     <View className={(this.state.selectedEntity === value) ? "tag-container-active" : "tag-container-inactive"}>
-                      <Text className="description-text-2">{value}</Text>
+                      <Text style={[styles.descriptionText2]}>{value}</Text>
                     </View>
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                   </View>
 
                 </View>
@@ -839,21 +839,21 @@ class CreatePost extends Component {
 
           return (
             <View key={"selectedTrends"}>
-              <View className="spacer" />
+              <View style={styles.spacer} />
               {selectedTrends.map((value, optionIndex) =>
                 <View key={"entity|" + optionIndex} className="float-left">
 
                   <View className="close-button-container-1" >
-                    <TouchableOpacity className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" className="image-auto-20" />
+                    <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <Image source={{ uri: deniedIcon}} alt="Compass target icon" style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
                   <View className="background-button float-left right-padding-5">
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                     <View className={(this.state.selectedTrend === value) ? "tag-container-active" : "tag-container-inactive"}>
-                      <Text className="description-text-2">{value}</Text>
+                      <Text style={[styles.descriptionText2]}>{value}</Text>
                     </View>
-                    <View className="half-spacer" />
+                    <View style={[styles.halfSpacer]} />
                   </View>
 
                 </View>
@@ -1010,28 +1010,28 @@ class CreatePost extends Component {
                 </View>
                 <View className="clear" />
 
-                <View className="mini-spacer" /><View className="mini-spacer" />
+                <View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
 
                 {(value.originalPost.headline && value.originalPost.headline !== '') ? (
                   <View>
-                    <Text className="description-text-3 description-text-color">{value.originalPost.headline}</Text>
+                    <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.headline}</Text>
                   </View>
                 ) : (
                   <View>
                     {(value.originalPost.education && value.originalPost.education[0] && value.originalPost.education[0].name && value.originalPost.education[0].isContinual) ? (
                       <View>
-                        <Text className="description-text-3 description-text-color">Student @ {value.originalPost.education[0].name}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Student @ {value.originalPost.education[0].name}</Text>
                       </View>
                     ) : (
                       <View>
                         <View>
-                          <Text className="description-text-3 description-text-color">{this.state.orgName} Member</Text>
+                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{this.state.orgName} Member</Text>
                         </View>
                       </View>
                     )}
                   </View>
                 )}
-                <Text className="description-text-4 description-text-color">{convertDateToString(value.originalPost.createdAt,"daysAgo")}</Text>
+                <Text style={[styles.descriptionText4,styles.descriptionTextColor]}>{convertDateToString(value.originalPost.createdAt,"daysAgo")}</Text>
               </View>
             </TouchableOpacity>
 
@@ -1041,21 +1041,21 @@ class CreatePost extends Component {
             <View className="clear" />
           </View>
 
-          <View className="row-10">
-            <Text className="description-text-2">{value.originalPost.message}</Text>
+          <View style={[styles.row10]}>
+            <Text style={[styles.descriptionText2]}>{value.originalPost.message}</Text>
 
             {(value.originalPost.url) && (
               <Text onPress={() => Linking.openURL(value.originalPost.url)} className="description-text-3 top-padding bold-text" target="_blank">{value.originalPost.url}</Text>
             )}
           </View>
           {(value.originalPost.imageURL) && (
-            <View className="row-10">
+            <View style={[styles.row10]}>
               <Image source={{ uri: value.originalPost.imageURL}} alt="GC" className="image-full-auto" />
             </View>
           )}
 
           {(value.originalPost.videoURL) && (
-            <View className="row-10">
+            <View style={[styles.row10]}>
               <View className="spacer"/>
 
               <View>
@@ -1071,12 +1071,12 @@ class CreatePost extends Component {
               </View>
 
               <View className="clear" />
-              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+              <View className="spacer"/><View className="spacer"/><View style={[styles.halfSpacer]}/>
             </View>
           )}
 
           {(value.originalPost.profileItem) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding]}>
               <View className="cta-border">
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.profileItem.objectId})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
@@ -1086,19 +1086,19 @@ class CreatePost extends Component {
                     <View className="calc-column-offset-60">
                       <Text>{value.originalPost.profileItem.name}</Text>
                       {(value.originalPost.profileItem.category === 'Project') && (
-                        <Text className="description-text-3 description-text-color">{value.originalPost.profileItem.category} | {value.originalPost.profileItem.hours} Hours</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.category} | {value.originalPost.profileItem.hours} Hours</Text>
                       )}
                       {(value.originalPost.profileItem.category === 'Experience') && (
-                        <Text className="description-text-3 description-text-color">{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
                       )}
                       {(value.originalPost.profileItem.category === 'Education') && (
-                        <Text className="description-text-3 description-text-color">{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
                       )}
                       {(value.originalPost.profileItem.category === 'Career Goal') && (
-                        <Text className="description-text-3 description-text-color">Deadline: {value.originalPost.profileItem.deadline}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Deadline: {value.originalPost.profileItem.deadline}</Text>
                       )}
                       {(value.originalPost.profileItem.category === 'Passion') && (
-                        <Text className="description-text-3 description-text-color">Last Updated {value.originalPost.profileItem.updatedAt}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Last Updated {value.originalPost.profileItem.updatedAt}</Text>
                       )}
 
                     </View>
@@ -1110,7 +1110,7 @@ class CreatePost extends Component {
           )}
 
           {(value.originalPost.opportunityTags && value.originalPost.opportunityTags.length > 0) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding]}>
               <View className="cta-border">
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { username: value.originalPost.opportunityTags[0]._id})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
@@ -1125,7 +1125,7 @@ class CreatePost extends Component {
                       )}
 
                       {(value.originalPost.opportunityTags[0].employerName) && (
-                        <Text className="description-text-3 description-text-color">{value.originalPost.opportunityTags[0].employerName}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.opportunityTags[0].employerName}</Text>
                       )}
 
                     </View>
@@ -1137,7 +1137,7 @@ class CreatePost extends Component {
           )}
 
           {(value.originalPost.careerTags && value.originalPost.careerTags.length > 0) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding]}>
               <View className="cta-border">
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: value.originalPost.careerTags[0].name})} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
@@ -1146,10 +1146,10 @@ class CreatePost extends Component {
                     </View>
                     <View className="calc-column-offset-60">
                       <Text>{value.originalPost.careerTags[0].name}</Text>
-                      <Text className="description-text-3 description-text-color">{value.originalPost.careerTags[0].jobFamily}</Text>
+                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.careerTags[0].jobFamily}</Text>
 
                       {(value.originalPost.careerTags[0].marketData) && (
-                        <Text className="description-text-3 description-text-color"> | ${Number(value.originalPost.careerTags[0].marketData.pay).toLocaleString()} avg pay</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}> | ${Number(value.originalPost.careerTags[0].marketData.pay).toLocaleString()} avg pay</Text>
                       )}
 
                     </View>
@@ -1161,7 +1161,7 @@ class CreatePost extends Component {
           )}
 
           {(value.originalPost.trendTags && value.originalPost.trendTags.length > 0) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding]}>
               <View className="cta-border">
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })} className="background-button standard-color padding-20 full-width">
                   <View className="padding-20">
@@ -1170,7 +1170,7 @@ class CreatePost extends Component {
                     </View>
                     <View className="calc-column-offset-120">
                       <Text>{value.originalPost.trendTags[0].name}</Text>
-                      <Text className="description-text-3 description-text-color">{value.originalPost.trendTags[0].category}</Text>
+                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.trendTags[0].category}</Text>
                     </View>
 
                     {(value.originalPost.trendTags[0].percentChange) && (
@@ -1188,11 +1188,11 @@ class CreatePost extends Component {
           )}
 
           {(value.originalPost.tags && value.originalPost.tags.length > 0) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding]}>
               {value.originalPost.tags.map((item2, index2) =>
                 <View key={index2} className="float-left right-padding top-padding">
                   <View className="tag-container-thin">
-                    <Text className="description-text-4">{item2}</Text>
+                    <Text style={[styles.descriptionText4]}>{item2}</Text>
                   </View>
                 </View>
               )}
@@ -1201,11 +1201,11 @@ class CreatePost extends Component {
           )}
 
           {(value.originalPost.entityTags && value.originalPost.entityTags.length > 0) && (
-            <View className="top-padding">
+            <View style={[styles.topPadding]}>
               {value.originalPost.entityTags.map((value2, optionIndex2) =>
                 <View key={value2} className="float-left right-padding">
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username})}  className="background-button standard-color">
-                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" className="image-auto-20" />
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username})}>
+                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
               )}
@@ -1321,19 +1321,19 @@ class CreatePost extends Component {
       return (
         <View>
           <View>
-            <View key="showPost" className="full-width padding-20">
-               <View className="row-10">
+            <View key="showPost" style={[styles.fullWidth,styles.padding20]}>
+               <View style={[styles.row10]}>
                  <View className="fixed-column-60 right-padding">
-                   <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-1 standard-border" />
+                   <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.profileThumbnail40,styles.standardBorder]} />
                  </View>
                  <View className="calc-column-offset-90 top-padding-5">
                    <View>
-                    <Text className="heading-text-3">{this.state.cuFirstName} {this.state.cuLastName}</Text>
+                    <Text style={[styles.headingText3]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
                    </View>
                  </View>
                  <View className="fixed-column-30 right-padding">
-                   <TouchableOpacity className="background-button" onClick={(this.state.showTips) ? () => this.setState({ showTips: false }) : () => this.setState({ showTips: true })}>
-                     <Image source={{ uri: infoIcon}} className="image-auto-20" alt="GC" />
+                   <TouchableOpacity onClick={(this.state.showTips) ? () => this.setState({ showTips: false }) : () => this.setState({ showTips: true })}>
+                     <Image source={{ uri: infoIcon}} style={[styles.square20,styles.contain]} alt="GC" />
                    </TouchableOpacity>
                  </View>
                  <View className="clear" />
@@ -1365,40 +1365,40 @@ class CreatePost extends Component {
                  </View>
                )}
 
-               <View className="row-10">
+               <View style={[styles.row10]}>
                  <textarea type="text" className="text-field clear-border standard-border" placeholder="Start a conversation..." name="postMessage" value={this.state.postMessage} onChange={this.formChangeHandler} />
                </View>
 
                {(this.state.sharePosting && this.state.originalPost) ? (
-                 <View className="cta-border padding-20">
+                 <View style={[styles.ctaBorder,styles.padding20]}>
                    {console.log('what is op: ', this.state.originalPost)}
                    {this.renderOriginalPost({ originalPost: this.state.originalPost })}
                  </View>
                ) : (
                  <View>
-                   <View className="row-10">
+                   <View style={[styles.row10]}>
                      <View className="float-left">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
-                         <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} className="image-auto-20" alt="GC" />
+                       <TouchableOpacity onClick={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
+                         <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} style={[styles.square20,styles.contain]} alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
-                         <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} className="image-auto-20" alt="GC"/>
+                       <TouchableOpacity onClick={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
+                         <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} style={[styles.square20,styles.contain]} alt="GC"/>
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showImage) ? () => this.setState({ showImage: false }) : () => this.setState({ showImage: true })}>
-                         <Image source={(this.state.showImage) ? { uri: imageIconBlue} : { uri: imageIconDark}} className="image-auto-20" alt="GC" />
+                       <TouchableOpacity onClick={(this.state.showImage) ? () => this.setState({ showImage: false }) : () => this.setState({ showImage: true })}>
+                         <Image source={(this.state.showImage) ? { uri: imageIconBlue} : { uri: imageIconDark}} style={[styles.square20,styles.contain]} alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showVideo) ? () => this.setState({ showVideo: false }) : () => this.setState({ showVideo: true })}>
-                         <Image source={(this.state.showVideo) ? { uri: videoIconBlue} : { uri: videoIconDark}} className="image-auto-20" alt="GC" />
+                       <TouchableOpacity onClick={(this.state.showVideo) ? () => this.setState({ showVideo: false }) : () => this.setState({ showVideo: true })}>
+                         <Image source={(this.state.showVideo) ? { uri: videoIconBlue} : { uri: videoIconDark}} style={[styles.square20,styles.contain]} alt="GC" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
+                       <TouchableOpacity onClick={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
                          <Image source={(this.state.showProfileItems) ? { uri: profileIconBlue} : { uri: profileIconDark}} className="image-auto-20 float-left" alt="GC" />
                          <Image source={(this.state.showProfileItems) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC"/>
                          <View className="clear" />
@@ -1407,7 +1407,7 @@ class CreatePost extends Component {
                      </View>
 
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showOpportunity) ? () => this.setState({ showOpportunity: false }) : () => this.setState({ showOpportunity: true })}>
+                       <TouchableOpacity onClick={(this.state.showOpportunity) ? () => this.setState({ showOpportunity: false }) : () => this.setState({ showOpportunity: true })}>
                          <Image source={(this.state.showOpportunity) ? { uri: opportunitiesIconBlue} : { uri: opportunitiesIconDark}} className="image-auto-20 float-left" alt="GC" />
                          <Image source={(this.state.showOpportunity) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
@@ -1415,14 +1415,14 @@ class CreatePost extends Component {
                      </View>
 
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })}>
+                       <TouchableOpacity onClick={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })}>
                          <Image source={(this.state.showPaths) ? { uri: pathsIconBlue} : { uri: pathsIconDark}} className="image-auto-20 float-left" alt="GC" />
                          <Image source={(this.state.showPaths) ? { uri: tagIconBlue } : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
                        </TouchableOpacity>
                      </View>
                      <View className="float-left left-padding-20">
-                       <TouchableOpacity className="background-button" onClick={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
+                       <TouchableOpacity onClick={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
                          <Image source={(this.state.showTrends) ? { uri: trendsIconBlue} : { uri: trendsIconDark}} className="image-auto-20 float-left" alt="GC" />
                          <Image source={(this.state.showTrends) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" alt="GC" />
                          <View className="clear" />
@@ -1434,13 +1434,13 @@ class CreatePost extends Component {
                    </View>
 
                    {(this.state.showPeople) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Tag People and/or Orgs (Optional)</Text>
-                       <View className="half-spacer" />
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Tag People and/or Orgs (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
 
                        <View>
                          <View className="calc-column-offset-70">
-                           <input type="text" className="text-field" placeholder="Search a person or org..." name="searchEntities" value={this.state.searchEntities} onChange={this.formChangeHandler}/>
+                           <input type="text"style={[styles.descriptionText3]} placeholder="Search a person or org..." name="searchEntities" value={this.state.searchEntities} onChange={this.formChangeHandler}/>
                          </View>
                          <View className="fixed-column-70 left-padding">
                            <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('entity')}>Add</TouchableOpacity>
@@ -1448,23 +1448,23 @@ class CreatePost extends Component {
                          <View className="clear" />
                        </View>
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
 
-                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-                       {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                       {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                        {(this.state.searchIsAnimating) ? (
                          <View className="flex-container flex-center full-space">
                            <View>
-                             <View className="super-spacer" />
+                             <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
                                 animating = {this.state.animating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
-                             <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                             <Text className="center-text cta-color bold-text">Searching...</Text>
+                             <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                             <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                            </View>
                          </View>
@@ -1477,13 +1477,13 @@ class CreatePost extends Component {
                                  {this.state.entityOptions.map((value, optionIndex) =>
                                    <View key={value._id} className="left-text bottom-margin-5 full-width">
                                      <TouchableOpacity className="background-button full-width row-7 left-text" onClick={() => this.searchItemClicked(value, 'entity')}>
-                                       <View className="full-width">
+                                       <View style={[styles.fullWidth]}>
                                          <View className="fixed-column-40">
-                                           <View className="mini-spacer" />
+                                           <View style={styles.miniSpacer} />
                                            <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} alt="GC" className="profile-thumbnail-25" />
                                          </View>
                                          <View className="calc-column-offset-40">
-                                           <Text className="cta-color heading-text-6">{value.firstName} {value.lastName}</Text>
+                                           <Text style={[styles.ctaColor,styles.headingText6]}>{value.firstName} {value.lastName}</Text>
                                          </View>
                                        </View>
                                      </TouchableOpacity>
@@ -1506,23 +1506,23 @@ class CreatePost extends Component {
                    )}
 
                    {(this.state.showLink) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Share a Link (Optional)</Text>
-                       <View className="half-spacer" />
-                       <input type="text" className="text-field" placeholder="Add a link..." name="postLink" value={this.state.postLink} onChange={this.formChangeHandler}/>
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Share a Link (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
+                       <input type="text"style={[styles.descriptionText3]} placeholder="Add a link..." name="postLink" value={this.state.postLink} onChange={this.formChangeHandler}/>
                        {(this.state.postLink && !this.state.postLink.startsWith('http')) && (
-                         <View className="row-5">
-                           <Text className="error-color bold-text description-text-2">The link must start with http</Text>
+                         <View style={[styles.row5]}>
+                           <Text style={[styles.errorColor,styles.boldText,styles.descriptionText2]}>The link must start with http</Text>
                          </View>
                        )}
                      </View>
                    )}
 
                    {(this.state.showImage) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Add an Image (Optional)</Text>
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Add an Image (Optional)</Text>
 
-                       <View className="row-10">
+                       <View style={[styles.row10]}>
                          {(this.state.postImage) ? (
                            <View>
                              <Image source={
@@ -1534,52 +1534,52 @@ class CreatePost extends Component {
                            </View>
                          ) : (
                            <View>
-                             <Text className="error-color description-text-2">No image uploaded</Text>
+                             <Text style={[styles.errorColor,styles.descriptionText2]}>No image uploaded</Text>
                            </View>
                          )}
                        </View>
 
-                       <View className="half-spacer" />
+                       <View style={[styles.halfSpacer]} />
 
                        <Text for={"file-upload-image"} class="custom-file-upload-squarish">Upload</Text>
                        <input type="file" id={"file-upload-image"} name="postImage" onChange={this.formChangeHandler} accept="image/*" />
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
                      </View>
                    )}
 
                    {(this.state.showVideo) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Embed a YouTube Video (Optional)</Text>
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Embed a YouTube Video (Optional)</Text>
 
-                       <View className="row-10">
+                       <View style={[styles.row10]}>
                          {(this.state.videoURL) ? (
                            <View>
                            </View>
                          ) : (
                            <View>
-                             <Text className="error-color description-text-2">No video uploaded</Text>
+                             <Text style={[styles.errorColor,styles.descriptionText2]}>No video uploaded</Text>
                            </View>
                          )}
                        </View>
 
-                       <View className="half-spacer" />
+                       <View style={[styles.halfSpacer]} />
 
 
-                       <input type="text" className="text-field" placeholder="(e.g., https://www.youtube.com/embed/92mBt-NFx50)" name="videoURL" value={this.state.videoURL} onChange={this.formChangeHandler}/>
-                         <Text className="description-text-2 bold-text error-color">Make sure to use the "embed" version of the link. Add the id after "https://www.youtube.com/embed/"</Text>
+                       <input type="text"style={[styles.descriptionText3]} placeholder="(e.g., https://www.youtube.com/embed/92mBt-NFx50)" name="videoURL" value={this.state.videoURL} onChange={this.formChangeHandler}/>
+                         <Text style={[styles.errorColor,styles.descriptionText2,styles.boldText]}>Make sure to use the "embed" version of the link. Add the id after "https://www.youtube.com/embed/"</Text>
                        {/*
                        <Text for={"file-upload-video"} class="custom-file-upload-squarish">Upload</Text>
                        <input type="file" id={"file-upload-image"} name="videoURL" onChange={this.formChangeHandler} accept="image/*" />*/}
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
                      </View>
                    )}
 
                    {(this.state.showProfileItems) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Tag Items On Your Profile (Optional)</Text>
-                       <View className="half-spacer" />
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Tag Items On Your Profile (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
 
                        <View>
                          <View className="container-left">
@@ -1613,13 +1613,13 @@ class CreatePost extends Component {
                    )}
 
                    {(this.state.showOpportunity) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Tag an Opportunity (Optional)</Text>
-                       <View className="half-spacer" />
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Tag an Opportunity (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
 
                        <View>
                          <View className="calc-column-offset-70">
-                           <input type="text" className="text-field" placeholder="Search event, project, and work opportunities..." name="searchOpportunities" value={this.state.searchOpportunities} onChange={this.formChangeHandler}/>
+                           <input type="text"style={[styles.descriptionText3]} placeholder="Search event, project, and work opportunities..." name="searchOpportunities" value={this.state.searchOpportunities} onChange={this.formChangeHandler}/>
                          </View>
                          <View className="fixed-column-70 left-padding">
                            <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('opportunity')}>Add</TouchableOpacity>
@@ -1627,23 +1627,23 @@ class CreatePost extends Component {
                          <View className="clear" />
                        </View>
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
 
-                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-                       {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                       {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                        {(this.state.searchIsAnimating) ? (
                          <View className="flex-container flex-center full-space">
                            <View>
-                             <View className="super-spacer" />
+                             <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
                                 animating = {this.state.animating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
-                             <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                             <Text className="center-text cta-color bold-text">Searching...</Text>
+                             <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                             <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                            </View>
                          </View>
@@ -1656,13 +1656,13 @@ class CreatePost extends Component {
                                  {this.state.opportunityOptions.map((value, optionIndex) =>
                                    <View key={value._id} className="left-text bottom-margin-5 full-width">
                                      <TouchableOpacity className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value, 'opportunity')}>
-                                       <View className="full-width">
+                                       <View style={[styles.fullWidth]}>
                                          <View className="fixed-column-40">
-                                           <View className="mini-spacer" />
+                                           <View style={styles.miniSpacer} />
                                            <Image source={{ uri: opportunitiesIconDark}} alt="Compass employer icon icon" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-40">
-                                           <Text className="cta-color">{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
+                                           <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
                                          </View>
                                        </View>
                                      </TouchableOpacity>
@@ -1685,13 +1685,13 @@ class CreatePost extends Component {
                    )}
 
                    {(this.state.showPaths) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Tag a Career Path (Optional)</Text>
-                       <View className="half-spacer" />
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Tag a Career Path (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
 
                        <View>
                          <View className="calc-column-offset-70">
-                           <input type="text" className="text-field" placeholder="Search over 1,000 career paths..." name="searchCareers" value={this.state.searchCareers} onChange={this.formChangeHandler}/>
+                           <input type="text"style={[styles.descriptionText3]} placeholder="Search over 1,000 career paths..." name="searchCareers" value={this.state.searchCareers} onChange={this.formChangeHandler}/>
                          </View>
                          <View className="fixed-column-70 left-padding">
                            <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('career')}>Add</TouchableOpacity>
@@ -1699,23 +1699,23 @@ class CreatePost extends Component {
                          <View className="clear" />
                        </View>
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
 
-                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-                       {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                       {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                        {(this.state.searchIsAnimating) ? (
                          <View className="flex-container flex-center full-space">
                            <View>
-                             <View className="super-spacer" />
+                             <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
                                 animating = {this.state.animating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
-                             <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                             <Text className="center-text cta-color bold-text">Searching...</Text>
+                             <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                             <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                            </View>
                          </View>
@@ -1727,13 +1727,13 @@ class CreatePost extends Component {
                                  {this.state.careerOptions.map((value, optionIndex) =>
                                    <View key={value._id} className="left-text bottom-margin-5 full-width">
                                      <TouchableOpacity className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value, 'career')}>
-                                       <View className="full-width">
+                                       <View style={[styles.fullWidth]}>
                                          <View className="fixed-column-40">
-                                           <View className="mini-spacer" />
+                                           <View style={styles.miniSpacer} />
                                            <Image source={{ uri: careerMatchesIconDark}} alt="Compass employer icon icon" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-40">
-                                           <Text className="cta-color">{value.name}</Text>
+                                           <Text style={[styles.ctaColor]}>{value.name}</Text>
                                          </View>
                                        </View>
                                      </TouchableOpacity>
@@ -1756,13 +1756,13 @@ class CreatePost extends Component {
                    )}
 
                    {(this.state.showTrends) && (
-                     <View className="row-10">
-                       <Text className="description-text-3">Tag a Labor Market Trend (Optional)</Text>
-                       <View className="half-spacer" />
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.descriptionText3]}>Tag a Labor Market Trend (Optional)</Text>
+                       <View style={[styles.halfSpacer]} />
 
                        <View>
                          <View className="calc-column-offset-70">
-                           <input type="text" className="text-field" placeholder="Search labor market trends..." name="searchTrends" value={this.state.searchTrends} onChange={this.formChangeHandler}/>
+                           <input type="text"style={[styles.descriptionText3]} placeholder="Search labor market trends..." name="searchTrends" value={this.state.searchTrends} onChange={this.formChangeHandler}/>
                          </View>
                          <View className="fixed-column-70 left-padding">
                            <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('trend')}>Add</TouchableOpacity>
@@ -1770,23 +1770,23 @@ class CreatePost extends Component {
                          <View className="clear" />
                        </View>
 
-                       <View className="spacer" />
+                       <View style={styles.spacer} />
 
-                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-                       {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                       {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                        {(this.state.searchIsAnimating) ? (
                          <View className="flex-container flex-center full-space">
                            <View>
-                             <View className="super-spacer" />
+                             <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
                                 animating = {this.state.animating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
-                             <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                             <Text className="center-text cta-color bold-text">Searching...</Text>
+                             <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                             <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                            </View>
                          </View>
@@ -1799,9 +1799,9 @@ class CreatePost extends Component {
                                  {this.state.trendOptions.map((value, optionIndex) =>
                                    <View key={value._id} className="left-text bottom-margin-5 full-width">
                                      <TouchableOpacity className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value, 'trend')}>
-                                       <View className="full-width">
+                                       <View style={[styles.fullWidth]}>
                                          <View className="fixed-column-40">
-                                           <View className="mini-spacer" />
+                                           <View style={styles.miniSpacer} />
                                            <Image source={{ uri: trendsIconDark}} alt="GC" className="image-auto-22" />
                                          </View>
                                          <View className="calc-column-offset-100">
@@ -1810,9 +1810,9 @@ class CreatePost extends Component {
                                          {(value.percentChange && Number(value.percentChange)) && (
                                            <View className="fixed-column-60">
                                              {(Number(value.percentChange) > 0) ? (
-                                               <Text className="cta-color">{Number(value.percentChange).toFixed()}%</Text>
+                                               <Text style={[styles.ctaColor]}>{Number(value.percentChange).toFixed()}%</Text>
                                              ) : (
-                                               <Text className="error-color">{Number(value.percentChange).toFixed()}%</Text>
+                                               <Text style={[styles.errorColor]}>{Number(value.percentChange).toFixed()}%</Text>
                                              )}
                                            </View>
                                          )}
@@ -1839,29 +1839,10 @@ class CreatePost extends Component {
                  </View>
                )}
 
+               {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor]}>{this.state.errorMessage}</Text>}
+               {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text>}
 
-               {/*
-               <View className="row-10">
-                 <Text className="description-text-5 description-text-color bold-text">ADD TAGS (Optional)</Text>
-
-                 <View className="top-padding-5">
-                   {this.state.tagOptions.map((value, index) =>
-                     <View key={index} className="float-left right-padding top-padding">
-                       <TouchableOpacity className="background-button" onClick={() => this.itemClicked(value,'tag')}>
-                         <View className={(this.state.tags.includes(value)) ? "tag-container-active" : "tag-container-inactive"}>
-                           <Text className="description-text-2">{value}</Text>
-                         </View>
-                       </TouchableOpacity>
-                     </View>
-                   )}
-                   <View className="clear" />
-                 </View>
-               </View>*/}
-
-               {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="error-message">{this.state.errorMessage}</Text>}
-               {(this.state.successMessage && this.state.successMessage !== '') && <Text className="error-message">{this.state.successMessage}</Text>}
-
-               <View className="row-10">
+               <View style={[styles.row10]}>
                  <TouchableOpacity className="btn btn-primary" disabled={this.state.isSaving} onClick={() => this.postPost()}>Post</TouchableOpacity>
                </View>
 

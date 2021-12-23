@@ -40,6 +40,9 @@ module.exports = StyleSheet.create({
   spacer: {
     height: 10
   },
+  superSpacer: {
+    height: 50
+  },
   flexCenter: {
     alignItems: 'center',
     justifyContent: 'center'
@@ -82,6 +85,10 @@ module.exports = StyleSheet.create({
     height: 20,
     width: 20
   },
+  square25: {
+    height: 25,
+    width: 25
+  },
   square40: {
     height: 40,
     width: 40
@@ -97,6 +104,12 @@ module.exports = StyleSheet.create({
   square80: {
     height: 80,
     width: 80
+  },
+  profileThumbnail40: {
+    height: 40,
+    width: 40,
+    objectFit: 'contain',
+    borderRadius: (43/2)
   },
   profileThumbnail43: {
     height: 43,
@@ -139,6 +152,12 @@ module.exports = StyleSheet.create({
   rightMargin: {
     marginRight: 10
   },
+  leftMargin: {
+    marginLeft: 10
+  },
+  leftMargin58: {
+    marginLeft: 58
+  },
   leftMargin67: {
     marginLeft: 67
   },
@@ -168,6 +187,9 @@ module.exports = StyleSheet.create({
   },
   leftPadding: {
     paddingLeft: 10
+  },
+  leftPadding15: {
+    paddingLeft: 15
   },
   padding7: {
     padding: 7
@@ -266,6 +288,9 @@ module.exports = StyleSheet.create({
   width80: {
     width: 80
   },
+  width100: {
+    width: 100
+  },
   width160: {
     width: 160
   },
@@ -350,8 +375,24 @@ module.exports = StyleSheet.create({
   descriptionTextColor: {
     color: unselectedColor
   },
+  btnPrimary: {
+    height: 40,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingRight: 15,
+    paddingLeft: 15,
+    borderRadius: 8
+  },
   btnSquarish: {
     height: 40,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingRight: 15,
+    paddingLeft: 15,
+    borderRadius: 8
+  },
+  btnSmall: {
+    height: 30,
     paddingTop: 3,
     paddingBottom: 3,
     paddingRight: 15,
@@ -385,5 +426,49 @@ module.exports = StyleSheet.create({
   borderRadius10: {
     borderRadius: 10
   },
+  commentBubble2: {
+    borderRadius: 10,
+    border: '1px solid transparent',
+    padding: 15
+  },
+  commentBackgroundStudent: {
+    backgroundColor: extremelyFaintColor
+  },
+  commentBackgroundMentor: {
+    backgroundColor: 'rgba(254, 216,177,0.5);'
+  },
+  commentBackgroundEmployer: {
+    backgroundColor: 'rgba(254, 216,177,0.5);'
+  },
+  commentBackgroundTeacher: {
+    backgroundColor: 'rgba(254, 216,177,0.5);'
+  },
+  commentBackgroundAdmin: {
+    backgroundColor: 'rgba(135,206,250,0.25);'
+  },
+  verticalSeparator: {
+    width: 1,
+    height: 25,
+    backgroundColor: slightFaintColor
+  },
+  commentTextField: {
+    height: 48,
+    width: null,
+    marginTop: 1,
+    borderRadius: 5
+  },
+  editComment: {
+    height: 38,
+    width: null,
+    marginTop: 1,
+    borderRadius: 5,
+    paddingLeft: 10
+  },
+  washOut: {
+    opacity: 0.25
+  },
+  washOut2: {
+    opacity: 0.4
+  }
 
 });
