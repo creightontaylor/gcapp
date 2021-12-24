@@ -8,22 +8,22 @@ Icon.loadFont()
 // import CircularProgressBar from 'react-circular-progressbar';
 // import Modal from 'react-modal';
 
-const profileIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png' }
-const projectsIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png' }
-const industryIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/indusry-icon-dark.png'}
-const socialIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png'}
-const socialIconGrey = { uri:'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-grey.png' }
-const favoriteIconSelected = { uri:'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorite-icon-selected.png' }
-const defaultProfileBackgroundImage = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/default-profile-background-image.png'}
-const favoritesIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png'}
-const arrowIndicatorIcon = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png'}
-const rightCarrotBlue = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/right-carrot-blue.png'}
+const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
+const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png'
+const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png'
+const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png'
+const socialIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-grey.png'
+const favoriteIconSelected = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorite-icon-selected.png'
+const defaultProfileBackgroundImage = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/default-profile-background-image.png'
+const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png'
+const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png'
+const rightCarrotBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/right-carrot-blue.png'
 
-const upvoteIconBlue = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-blue.png'}
-const upvoteIconGrey = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-grey.png'}
-const checkmarkIcon = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png'}
-const timeIconBlue = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png'}
-const addPeopleIconDark = { uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-people-icon-dark.png'}
+const upvoteIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-blue.png'
+const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-grey.png'
+const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png'
+const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png'
+const addPeopleIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-people-icon-dark.png'
 
 import SubInviteMembers from '../common/InviteMembers';
 import SubEditGroup from '../common/EditGroup';
@@ -86,7 +86,7 @@ class Community extends Component {
         const resLimit = 6
 
         if (activeOrg && !orgName) {
-          Axios.get('/api/org', { params: { orgCode: activeOrg } })
+          Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
           .then((response) => {
             console.log('Org info query attempted', response.data);
 
@@ -105,7 +105,7 @@ class Community extends Component {
           });
         }
 
-        Axios.get('/api/users/profile/details/' + emailId, { params: { emailId } })
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details/' + emailId, { params: { emailId } })
          .then((response) => {
            console.log('query for profile data worked');
 
@@ -129,7 +129,7 @@ class Community extends Component {
 
           const roleNames = ['Student','Career-Seeker']
 
-          Axios.get('/api/suggested-people', { params: { orgCode: activeOrg, emailId, resLimit, roleNames, friendIds } })
+          Axios.get('https://www.guidedcompass.com/api/suggested-people', { params: { orgCode: activeOrg, emailId, resLimit, roleNames, friendIds } })
           .then((response) => {
             console.log('Suggested people query attempted', response.data);
 
@@ -151,7 +151,7 @@ class Community extends Component {
         function pullGroupNotifications(showInvitations) {
           console.log('pullGroupNotifications called', showInvitations)
 
-          Axios.get('/api/groups/notifications', { params: { orgCode: activeOrg, emailId } })
+          Axios.get('https://www.guidedcompass.com/api/groups/notifications', { params: { orgCode: activeOrg, emailId } })
           .then((response) => {
             console.log('Group notifications query attempted', response.data);
 
@@ -256,7 +256,7 @@ class Community extends Component {
 
                 if (unreadGroups && unreadGroups.length > 0) {
                   // change read to true
-                  Axios.put('/api/groups/notifications/update', { emailId, unreadGroups })
+                  Axios.put('https://www.guidedcompass.com/api/groups/notifications/update', { emailId, unreadGroups })
                   .then((response) => {
                     console.log('Group notifications update attempted', response.data);
 
@@ -282,7 +282,7 @@ class Community extends Component {
           })
         }
 
-        Axios.get('/api/friends', { params: { orgCode: activeOrg, emailId } })
+        Axios.get('https://www.guidedcompass.com/api/friends', { params: { orgCode: activeOrg, emailId } })
         .then((response) => {
           console.log('Friends query attempted', response.data);
 
@@ -344,7 +344,7 @@ class Community extends Component {
 
               if (unreadRequests.length > 0) {
 
-                Axios.put('/api/friends/update', { emailId, readRequests: true })
+                Axios.put('https://www.guidedcompass.com/api/friends/update', { emailId, readRequests: true })
                 .then((response) => {
                   console.log('Friends update requests attempted', response.data);
 
@@ -376,7 +376,7 @@ class Community extends Component {
         function pullOtherItems(favoriteIds) {
           console.log('pullOtherItems called')
 
-          Axios.get('/api/projects', { params: { orgCode: activeOrg, resLimit, favoriteIds } })
+          Axios.get('https://www.guidedcompass.com/api/projects', { params: { orgCode: activeOrg, resLimit, favoriteIds } })
           .then((response) => {
             console.log('Projects query attempted', response.data);
 
@@ -397,7 +397,7 @@ class Community extends Component {
               console.log('Project query did not work', error);
           });
 
-          Axios.get('/api/account/partners', { params: { org: activeOrg, resLimit, favoriteIds } })
+          Axios.get('https://www.guidedcompass.com/api/account/partners', { params: { org: activeOrg, resLimit, favoriteIds } })
           .then((response) => {
             console.log('Posted employer query attempted', response.data);
 
@@ -418,7 +418,7 @@ class Community extends Component {
           });
         }
         console.log('show emailId: ', emailId)
-        Axios.get('/api/favorites', { params: { emailId } })
+        Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId } })
         .then((response) => {
           console.log('Favorites query attempted', response.data);
 
@@ -432,7 +432,7 @@ class Community extends Component {
                 const favoriteIds = response.data.favorites
 
                 //query info on those favorites
-                Axios.get('/api/favorites/detail', { params: { favorites: response.data.favorites, orgCode, orgFocus } })
+                Axios.get('https://www.guidedcompass.com/api/favorites/detail', { params: { favorites: response.data.favorites, orgCode, orgFocus } })
                 .then((response2) => {
                   console.log('Favorites detail query attempted', response2.data);
 
@@ -483,7 +483,7 @@ class Community extends Component {
             pullOtherItems(null)
         });
 
-        Axios.get('/api/groups', { params: { orgCode: activeOrg, resLimit: 9 }})
+        Axios.get('https://www.guidedcompass.com/api/groups', { params: { orgCode: activeOrg, resLimit: 9 }})
         .then((response) => {
           console.log('Groups query worked', response.data);
 
@@ -493,7 +493,7 @@ class Community extends Component {
             this.setState({ groups })
 
             // my groups
-            Axios.get('/api/groups', { params: { orgCode: activeOrg, emailId, type: 'myGroups' }})
+            Axios.get('https://www.guidedcompass.com/api/groups', { params: { orgCode: activeOrg, emailId, type: 'myGroups' }})
             .then((response) => {
               console.log('My groups query worked', response.data);
 
@@ -561,7 +561,7 @@ class Community extends Component {
     console.log('favorites', favoritesArray)
     this.setState({ favoriteIds: favoritesArray })
 
-    Axios.post('/api/favorites/save', {
+    Axios.post('https://www.guidedcompass.com/api/favorites/save', {
       favoritesArray, emailId: this.state.emailId
     })
     .then((response) => {
@@ -620,7 +620,7 @@ class Community extends Component {
       recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
       relationship, orgCode, orgName }
 
-    Axios.post('/api/friend/request', friend)
+    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
     .then((response) => {
 
       if (response.data.success) {
@@ -660,7 +660,7 @@ class Community extends Component {
     }
     const accessType = group.accessType
 
-    Axios.post('/api/groups/save', { groupId, member, accessType, joinGroup })
+    Axios.post('https://www.guidedcompass.com/api/groups/save', { groupId, member, accessType, joinGroup })
     .then((response) => {
       console.log('attempting to save addition to groups')
       if (response.data.success) {
@@ -703,7 +703,7 @@ class Community extends Component {
       const senderLastName = this.state.cuLastName
       const senderEmail = this.state.emailId
 
-      Axios.put('/api/friends/update', { decidedOnRequest: true, decision, request: friendRequests[index], senderFirstName, senderLastName, senderEmail })
+      Axios.put('https://www.guidedcompass.com/api/friends/update', { decidedOnRequest: true, decision, request: friendRequests[index], senderFirstName, senderLastName, senderEmail })
       .then((response) => {
         console.log('Friends update requests attempted', response.data);
 
@@ -734,7 +734,7 @@ class Community extends Component {
       const senderLastName = this.state.cuLastName
       const senderEmail = this.state.emailId
 
-      Axios.put('/api/groups/notifications/update', { decidedOnRequest: true, decision, request: groupRequests[index], senderFirstName, senderLastName, senderEmail, _id, type: 'request' })
+      Axios.put('https://www.guidedcompass.com/api/groups/notifications/update', { decidedOnRequest: true, decision, request: groupRequests[index], senderFirstName, senderLastName, senderEmail, _id, type: 'request' })
       .then((response) => {
         console.log('Groups update notifications attempted', response.data);
 
@@ -765,7 +765,7 @@ class Community extends Component {
       const senderLastName = this.state.cuLastName
       const senderEmail = this.state.emailId
 
-      Axios.put('/api/groups/notifications/update', { decidedOnRequest: true, decision, request: groupInvites[index], senderFirstName, senderLastName, senderEmail, _id, type: 'invite' })
+      Axios.put('https://www.guidedcompass.com/api/groups/notifications/update', { decidedOnRequest: true, decision, request: groupInvites[index], senderFirstName, senderLastName, senderEmail, _id, type: 'invite' })
       .then((response) => {
         console.log('Groups update notifications attempted', response.data);
 
@@ -823,10 +823,10 @@ class Community extends Component {
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
                   <View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username, matchScore: item.matchScore })} style={styles.fullScreenWidth}>
-                      <View style={[styles.card,styles.fullScreenWidth,styles.centerHorizontally]}>
-                        <View style={styles.rowDirection}>
-                          <View style={styles.flex15}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username, matchScore: item.matchScore })} style={styles.calcColumn40}>
+                      <View style={[styles.card,styles.standardBorder,styles.calcColumn40,styles.centerHorizontally]}>
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.flex15]}>
                             {(item.matchScore) && (
                               <View style={[styles.square30,styles.contain]}>
                                 {/*
@@ -842,42 +842,39 @@ class Community extends Component {
                               </View>
                             )}
                           </View>
-                          <View style={styles.flex70}>
+                          <View style={[styles.flex70,styles.flexCenter]}>
                             {(item.pictureURL) ? (
-                              <Image source={item.pictureURL} style={[styles.profileThumbnail80,styles.centerItem]} />
+                              <Image source={{ uri: item.pictureURL }} style={[styles.profileThumbnail80,styles.centerItem]} />
                             ) : (
-                              <Image source={profileIconDark} style={[styles.square60,styles.contain,styles.centerItem]} />
+                              <Image source={{uri: profileIconDark}} style={[styles.square60,styles.contain,styles.centerItem]} />
                             )}
                           </View>
-                          <View style={styles.flex15}>
+                          <View style={[styles.flex15,styles.height30]} />
 
-                          </View>
                         </View>
 
-                        <Text style={[styles.fullScreenWidth,styles.centerText,styles.headingText6,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
+                        <Text style={[styles.calcColumn100,styles.centerText,styles.headingText6,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
                         {(item.school) && (
-                          <Text style={[styles.fullScreenWidth,styles.centerText,styles.descriptionText3,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
+                          <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
                         )}
                         {(item.major) && (
-                          <Text style={[styles.fullScreenWidth,styles.centerText,styles.descriptionText3,styles.topPadding5]}>{item.major}</Text>
+                          <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding5]}>{item.major}</Text>
                         )}
 
                         <View style={[styles.topPadding20]}>
-                          <View className="display-inline full-width">
+                          <View style={[styles.calcColumn100]}>
                             {(item.active || item.activeRequest) ? (
                               <View>
                                 {(item.active) ? (
-                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item })} className="background-button full-width">
-                                    <TouchableOpacity className="btn btn-profile description-text-3 full-width left-margin-5">
-                                      Message
-                                    </TouchableOpacity>
+                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item })} style={[styles.calcColumn100,styles.btnSquarish,styles.ctaBackgroundColor, styles.whiteColor,styles.descriptionText3,styles.leftMargin5,styles.flexCenter]}>
+                                      <Text style={styles.whiteColor}>Message</Text>
                                   </TouchableOpacity>
                                 ) : (
-                                  <TouchableOpacity className="btn btn-squarish full-width medium-background clear-border no-pointers" disabled={true}>Pending</TouchableOpacity>
+                                  <View style={[styles.calcColumn100,styles.btnSquarish,styles.descriptionText1,styles.mediumBackground,styles.flexCenter]} disabled={true}><Text style={styles.whiteColor}>Pending</Text></View>
                                 )}
                               </View>
                             ) : (
-                              <TouchableOpacity className="btn btn-squarish full-width" disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item,optionIndex)}>Connect</TouchableOpacity>
+                              <TouchableOpacity style={[styles.calcColumn100,styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item,optionIndex)}><Text style={styles.whiteColor}>Connect</Text></TouchableOpacity>
                             )}
                           </View>
                         </View>
@@ -908,11 +905,11 @@ class Community extends Component {
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
                   <View>
-                    <TouchableOpacity style={styles.fullScreenWidth} onPress={() => this.props.navigation.navigate('ProjectDetails', { _id: item._id })}>
-                      <View className="elevated-box white-background" >
-                        <View className="full-width relative-position tint">
-                          <Image source={(item.imageURL) ? item.imageURL : defaultProfileBackgroundImage} className="image-full-width-150 center-horizontally"  />
-                          <View className="absolute-position absolute-top-5 absolute-left-5">
+                    <TouchableOpacity style={styles.calcColumn40} onPress={() => this.props.navigation.navigate('ProjectDetails', { _id: item._id })}>
+                      <View style={[styles.cardClearPadding,styles.standardBorder]} >
+                        <View style={[styles.calcColumn40, styles.relativePosition]} >
+                          <Image source={(item.imageURL) ? {uri: item.imageURL} : {uri: defaultProfileBackgroundImage}} style={[styles.calcColumn40,styles.height150, styles.centerHorizontally]}  />
+                          <View style={[styles.absolutePosition,styles.absoluteTop5, styles.absoluteLeft5]}>
                             {(item.matchScore) && (
                               <View style={[styles.square40,styles.contain]}>
                                 {/*
@@ -927,43 +924,42 @@ class Community extends Component {
                                 />*/}
                               </View>
                             )}
-                            <Text className="description-text-5 rounded-corners horizontal-padding-4 row-5 white-border white-text bold-text">{item.category}</Text>
+                            <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteText,styles.boldText]}>{item.category}</Text>
                           </View>
                         </View>
 
                         <View style={styles.spacer} />
 
-                        <View style={[styles.horizontalPadding30]}>
+                        <View style={[styles.padding20]}>
                           <Text style={[styles.headingText5]}>{item.name}</Text>
 
-                          <View style={[styles.topPadding20]}>
-                            <View className="fixed-column-35">
-                              <Image style={[styles.profileThumbnail25]} source={(item.userPic) ? item.userPic : profileIconDark} />
+                          <View style={[styles.topPadding20, styles.rowDirection]}>
+                            <View style={styles.width35}>
+                              <Image style={[styles.profileThumbnail25]} source={(item.userPic) ? {uri: item.userPic} : {uri: profileIconDark}} />
                             </View>
-                            <View className="calc-column-offset-35 description-text-2">
+                            <View style={[styles.calcColumn80,styles.descriptionText2]}>
                               <Text style={[styles.headingText6]}>{item.userFirstName} {item.userLastName}</Text>
-                              <label style={[styles.descriptionText2]}>{item.hours} Hours</label>
+                              <Text style={[styles.descriptionText2]}>{item.hours} Hours</Text>
                             </View>
-
                           </View>
 
                           {(item.collaborators && item.collaborators.length > 0) && (
                             <View style={styles.topPadding}>
-                              <label style={[styles.descriptionText5,styles.leftPadding5]}>|</label>
-                              <label style={[styles.descriptionText5,styles.leftPadding5]}>{item.collaborators.length} Collaborators</label>
+                              <Text style={[styles.descriptionText5,styles.leftPadding5]}>|</Text>
+                              <Text style={[styles.descriptionText5,styles.leftPadding5]}>{item.collaborators.length} Collaborators</Text>
                             </View>
                           )}
 
-                          <Text className="description-text-3 full-width left-text top-margin">{(item.startDate) && item.startDate + " - "}{(item.isContinual) ? "Present" : item.endDate}</Text>
+                          <Text style={[styles.descriptionText3,styles.calcColumn80,styles.topMargin]}>{(item.startDate) && item.startDate + " - "}{(item.isContinual) ? "Present" : item.endDate}</Text>
 
                           {(item.skillTags) && (
                             <View>
-                              <View style={styles.topPadding}>
+                              <View style={[styles.topPadding,styles.rowDirection]}>
                                 {item.skillTags.split(',').map((value, optionIndex) =>
                                   <View key={value}>
                                     {(optionIndex < 3) && (
-                                      <View key={value} className="float-left row-5 right-padding">
-                                        <View className="tag-container-7">
+                                      <View key={value} style={[styles.row5,styles.rightPadding]}>
+                                        <View style={styles.tagContainer7}>
                                           <Text style={[styles.descriptionText3]}>{value}</Text>
                                         </View>
                                       </View>
@@ -976,8 +972,8 @@ class Community extends Component {
                           )}
 
                           <View style={[styles.topPadding20]}>
-                            <View className="display-inline full-width">
-                              <TouchableOpacity className={this.state.favoriteIds.includes(item._id) ? "btn btn-profile medium-background clear-border full-width" : "btn btn-profile full-width"} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(e, item, entity)}>{this.state.favoriteIds.includes(item._id) ? "Following" : "Follow"}</TouchableOpacity>
+                            <View>
+                              <TouchableOpacity style={this.state.favoriteIds.includes(item._id) ? [styles.btnSquarish,styles.mediumBackground,styles.calcColumn80,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.calcColumn80,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(e, item, entity)}><Text style={[styles.whiteColor,styles.descriptionText1]}>{this.state.favoriteIds.includes(item._id) ? "Following" : "Follow"}</Text></TouchableOpacity>
                             </View>
                           </View>
 
@@ -1008,22 +1004,22 @@ class Community extends Component {
             <View>
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
-                  <View className="top-padding-20 bottom-padding-30">
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { _id: item._id, selectedEmployer: item, employers: items })}>
-                      <View className="fixed-column-70">
-                        <Image source={(item.employerLogoURI) ? item.employerLogoURI : industryIconDark} className="image-50-auto"/>
+                  <View style={[styles.topPadding20,styles.bottomPadding30]}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { _id: item._id, selectedEmployer: item, employers: items })} style={styles.rowDirection}>
+                      <View style={styles.width70}>
+                        <Image source={(item.employerLogoURI) ? {uri: item.employerLogoURI} : {uri: industryIconDark}} style={[styles.square50,styles.contain]}/>
                       </View>
-                      <View className={"calc-column-offset-130"}>
+                      <View style={styles.calcColumn170}>
                         <Text style={[styles.headingText5]}>{item.employerName}</Text>
-                        <Text className="description-text-2 description-text-color top-padding-5">{item.employerIndustry}</Text>
+                        <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.topPadding5]}>{item.employerIndustry}</Text>
                       </View>
-                      <View className="fixed-column-30 top-margin">
+                      <View style={[styles.width30,styles.topMargin]}>
                         <TouchableOpacity disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.favoriteItem(e, item, entity)}>
-                          <Image source={(this.state.favoriteIds.includes(item._id)) ? favoriteIconSelected : favoritesIconDark} className="image-auto-20 pin-right"/>
+                          <Image source={(this.state.favoriteIds.includes(item._id)) ? {uri: favoriteIconSelected} : {uri: favoritesIconDark}} style={[styles.square20,styles.contain, styles.pinRight]}/>
                         </TouchableOpacity>
                       </View>
-                      <View className="fixed-column-30 top-margin">
-                        <Image source={arrowIndicatorIcon} className="image-auto-20 pin-right"/>
+                      <View style={[styles.width30,styles.topMargin]}>
+                        <Image source={{uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain, styles.pinRight]}/>
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -1050,12 +1046,13 @@ class Community extends Component {
                 <View key={item + optionIndex}>
                   {((!item.members) || (item.members.length === 0) || (!item.members.some(member => member.email === this.state.emailId) || (type === 'existing'))) && (
                     <View>
-                      <View className="full-width medium-background">
-                        <TouchableOpacity onPress={() => this.viewGroup(item)} className="background-button full-width">
-                          <View className="elevated-box white-background" >
-                            <View className="full-width relative-position tint">
-                              <Image source={item.pictureURL} className="image-full-width-150 center-horizontally"  />
-                              <View className="absolute-position absolute-top-5 absolute-left-5">
+                      <View style={[styles.calcColumn40]}>
+                        <TouchableOpacity onPress={() => this.viewGroup(item)} style={styles.calcColumn40}>
+                          <View style={[styles.cardClearPadding,styles.standardBorder]}>
+                            <View style={[styles.calcColumn40,styles.relativePosition]}>
+                              <Image source={(item.pictureURL) ? { uri: item.pictureURL} : {uri: defaultProfileBackgroundImage}} style={[styles.calcColumn40,styles.height150, styles.centerHorizontally]}  />
+
+                              <View style={[styles.absolutePosition,styles.absoluteTop5, styles.absoluteLeft5]}>
                                 {(item.matchScore) && (
                                   <View style={[styles.square40,styles.contain]}>
                                     {/*
@@ -1070,16 +1067,16 @@ class Community extends Component {
                                     />*/}
                                   </View>
                                 )}
-                                <Text className="description-text-5 rounded-corners horizontal-padding-4 row-5 white-border white-text bold-text">{item.category}</Text>
+                                <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteText,styles.boldText]}>{item.category}</Text>
                               </View>
 
-                              <TouchableOpacity className="background-button clear-padding display-block absolute-position absolute-top-5 absolute-right-5 white-background rounded-corners" onPress={(e) => this.voteOnItem(e, item, 'up', optionIndex) }>
-                                <View className="standard-border rounded-corners">
-                                  <View className="float-left padding-7">
-                                    <Image source={(item.upvotes.includes(this.state.emailId)) ? upvoteIconBlue : upvoteIconGrey} style={[styles.square15,styles.contain]}/>
+                              <TouchableOpacity style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteRight5,styles.whiteBackground,styles.roundedCorners]} onPress={(e) => this.voteOnItem(e, item, 'up', optionIndex) }>
+                                <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+                                  <View style={styles.padding7}>
+                                    <Image source={(item.upvotes.includes(this.state.emailId)) ? {uri: upvoteIconBlue} : {uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
                                   </View>
-                                  <View className="vertical-separator-4" />
-                                  <View className="float-left horizontal-padding-10">
+                                  <View style={styles.verticalSeparator30} />
+                                  <View style={styles.horizontalPadding10}>
                                     <View style={[styles.halfSpacer]} />
                                     <Text style={[styles.descriptionText2,styles.boldText]}>{item.upvotes.length}</Text>
                                   </View>
@@ -1090,19 +1087,18 @@ class Community extends Component {
 
                             <View style={styles.spacer} />
 
-                            <View style={[styles.horizontalPadding30]}>
+                            <View style={[styles.padding20]}>
                               <Text style={[styles.headingText5]}>{item.name}</Text>
                               <Text style={[styles.descriptionText5]}>{item.memberCount} Members</Text>
 
                               <View style={styles.topPadding}>
-
                                   {(item.members && item.members.some(member => member.email === this.state.emailId)) ? (
-                                    <View>
-                                      <View className="float-left right-padding">
+                                    <View style={styles.rowDirection}>
+                                      <View styles={styles.rightPadding} >
                                         <View style={styles.miniSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
-                                        <Image source={checkmarkIcon} style={[styles.square12,styles.contain]} />
+                                        <Image source={{uri: checkmarkIcon}} style={[styles.square12,styles.contain]} />
                                       </View>
-                                      <View className="float-left">
+                                      <View>
                                         <Text style={[styles.descriptionText2,styles.boldText]}>Joined</Text>
                                       </View>
 
@@ -1117,12 +1113,12 @@ class Community extends Component {
                                       ) : (
                                         <View>
                                           {((item.requests && item.requests.some(request => request.email === this.state.emailId))) ? (
-                                            <View style={[styles.centerText,styles.fullScreenWidth,styles.rightMargin5]}>
-                                              <View className="float-left right-padding">
+                                            <View style={[styles.centerText,styles.fullScreenWidth,styles.rightMargin5,styles.rowDirection]}>
+                                              <View style={styles.rightPadding}>
                                                 <View style={styles.miniSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
-                                                <Image source={timeIconBlue} style={[styles.square15,styles.contain]} />
+                                                <Image source={{uri: timeIconBlue}} style={[styles.square15,styles.contain]} />
                                               </View>
-                                              <View className="float-left">
+                                              <View>
                                                 <Text style={[styles.descriptionText2,styles.boldText]}>Requested</Text>
                                               </View>
 
@@ -1162,68 +1158,68 @@ class Community extends Component {
       <ScrollView>
         <View style={[styles.topMargin20]}>
               <View style={[styles.fullScreenWidth]}>
-                <View className="card-clear-padding full-width bottom-margin-20">
-                  <View className="full-width height-5 primary-background" />
+                <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
+                  <View style={[styles.fullScreenWidth,styles.height5,styles.ctaBackgroundColor]} />
                   <View style={[styles.padding20]}>
                     <Text style={[styles.headingText5]}>My Community</Text>
                     <View style={styles.spacer} /><View style={[styles.halfSpacer]} />
 
                     <View>
                       <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth]} onPress={() => this.setState({ modalIsOpen: true, showPeopleYouFollow: true })}>
-                          <View className="fixed-column-30">
-                            <Image source={profileIconDark} style={[styles.square20,styles.contain]} />
+                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showPeopleYouFollow: true })}>
+                          <View style={styles.width30}>
+                            <Image source={{uri: profileIconDark}} style={[styles.square20,styles.contain]} />
                           </View>
-                          <View className="calc-column-offset-60">
+                          <View style={styles.calcColumn100}>
                             <Text>Your Connections</Text>
                           </View>
-                          <View className="fixed-column-30 cta-color right-text">
-                            <Text>{this.state.friends.length}</Text>
+                          <View style={[styles.width30,styles.rightText]}>
+                            <Text style={[styles.ctaColor]}>{this.state.friends.length}</Text>
                           </View>
 
                         </TouchableOpacity>
                       </View>
 
                       <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth]} onPress={() => this.setState({ modalIsOpen: true, showProjectsYouFollow: true })}>
-                          <View className="fixed-column-30">
-                            <Image source={projectsIconDark} style={[styles.square20,styles.contain]} />
+                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showProjectsYouFollow: true })}>
+                          <View style={styles.width30}>
+                            <Image source={{uri: projectsIconDark}} style={[styles.square20,styles.contain]} />
                           </View>
-                          <View className="calc-column-offset-60">
+                          <View style={styles.calcColumn100}>
                             <Text>Projects you follow</Text>
                           </View>
-                          <View className="fixed-column-30 cta-color right-text">
-                            <Text>{this.state.projectFollows.length}</Text>
+                          <View style={[styles.width30,styles.rightText]}>
+                            <Text style={[styles.ctaColor]}>{this.state.projectFollows.length}</Text>
                           </View>
 
                         </TouchableOpacity>
                       </View>
 
                       <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth]} onPress={() => this.setState({ modalIsOpen: true, showEmployersYouFollow: true })}>
-                          <View className="fixed-column-30">
-                            <Image source={industryIconDark} style={[styles.square20,styles.contain]} />
+                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showEmployersYouFollow: true })}>
+                          <View style={styles.width30}>
+                            <Image source={{uri: industryIconDark}} style={[styles.square20,styles.contain]} />
                           </View>
-                          <View className="calc-column-offset-60">
+                          <View style={styles.calcColumn100}>
                             <Text>Employers you follow</Text>
                           </View>
-                          <View className="fixed-column-30 cta-color right-text">
-                            <Text>{this.state.employerFollows.length}</Text>
+                          <View style={[styles.width30,styles.rightText]}>
+                            <Text style={[styles.ctaColor]}>{this.state.employerFollows.length}</Text>
                           </View>
 
                         </TouchableOpacity>
                       </View>
 
                       <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth]} onPress={() => this.setState({ modalIsOpen: true, showGroupsYouJoined: true })}>
-                          <View className="fixed-column-30">
-                            <Image source={socialIconDark} style={[styles.square20,styles.contain]} />
+                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showGroupsYouJoined: true })}>
+                          <View style={styles.width30}>
+                            <Image source={{uri: socialIconDark}} style={[styles.square20,styles.contain]} />
                           </View>
-                          <View className="calc-column-offset-60">
+                          <View style={styles.calcColumn100}>
                             <Text>Your groups</Text>
                           </View>
-                          <View className="fixed-column-30 cta-color right-text">
-                            <Text>{this.state.groupsJoined.length}</Text>
+                          <View style={[styles.width30,styles.rightText]}>
+                            <Text style={[styles.ctaColor]}>{this.state.groupsJoined.length}</Text>
                           </View>
 
                         </TouchableOpacity>
@@ -1234,28 +1230,28 @@ class Community extends Component {
 
                 {(this.state.showAccountabiliyGroupCTA && this.state.noAccountabilityGroups) && (
                   <View>
-                    <View className="card-clear-padding full-width bottom-margin-20">
-                      <View className="full-width height-5 error-background-color" />
+                    <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
+                      <View style={[styles.fullScreenWidth,styles.height5,styles.errorBackgroundColor]} />
                       <View style={[styles.padding30]}>
-                        <View style={[styles.fullScreenWidth]}>
-                          <View className="relative-column-10">
-                            <View className="width-30 height-40" />
+                        <View style={[styles.calcColumn60,styles.rowDirection]}>
+                          <View style={styles.flex10}>
+                            <View style={[styles.width30,styles.height40]} />
                           </View>
-                          <View className="relative-column-80">
-                            <Image source={socialIconGrey} className="image-auto-100 center-horizontally" />
+                          <View style={styles.flex80}>
+                            <Image source={{uri: socialIconGrey}} style={[styles.square100,styles.contain,styles.centerHorizontally]} />
                           </View>
-                          <View className="relative-column-10">
+                          <View style={styles.flex10}>
                             <Text style={[styles.errorColor,styles.descriptionText3]}>NEW</Text>
                           </View>
-
                         </View>
-                        <Text style={[styles.headingText5,styles.fullScreenWidth,styles.centerText,styles.topPadding20]}>Create an Accountability Group</Text>
 
-                        <Text style={[styles.fullScreenWidth,styles.centerText,styles.topPadding20]}>Accountability groups are 4-6 peers that meet regularly to help one another reach their goals.</Text>
+                        <Text style={[styles.headingText5,styles.calcColumn60,styles.centerText,styles.topPadding20]}>Create an Accountability Group</Text>
+
+                        <Text style={[styles.calcColumn60,styles.centerText,styles.topPadding20]}>Accountability groups are 4-6 peers that meet regularly to help one another reach their goals.</Text>
 
                         <View style={[styles.row10,styles.centerText]}>
-                          <TouchableOpacity className="btn btn-squarish error-background-color full-width top-margin-20 error-border" onPress={() => this.setState({ modalIsOpen: true, showEditGroup: true, groupToEdit: null })}>
-                            <Text>Create new group</Text>
+                          <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.topMargin20,styles.errorBorder, styles.calcColumn60, styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: true, showEditGroup: true, groupToEdit: null })}>
+                            <Text style={[styles.whiteColor]}>Create new group</Text>
                           </TouchableOpacity>
                         </View>
 
@@ -1266,7 +1262,6 @@ class Community extends Component {
               </View>
 
               <View style={[styles.fullScreenWidth]}>
-
                 {(this.state.showInvitations) && (
                   <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
                     <Text style={[styles.headingText5]}>Requests & Invitations</Text>
@@ -1278,25 +1273,25 @@ class Community extends Component {
                         {this.state.friendRequests.map((value2, optionIndex) =>
                           <View key={value2 + optionIndex}>
                             <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} className="background-button standard-color calc-column-offset-150 top-padding-5">
-                                <View className="fixed-column-40">
-                                  <Image source={(value2.pictureURL) ? value2.pictureURL : profileIconDark} className="image-auto-30" />
+                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                                <View style={styles.width40}>
+                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-40 left-padding">
+                                <View style={[styles.calcColumn190,styles.leftPadding]}>
                                   <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
                                   <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to connect with you</Text>
                                 </View>
 
                               </TouchableOpacity>
 
-                              <View className="fixed-column-150">
-                                <View className="float-left">
+                              <View style={styles.width150,styles.rowDirection}>
+                                <View>
                                   <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'connection')}>
                                     <Text style={styles.descriptionTextColor}>Ignore</Text>
                                   </TouchableOpacity>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <TouchableOpacity className="btn btn-small" onPress={() => this.decideOnRequest(optionIndex, true,'connection')}>Accept</TouchableOpacity>
+                                <View style={styles.leftPadding}>
+                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.whiteColor,styles.descriptionText1]} onPress={() => this.decideOnRequest(optionIndex, true,'connection')}>Accept</TouchableOpacity>
                                 </View>
 
                               </View>
@@ -1312,25 +1307,25 @@ class Community extends Component {
                         {this.state.groupRequests.map((value2, optionIndex) =>
                           <View key={value2 + optionIndex}>
                             <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} className="background-button standard-color calc-column-offset-150 top-padding-5">
-                                <View className="fixed-column-40">
-                                  <Image source={(value2.pictureURL) ? value2.pictureURL : profileIconDark} style={[styles.square30,styles.contain]} />
+                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                                <View style={styles.width40}>
+                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-40 left-padding">
+                                <View style={[styles.calcColumn190,styles.leftPadding]}>
                                   <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
                                   <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to join {value2.groupName}</Text>
                                 </View>
 
                               </TouchableOpacity>
 
-                              <View className="fixed-column-150">
-                                <View className="float-left">
+                              <View style={styles.width150}>
+                                <View>
                                   <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupRequest')}>
                                     <Text style={styles.descriptionTextColor}>Ignore</Text>
                                   </TouchableOpacity>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <TouchableOpacity className="btn btn-small" onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}>Accept</TouchableOpacity>
+                                <View style={styles.leftPadding}>
+                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}>Accept</TouchableOpacity>
                                 </View>
 
                               </View>
@@ -1347,25 +1342,25 @@ class Community extends Component {
                         {this.state.groupInvites.map((value2, optionIndex) =>
                           <View key={value2 + optionIndex}>
                             <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} className="background-button standard-color calc-column-offset-150 top-padding-5">
-                                <View className="fixed-column-40">
-                                  <Image source={(value2.pictureURL) ? value2.pictureURL : profileIconDark} style={[styles.square30,styles.contain]} />
+                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                                <View style={styles.width40}>
+                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-40 left-padding">
+                                <View style={[styles.calcColumn190,styles.leftPadding]}>
                                   <Text style={[styles.headingText5]}>{value2.groupName}</Text>
                                   <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} {value2.lastName} invited you to join their accountability group: {value2.groupName}</Text>
                                 </View>
 
                               </TouchableOpacity>
 
-                              <View className="fixed-column-150">
-                                <View className="float-left">
+                              <View style={styles.width150}>
+                                <View>
                                   <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupInvite')}>
                                     <Text style={styles.descriptionTextColor}>Ignore</Text>
                                   </TouchableOpacity>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <TouchableOpacity className="btn btn-small" onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}>Accept</TouchableOpacity>
+                                <View style={styles.leftPadding}>
+                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}>Accept</TouchableOpacity>
                                 </View>
 
                               </View>
@@ -1377,22 +1372,22 @@ class Community extends Component {
                       </View>
                     )}
 
-                    {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="error-color row-5">{this.state.errorMessage}</Text>}
-                    {(this.state.successMessage && this.state.successMessage !== '') && <Text className="cta-color row-5">{this.state.successMessage}</Text>}
+                    {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor, styles.row5]}>{this.state.errorMessage}</Text>}
+                    {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor, styles.row5]}>{this.state.successMessage}</Text>}
 
                   </View>
                 )}
 
                 <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                  <View>
-                    <View className="calc-column-offset-40">
+                  <View style={styles.rowDirection}>
+                    <View style={[styles.calcColumn80]}>
                       <Text style={[styles.headingText5]}>Recommended People to Follow</Text>
                       <View style={styles.spacer} />
                     </View>
                     {(!this.state.remoteAuth) && (
-                      <View className="fixed-column-40">
+                      <View style={styles.width40}>
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showInviteMembersWidget: true })}>
-                          <Image source={addPeopleIconDark} style={[styles.square25,styles.pinRight]}/>
+                          <Image source={{uri: addPeopleIconDark}} style={[styles.square25,styles.pinRight]}/>
                         </TouchableOpacity>
                       </View>
                     )}
@@ -1404,13 +1399,13 @@ class Community extends Component {
                   {this.renderItems('people','recommended')}
 
                   <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.fullScreenWidth,styles.rightText,styles.headingText5]}>
-                      <View className="float-right top-margin-5">
-                        <View style={styles.miniSpacer} />
-                        <Image source={rightCarrotBlue} style={[styles.square15,styles.contain]} />
-                      </View>
-                      <View className="float-right right-padding">
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                      <View style={[styles.rightPadding]}>
                         <Text>Browse All Profiles</Text>
+                      </View>
+                      <View style={[styles.topMargin5]}>
+                        <View style={styles.miniSpacer} />
+                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
                       </View>
 
                     </TouchableOpacity>
@@ -1426,13 +1421,13 @@ class Community extends Component {
                   {this.renderItems('projects','recommended')}
 
                   <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.fullScreenWidth,styles.rightText,styles.headingText5]}>
-                      <View className="float-right top-margin-5">
-                        <View style={styles.miniSpacer} />
-                        <Image source={rightCarrotBlue} style={[styles.square15,styles.contain]} />
-                      </View>
-                      <View className="float-right right-padding">
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                      <View style={[styles.rightPadding]}>
                         <Text>Browse All Projects</Text>
+                      </View>
+                      <View style={[styles.topMargin5]}>
+                        <View style={styles.miniSpacer} />
+                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
                       </View>
 
                     </TouchableOpacity>
@@ -1446,15 +1441,14 @@ class Community extends Component {
                   {this.renderItems('groups','recommended')}
 
                   <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.fullScreenWidth,styles.rightText,styles.headingText5]}>
-                      <View className="float-right top-margin-5">
-                        <View style={styles.miniSpacer} />
-                        <Image source={rightCarrotBlue} style={[styles.square15,styles.contain]} />
-                      </View>
-                      <View className="float-right right-padding">
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                      <View style={[styles.rightPadding]}>
                         <Text>Browse All Groups</Text>
                       </View>
-
+                      <View style={[styles.topMargin5]}>
+                        <View style={styles.miniSpacer} />
+                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
+                      </View>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1468,22 +1462,20 @@ class Community extends Component {
                   <View style={styles.spacer} />
 
                   <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.fullScreenWidth,styles.rightText,styles.headingText5]}>
-                      <View className="float-right top-margin-5">
-                        <View style={styles.miniSpacer} />
-                        <Image source={rightCarrotBlue} style={[styles.square15,styles.contain]} />
-                      </View>
-                      <View className="float-right right-padding">
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                      <View style={[styles.rightPadding]}>
                         <Text>Browse All Employers</Text>
+                      </View>
+                      <View style={[styles.topMargin5]}>
+                        <View style={styles.miniSpacer} />
+                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
                       </View>
 
                     </TouchableOpacity>
                   </View>
                 </View>
               </View>
-
             </View>
-
 
             {/*
             <Modal

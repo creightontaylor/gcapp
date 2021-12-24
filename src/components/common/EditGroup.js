@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch } from 'react-native';
-
+const styles = require('../css/style');
 import Axios from 'axios';
 
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png'
@@ -303,7 +303,7 @@ class EditGroup extends Component {
 
           return (
             <div key={"items"}>
-              <div className="spacer" />
+              <div style={styles.spacer} />
               {items.map((value, optionIndex) =>
                 <div key={"items|" + optionIndex} className="float-left">
 
@@ -832,7 +832,7 @@ class EditGroup extends Component {
                   <div>
                     <p className="heading-text-2 bottom-padding">Create an Acccountability Group</p>
                     <p className="top-padding">An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</p>
-                    <div className="spacer" /><div className="spacer" />
+                    <div style={styles.spacer} /><div style={styles.spacer} />
                   </div>
                 ) : (
                   <div>
@@ -848,7 +848,7 @@ class EditGroup extends Component {
                       </div>
                     )}
 
-                    <div className="spacer" /><div className="spacer" />
+                    <div style={styles.spacer} /><div style={styles.spacer} />
                   </div>
                 )}
 
@@ -865,7 +865,7 @@ class EditGroup extends Component {
                         color = '#87CEFA'
                         size = "large"
                         style={styles.square80, styles.centerHorizontally}/>
-                     <div className="spacer" /><div className="spacer" /><div className="spacer" />
+                     <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
                      <p className="center-text cta-color bold-text">Searching...</p>
 
                    </div>
@@ -874,10 +874,10 @@ class EditGroup extends Component {
                  <div>
                    <div className="row-15">
                      <div className="upload-image">
-                       <div className="spacer" />
+                       <div style={styles.spacer} />
                        <div>
                          <p className="heading-text-6">Group Cover Image</p>
-                         <div className="spacer" />
+                         <div style={styles.spacer} />
                        </div>
 
                        <div className="relative-position">
@@ -899,7 +899,7 @@ class EditGroup extends Component {
                        </div>
 
                        <div className="clear" />
-                       <div className="spacer" />
+                       <div style={styles.spacer} />
                        <p className="description-text-color">Dimensions: 600 x 360</p>
 
                        { (this.state.serverPostSuccess) ? (
@@ -913,7 +913,7 @@ class EditGroup extends Component {
                    <div className="row-15">
                      <div className="container-left">
                        <p className="heading-text-6">Group Name<label className="error-color bold-text">*</label></p>
-                       <div className="spacer" />
+                       <div style={styles.spacer} />
                        <input type="text" className="text-field" placeholder="Add group name..." name="groupName" value={this.state.groupName} onChange={this.formChangeHandler}></input>
                      </div>
                      {(!window.location.pathname.includes('/app/')) && (
@@ -921,13 +921,13 @@ class EditGroup extends Component {
                           {(window.location.pathname.includes('/employers/')) ? (
                             <div className="container-right">
                               <p className="heading-text-6">Group Pathway<label className="error-color bold-text">*</label></p>
-                              <div className="spacer" />
+                              <div style={styles.spacer} />
                               <input type="text" className="text-field" placeholder="Add career pathway or department..." name="groupPathway" value={this.state.groupPathway} onChange={this.formChangeHandler}></input>
                             </div>
                           ) : (
                             <div className="container-right">
                               <p className="heading-text-6">Group Category<label className="error-color bold-text">*</label></p>
-                              <div className="spacer" />
+                              <div style={styles.spacer} />
                               <select name="groupCategory" value={this.state.groupCategory} onChange={this.formChangeHandler} className="dropdown">
                                 {this.state.categoryOptions.map(value =>
                                   <option key={value} value={value}>{value}</option>
@@ -943,7 +943,7 @@ class EditGroup extends Component {
 
                    <div className="row-15">
                      <p className="heading-text-6">Group Description<label className="error-color bold-text">*</label></p>
-                     <div className="spacer" />
+                     <div style={styles.spacer} />
                      <textarea type="text" className="text-field" placeholder="Add description..." name="groupDescription" value={this.state.groupDescription} onChange={this.formChangeHandler}></textarea>
                    </div>
 
@@ -951,7 +951,7 @@ class EditGroup extends Component {
                      <div>
                        <div className="row-15">
                          <p className="heading-text-6">Tag the Relevant Goals of this Group</p>
-                         <div className="spacer" />
+                         <div style={styles.spacer} />
                          {this.state.goalTypeOptions.map((value, optionIndex) =>
                            <div key={"items|" + optionIndex} className="float-left">
                              <button className="background-button" onClick={() => this.itemClicked(value,'goal')}>
@@ -974,7 +974,7 @@ class EditGroup extends Component {
 
                        <div className="row-15">
                          <p className="heading-text-6">Meetings</p>
-                         <div className="spacer" />
+                         <div style={styles.spacer} />
 
                          <div className="row-5">
                            <div className="container-left">
@@ -1032,7 +1032,7 @@ class EditGroup extends Component {
                          <div className="container-left">
                            <p className="heading-text-6">Visible?</p>
 
-                           <div className="spacer" /><div className="half-spacer"/>
+                           <div style={styles.spacer} /><div className="half-spacer"/>
                            <Switch
                              onValueChange={(change) => this.setState({ isActive: change, formHasChanged: true })}
                              value={this.state.isActive}
@@ -1049,7 +1049,7 @@ class EditGroup extends Component {
                             <div className="row-15">
                               <div className="container-left">
                                 <p className="heading-text-6">Access Type<label className="error-color bold-text">*</label></p>
-                                <div className="spacer" />
+                                <div style={styles.spacer} />
                                 <select name="groupAccessType" value={this.state.groupAccessType} onChange={this.formChangeHandler} className="dropdown">
                                   {this.state.accessTypeOptions.map(value =>
                                     <option key={value} value={value}>{value}</option>
@@ -1061,7 +1061,7 @@ class EditGroup extends Component {
 
                             <div className="row-15">
                               <p className="heading-text-6">Roles Who Can Access<label className="error-color bold-text">*</label></p>
-                              <div className="spacer" />
+                              <div style={styles.spacer} />
                               {this.state.roleNameOptions.map((value, optionIndex) =>
                                 <div key={optionIndex}>
                                   <div className="float-left bottom-padding-5 right-padding">
@@ -1122,7 +1122,7 @@ class EditGroup extends Component {
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
-                             <div className="spacer" /><div className="spacer" /><div className="spacer" />
+                             <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
                              <p className="center-text cta-color bold-text">Searching...</p>
 
                            </div>
@@ -1169,7 +1169,7 @@ class EditGroup extends Component {
                    {(!window.location.pathname.includes('/app/') || (window.location.pathname.includes('/app/') && this.state.selectedGroup)) && (
                      <div className="row-15">
                        <p className="heading-text-6">Manage Members</p>
-                       <div className="spacer" />
+                       <div style={styles.spacer} />
 
                        <div>
                          {(!window.location.pathname.includes('/app/')) && (
@@ -1197,7 +1197,7 @@ class EditGroup extends Component {
                                       color = '#87CEFA'
                                       size = "large"
                                       style={styles.square80, styles.centerHorizontally}/>
-                                   <div className="spacer" /><div className="spacer" /><div className="spacer" />
+                                   <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
                                    <p className="center-text cta-color bold-text">Searching...</p>
 
                                  </div>
@@ -1257,7 +1257,7 @@ class EditGroup extends Component {
                    {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="error-color row-5">{this.state.errorMessage}</p>}
 
                    <div className="row-15">
-                     <div className="spacer" />
+                     <div style={styles.spacer} />
 
                      {(this.state.confirmDelete) ? (
                        <div>

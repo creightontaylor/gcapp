@@ -31,9 +31,6 @@ class Home extends Component {
   retrieveData = async() => {
     try {
 
-      console.log('are is this causing the error?')
-      //testing badges
-
       console.log('this is causing the error')
       const email = await AsyncStorage.getItem('email')
       //const email = 'harry@potter.com'
@@ -68,7 +65,7 @@ class Home extends Component {
       }
      } catch (error) {
        // Error retrieving data
-       console.log('there was an error')
+       console.log('there was an error', error)
      }
   }
 

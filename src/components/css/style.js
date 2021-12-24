@@ -58,6 +58,12 @@ module.exports = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
+  alignEnd: {
+    alignItems: 'flex-end'
+  },
+  justifyEnd: {
+    justifyContent: 'flex-end'
+  },
   contain: {
     resizeMode: 'contain'
   },
@@ -103,6 +109,10 @@ module.exports = StyleSheet.create({
   square25: {
     height: 25,
     width: 25
+  },
+  square28: {
+    height: 28,
+    width: 28
   },
   square30: {
     height: 30,
@@ -171,26 +181,50 @@ module.exports = StyleSheet.create({
     height: 30,
     backgroundColor: slightFaintColor
   },
+  mediumShadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
   card: {
     backgroundColor: 'white',
     padding: 30,
-    boxShadow: '3px 3px 10px rgba(0,0,0,0.2)'
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
   cardClearPadding: {
     backgroundColor: 'white',
-    boxShadow: '3px 3px 10px rgba(0,0,0,0.2)'
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
   topMargin: {
     marginTop: 10
   },
+  topMargin15: {
+    marginTop: 15
+  },
   topMargin20: {
     marginTop: 20
+  },
+  topMarginNegative2: {
+    marginTop: -2
   },
   topMarginNegative36: {
     marginTop: -36
   },
   rightMargin: {
     marginRight: 10
+  },
+  leftMargin: {
+    marginLeft: 10
   },
   leftMargin: {
     marginLeft: 10
@@ -214,6 +248,9 @@ module.exports = StyleSheet.create({
   topPadding5: {
     paddingTop: 5
   },
+  topPadding15: {
+    paddingTop: 15
+  },
   topPadding20: {
     paddingTop: 20
   },
@@ -222,6 +259,12 @@ module.exports = StyleSheet.create({
   },
   bottomPadding: {
     paddingBottom: 10
+  },
+  bottomPadding30: {
+    paddingBottom: 30
+  },
+  rightPadding5: {
+    paddingRight: 5
   },
   rightPadding8: {
     paddingRight: 8
@@ -238,6 +281,9 @@ module.exports = StyleSheet.create({
   leftPadding15: {
     paddingLeft: 15
   },
+  leftPadding70: {
+    paddingLeft: 70
+  },
   padding7: {
     padding: 7
   },
@@ -249,6 +295,10 @@ module.exports = StyleSheet.create({
   },
   padding30: {
     padding: 30
+  },
+  horizontalPadding3: {
+    paddingLeft: 3,
+    paddingRight: 3
   },
   horizontalPadding5: {
     paddingLeft: 5,
@@ -324,6 +374,9 @@ module.exports = StyleSheet.create({
   width30: {
     width: 30
   },
+  width35: {
+    width: 35
+  },
   width40: {
     width: 40
   },
@@ -351,11 +404,35 @@ module.exports = StyleSheet.create({
   width140: {
     width: 140
   },
+  width150: {
+    width: 150
+  },
   width160: {
     width: 160
   },
   width190: {
     width: 190
+  },
+  width210: {
+    width: 210
+  },
+  height5: {
+    height: 5
+  },
+  height30: {
+    height: 30
+  },
+  height40: {
+    height: 40
+  },
+  height150: {
+    height: 150
+  },
+  calcColumn40: {
+    width: Dimensions.get('window').width - 40
+  },
+  calcColumn60: {
+    width: Dimensions.get('window').width - 60
   },
   calcColumn100: {
     width: Dimensions.get('window').width - 100
@@ -375,6 +452,9 @@ module.exports = StyleSheet.create({
   calcColumn120: {
     width: Dimensions.get('window').width - 120
   },
+  calcColumn125: {
+    width: Dimensions.get('window').width - 125
+  },
   calcColumn130: {
     width: Dimensions.get('window').width - 130
   },
@@ -387,6 +467,9 @@ module.exports = StyleSheet.create({
   calcColumn160: {
     width: Dimensions.get('window').width - 160
   },
+  calcColumn170: {
+    width: Dimensions.get('window').width - 170
+  },
   calcColumn190: {
     width: Dimensions.get('window').width - 190
   },
@@ -396,11 +479,20 @@ module.exports = StyleSheet.create({
   calcColumn208: {
     width: Dimensions.get('window').width - 200
   },
+  calcColumn60Of50: {
+    width: (Dimensions.get('window').width / 2) - 60
+  },
   flexGrow: {
     flexGrow: 1
   },
   rowDirection: {
     flexDirection: 'row'
+  },
+  flex1: {
+    flex: 1
+  },
+  flex10: {
+    flex: 10
   },
   flex15: {
     flex: 15
@@ -414,20 +506,38 @@ module.exports = StyleSheet.create({
   flex70: {
     flex: 70
   },
+  flex80: {
+    flex: 80
+  },
   standardBorder: {
-    border: '1px solid ' + faintColor
+    borderWidth: 1,
+    borderColor: faintColor,
   },
   ctaBorder: {
-    border: '1px solid ' + primaryColor
+    borderWidth: 1,
+    borderColor: primaryColor,
   },
   errorBorder: {
-    border: '1px solid ' + errorColor
+    borderWidth: 1,
+    borderColor: errorColor,
+  },
+  lightBorder: {
+    borderWidth: 1,
+    borderColor: faintColor,
+  },
+  whiteBorder: {
+    borderWidth: 1,
+    borderColor: 'white',
   },
   transparentBorder: {
-    border: '1px solid transparent'
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
   roundedCorners: {
     borderRadius: 10
+  },
+  slightlyRoundedCorners: {
+    borderRadius: 5
   },
   fullWidth: {
     width: null
@@ -440,19 +550,22 @@ module.exports = StyleSheet.create({
     height: 12,
     width: Dimensions.get('window').width,
     borderRadius: 50,
-    border: '1px solid ' + primaryColor
+    borderWidth: 1,
+    borderColor: primaryColor,
   },
   progressBarThin: {
     position: 'relative',
     height: '6',
     width: Dimensions.get('window').width,
     borderRadius: 50,
-    border: '1px solid ' + primaryColor
+    borderWidth: 1,
+    borderColor: primaryColor,
   },
   progressBarFat: {
     position: 'relative',
     width: Dimensions.get('window').width,
-    border: '1px solid ' + primaryColor
+    borderWidth: 1,
+    borderColor: primaryColor,
   },
   filler: {
     background: primaryColor,
@@ -549,13 +662,27 @@ module.exports = StyleSheet.create({
   lightBackground: {
     backgroundColor: extremelyFaintColor
   },
+  whiteBackground: {
+    backgroundColor: 'white'
+  },
   tagContainerThin: {
     paddingTop: 4,
     paddingBottom: 4,
     paddingTop: 10,
     paddingBottom: 10,
     borderRadius: 2,
-    border: '1px solid transparent',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    backgroundColor: 'rgba(230,230,230,1)'
+  },
+  tagContainer7: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'transparent',
     backgroundColor: 'rgba(230,230,230,1)'
   },
   borderRadius10: {
@@ -563,7 +690,8 @@ module.exports = StyleSheet.create({
   },
   commentBubble2: {
     borderRadius: 10,
-    border: '1px solid transparent',
+    borderWidth: 1,
+    borderColor: 'transparent',
     padding: 15
   },
   commentBackgroundStudent: {
@@ -586,6 +714,11 @@ module.exports = StyleSheet.create({
     height: 25,
     backgroundColor: slightFaintColor
   },
+  verticalSeparator30: {
+    width: 1,
+    height: 30,
+    backgroundColor: slightFaintColor
+  },
   commentTextField: {
     height: 48,
     width: null,
@@ -604,6 +737,71 @@ module.exports = StyleSheet.create({
   },
   washOut2: {
     opacity: 0.4
+  },
+  elevatedBox: {
+    borderWidth: 1,
+    borderColor: slightFaintColor,
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    margin: '10px 2%',
+    paddingBottom: 30,
+  },
+  relativePosition: {
+    position: 'relative'
+  },
+  absolutePosition: {
+      position: 'absolute'
+  },
+  absoluteTop5: {
+    top: '5%'
+  },
+  absoluteLeft5: {
+    left: '5%'
+  },
+  absoluteRight5: {
+    right: '5%'
+  },
+  nowrap: {
+    whiteSpace: 'nowrap'
+  },
+  carousel: {
+    overflow: 'scroll',
+    whiteSpace: 'nowrap'
+  },
+  selectedCarouselItem2: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    backgroundColor: 'rgba(135,206,250,0.15)',
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    borderBottomColor: primaryColor,
+    borderBottomWidth: 1
+  },
+  menuButton2: {
+    paddingTop: 15,
+    paddingBottom: 15,
+    margin: 0,
+    backgroundColor: 'rgba(0,0,0,0)',
+    border: 0,
+    borderRadius: 3,
+    transition: 'background-color 0.2s, border 0.2s, color 0.2s'
+  },
+  filterFieldSearch: {
+    borderWidth: 1,
+    borderColor: faintColor,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 5,
+    paddingRight: 5,
+    width: 250,
+    marginTop: 15,
+    marginRight: 10
   }
 
 });
