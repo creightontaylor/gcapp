@@ -2524,11 +2524,11 @@ class Opportunities extends Component {
 
             rows.push(
               <View key={i}>
-                <View className="spacer" />
+                <View style={styles.spacer} />
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })}>
                   <View className="fixed-column-70">
                     {(filteredFeaturedOpportunities[index].matchScore) ? (
-                      <View className="padding-10">
+                      <View style={styles.padding10}>
                         <CircularProgressBar
                           percentage={filteredFeaturedOpportunities[index].matchScore}
                           text={`${filteredFeaturedOpportunities[index].matchScore}%`}
@@ -2540,7 +2540,7 @@ class Opportunities extends Component {
                         />
                       </View>
                     ) : (
-                      <Image source={imgSrc} className="image-50-fit top-margin-5 center-item"/>
+                      <Image source={imgSrc} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                     )}
                     {(filteredFeaturedOpportunities[index].createdAt) && (
                       <View className="top-padding horizontal-padding-7">
@@ -2559,7 +2559,7 @@ class Opportunities extends Component {
                 </TouchableOpacity>
                 <View className="float-left left-padding">
                   <View className="float-right">
-                    <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
+                    <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })}>
                       <Image source={arrowIndicatorIcon} className="image-auto-22"/>
                     </TouchableOpacity>
@@ -2585,11 +2585,11 @@ class Opportunities extends Component {
                     </View>
                   )}
                 </View>
-                <View className="clear"/>
-                <View className="spacer" /><View className="spacer" />
+
+                <View style={styles.spacer} /><View style={styles.spacer} />
                 <View style={[styles.horizontalLine]} />
-                <View className="clear"/>
-                <View className="spacer" />
+
+                <View style={styles.spacer} />
 
               </View>
             )
@@ -2600,10 +2600,10 @@ class Opportunities extends Component {
 
           rows.push(
             <View key={i}>
-              <View className="spacer" />
-              <Link to={{ pathname, state: { selectedOpportunity: this.state.filteredFeaturedOpportunities[index], source: 'Student' } }} className="background-link">
+              <View style={styles.spacer} />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
                 <View className="fixed-column-70">
-                  <Image source={(filteredFeaturedOpportunities[index].imageURL) ? filteredFeaturedOpportunities[index].imageURL : assignmentsIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                  <Image source={(filteredFeaturedOpportunities[index].imageURL) ? filteredFeaturedOpportunities[index].imageURL : assignmentsIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                   {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
                     <View className="top-padding horizontal-padding-7">
                       <Text className="description-text-4 description-text-color bold-text full-width center-text">{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
@@ -2615,13 +2615,13 @@ class Opportunities extends Component {
                   <Text className="description-text-1 standard-color">{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
                   <Text className="description-text-2 standard-color">{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
                 </View>
-              </Link>
+              </TouchableOpacity>
               <View className="float-left left-padding">
                 <View className="float-right">
-                  <View className="spacer"/><View className="half-spacer"/>
-                  <Link to={{ pathname: '/' + subpath + '/opportunities/' + filteredFeaturedOpportunities[index]._id, state: { selectedOpportunity: filteredFeaturedOpportunities[i - 1] } }} className="background-link">
+                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index]})}>
                     <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                  </Link>
+                  </TouchableOpacity>
                 </View>
                 <View className="float-right right-padding-15 fixed-column-110 right-text">
                   <TouchableOpacity className="background-button clear-margin clear-padding display-block float-right" onPress={() => this.voteOnItem(filteredFeaturedOpportunities[index], 'up', index, true) }>
@@ -2631,10 +2631,10 @@ class Opportunities extends Component {
                       </View>
                       <View className="vertical-separator-4" />
                       <View className="float-left horizontal-padding-10">
-                        <View className="half-spacer" />
+                        <View style={styles.halfSpacer} />
                         <Text className="description-text-2 half-bold-text">{filteredFeaturedOpportunities[index].upvotes.length}</Text>
                       </View>
-                      <View className="clear" />
+
                     </View>
                   </TouchableOpacity>
 
@@ -2648,14 +2648,14 @@ class Opportunities extends Component {
                           <View className="float-left row-5 right-padding-10 center-text">
                             <Text className="description-text-3 half-bold-text white-text">Followed</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       ) : (
                         <View className="standard-border rounded-corners">
                           <View className="float-left row-5 horizontal-padding-10 center-text">
                             <Text className="description-text-3 half-bold-text">Follow</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       )}
                     </TouchableOpacity>
@@ -2676,11 +2676,11 @@ class Opportunities extends Component {
                 </View>
 
               </View>
-              <View className="clear"/>
-              <View className="spacer" /><View className="spacer" />
+
+              <View style={styles.spacer} /><View style={styles.spacer} />
               <View style={[styles.horizontalLine]} />
-              <View className="clear"/>
-              <View className="spacer" />
+
+              <View style={styles.spacer} />
             </View>
           )
         } else if (filteredFeaturedOpportunities[index].postType === 'Problem' || filteredFeaturedOpportunities[index].postType === 'Challenge') {
@@ -2696,11 +2696,11 @@ class Opportunities extends Component {
 
           rows.push(
             <View key={i}>
-              <View className="spacer" />
-              <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredFeaturedOpportunities[index]._id, state: { selectedOpportunity: this.state.filteredFeaturedOpportunities[index], source: 'Student' } }} className="background-link">
+              <View style={styles.spacer} />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
                 <View className="fixed-column-70">
                   {(filteredFeaturedOpportunities[index].matchScore) ? (
-                    <View className="padding-10">
+                    <View style={styles.padding10}>
                       <CircularProgressBar
                         percentage={filteredFeaturedOpportunities[index].matchScore}
                         text={`${filteredFeaturedOpportunities[index].matchScore}%`}
@@ -2712,7 +2712,7 @@ class Opportunities extends Component {
                       />
                     </View>
                   ) : (
-                    <Image source={imgSrc} className="image-50-fit top-margin-5 center-item"/>
+                    <Image source={imgSrc} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                   )}
                   {(filteredFeaturedOpportunities[index].createdAt) && (
                     <View className="top-padding horizontal-padding-7">
@@ -2725,14 +2725,14 @@ class Opportunities extends Component {
                   <Text className="description-text-1 standard-color">{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
                   <Text className="description-text-2 standard-color">{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
                 </View>
-              </Link>
+              </TouchableOpacity>
 
               <View className="float-left left-padding">
                 <View className="float-right">
-                  <View className="spacer"/><View className="half-spacer"/>
-                  <Link to={{ pathname: '/' + subpath + '/opportunities/' + filteredFeaturedOpportunities[index]._id, state: { selectedOpportunity: filteredFeaturedOpportunities[i - 1] } }} className="background-link">
+                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[i - 1]})}>
                     <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                  </Link>
+                  </TouchableOpacity>
                 </View>
                 <View className="float-right right-padding-15 fixed-column-110 right-text">
                   {(filteredFeaturedOpportunities[i - 1].postType === 'Challenge') ? (
@@ -2751,10 +2751,10 @@ class Opportunities extends Component {
                         </View>
                         <View className="vertical-separator-4" />
                         <View className="float-left horizontal-padding-10">
-                          <View className="half-spacer" />
+                          <View style={styles.halfSpacer} />
                           <Text className="description-text-2 half-bold-text">{filteredFeaturedOpportunities[index].upvotes.length}</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
                     </TouchableOpacity>
                   )}
@@ -2769,14 +2769,14 @@ class Opportunities extends Component {
                           <View className="float-left row-5 right-padding-10 center-text">
                             <Text className="description-text-3 half-bold-text white-text">Followed</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       ) : (
                         <View className="standard-border rounded-corners">
                           <View className="float-left row-5 horizontal-padding-10 center-text">
                             <Text className="description-text-3 half-bold-text">Follow</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       )}
                     </TouchableOpacity>
@@ -2796,21 +2796,21 @@ class Opportunities extends Component {
                   )}
                 </View>
               </View>
-              <View className="clear"/>
-              <View className="spacer" /><View className="spacer" />
+
+              <View style={styles.spacer} /><View style={styles.spacer} />
               <View style={[styles.horizontalLine]} />
-              <View className="clear"/>
-              <View className="spacer" />
+
+              <View style={styles.spacer} />
             </View>
           )
         } else {
           //is event
           rows.push(
             <View key={i}>
-              <View className="spacer" />
-              <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredFeaturedOpportunities[index]._id, state: { selectedOpportunity: this.state.filteredFeaturedOpportunities[index], source: 'Student' } }} className="background-link">
+              <View style={styles.spacer} />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
                 <View className="fixed-column-70">
-                  <Image source={(this.state.filteredFeaturedOpportunities[index].imageURL) ? this.state.filteredFeaturedOpportunities[index].imageURL : eventIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                  <Image source={(this.state.filteredFeaturedOpportunities[index].imageURL) ? this.state.filteredFeaturedOpportunities[index].imageURL : eventIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                   {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
                     <View className="top-padding horizontal-padding-7">
                       <Text className="description-text-4 description-text-color bold-text full-width center-text">{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
@@ -2822,13 +2822,13 @@ class Opportunities extends Component {
                   <Text className="description-text-1 standard-color">{filteredFeaturedOpportunities[i - 1].orgName} | {filteredFeaturedOpportunities[i - 1].postType}</Text>
                   <Text className="description-text-2 standard-color">{convertDateToString(filteredFeaturedOpportunities[i - 1].startDate,"datetime")} - {convertDateToString(filteredFeaturedOpportunities[i - 1].endDate,"datetime")}</Text>
                 </View>
-              </Link>
+              </TouchableOpacity>
               <View className="float-left left-padding">
                 <View className="float-right">
-                  <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
-                  <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredFeaturedOpportunities[index]._id, state: { selectedOpportunity: this.state.filteredFeaturedOpportunities[i - 1] } }} className="background-link">
+                  <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
                     <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                  </Link>
+                  </TouchableOpacity>
                 </View>
                 {(this.state.path && this.state.path.includes('/app')) && (
                   <View className="float-right right-padding-15">
@@ -2851,12 +2851,12 @@ class Opportunities extends Component {
                   </View>
                 )}
               </View>
-              <View className="clear"/>
-              <View className="spacer" /><View className="spacer" />
+
+              <View style={styles.spacer} /><View style={styles.spacer} />
 
               <View style={[styles.horizontalLine]} />
-              <View className="clear"/>
-              <View className="spacer" />
+
+              <View style={styles.spacer} />
             </View>
           )
         }
@@ -2876,23 +2876,23 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname, state: { selectedOpportunity: this.state.filteredAssignments[index], source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})}>
               <View className="fixed-column-70">
-                <Image source={(this.state.filteredAssignments[index].imageURL) ? this.state.filteredAssignments[index].imageURL : assignmentsIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                <Image source={(this.state.filteredAssignments[index].imageURL) ? this.state.filteredAssignments[index].imageURL : assignmentsIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
               </View>
               <View className="calc-column-offset-150">
                 <Text className="heading-text-5">{filteredAssignments[i - 1].name}</Text>
                 <Text className="description-text-1 standard-color">{filteredAssignments[i - 1].firstName} {filteredAssignments[i - 1].contributorTitle} @ {filteredAssignments[i - 1].employerName} | {filteredAssignments[i - 1].industry} Industry</Text>
                 <Text className="description-text-2 standard-color">{filteredAssignments[i - 1].industry} Industry | {filteredAssignments[i - 1].difficultyLevel} Difficulty | {filteredAssignments[i - 1].upvotes - filteredAssignments[i - 1].downvotes} Popularity Score</Text>
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredAssignments[index]._id, state: { selectedOpportunity: this.state.filteredAssignments[i - 1] } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               <View className="float-right right-padding-15">
                 <TouchableOpacity className="btn background-button top-margin-20" onPress={() => this.favoriteItem(this.state.filteredAssignments[i - 1]) }>
@@ -2900,13 +2900,13 @@ class Opportunities extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <View className="clear"/>
 
-            <View className="spacer" /><View className="spacer" />
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
 
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -2919,23 +2919,23 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredProblems[index]._id, state: { selectedOpportunity: this.state.filteredProblems[index], source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})}>
               <View className="fixed-column-70">
-                <Image source={(this.state.filteredProblems[index].imageURL) ? this.state.filteredProblems[index].imageURL : problemIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                <Image source={(this.state.filteredProblems[index].imageURL) ? this.state.filteredProblems[index].imageURL : problemIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
               </View>
               <View className="calc-column-offset-150">
                 <Text className="heading-text-5">{filteredProblems[i - 1].name}</Text>
                 <Text className="description-text-1 standard-color">{filteredProblems[i - 1].firstName} {filteredProblems[i - 1].contributorTitle} @ {filteredProblems[i - 1].employerName} | {filteredProblems[i - 1].industry} Industry</Text>
                 <Text className="description-text-2 standard-color">{filteredProblems[i - 1].industry} Industry | {filteredProblems[i - 1].difficultyLevel} Difficulty | {filteredProblems[i - 1].upvotes - filteredProblems[i - 1].downvotes} Popularity Score</Text>
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredProblems[index]._id, state: { selectedOpportunity: this.state.filteredProblems[i - 1] } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               <View className="float-right right-padding-15">
                 <TouchableOpacity className="btn background-button top-margin-20" onPress={() => this.favoriteItem(this.state.filteredProblems[i - 1]) }>
@@ -2943,11 +2943,11 @@ class Opportunities extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <View className="clear"/>
-            <View className="spacer" /><View className="spacer" />
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -2960,23 +2960,23 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredChallenges[index]._id, state: { selectedOpportunity: this.state.filteredChallenges[index], source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})}>
               <View className="fixed-column-70">
-                <Image source={(this.state.filteredChallenges[index].imageURL) ? this.state.filteredChallenges[index].imageURL : challengeIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                <Image source={(this.state.filteredChallenges[index].imageURL) ? this.state.filteredChallenges[index].imageURL : challengeIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
               </View>
               <View className="calc-column-offset-150">
                 <Text className="heading-text-5">{filteredChallenges[i - 1].name}</Text>
                 <Text className="description-text-1 standard-color">{filteredChallenges[i - 1].firstName} {filteredChallenges[i - 1].contributorTitle} @ {filteredChallenges[i - 1].employerName} | {filteredChallenges[i - 1].industry} Industry</Text>
                 <Text className="description-text-2 standard-color">{filteredChallenges[i - 1].industry} Industry | {filteredChallenges[i - 1].difficultyLevel} Difficulty | {filteredChallenges[i - 1].upvotes - filteredChallenges[i - 1].downvotes} Popularity Score</Text>
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredChallenges[index]._id, state: { selectedOpportunity: this.state.filteredChallenges[i - 1] } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               <View className="float-right right-padding-15">
                 <TouchableOpacity className="btn background-button top-margin-20" onPress={() => this.favoriteItem(this.state.filteredChallenges[i - 1]) }>
@@ -2984,11 +2984,11 @@ class Opportunities extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <View className="clear"/>
-            <View className="spacer" /><View className="spacer" />
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3030,11 +3030,11 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname: fullPath, state: passedState }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredProjectWork[index]})}>
               <View className="fixed-column-70">
                 {(filteredProjectWork[index].matchScore) ? (
-                  <View className="padding-10">
+                  <View style={styles.padding10}>
                     <CircularProgressBar
                       percentage={filteredProjectWork[index].matchScore}
                       text={`${filteredProjectWork[index].matchScore}%`}
@@ -3046,7 +3046,7 @@ class Opportunities extends Component {
                     />
                   </View>
                 ) : (
-                  <Image source={projectImg} className="image-50-fit top-margin-5 center-item"/>
+                  <Image source={projectImg} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                 )}
 
                 {(filteredProjectWork[index].createdAt) && (
@@ -3066,7 +3066,7 @@ class Opportunities extends Component {
                   </View>
                 )}
               </View>
-            </Link>
+            </TouchableOpacity>
 
             <View className="float-left left-padding">
               <View className="float-right right-padding-15 fixed-column-110 right-text right-text">
@@ -3087,10 +3087,10 @@ class Opportunities extends Component {
                         </View>
                         <View className="vertical-separator-4" />
                         <View className="float-left horizontal-padding-10">
-                          <View className="half-spacer" />
+                          <View style={styles.halfSpacer} />
                           <Text className="description-text-2 half-bold-text">{filteredProjectWork[index].upvotes.length}</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
                     </TouchableOpacity>
                   </View>
@@ -3106,14 +3106,14 @@ class Opportunities extends Component {
                         <View className="float-left row-5 right-padding-10 center-text">
                           <Text className="description-text-3 half-bold-text white-text">Followed</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
                     ) : (
                       <View className="standard-border rounded-corners">
                         <View className="float-left row-5 horizontal-padding-10 center-text">
                           <Text className="description-text-3 half-bold-text">Follow</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
                     )}
                   </TouchableOpacity>
@@ -3135,23 +3135,23 @@ class Opportunities extends Component {
 
 
             </View>
-            <View className="clear"/>
+
             {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[i - 1] && this.state.sortCriteriaArray[i - 1].name) && (
               <View className="left-padding-70">
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
                 <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
               </View>
             )}
             {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
               <View className="left-padding-70">
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
                 <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
               </View>
             )}
-            <View className="spacer" /><View className="spacer" />
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3165,8 +3165,8 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname: '/' + subpath + '/' + tempVarForPostings + '/' + this.state.filteredInternships[index]._id, state: { selectedOpportunity: this.state.filteredInternships[index], selectedPosting: this.state.filteredInternships[index], postings: this.state.filteredInternships, source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})}>
               <View className="fixed-column-70">
                 <Image source={(this.state.filteredInternships[index].imageURL) ? this.state.filteredInternships[index].imageURL : internIconBlue} className="image-50-fit center-item"/>
               </View>
@@ -3175,13 +3175,13 @@ class Opportunities extends Component {
               <Text className="description-text-1 standard-color">{filteredInternships[i - 1].employerName}</Text>
               <Text className="description-text-2 standard-color">{filteredInternships[i - 1].industry}</Text>
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/' + tempVarForPostings + '/' + this.state.filteredInternships[index]._id, state: { selectedOpportunity: this.state.filteredInternships[index], selectedPosting: this.state.filteredInternships[index], postings: this.state.filteredInternships, source: 'Student' } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               {(this.state.path && this.state.path.includes('/app')) && (
                 <View className="float-right right-padding-15">
@@ -3191,11 +3191,11 @@ class Opportunities extends Component {
                 </View>
               )}
             </View>
-            <View className="clear"/>
-            <View className="spacer" /><View className="spacer" />
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3244,11 +3244,11 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={i}>
-            <View className="spacer" />
-            <Link to={{ pathname, state: { selectedOpportunity: this.state.filteredWork[index], selectedPosting: this.state.filteredWork[index], postings: filteredWork, source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredWork[index]})}>
               <View className="fixed-column-70">
                 {(this.state.filteredWork[index].matchScore) ? (
-                  <View className="padding-10">
+                  <View style={styles.padding10}>
                     <CircularProgressBar
                       percentage={this.state.filteredWork[index].matchScore}
                       text={`${this.state.filteredWork[index].matchScore}%`}
@@ -3282,13 +3282,13 @@ class Opportunities extends Component {
                 )}
 
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/' + tempVarForPostings + '/' + filteredWork[index]._id, state: { selectedOpportunity: this.state.filteredWork[index], selectedPosting: filteredWork[index], postings: filteredWork, source: 'Student' } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredWork[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               {(this.state.path && this.state.path.includes('/app')) && (
                 <View className="float-right right-padding-15">
@@ -3303,13 +3303,13 @@ class Opportunities extends Component {
                 </View>
               )}
             </View>
-            <View className="clear"/>
+
 
             {(this.state.filteredWork[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
               <View className="left-padding-70">
                 {(this.state.sortCriteriaArray.length > 0) && (
                   <View>
-                    <View className="half-spacer" />
+                    <View style={styles.halfSpacer} />
                     <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
                   </View>
                 )}
@@ -3317,14 +3317,14 @@ class Opportunities extends Component {
             )}
             {(this.state.filteredWork[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
               <View className="left-padding-70">
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
                 <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
               </View>
             )}
-            <View className="spacer" /><View className="spacer" />
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3350,11 +3350,11 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={"upcoming|" +i}>
-            <View className="spacer" />
-            <Link to={{ pathname, state: { selectedOpportunity: this.state.filteredUpcomingEvents[index], source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.upcomingEvents[index]})}>
               <View className="fixed-column-70">
                 {(this.state.filteredUpcomingEvents[index].matchScore) ? (
-                  <View className="padding-10">
+                  <View style={styles.padding10}>
                     <CircularProgressBar
                       percentage={this.state.filteredUpcomingEvents[index].matchScore}
                       text={`${this.state.filteredUpcomingEvents[index].matchScore}%`}
@@ -3366,7 +3366,7 @@ class Opportunities extends Component {
                     />
                   </View>
                 ) : (
-                  <Image source={(this.state.filteredUpcomingEvents[index].imageURL) ? this.state.filteredUpcomingEvents[index].imageURL : eventIconBlue} className="image-50-fit top-margin-5 center-item"/>
+                  <Image source={(this.state.filteredUpcomingEvents[index].imageURL) ? this.state.filteredUpcomingEvents[index].imageURL : eventIconBlue} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
                 )}
                 {(this.state.filteredUpcomingEvents[index].createdAt) && (
                   <View className="top-padding horizontal-padding-7">
@@ -3385,13 +3385,13 @@ class Opportunities extends Component {
                 </View>
               )}
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredUpcomingEvents[index]._id, state: { selectedOpportunity: this.state.filteredUpcomingEvents[index] } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredUpcomingEvents[index]})}>
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               {(this.state.path && this.state.path.includes('/app')) && (
                 <View className="float-right right-padding-15">
@@ -3407,12 +3407,12 @@ class Opportunities extends Component {
                 </View>
               )}
             </View>
-            <View className="clear"/>
+
             {(this.state.filteredUpcomingEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
               <View className="left-padding-70">
                 {(this.state.sortCriteriaArray.length > 0) && (
                   <View>
-                    <View className="half-spacer" />
+                    <View style={styles.halfSpacer} />
                     <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
                   </View>
                 )}
@@ -3420,14 +3420,14 @@ class Opportunities extends Component {
             )}
             {(this.state.filteredUpcomingEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
               <View className="left-padding-70">
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
                 <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
               </View>
             )}
-            <View className="spacer" /><View className="spacer" />
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3452,11 +3452,11 @@ class Opportunities extends Component {
 
         rows.push(
           <View key={"past|" +i}>
-            <View className="spacer" />
-            <Link to={{ pathname, state: { selectedOpportunity: this.state.filteredPastEvents[index], source: 'Student' } }} className="background-link">
+            <View style={styles.spacer} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})}>
               <View className="fixed-column-70">
                 {(this.state.filteredPastEvents[index].matchScore) ? (
-                  <View className="padding-10">
+                  <View style={styles.padding10}>
                     <CircularProgressBar
                       percentage={this.state.filteredPastEvents[index].matchScore}
                       text={`${this.state.filteredPastEvents[index].matchScore}%`}
@@ -3486,13 +3486,13 @@ class Opportunities extends Component {
                 </View>
               )}
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="float-left left-padding">
               <View className="float-right">
-                <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
-                <Link to={{ pathname: '/' + subpath + '/opportunities/' + this.state.filteredPastEvents[index]._id, state: { selectedOpportunity: this.state.filteredPastEvents[index] } }} className="background-link">
+                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} >
                   <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                </Link>
+                </TouchableOpacity>
               </View>
               {(this.state.path && this.state.path.includes('/app')) && (
                 <View className="float-right right-padding-15">
@@ -3507,12 +3507,12 @@ class Opportunities extends Component {
                 </View>
               )}
             </View>
-            <View className="clear"/>
+
             {(this.state.filteredPastEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
               <View className="left-padding-70">
                 {(this.state.sortCriteriaArray.length > 0) && (
                   <View>
-                    <View className="half-spacer" />
+                    <View style={styles.halfSpacer} />
                     <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
                   </View>
                 )}
@@ -3520,14 +3520,14 @@ class Opportunities extends Component {
             )}
             {(this.state.filteredPastEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
               <View className="left-padding-70">
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
                 <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
               </View>
             )}
-            <View className="spacer" /><View className="spacer" />
+            <View style={styles.spacer} /><View style={styles.spacer} />
             <View style={[styles.horizontalLine]} />
-            <View className="clear"/>
-            <View className="spacer" />
+
+            <View style={styles.spacer} />
           </View>
         )
       }
@@ -3653,11 +3653,11 @@ class Opportunities extends Component {
 
           rows.push(
             <View key={i}>
-              <View className="spacer" />
-              <Link to={{ pathname, state: { selectedOpportunity: posting, selectedPosting: posting, postings: filteredPostings, source: 'Student' } }} className="background-link">
+              <View style={styles.spacer} />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
                 <View className="fixed-column-70">
                   {(posting.matchScore) ? (
-                    <View className="padding-10">
+                    <View style={styles.padding10}>
                       <CircularProgressBar
                         percentage={posting.matchScore}
                         text={`${posting.matchScore}%`}
@@ -3682,17 +3682,19 @@ class Opportunities extends Component {
                   <Text className="heading-text-5">{title}</Text>
                   <Text className="description-text-1">{subtitle1}</Text>
                   <Text className="description-text-2 standard-color">{subtitle2}</Text>
-                  {(posting.payRange && (posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time')) && (
-                    <Text className="description-text-3 cta-color bold-text top-padding-5">{posting.payRange}</Text>
+                  {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
+                    <View>
+                      <Text className="description-text-3 cta-color bold-text top-padding-5">{posting.payRange}</Text>
+                    </View>
                   )}
                 </View>
-              </Link>
+              </TouchableOpacity>
               <View className="float-left left-padding">
                 <View className="float-right">
-                  <View className="spacer"/><View className="half-spacer"/><View className="half-spacer"/>
-                  <Link to={{ pathname: pathname, state: { selectedOpportunity: posting, selectedPosting: posting, postings: filteredPostings, source: 'Student' } }} className="background-link">
+                  <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
                     <Image source={arrowIndicatorIcon} className="image-auto-22"/>
-                  </Link>
+                  </TouchableOpacity>
                 </View>
                 {(this.state.path && this.state.path.includes('/app')) && (
                   <View className="float-right right-padding-15">
@@ -3716,13 +3718,13 @@ class Opportunities extends Component {
                   </View>
                 )}
               </View>
-              <View className="clear"/>
+
 
               {(posting.sortCriteria || this.state.sortCriteriaArray) && (
                 <View className="left-padding-70">
                   {(this.state.sortCriteriaArray.length > 0) && (
                     <View>
-                      <View className="half-spacer" />
+                      <View style={styles.halfSpacer} />
                       <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
                     </View>
                   )}
@@ -3730,14 +3732,14 @@ class Opportunities extends Component {
               )}
               {(posting.filterCriteria || this.state.filterCriteriaArray) && (
                 <View className="left-padding-70">
-                  <View className="half-spacer" />
+                  <View style={styles.halfSpacer} />
                   <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
                 </View>
               )}
-              <View className="spacer" /><View className="spacer" />
+              <View style={styles.spacer} /><View style={styles.spacer} />
               <View style={[styles.horizontalLine]} />
-              <View className="clear"/>
-              <View className="spacer" />
+
+              <View style={styles.spacer} />
             </View>
           )
         }
@@ -3777,7 +3779,7 @@ class Opportunities extends Component {
                 <View className="float-left row-10 right-padding-20">
                   <View className="float-left light-border">
                     <View className="float-left right-padding-5 left-padding nowrap top-margin-negative-2">
-                      <View className="spacer" />
+                      <View style={styles.spacer} />
                       <Text className="standard-color">{filters[i - 1].name}</Text>
                     </View>
                     <View className="float-left">
@@ -3826,7 +3828,7 @@ class Opportunities extends Component {
                 <View className="float-left row-10 right-padding-20">
                   <View className="float-left light-border">
                     <View className="float-left right-padding-5 left-padding nowrap top-margin-negative-2">
-                      <View className="spacer" />
+                      <View style={styles.spacer} />
                       <Text className="standard-color">{sorters[i - 1].name}</Text>
                     </View>
                     <View className="float-left">
@@ -4172,7 +4174,7 @@ class Opportunities extends Component {
     }
 
     return (
-        <View>
+        <ScrollView>
             <View>
               {(this.props.pageSource !== 'Goal') && (
                 <View>
@@ -4196,9 +4198,9 @@ class Opportunities extends Component {
                             </View>
                           </TouchableOpacity>
 
-                          <View className="clear" />
 
-                          <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
+
+                          <View style={styles.halfSpacer} /><View className="mini-spacer" /><View className="mini-spacer" />
                         </View>
                       )}
 
@@ -4237,7 +4239,7 @@ class Opportunities extends Component {
                         </View>
                       )}
 
-                      <View className="clear" />
+
 
                       <View>
                         <View className="carousel-3" onScroll={this.handleScroll}>
@@ -4260,7 +4262,7 @@ class Opportunities extends Component {
                                         <TouchableOpacity key={value} className="menu-button-noti-bubble" onPress={() => this.subNavClicked(value)}>
                                           <View className="flex-container row-direction">
                                             <Text className="left-margin-18">{value}</Text>
-                                            <View className="noti-bubble-small unselected-background description-text-6 left-margin-3">{this.state.filteredPostings.length}</View>
+                                            <View className="noti-bubble-small unselected-background left-margin-3"><Text style={styles.descriptionText6}>{this.state.filteredPostings.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
@@ -4276,7 +4278,7 @@ class Opportunities extends Component {
                                         <TouchableOpacity key={value} className="menu-button-noti-bubble" onPress={() => this.subNavClicked(value)}>
                                           <View className="flex-container row-direction">
                                             <Text className="left-margin-18">{value}</Text>
-                                            <View className="noti-bubble-small unselected-background description-text-6 left-margin-3">{this.state.filteredFeaturedOpportunities.length}</View>
+                                            <View className="noti-bubble-small unselected-background left-margin-3"><Text style={styles.descriptionText6}>{this.state.filteredFeaturedOpportunities.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
@@ -4292,7 +4294,7 @@ class Opportunities extends Component {
                                         <TouchableOpacity key={value} className="menu-button-noti-bubble" onPress={() => this.subNavClicked(value)}>
                                           <View className="flex-container row-direction">
                                             <Text className="left-margin-18">{value}</Text>
-                                            <View className="noti-bubble-small unselected-background description-text-6 left-margin-3">{this.state.filteredWork.length}</View>
+                                            <View className="noti-bubble-small unselected-background left-margin-3"><Text style={styles.descriptionText6}>{this.state.filteredWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
@@ -4308,7 +4310,7 @@ class Opportunities extends Component {
                                         <TouchableOpacity key={value} className="menu-button-noti-bubble" onPress={() => this.subNavClicked(value)}>
                                           <View className="flex-container row-direction">
                                             <Text className="left-margin-18">{value}</Text>
-                                            <View className="noti-bubble-small unselected-background description-text-6 left-margin-3">{this.state.filteredProjectWork.length}</View>
+                                            <View className="noti-bubble-small unselected-background left-margin-3"><Text style={styles.descriptionText6}>{this.state.filteredProjectWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
@@ -4324,7 +4326,7 @@ class Opportunities extends Component {
                                         <TouchableOpacity key={value} className="menu-button-noti-bubble" onPress={() => this.subNavClicked(value)}>
                                           <View className="flex-container row-direction">
                                             <Text className="left-margin-18">{value}</Text>
-                                            <View className="noti-bubble-small unselected-background description-text-6 left-margin-3">{this.state.filteredEvents.length}</View>
+                                            <View className="noti-bubble-small unselected-background left-margin-3"><Text style={styles.descriptionText6}>{this.state.filteredEvents.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
@@ -4336,9 +4338,9 @@ class Opportunities extends Component {
                                   )}
                                   {(value === 'View External Jobs') && (
                                     <View className="left-padding-50">
-                                      <Link to="/app/jobs" className="clear-decoration background-button">
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Jobs')} className="clear-decoration background-button">
                                         <Text className="error-color description-text-2 bold-text auto-pointers">{value}</Text>
-                                      </Link>
+                                      </TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -4356,26 +4358,26 @@ class Opportunities extends Component {
                       <View>
                         {(this.state.subNavSelected !== "Featured") && (
                           <View>
-                            <View className="clear" />
+
 
                             <View>
-                              <View className="spacer" /><View className="spacer" />
+                              <View style={styles.spacer} /><View style={styles.spacer} />
                               <View style={[styles.horizontalLine]} />
-                              <View className="spacer" /><View className="spacer" />
+                              <View style={styles.spacer} /><View style={styles.spacer} />
                             </View>
 
                             <Text>Filter</Text>
-                            <View className="half-spacer" />
+                            <View style={styles.halfSpacer} />
                             {(this.renderManipulators('filter'))}
 
-                            <View className="clear" />
-                            <View className="spacer" />
+
+                            <View style={styles.spacer} />
                             <View style={[styles.horizontalLine]} />
-                            <View className="spacer" /><View className="spacer" />
+                            <View style={styles.spacer} /><View style={styles.spacer} />
                             <Text>Sort</Text>
-                            <View className="half-spacer" />
+                            <View style={styles.halfSpacer} />
                             {(this.renderManipulators('sort'))}
-                            <View className="clear" />
+
                           </View>
                         )}
 
@@ -4387,15 +4389,15 @@ class Opportunities extends Component {
 
               <View>
                 {(this.state.animating) ? (
-                  <View className="full-space">
+                  <View style={styles.fullSpace}>
                     <View>
                       <ActivityIndicator
                          animating = {this.state.animating}
                          color = '#87CEFA'
                          size = "large"
                          style={[styles.square80, styles.centerHorizontally]}/>
-                      <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                      <Text className="center-text cta-color bold-text">Calculating results...</Text>
+                      <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                      <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Calculating results...</Text>
 
                     </View>
                   </View>
@@ -4404,9 +4406,9 @@ class Opportunities extends Component {
 
                     {(this.state.matchingView && this.state.errorMessage && this.state.errorMessage !== '') ? (
                       <View>
-                        <View className="full-space">
+                        <View style={styles.fullSpace}>
                           <View>
-                            <Text className="error-message">{this.state.errorMessage}</Text>
+                            <Text style={styles.errorColor}>{this.state.errorMessage}</Text>
                           </View>
                         </View>
                       </View>
@@ -4448,49 +4450,6 @@ class Opportunities extends Component {
                 )}
               </View>
 
-              {(this.state.pageSource === 'landingPage') && (
-                <View className="row">
-                  {(this.state.animating) ? (
-                    <View className="flex-container flex-center full-space white-background">
-                      <View>
-                        <ActivityIndicator
-                           animating = {this.state.animating}
-                           color = '#87CEFA'
-                           size = "large"
-                           style={[styles.square80, styles.centerHorizontally]}/>
-                        <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                        <Text className="center-text cta-color bold-text">Calculating results...</Text>
-
-                      </View>
-                    </View>
-                  ) : (
-                    <View className="box-container-1 white-background">
-                      {(this.props.passedViewIndex === 1) && (
-                        <View>
-                          {this.renderOpportunities('events')}
-                        </View>
-                      )}
-                      {(this.props.passedViewIndex === 5) && (
-                        <View>
-                          {this.renderOpportunities('projectWork')}
-                        </View>
-                      )}
-                      {(this.props.passedViewIndex === 7) && (
-                        <View>
-                          {this.renderOpportunities('work')}
-                        </View>
-                      )}
-                      {(this.props.passedViewIndex === 8) && (
-                        <View>
-                          {this.renderOpportunities('all')}
-                        </View>
-                      )}
-                    </View>
-                  )}
-                </View>
-              )}
-
-
             </View>
 
             {/*
@@ -4507,7 +4466,7 @@ class Opportunities extends Component {
             {(this.state.showMatchingCriteria) && (
               <View key="showMatchingCriteria" className="full-width padding-20">
                 <Text className="heading-text-2">Adjust Matching Criteria</Text>
-                <View className="spacer" />
+                <View style={styles.spacer} />
 
                 <View className="row-10">
                   <View className="flex-container">
@@ -4523,7 +4482,7 @@ class Opportunities extends Component {
                     </TouchableOpacity>
 
                   </View>
-                  <View className="spacer" />
+                  <View style={styles.spacer} />
                 </View>
 
                 {(this.state.customAdjustment) ? (
@@ -4535,7 +4494,7 @@ class Opportunities extends Component {
                           <View key={"c" + index}>
                             <View className="calc-column-offset-100-static">
                               <Text className="half-bold-text">{index + 1}. {value.name}</Text>
-                              <View className="half-spacer" />
+                              <View style={styles.halfSpacer} />
                               <Text className="description-text-3">{value.description}</Text>
                             </View>
                             <View className="fixed-column-100 right-text">
@@ -4548,19 +4507,19 @@ class Opportunities extends Component {
                               </View>
                             </View>
 
-                            <View className="clear" />
-                            <View className="spacer" /><View className="half-spacer" />
+
+                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
                           </View>
                         )}
 
                         <View>
                           <View style={[styles.horizontalLine]} />
-                          <View className="spacer" />
+                          <View style={styles.spacer} />
                           <View className="float-left full-width right-text">
                             <Text className="heading-text-2 cta-color bold-text">{this.state.totalPercent}%</Text>
                           </View>
-                          <View className="clear" />
+
                           {(this.state.totalPercent !== 100) && (
                             <View className="full-width">
                               <Text className="error-message right-text">Please adjust percentages to equal 100%</Text>
@@ -4579,7 +4538,7 @@ class Opportunities extends Component {
                           <View key={"u" + index} className={(value.name === 'Purpose') && "wash-out-2"}>
                             <View className="calc-column-offset-50">
                               <Text className="half-bold-text">{index + 1}. {value.name}</Text>
-                              <View className="half-spacer" />
+                              <View style={styles.halfSpacer} />
                               <Text className="description-text-3">{value.description}</Text>
                             </View>
                             <View className="fixed-column-50 horizontally-center center-text top-padding-5">
@@ -4596,8 +4555,8 @@ class Opportunities extends Component {
 
                             </View>
 
-                            <View className="clear" />
-                            <View className="spacer" /><View className="half-spacer" />
+
+                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
                           </View>
                         )}
@@ -4619,7 +4578,7 @@ class Opportunities extends Component {
             </View>
            </Modal>*/}
 
-        </View>
+        </ScrollView>
 
     )
   }

@@ -365,6 +365,9 @@ module.exports = StyleSheet.create({
   descriptionText5: {
     fontSize: (0.5 * baseFontSize)
   },
+  descriptionText6: {
+    fontSize: (0.4 * baseFontSize)
+  },
   boldText: {
     fontWeight: 'bold'
   },
