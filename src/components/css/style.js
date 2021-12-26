@@ -495,6 +495,9 @@ module.exports = StyleSheet.create({
   calcColumn170: {
     width: Dimensions.get('window').width - 170
   },
+  calcColumn180: {
+    width: Dimensions.get('window').width - 180
+  },
   calcColumn190: {
     width: Dimensions.get('window').width - 190
   },

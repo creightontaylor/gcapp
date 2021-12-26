@@ -3645,69 +3645,71 @@ class Opportunities extends Component {
           rows.push(
             <View key={i}>
               <View style={styles.spacer} />
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn140,styles.rowDirection]}>
-                <View style={[styles.width70]}>
-                  {(posting.matchScore) ? (
-                    <View style={styles.padding10}>
-                      <CircularProgressBar
-                        percentage={posting.matchScore}
-                        text={`${posting.matchScore}%`}
-                        styles={{
-                          path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
-                          text: { fill: '#6EBEFA', fontSize: '26px' },
-                          trail: { stroke: 'transparent' }
-                        }}
-                      />
-                    </View>
-                  ) : (
-                    <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem]} />
-                  )}
-                  {(posting.createdAt) && (
-                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(posting.createdAt,"daysAgo")}</Text>
-                    </View>
-                  )}
 
-                </View>
-                <View style={[styles.calcColumn150]}>
-                  <Text style={[styles.headingText5]}>{title}</Text>
-                  <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
-                  <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
-                  {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
-                    <View>
-                      <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
-                    </View>
-                  )}
-                </View>
-              </TouchableOpacity>
-              <View style={[styles.leftPadding,styles.rowDirection]}>
-                <View>
-                  <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                  </TouchableOpacity>
-                </View>
-                {(this.state.path && this.state.path.includes('/app')) && (
-                  <View style={[styles.rightPadding15]}>
-                    {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                      <View style={[styles.topMargin]}>
-                        <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+              <View style={[styles.rowDirection]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
+                  <View style={[styles.width70]}>
+                    {(posting.matchScore) ? (
+                      <View style={styles.padding10}>
+                        <CircularProgressBar
+                          percentage={posting.matchScore}
+                          text={`${posting.matchScore}%`}
+                          styles={{
+                            path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
+                            text: { fill: '#6EBEFA', fontSize: '26px' },
+                            trail: { stroke: 'transparent' }
+                          }}
+                        />
                       </View>
                     ) : (
+                      <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem]} />
+                    )}
+                  </View>
+                  <View style={[styles.calcColumn180]}>
+                    <Text style={[styles.headingText5]}>{title}</Text>
+                    <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
+                    <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
+                    {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
                       <View>
-                        {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
-                          <View style={[styles.topMargin]}>
-                            <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                          </View>
-                        )}
+                        <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
                       </View>
                     )}
-
-                    <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
-                      <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                    </TouchableOpacity>
+                    {(posting.createdAt) && (
+                      <View style={[styles.topPadding,styles.horizontalPadding5]}>
+                        <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth]}>{convertDateToString(posting.createdAt,"daysAgo")}</Text>
+                      </View>
+                    )}
                   </View>
-                )}
+                </TouchableOpacity>
+                <View>
+                  <View style={[styles.leftPadding,styles.rowDirection]}>
+                    <View style={[styles.rightPadding]}>
+                      {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+                        <View style={[styles.topMargin]}>
+                          <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+                        </View>
+                      ) : (
+                        <View>
+                          {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
+                            <View style={[styles.topMargin]}>
+                              <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain,styles.pinRight]}/>
+                            </View>
+                          )}
+                        </View>
+                      )}
+
+                      <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
+                        <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
+                        <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
               </View>
 
               {(posting.sortCriteria || this.state.sortCriteriaArray) && (
