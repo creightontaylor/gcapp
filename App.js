@@ -261,6 +261,7 @@ export default class App extends Component<Props> {
               tabBarIcon: ({ color, size }) => (
                 <Icon name="person" size={size} color={color} />
               ),
+              headerTitle: 'Edit Profile',
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>

@@ -217,183 +217,6 @@ class EditProfile extends Component {
     });
   }
 
-  formChangeHandler = event => {
-
-    console.log('show data: ', event.target.name)
-
-    if (event.target.name === 'profilePic') {
-      console.log('profilePicSelectedHandler changed', event.target.files[0])
-
-      // ImagePicker.showImagePicker({title: "Pick an Image", maxWidth: 300, maxHeight: 300, takePhotoButtonTitle: null}, res => {
-      //   if (res.didCancel) {
-      //     console.log("User cancelled!");
-      //   } else if (res.error) {
-      //     console.log("Error", res.error);
-      //   } else {
-      //     console.log('give me response:', res)
-      //     this.setState({
-      //       profilePicImage: { uri: res.uri },
-      //       profilePicHasChanged: true
-      //     });
-      //   }
-      // });
-
-      if (event.target.files[0]) {
-        if (event.target.files[0].size > 1 * 1024 * 1024) {
-          console.log('file is too big')
-
-          const errorMessage = 'File must be less than 1MB.'
-          this.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
-
-        } else {
-          console.log('file is small enough', event.target.files[0].size)
-
-          let reader = new FileReader();
-          reader.onload = (e) => {
-              this.setState({ profilePicImage: e.target.result });
-              console.log('how do i access the image', e.target.result)
-          };
-          reader.readAsDataURL(event.target.files[0]);
-          // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-          this.saveFile(event.target.name, event.target.files[0])
-        }
-      }
-    } else if (event.target.name === 'pictureURL') {
-      //only covers Google Drive for now
-      // https://drive.google.com/file/d/1x5MeSXzjC4dbmwfESGpspe7WnmkbNKLB/view?usp=sharing
-      // https://drive.google.com/uc?export=view&id=1x5MeSXzjC4dbmwfESGpspe7WnmkbNKLB
-      const rawPictureURL = event.target.value
-
-      // .indexOf('<saml:Attribute Name="uid"')
-      const startString = rawPictureURL.indexOf('/d/')
-      const endString = rawPictureURL.indexOf('/view')
-
-      if (startString > 0 && endString > 0 && rawPictureURL.includes('google')) {
-        const pictureId = rawPictureURL.substring(startString + 3, endString)
-        const pictureURL = 'https://drive.google.com/uc?export=view&id=' + pictureId
-
-        this.setState({ rawPictureURL, pictureURL, textFormHasChanged: true })
-        console.log('show pic values 1: ', rawPictureURL, pictureURL)
-      } else {
-        const pictureURL = ''
-        this.setState({ rawPictureURL, pictureURL, textFormHasChanged: true })
-        console.log('show pic values 2: ', rawPictureURL, pictureURL)
-      }
-    } else {
-      console.log('there was an error in formChangeHandler')
-      this.setState({ [event.target.name]: event.target.value })
-    }
-  }
-
-  saveFile(category, passedFile) {
-    console.log('saveFile called', category, passedFile)
-
-    const emailId = this.state.emailId
-    const fileName = passedFile.name
-    let originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
-
-    let fileData = new FormData();
-    // const fileName = 'profileImage'
-    // const fileName = 'newFile'
-    fileData.append('baseFileName', passedFile, originalName)
-
-    fetch("/api/file-upload", {
-        mode: 'no-cors',
-        method: "POST",
-        body: fileData
-    }).then(function (res) {
-      console.log('what is the profile pic response');
-      if (res.ok) {
-
-        if (category === 'profilePic') {
-          const serverSuccessProfilePic = true
-          const serverSuccessMessageProfilePic = category.charAt(0).toUpperCase() + category.slice(1) + ' saved successfully!'
-          this.setState({ serverSuccessProfilePic, serverSuccessMessageProfilePic, profilePicFile: passedFile })
-        } else if (category === 'resume') {
-          const serverSuccessResume = true
-          const serverSuccessMessageResume = category.charAt(0).toUpperCase() + category.slice(1) + ' saved successfully!'
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, resumeFile: passedFile, resumeName: fileName })
-        }
-
-        const self = this
-
-        res.json()
-        .then(function(data) {
-          console.log('show data: ', data)
-          let newFilePath = data.filePath
-          console.log('show filePath: ', newFilePath)
-
-          let existingFilePath = null
-          if (category === 'profilePic') {
-            if (self.state.pictureURL) {
-              existingFilePath = self.state.pictureURL
-            } else if (self.state.profilePicPath) {
-              existingFilePath = self.state.profilePicPath
-            }
-          } else if (category === 'resume') {
-            existingFilePath = self.state.resumeURLValue
-          }
-
-          // remove existing file
-          if (existingFilePath && !self.state.allowMultipleFiles) {
-            const deleteArray = existingFilePath.split("amazonaws.com/")
-            console.log('show deleteArrary: ', deleteArray)
-            const deleteKey = deleteArray[1].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")
-            console.log('show deleteKey: ', deleteKey)
-
-            Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
-            .then((response) => {
-              console.log('tried to delete', response.data)
-              if (response.data.success) {
-                //save values
-                console.log('File delete worked');
-
-                if (category === 'profilePic') {
-                  self.setState({
-                    serverPostSuccess: true,
-                    serverSuccessMessage: 'File was saved successfully',
-                    profilePicPath: newFilePath, pictureURL: newFilePath
-                  })
-                } else if (category === 'resume') {
-                  self.setState({
-                    serverPostSuccess: true,
-                    serverSuccessMessage: 'File was saved successfully', resumeURLValue: newFilePath
-                  })
-                }
-
-              } else {
-                console.error('there was an error saving the file');
-                self.setState({
-                  serverPostSuccess: false,
-                  serverErrorMessage: response.data.message,
-                })
-              }
-            }).catch((error) => {
-                console.log('The saving did not work', error);
-                self.setState({
-                  serverPostSuccess: false,
-                  serverErrorMessage: error,
-                })
-            });
-          }
-        })
-
-      } else if (res.status === 401) {
-        //unauthorized
-        this.setState({
-            serverSuccessProfilePic: false,
-            serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
-        })
-      }
-    }.bind(this), function (e) {
-      //there was an error
-      this.setState({
-          serverSuccessProfilePic: false,
-          serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
-      })
-    }.bind(this));
-  }
-
   render() {
 
     if (this.props.fromAdvisor) {
@@ -420,23 +243,7 @@ class EditProfile extends Component {
                       <View style={styles.spacer} />
                     </View>
 
-                    <View style={styles.relativePosition}>
-                      <TouchableOpacity onPress={this.formChangeHandler}>
-                        <View style={styles.profilePhotoContainer}>
-                        <Image source={
-                          this.state.profilePicImage ? ( { uri: this.state.profilePicImage} )
-                          : this.state.pictureURL ? ( { uri: this.state.pictureURL} )
-                          : this.state.profilePicPath ? ( { uri: this.state.profilePicPath} )
-                          : ( { uri: addProfilePhotoIcon})}
-                          style={[styles.square200,styles.contain]}/>
-                        </View>
-                      </TouchableOpacity>
-                      <View style={[styles.width150,styles.relativePosition]}>
-                        <View style={[styles.topMarginNegative40,styles.standardBorder,styles.square40,styles.whiteBackground,styles.pinRight]}>
-                          <Image source={{ uri: addIcon}} style={[styles.square18,styles.contain,styles.centerItem]} />
-                        </View>
-                      </View>
-                    </View>
+                    <Image source={(this.state.profilePicURL) ? { uri: this.state.pictureURL } : { uri: profileIconDark }} style={[styles.square200,styles.contain]}/>
 
                     <View style={styles.spacer} />
                     <Text style={styles.descriptionTextColor}>Dimensions: 200 x 200</Text>
@@ -573,96 +380,81 @@ class EditProfile extends Component {
         return (
             <ScrollView>
                 <View style={[styles.card,styles.topMargin]}>
-                    <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
 
                     <View>
                       <View style={[styles.row10,styles.rowDirection]}>
-                        <View style={[styles.rightPadding,styles.width180]}>
-                          <View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Basics'})}>
+                          <View style={[styles.rightPadding,styles.width70]}>
                             <View>
                               <View>
-                                <View style={styles.spacer} />
-                                <View style={styles.relativePosition}>
-                                  <Text for="profilePic">
-                                    <TouchableOpacity onPress={this.formChangeHandler}>
-                                      <View style={styles.profilePhotoContainer}>
-                                        <Image source={
-                                          this.state.profilePicImage ? ( { uri: this.state.profilePicImage} )
-                                          : this.state.pictureURL ? ( { uri: this.state.pictureURL} )
-                                          : this.state.profilePicPath ? ( { uri: this.state.profilePicPath} )
-                                          : ( { uri: addProfilePhotoIcon})}
-                                          style={[styles.square200,styles.contain]}/>
-                                      </View>
-                                    </TouchableOpacity>
-                                    <View style={[styles.width150,styles.relativePosition]}>
-                                      <View style={[styles.topMarginNegative40,styles.standardBorder,styles.square40,styles.whiteBackground,styles.pinRight]}>
-                                        <Image source={{ uri: addIcon}} style={[styles.square18,styles.centerItem]} />
-                                      </View>
-                                    </View>
-                                  </Text>
-                                </View>
-
-                                <View style={styles.spacer} />
-                                <Text style={[styles.descriptionText2,styles.calcColumn60,styles.centerText]}>Dimensions: 150 x 150</Text>
-                                <View style={styles.spacer} />
-                              </View>
-                            </View>
-
-                          </View>
-                        </View>
-                        <View style={styles.calcColumn180}>
-                          <View style={styles.spacer} />
-                          <View style={[styles.row5]}>
-                            <Text style={styles.headingText2}>{this.state.firstNameValue} {this.state.lastNameValue}</Text>
-                          </View>
-                          <View style={[styles.row5]}>
-
-                            <Text>Student @ {this.state.schoolValue}{(this.state.gradYear) && " '" + this.state.gradYear.substring(2,4)}</Text>
-                            {(this.state.oauthUid) && (
-                              <View>
-                                <Text style={[styles.errorColor,styles.topMargin]}>UID: {this.state.oauthUid}</Text>
-                              </View>
-                            )}
-                          </View>
-                        </View>
-
-                        {(this.state.publicProfile) ? (
-                          <View>
-                            <View style={[styles.topMargin20]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username})}>
-                                <View style={[styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.mediumShadow,styles.row10,styles.horizontalPadding30,styles.rightMargin]}>
-                                  <Text style={[styles.whiteColor,styles.descriptionText2]}>Preview Profile in Portal</Text>
-                                </View>
-                              </TouchableOpacity>
-
-                              {(this.state.publicProfileExtent === 'Public') && (
                                 <View>
+                                  <View style={styles.spacer} />
+                                  <Image source={(this.state.profilePicURL) ? { uri: this.state.pictureURL } : { uri: profileIconDark }} style={[styles.square60,styles.contain]}/>
 
                                   <View style={styles.spacer} />
-                                  <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/' + this.state.username + '/profile')}>
-                                    <View style={[styles.slightlyRoundedCorners,styles.ctaBorder,styles.mediumShadow,styles.row10,styles.horizontalPadding30]}>
-                                      <Text style={[styles.ctaColor,styles.descriptionText2]}>Preview Public Profile</Text>
-                                    </View>
-                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+
+                        <View>
+                          <View style={styles.calcColumn130}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Basics'})}>
+                              <View style={[styles.row5]}>
+                                <Text style={styles.headingText2}>{this.state.firstNameValue} {this.state.lastNameValue}</Text>
+                              </View>
+                              <View style={[styles.row5]}>
+
+                                <Text>Student @ {this.state.schoolValue}{(this.state.gradYear) && " '" + this.state.gradYear.substring(2,4)}</Text>
+                                {(this.state.oauthUid) && (
+                                  <View>
+                                    <Text style={[styles.errorColor,styles.topMargin]}>UID: {this.state.oauthUid}</Text>
+                                  </View>
+                                )}
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+
+                          {(this.state.publicProfile) ? (
+                            <View>
+                              <View style={[styles.topMargin20]}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username})}>
+                                  <View style={[styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.mediumShadow,styles.horizontalPadding30,styles.rightMargin,styles.row7,styles.flexCenter]}>
+                                    <Text style={[styles.whiteColor,styles.descriptionText2]}>Preview Profile in Portal</Text>
+                                  </View>
+                                </TouchableOpacity>
+
+                                {(this.state.publicProfileExtent === 'Public') && (
+                                  <View>
+
+                                    <View style={styles.spacer} />
+                                    <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/' + this.state.username + '/profile')}>
+                                      <View style={[styles.slightlyRoundedCorners,styles.ctaBorder,styles.mediumShadow,styles.row10,styles.horizontalPadding30]}>
+                                        <Text style={[styles.ctaColor,styles.descriptionText2]}>Preview Public Profile</Text>
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          ) : (
+                            <View>
+                              {(!this.state.remoteAuth) && (
+                                <View style={[styles.topPadding20,styles.descriptionText2]}>
+                                  <Text>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>click here</Text></TouchableOpacity></Text>
                                 </View>
                               )}
                             </View>
-                          </View>
-                        ) : (
-                          <View>
-                            {(!this.state.remoteAuth) && (
-                              <View style={[styles.topPadding20,styles.descriptionText2]}>
-                                <Text>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>click here</Text></TouchableOpacity></Text>
-                              </View>
-                            )}
-                          </View>
-                        )}
+                          )}
 
-                        { (this.state.serverSuccessProfilePic) ? (
-                          <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
-                        ) : (
-                          <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
-                        )}
+                          { (this.state.serverSuccessProfilePic) ? (
+                            <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
+                          ) : (
+                            <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                          )}
+                        </View>
                       </View>
 
                       <View style={styles.horizontalLine} />

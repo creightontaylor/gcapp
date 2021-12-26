@@ -58,6 +58,12 @@ module.exports = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
+  alignStart: {
+    alignItems: 'flex-start'
+  },
+  justifyStart: {
+    justifyContent: 'flex-start'
+  },
   alignEnd: {
     alignItems: 'flex-end'
   },
@@ -343,27 +349,27 @@ module.exports = StyleSheet.create({
   },
   row5: {
     paddingTop: 5,
-    paddingRight: 5
+    paddingBottom: 5
   },
   row7: {
     paddingTop: 7,
-    paddingRight: 7
+    paddingBottom: 7
   },
   row10: {
     paddingTop: 10,
-    paddingRight: 10
+    paddingBottom: 10
   },
   row15: {
     paddingTop: 15,
-    paddingRight: 15
+    paddingBottom: 15
   },
   row20: {
     paddingTop: 20,
-    paddingRight: 20
+    paddingBottom: 20
   },
   row30: {
     paddingTop: 30,
-    paddingRight: 30
+    paddingBottom: 30
   },
   headingText1: {
     fontSize: (3 * baseFontSize)
