@@ -3645,7 +3645,7 @@ class Opportunities extends Component {
           rows.push(
             <View key={i}>
               <View style={styles.spacer} />
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn80,styles.rowDirection]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn140,styles.rowDirection]}>
                 <View style={[styles.width70]}>
                   {(posting.matchScore) ? (
                     <View style={styles.padding10}>
@@ -4168,67 +4168,70 @@ class Opportunities extends Component {
               {(this.props.pageSource !== 'Goal') && (
                 <View>
                   <View style={[styles.row10,styles.horizontalPadding30]}>
-                    <View style={styles.rowDirection}>
-                      <View style={(this.state.matchingView) ? [styles.row7,styles.horizontalPadding3,styles.topMarginNegative2,styles.fullScreenWidth] : [styles.row7,styles.horizontalPadding3,styles.topMargin]}>
-                        <TouchableOpacity onPress={(this.state.matchingView) ? () => this.calculateMatches(false, false, false) : () => this.calculateMatches(true, true, false)} >
-                          {(this.state.matchingView) ? <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.contain,styles.rightMargin]} /> : <Image source={{ uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin]} />}
-                        </TouchableOpacity>
+                    <View>
+
+                      <View style={styles.rowDirection}>
+                        <View style={(this.state.matchingView) ? [styles.row7,styles.horizontalPadding3,styles.topMarginNegative2,styles.fullScreenWidth] : [styles.row7,styles.horizontalPadding3,styles.topMargin]}>
+                          <TouchableOpacity onPress={(this.state.matchingView) ? () => this.calculateMatches(false, false, false) : () => this.calculateMatches(true, true, false)} >
+                            {(this.state.matchingView) ? <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.contain,styles.rightMargin]} /> : <Image source={{ uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin]} />}
+                          </TouchableOpacity>
+                        </View>
+
+                        {(this.state.matchingView) && (
+                          <View style={[styles.fullScreenWidth, styles.rowDirection]}>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
+                              <View style={[styles.rightMargin,styles.slightlyRoundedCorners,styles.horizontalPadding30,styles.ctaBackgroundColor,styles.ctaBorder,styles.whiteColor]}>
+                                <Text>Adjust</Text>
+                              </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
+                              <View style={[styles.rightPadding,styles.standardBorder, styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30]}>
+                                <Text>Close</Text>
+                              </View>
+                            </TouchableOpacity>
+
+                            <View style={styles.halfSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
+                          </View>
+                        )}
+
+                        {(!this.state.matchingView) && (
+                          <View style={styles.rowDirection}>
+                            <View style={[styles.calcColumn100,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
+                              <View style={[styles.row7,styles.horizontalPadding3]}>
+                                <Image source={{ uri: searchIcon}} style={[styles.square20,styles.contain,styles.padding5]}/>
+                              </View>
+                              <View style={[styles.calcColumn230]}>
+                                {(this.props.passedType) ? (
+                                  <TextInput
+                                    style={styles.height30}
+                                    onChangeText={(text) => this.formChangeHandler(text, 'search')}
+                                    value={this.state.searchString}
+                                    placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
+                                    placeholderTextColor="grey"
+                                  />
+                                ) : (
+                                  <TextInput
+                                    style={[styles.height30]}
+                                    onChangeText={(text) => this.formChangeHandler(text, 'search')}
+                                    value={this.state.searchString}
+                                    placeholder={"Search " + postings.length + ' Opportunities...'}
+                                    placeholderTextColor="grey"
+                                  />
+                                )}
+                              </View>
+                            </View>
+
+                            <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin]}>
+                              <TouchableOpacity onPress={() => this.toggleSearchBar('show')} >
+                                {(this.state.showingSearchBar) ? <Image source={{ uri: filterIconSelected}} style={[styles.square25,styles.contain]} /> : <Image source={{ uri: filterIcon}} style={[styles.square25,styles.contain]} />}
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        )}
                       </View>
 
-                      {(this.state.matchingView) && (
-                        <View style={[styles.fullScreenWidth, styles.rowDirection]}>
-                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
-                            <View style={[styles.rightMargin,styles.slightlyRoundedCorners,styles.horizontalPadding30,styles.ctaBackgroundColor,styles.ctaBorder,styles.whiteColor]}>
-                              <Text>Adjust</Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
-                            <View style={[styles.rightPadding,styles.standardBorder, styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30]}>
-                              <Text>Close</Text>
-                            </View>
-                          </TouchableOpacity>
-
-                          <View style={styles.halfSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
-                        </View>
-                      )}
-
-                      {(!this.state.matchingView) && (
-                        <View style={styles.rowDirection}>
-                          <View style={[styles.calcColumn100,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
-                            <View style={[styles.row7,styles.horizontalPadding3]}>
-                              <Image source={{ uri: searchIcon}} style={[styles.square28,styles.contain,styles.padding5]}/>
-                            </View>
-                            <View style={[styles.calcColumn150]}>
-                              {(this.props.passedType) ? (
-                                <TextInput
-                                  style={styles.height30}
-                                  onChangeText={(text) => this.formChangeHandler(text, 'search')}
-                                  value={this.state.searchString}
-                                  placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
-                                  placeholderTextColor="grey"
-                                />
-                              ) : (
-                                <TextInput
-                                  style={styles.height30}
-                                  onChangeText={(text) => this.formChangeHandler(text, 'search')}
-                                  value={this.state.searchString}
-                                  placeholder={"Search " + postings.length + ' Opportunities...'}
-                                  placeholderTextColor="grey"
-                                />
-                              )}
-                            </View>
-                          </View>
-
-                          <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin]}>
-                            <TouchableOpacity onPress={() => this.toggleSearchBar('show')} >
-                              {(this.state.showingSearchBar) ? <Image source={{ uri: filterIconSelected}} style={[styles.square25,styles.contain]} /> : <Image source={{ uri: filterIcon}} style={[styles.square25,styles.contain]} />}
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      )}
-
-                      <View>
-                        <View style={[styles.carousel]} onScroll={this.handleScroll}>
+                      <View style={[styles.fullScreenWidth]}>
+                        <View style={[styles.carousel,styles.rowDirection]} onScroll={this.handleScroll}>
                           {this.state.subNavCategories.map((value, index) =>
                             <View style={[styles.row10,styles.rightPadding20]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (

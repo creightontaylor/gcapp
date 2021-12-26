@@ -504,8 +504,14 @@ module.exports = StyleSheet.create({
   calcColumn208: {
     width: Dimensions.get('window').width - 200
   },
+  calcColumn210: {
+    width: Dimensions.get('window').width - 210
+  },
   calcColumn220: {
     width: Dimensions.get('window').width - 220
+  },
+  calcColumn230: {
+    width: Dimensions.get('window').width - 230
   },
   calcColumn60Of50: {
     width: (Dimensions.get('window').width / 2) - 60
