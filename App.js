@@ -256,7 +256,7 @@ export default class App extends Component<Props> {
                 </TouchableOpacity>
               ),
             }}/>
-            <Tab.Screen name="EditPofile" component={EditProfile} options={{
+            <Tab.Screen name="EditProfile" component={EditProfile} options={{
               tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="person" size={size} color={color} />
@@ -283,6 +283,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
           <Stack.Screen name="Notifications" component={Notifications} />
           <Stack.Screen name="Messages" component={Messages} />
+          <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </NavigationContainer>
     );

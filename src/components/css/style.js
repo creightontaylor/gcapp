@@ -227,6 +227,9 @@ module.exports = StyleSheet.create({
   topMarginNegative2: {
     marginTop: -2
   },
+  topMarginNegative40: {
+    marginTop: -40
+  },
   topMarginNegative36: {
     marginTop: -36
   },
@@ -446,6 +449,9 @@ module.exports = StyleSheet.create({
   width160: {
     width: 160
   },
+  width180: {
+    width: 180
+  },
   width190: {
     width: 190
   },
@@ -601,6 +607,9 @@ module.exports = StyleSheet.create({
   },
   slightlyRoundedCorners: {
     borderRadius: 5
+  },
+  circleRadius: {
+    borderRadius: '50%'
   },
   fullWidth: {
     width: null
