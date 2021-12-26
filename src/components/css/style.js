@@ -224,10 +224,13 @@ module.exports = StyleSheet.create({
     marginRight: 10
   },
   leftMargin: {
-    marginLeft: 10
+    marginLeft: 3
   },
   leftMargin: {
     marginLeft: 10
+  },
+  leftMargin18: {
+    marginLeft: 18
   },
   leftMargin58: {
     marginLeft: 58
@@ -272,6 +275,9 @@ module.exports = StyleSheet.create({
   rightPadding: {
     paddingRight: 10
   },
+  rightPadding15: {
+    paddingRight: 15
+  },
   rightPadding20: {
     paddingRight: 20
   },
@@ -281,8 +287,14 @@ module.exports = StyleSheet.create({
   leftPadding15: {
     paddingLeft: 15
   },
+  leftPadding50: {
+    paddingLeft: 50
+  },
   leftPadding70: {
     paddingLeft: 70
+  },
+  padding5: {
+    padding: 5
   },
   padding7: {
     padding: 7
@@ -325,12 +337,16 @@ module.exports = StyleSheet.create({
     paddingRight: 10
   },
   row15: {
-    paddingTop: 10,
-    paddingRight: 10
+    paddingTop: 15,
+    paddingRight: 15
   },
   row20: {
-    paddingTop: 10,
-    paddingRight: 10
+    paddingTop: 20,
+    paddingRight: 20
+  },
+  row30: {
+    paddingTop: 30,
+    paddingRight: 30
   },
   headingText1: {
     fontSize: (3 * baseFontSize)
@@ -400,6 +416,9 @@ module.exports = StyleSheet.create({
   },
   width100: {
     width: 100
+  },
+  width110: {
+    width: 110
   },
   width120: {
     width: 120
@@ -484,6 +503,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn208: {
     width: Dimensions.get('window').width - 200
+  },
+  calcColumn220: {
+    width: Dimensions.get('window').width - 220
   },
   calcColumn60Of50: {
     width: (Dimensions.get('window').width / 2) - 60
@@ -807,6 +829,14 @@ module.exports = StyleSheet.create({
     borderRadius: 3,
     transition: 'background-color 0.2s, border 0.2s, color 0.2s'
   },
+  menuButtonNotiBubble: {
+    padding: 10,
+    margin: 0,
+    backgroundColor: 'rgba(0,0,0,0)',
+    border: 0,
+    borderRadius: 3,
+    transition: 'background-color 0.2s, border 0.2s, color 0.2s'
+  },
   filterFieldSearch: {
     borderWidth: 1,
     borderColor: faintColor,
@@ -817,6 +847,16 @@ module.exports = StyleSheet.create({
     width: 250,
     marginTop: 15,
     marginRight: 10
+  },
+  notiBubbleSmall: {
+    color: 'white',
+    fontWeight: 'bold',
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 
 });
