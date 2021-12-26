@@ -1025,7 +1025,7 @@ class Careers extends Component {
     // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
-        <View style={styles.row20}>
+        <View style={styles.bottompadding20}>
           <View>
             <View>
               <View>
@@ -1058,13 +1058,12 @@ class Careers extends Component {
                           <Image source={(this.state.matchingView) ? {uri: matchIconSelected} : {uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.centerItem,styles.topMargin]} />
                         </TouchableOpacity>
                       </View>
-                      <View style={[styles.filterFieldSearch,styles.calcColumn100,styles.whiteBackground,styles.rowDirection]}>
+                      <View style={[styles.filterFieldSearch,styles.calcColumn100,styles.whiteBackground,styles.rowDirection,styles.topMargin3]}>
                         <View style={[styles.row7,styles.horizontalPadding3]}>
-                          <Image source={{uri: searchIcon}} style={[styles.square20,styles.contain,styles.padding5]}/>
+                          <Image source={{uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                         </View>
-                        <View style={[styles.width210,styles.calcColumn100]}>
+                        <View style={[styles.width210,styles.calcColumn100,styles.topPadding5]}>
                           <TextInput
-                            style={styles.height30}
                             onChangeText={(text) => this.formChangeHandler(text, 'search')}
                             value={this.state.searchString}
                             placeholder="Search 1,000+ careers..."
@@ -1072,7 +1071,7 @@ class Careers extends Component {
                           />
                         </View>
                       </View>
-                      <View style={[styles.width50,styles.centerItem]}>
+                      <View style={[styles.width50,styles.centerItem,styles.leftMargin]}>
                         <TouchableOpacity style={[styles.fullScreenWidth,styles.bottomPadding]} onPress={() => this.toggleSearchBar('show')}>
                           <Image source={(this.state.showingSearchBar) ? {uri: filterIconSelected} : {uri: filterIcon}} style={[styles.square25,styles.contain,styles.centerItem,styles.topMargin]} />
                         </TouchableOpacity>
@@ -1134,7 +1133,7 @@ class Careers extends Component {
                       <View style={styles.spacer} />
 
                       <View style={[styles.rowDirection]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })} style={[styles.rowDirection,styles.calcColumn125]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })} style={[styles.rowDirection,styles.calcColumn110]}>
                           <View style={styles.width70}>
                             {(this.state.matchScores && this.state.matchScores[index]) ? (
                               <View style={[styles.padding10]}>
@@ -1154,13 +1153,13 @@ class Careers extends Component {
                             )}
 
                           </View>
-                          <View style={styles.calcColumn200}>
+                          <View style={[styles.calcColumn180]}>
                             <Text style={[styles.headingText5]}>{value.name}</Text>
                             <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.jobFunction}{(value.jobFunction && value.industry) && ' | ' + value.industry}{(!value.jobFunction && value.industry) && value.industry}{(value.jobFamily) && ' | ' + value.jobFamily}</Text>
 
                             {(value.marketData) && (
-                              <View style={[styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection]}>
-                                <View style={styles.rowDirection}>
+                              <View style={[styles.calcColumn110,styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection,styles.flexWrap]}>
+                                <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
                                     <Image source={{uri: trendingUpIcon}} style={[styles.square15,styles.contain]}/>
                                   </View>
@@ -1169,7 +1168,7 @@ class Careers extends Component {
                                   </View>
                                 </View>
 
-                                <View style={styles.rowDirection}>
+                                <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
                                     <Image source={{uri: moneyIconBlue}} style={[styles.square20,styles.contain]}/>
                                   </View>
@@ -1178,7 +1177,7 @@ class Careers extends Component {
                                   </View>
                                 </View>
 
-                                <View style={styles.rowDirection}>
+                                <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
                                     <Image source={{uri: membersIconBlue}} style={[styles.square22,styles.contain]}/>
                                   </View>
@@ -1190,8 +1189,8 @@ class Careers extends Component {
                             )}
 
                             {(value.onetInterests) && (
-                              <View style={[styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection]}>
-                                <View style={styles.rowDirection}>
+                              <View style={[styles.calcColumn110,styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection]}>
+                                <View style={[styles.rowDirection,styles.flexWrap]}>
                                   <View style={styles.rightPadding}>
                                     <Image source={{uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                                   </View>
@@ -1219,9 +1218,9 @@ class Careers extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <View style={[styles.width40,styles.topMargin15]}>
+                        <View style={[styles.width25,styles.topMargin15]}>
                           <TouchableOpacity onPress={() => this.favoriteItem(value) }>
-                            <Image source={(this.state.favorites.includes(value._id)) ? {uri: favoritesIconBlue} : {uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+                            <Image source={(this.state.favorites.includes(value._id)) ? {uri: favoritesIconBlue} : {uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.pinRight]}/>
                           </TouchableOpacity>
                         </View>
 
@@ -1229,7 +1228,7 @@ class Careers extends Component {
                           <View style={styles.alignEnd}>
                             <View style={[styles.spacer]} /><View style={[styles.halfSpacer]}/>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
                             </TouchableOpacity>
                           </View>
                         </View>

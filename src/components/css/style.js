@@ -94,6 +94,10 @@ module.exports = StyleSheet.create({
     height: 15,
     width: 15
   },
+  square17: {
+    height: 17,
+    width: 17
+  },
   square18: {
     height: 18,
     width: 18
@@ -145,31 +149,31 @@ module.exports = StyleSheet.create({
   profileThumbnail25: {
     height: 25,
     width: 25,
-    objectFit: 'contain',
+    resizeMode: 'contain',
     borderRadius: (25/2)
   },
   profileThumbnail40: {
     height: 40,
     width: 40,
-    objectFit: 'contain',
+    resizeMode: 'contain',
     borderRadius: (40/2)
   },
   profileThumbnail43: {
     height: 43,
     width: 43,
-    objectFit: 'contain',
+    resizeMode: 'contain',
     borderRadius: (43/2)
   },
   profileThumbnail50: {
     height: 50,
     width: 50,
-    objectFit: 'contain',
+    resizeMode: 'contain',
     borderRadius: (50/2)
   },
   profileThumbnail80: {
     height: 80,
     width: 80,
-    objectFit: 'contain',
+    resizeMode: 'contain',
     borderRadius: (80/2)
   },
   horizontalLine: {
@@ -204,6 +208,12 @@ module.exports = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
+  },
+  topMargin3: {
+    marginTop: 3
+  },
+  topMargin5: {
+    marginTop: 5
   },
   topMargin: {
     marginTop: 10
@@ -317,6 +327,10 @@ module.exports = StyleSheet.create({
     paddingRight: 5
   },
   horizontalPadding: {
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  horizontalPadding10: {
     paddingLeft: 10,
     paddingRight: 10
   },
@@ -441,6 +455,9 @@ module.exports = StyleSheet.create({
   height5: {
     height: 5
   },
+  height20: {
+    height: 20
+  },
   height30: {
     height: 30
   },
@@ -519,8 +536,8 @@ module.exports = StyleSheet.create({
   calcColumn60Of50: {
     width: (Dimensions.get('window').width / 2) - 60
   },
-  flexGrow: {
-    flexGrow: 1
+  flexWrap: {
+    flexWrap: 'wrap'
   },
   rowDirection: {
     flexDirection: 'row'
@@ -817,6 +834,16 @@ module.exports = StyleSheet.create({
     overflow: 'scroll',
     whiteSpace: 'nowrap'
   },
+  selectedCarouselItem: {
+    backgroundColor: 'rgba(135,206,250,0.15)',
+    shadowColor: '#000',
+    shadowOffset: { width: 10, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    borderBottomColor: primaryColor,
+    borderBottomWidth: 1
+  },
   selectedCarouselItem2: {
     paddingTop: 15,
     paddingBottom: 15,
@@ -828,6 +855,12 @@ module.exports = StyleSheet.create({
     elevation: 1,
     borderBottomColor: primaryColor,
     borderBottomWidth: 1
+  },
+  menuButton: {
+    backgroundColor: 'rgba(0,0,0,0)',
+    border: 0,
+    borderRadius: 3,
+    transition: 'background-color 0.2s, border 0.2s, color 0.2s'
   },
   menuButton2: {
     paddingTop: 15,
@@ -854,8 +887,7 @@ module.exports = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     width: 250,
-    marginTop: 15,
-    marginRight: 10
+    height: 38
   },
   notiBubbleSmall: {
     color: 'white',
@@ -865,7 +897,9 @@ module.exports = StyleSheet.create({
     borderRadius: 9,
     textAlign: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: faintColor,
   }
 
 });

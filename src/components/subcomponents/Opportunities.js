@@ -2496,809 +2496,214 @@ class Opportunities extends Component {
     console.log('renderOpportunities called', type);
 
     let rows = [];
-    const subpath = this.state.subpath
-    //DELETE postingDetails in /app
-    let tempVarForPostings = 'opportunities'
-    if (subpath === 'app') {
-      tempVarForPostings = 'opportunities'
+
+    let filteredPostings = []
+    if (type === 'all') {
+      filteredPostings = this.state.filteredPostings
+    } else if (type === 'featured') {
+      filteredPostings = this.state.filteredFeaturedOpportunities
+    } else if (type === 'assignments') {
+      filteredPostings = this.state.filteredAssignments
+    } else if (type === 'problems') {
+      filteredPostings = this.state.filteredProblems
+    } else if (type === 'challenges') {
+      filteredPostings = this.state.filteredChallenges
+    } else if (type === 'projectWork') {
+      filteredPostings = this.state.filteredProjectWork
+    } else if (type === 'internships') {
+      filteredPostings = this.state.filteredInternships
+    } else if (type === 'work') {
+      filteredPostings = this.state.filteredWork
+    } else if (type === 'events') {
+      filteredPostings = this.state.upcomingEvents
     }
-    // console.log('show path in shared:', subpath, this.state.path, this.props.path)
-    if (type === 'featured') {
-      const filteredFeaturedOpportunities = this.state.filteredFeaturedOpportunities
-      console.log('test 1', filteredFeaturedOpportunities)
 
-      for (let i = 1; i <= filteredFeaturedOpportunities.length; i++) {
-        console.log(i);
+    for (let i = 1; i <= filteredPostings.length; i++) {
+      console.log(i);
 
-        const index = i - 1
+      // const index = i - 1
+      const posting = filteredPostings[i - 1]
+      let isActive = true
 
-        if (filteredFeaturedOpportunities[index].postType === 'Scholarship' || filteredFeaturedOpportunities[index].postType === 'Individual' || filteredFeaturedOpportunities[index].postType === 'Track' || filteredFeaturedOpportunities[index].postType === 'Internship' || filteredFeaturedOpportunities[index].postType === 'Work') {
-          if (filteredFeaturedOpportunities[index].isActive === true) {
-            let imgSrc = internIconBlue
-            if (filteredFeaturedOpportunities[index].postType === 'Scholarship') {
-              imgSrc = moneyIconBlue
-            }
-            if (filteredFeaturedOpportunities[index].imageURL) {
-              imgSrc = filteredFeaturedOpportunities[index].imageURL
-            }
+      let postingIcon = internIconBlue
+      let postingIconClassName = "image-auto-50 center-item"
 
-            rows.push(
-              <View key={i}>
-                <View style={styles.spacer} />
+      if (posting.postType === 'Event') {
+        postingIcon = eventIconBlue
+        postingIconClassName = "image-auto-48 center-item"
+      } else if (posting.postType === 'Assignment') {
+        postingIcon = assignmentsIconBlue
+        postingIconClassName = "image-auto-50 top-margin-5 center-item"
+      } else if (posting.postType === 'Problem') {
+        postingIcon = problemIconBlue
+        postingIconClassName = "image-auto-50 top-margin-5 center-item"
+      } else if (posting.postType === 'Challenge') {
+        postingIcon = challengeIconBlue
+        postingIconClassName = "image-auto-50 top-margin-5 center-item"
+      } else if (posting.postType === 'Internship') {
+        if (!posting.isActive) {
+          isActive = false
+        }
+      } else if (posting.postType === 'Work') {
+        // none of these yet
+        if (!posting.isActive) {
+          isActive = false
+        }
+      } else if (posting.postType === 'Scholarship') {
+        postingIcon = moneyIconBlue
+        postingIconClassName = "image-auto-50 top-margin-5 center-item"
+      }
 
-                <View style={[styles.fullScreenWidth,styles.rowDirection]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })} style={styles.rowDirection,styles.calcColumn80}>
-                    <View style={styles.width70}>
-                      {(filteredFeaturedOpportunities[index].matchScore) ? (
-                        <View style={styles.padding10}>
-                          <CircularProgressBar
-                            percentage={filteredFeaturedOpportunities[index].matchScore}
-                            text={`${filteredFeaturedOpportunities[index].matchScore}%`}
-                            styles={{
-                              path: { stroke: `rgba(110, 190, 250, ${filteredFeaturedOpportunities[index].matchScore / 100})` },
-                              text: { fill: '#6EBEFA', fontSize: '26px' },
-                              trail: { stroke: 'transparent' }
-                            }}
-                          />
-                        </View>
-                      ) : (
-                        <Image source={{ uri: imgSrc}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                      )}
-                      {(filteredFeaturedOpportunities[index].createdAt) && (
-                        <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                          <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
-                        </View>
-                      )}
-                    </View>
-                    <View style={styles.calcColumn150}>
-                      <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].title}</Text>
-                      <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].orgName}  | {filteredFeaturedOpportunities[i - 1].postType}</Text>
+      if (posting.imageURL) {
+        postingIcon = posting.imageURL
+        postingIconClassName = "image-50-fit top-margin-5 center-item"
+      }
 
-                      {(filteredFeaturedOpportunities[i - 1].payRange && (filteredFeaturedOpportunities[i - 1].subPostType === 'Full-Time' || filteredFeaturedOpportunities[i - 1].subPostType === 'Part-Time')) && (
-                        <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{filteredFeaturedOpportunities[i - 1].payRange}</Text>
-                      )}
-                    </View>
-                  </TouchableOpacity>
-                  <View style={[styles.width80,styles.rowDirection]}>
-                    <View style={[styles.rowDirection,styles.rightPadding15]}>
-                      {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                        <View style={[styles.topMargin]}>
-                          <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
-                        </View>
-                      ) : (
-                        <View>
-                          {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
-                            <View style={[styles.topMargin]}>
-                              <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                            </View>
-                          )}
-                        </View>
-                      )}
-                      <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
-                        <Image source={(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                      </TouchableOpacity>
-                    </View>
-                    <View>
-                      <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })}>
-                        <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
+      if (isActive) {
+        let title = posting.title
+        if (!posting.title) {
+          title = posting.name
+        }
 
-                <View style={styles.spacer} /><View style={styles.spacer} />
-                <View style={[styles.horizontalLine]} />
+        let subtitle1 = posting.employerName
 
-                <View style={styles.spacer} />
-
-              </View>
-            )
+        let subtitle2 = posting.postType
+        if (posting.politicalParty && posting.politicalParty !== '') {
+          if (subtitle2 === '') {
+            subtitle2 = posting.politicalParty
+          } else {
+            subtitle2 = subtitle2 + ' | ' + posting.politicalParty
           }
-        } else if (filteredFeaturedOpportunities[index].postType === 'Assignment') {
+        }
 
-          let pathname = '/' + subpath + '/opportunities/' + this.state.filteredFeaturedOpportunities[index]._id
-
-          rows.push(
-            <View key={i}>
-              <View style={styles.spacer} />
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.rowDirection,styles.calcColumn150]}>
-                <View style={styles.width70}>
-                  <Image source={(filteredFeaturedOpportunities[index].imageURL) ? { uri: filteredFeaturedOpportunities[index].imageURL} : { uri: assignmentsIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                  {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
-                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
-                    </View>
-                  )}
-                </View>
-                <View style={styles.calcColumn220}>
-                  <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].name}</Text>
-                  <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
-                  <Text style={[styles.descriptionText2]}>{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
-                </View>
-              </TouchableOpacity>
-              <View style={[styles.width150,styles.leftPadding]}>
-                <View style={[styles.rightPadding15,styles.width110,styles.rightText]}>
-                  <View style={styles.topPadding}>
-                    {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                      <View style={styles.topMargin}>
-                        <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
-                      </View>
-                    ) : (
-                      <View>
-                        {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
-                          <View style={styles.topMargin}>
-                            <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                          </View>
-                        )}
-                      </View>
-                    )}
-                    <TouchableOpacity onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
-                      {(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? (
-                        <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
-                          <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
-                            <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
-                          </View>
-                          <View style={[styles.row5,styles.rightPadding,styles.centerText]}>
-                            <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
-                          </View>
-
-                        </View>
-                      ) : (
-                        <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
-                          <View style={[styles.row5,styles.horizontalPadding10,styles.centerText]}>
-                            <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
-                          </View>
-
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                  <TouchableOpacity onPress={() => this.voteOnItem(filteredFeaturedOpportunities[index], 'up', index, true) }>
-                    <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
-                      <View style={styles.padding7}>
-                        <Image source={(filteredFeaturedOpportunities[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
-                      </View>
-                      <View style={[styles.verticalSeparator30]} />
-                      <View style={styles.horizontalPadding10}>
-                        <View style={styles.halfSpacer} />
-                        <Text style={[styles.descriptionText2,styles.boldText]}>{filteredFeaturedOpportunities[index].upvotes.length}</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index]})}>
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.spacer} /><View style={styles.spacer} />
-              <View style={[styles.horizontalLine]} />
-
-              <View style={styles.spacer} />
-            </View>
-          )
-        } else if (filteredFeaturedOpportunities[index].postType === 'Problem' || filteredFeaturedOpportunities[index].postType === 'Challenge') {
-
-          let imgSrc = problemIconBlue
-          if (filteredFeaturedOpportunities[index].postType === 'Challenge') {
-            imgSrc = challengeIconBlue
+        if (posting.field && posting.field !== '') {
+          if (subtitle2 === '') {
+            subtitle2 = posting.field.split("|")[0].trim()
+          } else {
+            subtitle2 = subtitle2 + ' | ' + posting.field.split("|")[0].trim()
           }
+        }
 
-          if (filteredFeaturedOpportunities[index].imageURL) {
-            imgSrc = filteredFeaturedOpportunities[index].imageURL
+        if (posting.industry && posting.industry !== '') {
+          if (subtitle2 === '') {
+            subtitle2 = posting.industry
+          } else {
+            subtitle2 = subtitle2 + ' | Industry: ' + posting.industry
           }
+        }
 
-          rows.push(
-            <View key={i}>
-              <View style={styles.spacer} />
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.rowDirection,styles.calcColumn150]}>
-                <View style={styles.width70}>
-                  {(filteredFeaturedOpportunities[index].matchScore) ? (
+        if (posting.difficultyLevel && posting.difficultyLevel !== '') {
+          if (subtitle2 === '') {
+            subtitle2 = posting.difficultyLevel
+          } else {
+            subtitle2 = subtitle2 + ' | Difficulty Level: ' + posting.difficultyLevel
+          }
+        }
+
+        if (posting.submissionDeadline) {
+          if (subtitle2 === '') {
+            subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
+          } else {
+            subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
+          }
+        }
+
+        if (posting.startDate) {
+          if (subtitle2 === '') {
+            subtitle2 = convertDateToString(posting.startDate,"datetime")
+          } else {
+            subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
+          }
+        }
+
+        // if (posting.createdAt) {
+        //   if (subtitle2 === '') {
+        //     subtitle2 = 'Created :' + convertDateToString(posting.createdAt,"datetime")
+        //   } else {
+        //     subtitle2 = subtitle2 + ' | Created: ' + convertDateToString(posting.createdAt,"datetime")
+        //   }
+        // }
+
+        if (this.state.pageSource === 'landingPage') {
+          if (this.state.activeOrg && this.state.activeOrg !== '') {
+            pathname = '/opportunities/organizations/' + this.state.activeOrg + '/' + posting._id
+          } else {
+            pathname = '/opportunities/' + posting._id
+          }
+        }
+
+
+        rows.push(
+          <View key={i}>
+            <View style={styles.spacer} />
+
+            <View style={[styles.rowDirection]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
+                <View style={[styles.width70]}>
+                  {(posting.matchScore) ? (
                     <View style={styles.padding10}>
                       <CircularProgressBar
-                        percentage={filteredFeaturedOpportunities[index].matchScore}
-                        text={`${filteredFeaturedOpportunities[index].matchScore}%`}
+                        percentage={posting.matchScore}
+                        text={`${posting.matchScore}%`}
                         styles={{
-                          path: { stroke: `rgba(110, 190, 250, ${filteredFeaturedOpportunities[index].matchScore / 100})` },
+                          path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
                           text: { fill: '#6EBEFA', fontSize: '26px' },
                           trail: { stroke: 'transparent' }
                         }}
                       />
                     </View>
                   ) : (
-                    <Image source={{ uri: imgSrc}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                  )}
-                  {(filteredFeaturedOpportunities[index].createdAt) && (
-                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
-                    </View>
+                    <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem,styles.contain]} />
                   )}
                 </View>
-                <View style={styles.calcColumn220}>
-                  <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].name}</Text>
-                  <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
-                  <Text style={[styles.descriptionText2]}>{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
+                <View style={[styles.calcColumn180]}>
+                  <Text style={[styles.headingText5]}>{title}</Text>
+                  <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
+                  <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
+                  {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
+                    <View>
+                      <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
+                    </View>
+                  )}
+                  {(posting.createdAt) && (
+                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
+                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth]}>Posted {convertDateToString(posting.createdAt,"daysAgo")}</Text>
+                    </View>
+                  )}
                 </View>
               </TouchableOpacity>
-
-              <View style={[styles.width150,styles.leftPadding]}>
-                <View style={[styles.width110,styles.rightPadding15,styles.rightText]}>
-                  {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                    <View style={styles.topMargin}>
-                      <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]} />
-                    </View>
-                  ) : (
-                    <View>
-                      {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
-                        <View style={styles.topMargin}>
-                          <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                        </View>
-                      )}
-                    </View>
-                  )}
-                  <View style={styles.topPadding}>
-                    <TouchableOpacity onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
-                      {(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? (
-                        <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
-                          <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
-                            <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
-                          </View>
-                          <View style={[styles.row5,styles.rightPadding10,styles.centerText]}>
-                            <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
-                          </View>
-
-                        </View>
-                      ) : (
-                        <View style={[styles.standardBorder,styles.roundedCorners]}>
-                          <View style={[styles.row5,styles.horizontalPadding10,styles.centerText]}>
-                            <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
-                          </View>
-
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                  {(filteredFeaturedOpportunities[i - 1].postType === 'Challenge') ? (
-                    <View>
-                      {(filteredFeaturedOpportunities[i - 1].prizes && filteredFeaturedOpportunities[index].prizes.length > 0) ? (
-                        <Text style={[styles.headingText3,styles.ctaColor,styles.rightText,styles.fullScreenWidth]}>${filteredFeaturedOpportunities[index].prizes[0]}</Text>
-                      ) : (
-                        <Text style={[styles.headingText3,styles.ctaColor,styles.rightText]}>$0</Text>
-                      )}
-                    </View>
-                  ) : (
-                    <TouchableOpacity onPress={() => this.voteOnItem(filteredFeaturedOpportunities[index], 'up', index, true) }>
-                      <View style={[styles.standardBorder,styles.roundedCorners]}>
-                        <View style={styles.padding7}>
-                          <Image source={(filteredFeaturedOpportunities[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
-                        </View>
-                        <View style={[styles.verticalSeparator30]} />
-                        <View style={styles.horizontalPadding10}>
-                          <View style={styles.halfSpacer} />
-                          <Text style={[styles.descriptionText2,styles.boldText]}>{filteredFeaturedOpportunities[index].upvotes.length}</Text>
-                        </View>
-
+              <View>
+                <View style={[styles.leftPadding,styles.rowDirection]}>
+                  <View style={[styles.rightPadding]}>
+                    {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+                      <View style={[styles.topMargin]}>
+                        <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
                       </View>
+                    ) : (
+                      <View>
+                        {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
+                          <View style={[styles.topMargin]}>
+                            <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain,styles.pinRight]}/>
+                          </View>
+                        )}
+                      </View>
+                    )}
+
+                    <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
+                      <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
                     </TouchableOpacity>
-                  )}
-                </View>
-                <View>
-                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[i - 1]})}>
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.spacer} /><View style={styles.spacer} />
-              <View style={[styles.horizontalLine]} />
-
-              <View style={styles.spacer} />
-            </View>
-          )
-        } else {
-          //is event
-          rows.push(
-            <View key={i}>
-              <View style={styles.spacer} />
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
-                <View style={styles.width70}>
-                  <Image source={(this.state.filteredFeaturedOpportunities[index].imageURL) ? { uri: this.state.filteredFeaturedOpportunities[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                  {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
-                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
-                    </View>
-                  )}
-                </View>
-                <View style={styles.calcColumn150}>
-                  <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].title}</Text>
-                  <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].orgName} | {filteredFeaturedOpportunities[i - 1].postType}</Text>
-                  <Text style={[styles.descriptionText2]}>{convertDateToString(filteredFeaturedOpportunities[i - 1].startDate,"datetime")} - {convertDateToString(filteredFeaturedOpportunities[i - 1].endDate,"datetime")}</Text>
-                </View>
-              </TouchableOpacity>
-              <View style={[styles.width80,styles.leftPadding,styles.rowDirection]}>
-                <View style={styles.rightPadding15}>
-                  <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredFeaturedOpportunities[i - 1]) }>
-                    <Image source={(this.state.favorites.includes(this.state.filteredFeaturedOpportunities[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                  </TouchableOpacity>
-                </View>
-                {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                  <View style={styles.topMargin}>
-                    <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
                   </View>
-                ) : (
                   <View>
-                    {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
-                      <View style={styles.topMargin}>
-                        <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                      </View>
-                    )}
-                  </View>
-                )}
-                <View>
-                  <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.spacer} /><View style={styles.spacer} />
-
-              <View style={[styles.horizontalLine]} />
-
-              <View style={styles.spacer} />
-            </View>
-          )
-        }
-      }
-
-    } else if (type === 'assignments') {
-      const filteredAssignments = this.state.filteredAssignments
-      for (let i = 1; i <= filteredAssignments.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        let pathname = '/' + subpath + '/opportunities/' + this.state.filteredAssignments[index]._id
-        if (this.props.pageSource === 'landingPage') {
-          pathname = '/' + subpath + '/employers'
-        }
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
-              <View style={[styles.width70]}>
-                <Image source={(this.state.filteredAssignments[index].imageURL) ? { uri: this.state.filteredAssignments[index].imageURL} : { uri: assignmentsIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-              </View>
-              <View style={[styles.calcColumn150]}>
-                <Text style={[styles.headingText5]}>{filteredAssignments[i - 1].name}</Text>
-                <Text style={[styles.descriptionText1]}>{filteredAssignments[i - 1].firstName} {filteredAssignments[i - 1].contributorTitle} @ {filteredAssignments[i - 1].employerName} | {filteredAssignments[i - 1].industry} Industry</Text>
-                <Text style={[styles.descriptionText2]}>{filteredAssignments[i - 1].industry} Industry | {filteredAssignments[i - 1].difficultyLevel} Difficulty | {filteredAssignments[i - 1].upvotes - filteredAssignments[i - 1].downvotes} Popularity Score</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View style={[styles.rightPadding15]}>
-                <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredAssignments[i - 1]) }>
-                  <Image source={(this.state.favorites.includes(this.state.filteredAssignments[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square30,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.spacer} /><View style={styles.spacer} />
-
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-    } else if (type === 'problems') {
-      const filteredProblems = this.state.filteredProblems
-      for (let i = 1; i <= filteredProblems.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
-              <View style={[styles.width70]}>
-                <Image source={(this.state.filteredProblems[index].imageURL) ? { uri: this.state.filteredProblems[index].imageURL} : { uri: problemIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-              </View>
-              <View style={[styles.calcColumn150]}>
-                <Text style={[styles.headingText5]}>{filteredProblems[i - 1].name}</Text>
-                <Text style={[styles.descriptionText1]}>{filteredProblems[i - 1].firstName} {filteredProblems[i - 1].contributorTitle} @ {filteredProblems[i - 1].employerName} | {filteredProblems[i - 1].industry} Industry</Text>
-                <Text style={[styles.descriptionText2]}>{filteredProblems[i - 1].industry} Industry | {filteredProblems[i - 1].difficultyLevel} Difficulty | {filteredProblems[i - 1].upvotes - filteredProblems[i - 1].downvotes} Popularity Score</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View style={[styles.rightPadding15]}>
-                <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredProblems[i - 1]) }>
-                  <Image source={(this.state.favorites.includes(this.state.filteredProblems[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.spacer} /><View style={styles.spacer} />
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-    } else if (type === 'challenges') {
-      const filteredChallenges = this.state.filteredChallenges
-      for (let i = 1; i <= filteredChallenges.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
-              <View style={[styles.width70]}>
-                <Image source={(this.state.filteredChallenges[index].imageURL) ? { uri: this.state.filteredChallenges[index].imageURL} : { uri: challengeIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-              </View>
-              <View style={[styles.calcColumn150]}>
-                <Text style={[styles.headingText5]}>{filteredChallenges[i - 1].name}</Text>
-                <Text style={[styles.descriptionText1]}>{filteredChallenges[i - 1].firstName} {filteredChallenges[i - 1].contributorTitle} @ {filteredChallenges[i - 1].employerName} | {filteredChallenges[i - 1].industry} Industry</Text>
-                <Text style={[styles.descriptionText2]}>{filteredChallenges[i - 1].industry} Industry | {filteredChallenges[i - 1].difficultyLevel} Difficulty | {filteredChallenges[i - 1].upvotes - filteredChallenges[i - 1].downvotes} Popularity Score</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View style={[styles.rightPadding15]}>
-                <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredChallenges[i - 1]) }>
-                  <Image source={(this.state.favorites.includes(this.state.filteredChallenges[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View style={styles.spacer} /><View style={styles.spacer} />
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-    } else if (type === 'projectWork') {
-      console.log('rendering projectWork opps')
-      const filteredProjectWork = this.state.filteredProjectWork
-      for (let i = 1; i <= filteredProjectWork.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        let subtitle1 = ''
-        let subtitle2 = ''
-        let projectImg
-        if (filteredProjectWork[i - 1].postType === 'Assignment') {
-          subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].duration + ' Hours | ' + filteredProjectWork[i - 1].industry + ' Industry'
-          subtitle2 = 'Deadline: ' + convertDateToString(filteredProjectWork[i - 1].submissionDeadline,"datetime") + ' | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
-          projectImg = assignmentsIconBlue
-        } else if (filteredProjectWork[i - 1].postType === 'Problem') {
-          subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].contributorFirstName + ' ' + filteredProjectWork[i - 1].contributorLastName +  ' @ ' + filteredProjectWork[i - 1].employerName
-          subtitle2 = filteredProjectWork[i - 1].industry + ' Industry | ' + filteredProjectWork[i - 1].difficultyLevel +  ' Difficulty | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
-          projectImg = problemIconBlue
-        } else if (filteredProjectWork[i - 1].postType === 'Challenge') {
-          subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].contributorFirstName + ' ' + filteredProjectWork[i - 1].contributorLastName +  ' @ ' + filteredProjectWork[i - 1].employerName
-          subtitle2 = filteredProjectWork[i - 1].industry + ' Industry | ' + filteredProjectWork[i - 1].difficultyLevel +  ' Difficulty | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
-          projectImg = challengeIconBlue
-        }
-
-        if (filteredProjectWork[i - 1].imageURL) {
-          projectImg = filteredProjectWork[i - 1].imageURL
-        }
-
-        let fullPath = '/' + subpath + '/opportunities/' + filteredProjectWork[index]._id
-        let passedState = { selectedOpportunity: filteredProjectWork[index], source: 'Student' }
-
-        if (this.props.pageSource === 'landingPage') {
-          fullPath = '/opportunities/organizations/' + filteredProjectWork[index].orgCode + '/' + filteredProjectWork[index]._id
-        }
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredProjectWork[index]})} style={[styles.calcColumn150,styles.rowDirection]}>
-              <View style={[styles.width70]}>
-                {(filteredProjectWork[index].matchScore) ? (
-                  <View style={styles.padding10}>
-                    <CircularProgressBar
-                      percentage={filteredProjectWork[index].matchScore}
-                      text={`${filteredProjectWork[index].matchScore}%`}
-                      styles={{
-                        path: { stroke: `rgba(110, 190, 250, ${filteredProjectWork[index].matchScore / 100})` },
-                        text: { fill: '#6EBEFA', fontSize: '26px' },
-                        trail: { stroke: 'transparent' }
-                      }}
-                    />
-                  </View>
-                ) : (
-                  <Image source={{ uri: projectImg}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                )}
-
-                {(filteredProjectWork[index].createdAt) && (
-                  <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                    <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredProjectWork[index].createdAt,"daysAgo")}</Text>
-                  </View>
-                )}
-
-              </View>
-              <View style={styles.calcColumn220}>
-                <Text style={[styles.headingText5]}>{filteredProjectWork[i - 1].name}</Text>
-                <Text style={[styles.descriptionText2]}>{subtitle1}</Text>
-                <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
-                {(this.props.pageSource === 'landingPage') && (
-                  <View style={[styles.row5]}>
-                    <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredProjectWork[i - 1].orgName}</Text></Text>
-                  </View>
-                )}
-              </View>
-            </TouchableOpacity>
-
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View style={[styles.rightPadding15,styles.width110,styles.rightText,styles.rowDirection]}>
-                {(filteredProjectWork[i - 1].postType === 'Challenge') ? (
-                  <View style={styles.rowDirection}>
-                    {(filteredProjectWork[index].prizes && filteredProjectWork[index].prizes.length > 0) ? (
-                      <Text style={[styles.headingText3,styles.ctaColor,styles.fullScreenWidth]}>${filteredProjectWork[index].prizes[0]}</Text>
-                    ) : (
-                      <Text style={[styles.headingText2,styles.fullScreenWidth]}>$0</Text>
-                    )}
-                  </View>
-                ) : (
-                  <View style={[styles.width150,styles.rowDirection]}>
-                    <TouchableOpacity onPress={() => this.voteOnItem(filteredProjectWork[index], 'up', index, false) }>
-                      <View style={[styles.standardBorder,styles.roundedCorners,styles.pinRight,styles.rowDirection]}>
-                        <View style={styles.padding7}>
-                          <Image source={(filteredProjectWork[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
-                        </View>
-                        <View style={[styles.verticalSeparator30]} />
-                        <View style={styles.horizontalPadding10}>
-                          <View style={styles.halfSpacer} />
-                          <Text style={[styles.descriptionText2,styles.boldText]}>{filteredProjectWork[index].upvotes.length}</Text>
-                        </View>
-
-                      </View>
+                    <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
+                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
                     </TouchableOpacity>
                   </View>
-                )}
-
-                <View style={[styles.topMargin,styles.rowDirection]}>
-                  <TouchableOpacity onPress={() => this.favoriteItem(filteredProjectWork[i - 1]) }>
-                    {(this.state.favorites.includes(filteredProjectWork[i - 1]._id)) ? (
-                      <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
-                        <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
-                          <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
-                        </View>
-                        <View style={[styles.row5,styles.rightPadding10,styles.centerText]}>
-                          <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
-                        </View>
-
-                      </View>
-                    ) : (
-                      <View style={[styles.standardBorder,styles.roundedCorners]}>
-                        <View style={[styles.row5,styles.horizontalPadding10,styles.centerTex]}>
-                          <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
-                        </View>
-                      </View>
-                    )}
-                  </TouchableOpacity>
-
-                  {(filteredProjectWork[i - 1].submissions && filteredProjectWork[i - 1].submissions.some(sub => sub.userEmail === this.state.emailId)) ? (
-                    <View style={styles.topMargin}>
-                      <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
-                    </View>
-                  ) : (
-                    <View>
-                      {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredProjectWork[i - 1]._id)) && (
-                        <View style={styles.topMargin}>
-                          <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                        </View>
-                      )}
-                    </View>
-                  )}
                 </View>
               </View>
-
-
             </View>
 
-            {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[i - 1] && this.state.sortCriteriaArray[i - 1].name) && (
-              <View style={[styles.leftPadding70]}>
-                <View style={styles.halfSpacer} />
-                <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
-              </View>
-            )}
-            {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
-              <View style={[styles.leftPadding70]}>
-                <View style={styles.halfSpacer} />
-                <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-              </View>
-            )}
-            <View style={styles.spacer} /><View style={styles.spacer} />
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-    } else if (type === 'internships') {
-
-      const filteredInternships = this.state.filteredInternships
-      for (let i = 1; i <= filteredInternships.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
-              <View style={[styles.width70]}>
-                <Image source={(this.state.filteredInternships[index].imageURL) ? { uri: this.state.filteredInternships[index].imageURL} : { uri: internIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
-              </View>
-              <View style={[styles.calcColumn150]}>
-              <Text style={[styles.headingText5]}>{filteredInternships[i - 1].title}</Text>
-              <Text style={[styles.descriptionText1]}>{filteredInternships[i - 1].employerName}</Text>
-              <Text style={[styles.descriptionText2]}>{filteredInternships[i - 1].industry}</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              {(this.state.path && this.state.path.includes('/app')) && (
-                <View style={[styles.rightPadding15]}>
-                  <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredInternships[i - 1]) }>
-                    <Image source={(this.state.favorites.includes(this.state.filteredInternships[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-
-            <View style={styles.spacer} /><View style={styles.spacer} />
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-    } else if (type === 'work') {
-
-      const filteredWork = this.state.filteredWork
-      for (let i = 1; i <= filteredWork.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        let subtitle = ''
-        if (this.state.filteredWork[i - 1].politicalParty && this.state.filteredWork[i - 1].politicalParty !== '') {
-          subtitle = this.state.filteredWork[i - 1].politicalParty
-        }
-
-        if (this.state.filteredWork[i - 1].field && this.state.filteredWork[i - 1].field !== '') {
-          if (subtitle === '') {
-            subtitle = this.state.filteredWork[i - 1].field.split("|")[0].trim()
-          } else {
-            subtitle = subtitle + ' | ' + this.state.filteredWork[i - 1].field.split("|")[0].trim()
-          }
-        }
-
-        if (this.state.filteredWork[i - 1].submissionDeadline && this.state.filteredWork[i - 1].submissionDeadline) {
-          if (subtitle === '') {
-            subtitle = convertDateToString(this.state.filteredWork[i - 1].submissionDeadline,"datetime")
-          } else {
-            subtitle = subtitle + ' | Deadline: ' + convertDateToString(this.state.filteredWork[i - 1].submissionDeadline,"datetime")
-          }
-        }
-
-        if (this.state.filteredWork[i - 1].startDate && this.state.filteredWork[i - 1].startDate) {
-          if (subtitle === '') {
-            subtitle = convertDateToString(this.state.filteredWork[i - 1].startDate,"date")
-          } else {
-            subtitle = subtitle + ' | Start Date: ' + convertDateToString(this.state.filteredWork[i - 1].startDate,"date")
-          }
-        }
-
-        let pathname = '/' + subpath + '/' + tempVarForPostings + '/' + filteredWork[index]._id
-        if (this.props.pageSource === 'landingPage') {
-          pathname = '/opportunities/organizations/' + filteredWork[index].orgCode + '/' + filteredWork[index]._id
-        }
-        // console.log('match score???', i, this.state.filteredWork[index].matchScore)
-
-        rows.push(
-          <View key={i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredWork[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
-              <View style={[styles.width70]}>
-                {(this.state.filteredWork[index].matchScore) ? (
-                  <View style={styles.padding10}>
-                    <CircularProgressBar
-                      percentage={this.state.filteredWork[index].matchScore}
-                      text={`${this.state.filteredWork[index].matchScore}%`}
-                      styles={{
-                        path: { stroke: `rgba(110, 190, 250, ${this.state.filteredWork[index].matchScore / 100})` },
-                        text: { fill: '#6EBEFA', fontSize: '26px' },
-                        trail: { stroke: 'transparent' }
-                      }}
-                    />
-                  </View>
-                ) : (
-                  <Image source={(this.state.filteredWork[index].imageURL) ? { uri: this.state.filteredWork[index].imageURL} : { uri: internIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
-                )}
-                {(this.state.filteredWork[index].createdAt) && (
-                  <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                    <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredWork[index].createdAt,"daysAgo")}</Text>
-                  </View>
-                )}
-              </View>
-              <View style={[styles.calcColumn150]}>
-                <Text style={[styles.headingText5]}>{filteredWork[i - 1].title}</Text>
-                <Text style={[styles.descriptionText1]}>{filteredWork[i - 1].employerName}</Text>
-                <Text style={[styles.descriptionText2]}>{subtitle}</Text>
-                {(filteredWork[i - 1].payRange && (filteredWork[i - 1].subPostType === 'Full-Time' || filteredWork[i - 1].subPostType === 'Part-Time')) && (
-                  <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{filteredWork[i - 1].payRange}</Text>
-                )}
-                {(this.props.pageSource === 'landingPage') && (
-                  <View style={[styles.row5]}>
-                    <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredWork[i - 1].orgName}</Text></Text>
-                  </View>
-                )}
-
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredWork[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              {(this.state.path && this.state.path.includes('/app')) && (
-                <View style={[styles.rightPadding15]}>
-                  {(this.state.applications && this.state.applications.some(app => app.postingId === filteredWork[index]._id)) && (
-                    <View style={[styles.topMargin]}>
-                      <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]} />
-                    </View>
-                  )}
-                  <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(filteredWork[i - 1]) }>
-                    <Image source={(this.state.favorites.includes(this.state.filteredWork[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-
-            {(this.state.filteredWork[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
+            {(posting.sortCriteria || this.state.sortCriteriaArray) && (
               <View style={[styles.leftPadding70]}>
                 {(this.state.sortCriteriaArray.length > 0) && (
                   <View>
@@ -3308,7 +2713,7 @@ class Opportunities extends Component {
                 )}
               </View>
             )}
-            {(this.state.filteredWork[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
+            {(posting.filterCriteria || this.state.filterCriteriaArray) && (
               <View style={[styles.leftPadding70]}>
                 <View style={styles.halfSpacer} />
                 <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
@@ -3321,109 +2726,9 @@ class Opportunities extends Component {
           </View>
         )
       }
-    } else if (type === 'events') {
-      console.log('show events: ', this.state.events.length, this.state.filteredUpcomingEvents.length)
-      //renderUpcomingEvents
-      rows.push(
-        <View key="upcoming" style={[styles.row30]}>
-          <Text style={[styles.headingText3]}>Upcoming Events</Text>
-        </View>
-      )
+    }
 
-      const filteredUpcomingEvents = this.state.filteredUpcomingEvents
-      for (let i = 1; i <= filteredUpcomingEvents.length; i++) {
-        console.log(i);
-
-        const index = i - 1
-
-        let pathname = '/' + subpath + '/opportunities/' + this.state.filteredUpcomingEvents[index]._id
-        if (this.props.pageSource === 'landingPage') {
-          pathname = '/opportunities/organizations/' + filteredUpcomingEvents[index].orgCode + '/' + filteredUpcomingEvents[index]._id
-        }
-
-        rows.push(
-          <View key={"upcoming|" +i}>
-            <View style={styles.spacer} />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.upcomingEvents[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
-              <View style={[styles.width70]}>
-                {(this.state.filteredUpcomingEvents[index].matchScore) ? (
-                  <View style={styles.padding10}>
-                    <CircularProgressBar
-                      percentage={this.state.filteredUpcomingEvents[index].matchScore}
-                      text={`${this.state.filteredUpcomingEvents[index].matchScore}%`}
-                      styles={{
-                        path: { stroke: `rgba(110, 190, 250, ${this.state.filteredUpcomingEvents[index].matchScore / 100})` },
-                        text: { fill: '#6EBEFA', fontSize: '26px' },
-                        trail: { stroke: 'transparent' }
-                      }}
-                    />
-                  </View>
-                ) : (
-                  <Image source={(this.state.filteredUpcomingEvents[index].imageURL) ? { uri: this.state.filteredUpcomingEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
-                )}
-                {(this.state.filteredUpcomingEvents[index].createdAt) && (
-                  <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                    <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredUpcomingEvents[index].createdAt,"daysAgo")}</Text>
-                  </View>
-                )}
-
-              </View>
-              <View style={[styles.calcColumn150]}>
-              <Text style={[styles.headingText5]}>{filteredUpcomingEvents[i - 1].title}</Text>
-              <Text style={[styles.descriptionText1]}>{filteredUpcomingEvents[i - 1].orgName}</Text>
-              <Text style={[styles.descriptionText2]}>{convertDateToString(filteredUpcomingEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredUpcomingEvents[i - 1].endDate,"datetime")}</Text>
-              {(this.props.pageSource === 'landingPage') && (
-                <View style={[styles.row5]}>
-                  <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredUpcomingEvents[i - 1].orgName}</Text></Text>
-                </View>
-              )}
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.leftPadding,styles.rowDirection]}>
-              <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredUpcomingEvents[index]})}>
-                  <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                </TouchableOpacity>
-              </View>
-              <View style={[styles.rightPadding15]}>
-
-                {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === this.state.filteredUpcomingEvents[index]._id)) && (
-                  <View style={[styles.topMargin]}>
-                    <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
-                  </View>
-                )}
-                <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredUpcomingEvents[i - 1]) }>
-                  <Image source={(this.state.favorites.includes(this.state.filteredUpcomingEvents[index]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {(this.state.filteredUpcomingEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
-              <View style={[styles.leftPadding70]}>
-                {(this.state.sortCriteriaArray.length > 0) && (
-                  <View>
-                    <View style={styles.halfSpacer} />
-                    <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
-                  </View>
-                )}
-              </View>
-            )}
-            {(this.state.filteredUpcomingEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
-              <View style={[styles.leftPadding70]}>
-                <View style={styles.halfSpacer} />
-                <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-              </View>
-            )}
-            <View style={styles.spacer} /><View style={styles.spacer} />
-            <View style={[styles.horizontalLine]} />
-
-            <View style={styles.spacer} />
-          </View>
-        )
-      }
-
-      //renderPastEvents
+    if (type === 'events' && this.state.filteredPastEvents && this.state.filteredPastEvents.length > 0) {
       rows.push(
         <View key="past" style={[styles.row30]}>
           <Text style={[styles.headingText3]}>Past Events</Text>
@@ -3435,11 +2740,6 @@ class Opportunities extends Component {
         console.log(i);
 
         const index = i - 1
-
-        let pathname = '/' + subpath + '/opportunities/' + this.state.filteredPastEvents[index]._id
-        if (this.props.pageSource === 'landingPage') {
-          pathname = '/opportunities/organizations/' + filteredPastEvents[index].orgCode + '/' + filteredPastEvents[index]._id
-        }
 
         rows.push(
           <View key={"past|" +i}>
@@ -3522,221 +2822,1215 @@ class Opportunities extends Component {
           </View>
         )
       }
-    } else if (type === 'all') {
-
-      const filteredPostings = this.state.filteredPostings
-
-      for (let i = 1; i <= filteredPostings.length; i++) {
-        console.log(i);
-
-        // const index = i - 1
-        const posting = filteredPostings[i - 1]
-        let isActive = true
-
-        let postingIcon = internIconBlue
-        let postingIconClassName = "image-auto-50 center-item"
-
-        if (posting.postType === 'Event') {
-          postingIcon = eventIconBlue
-          postingIconClassName = "image-auto-48 center-item"
-        } else if (posting.postType === 'Assignment') {
-          postingIcon = assignmentsIconBlue
-          postingIconClassName = "image-auto-50 top-margin-5 center-item"
-        } else if (posting.postType === 'Problem') {
-          postingIcon = problemIconBlue
-          postingIconClassName = "image-auto-50 top-margin-5 center-item"
-        } else if (posting.postType === 'Challenge') {
-          postingIcon = challengeIconBlue
-          postingIconClassName = "image-auto-50 top-margin-5 center-item"
-        } else if (posting.postType === 'Internship') {
-          if (!posting.isActive) {
-            isActive = false
-          }
-        } else if (posting.postType === 'Work') {
-          // none of these yet
-          if (!posting.isActive) {
-            isActive = false
-          }
-        } else if (posting.postType === 'Scholarship') {
-          postingIcon = moneyIconBlue
-          postingIconClassName = "image-auto-50 top-margin-5 center-item"
-        }
-
-        if (posting.imageURL) {
-          postingIcon = posting.imageURL
-          postingIconClassName = "image-50-fit top-margin-5 center-item"
-        }
-
-        if (isActive) {
-          let title = posting.title
-          if (!posting.title) {
-            title = posting.name
-          }
-
-          let subtitle1 = posting.employerName
-
-          let subtitle2 = posting.postType
-          if (posting.politicalParty && posting.politicalParty !== '') {
-            if (subtitle2 === '') {
-              subtitle2 = posting.politicalParty
-            } else {
-              subtitle2 = subtitle2 + ' | ' + posting.politicalParty
-            }
-          }
-
-          if (posting.field && posting.field !== '') {
-            if (subtitle2 === '') {
-              subtitle2 = posting.field.split("|")[0].trim()
-            } else {
-              subtitle2 = subtitle2 + ' | ' + posting.field.split("|")[0].trim()
-            }
-          }
-
-          if (posting.industry && posting.industry !== '') {
-            if (subtitle2 === '') {
-              subtitle2 = posting.industry
-            } else {
-              subtitle2 = subtitle2 + ' | Industry: ' + posting.industry
-            }
-          }
-
-          if (posting.difficultyLevel && posting.difficultyLevel !== '') {
-            if (subtitle2 === '') {
-              subtitle2 = posting.difficultyLevel
-            } else {
-              subtitle2 = subtitle2 + ' | Difficulty Level: ' + posting.difficultyLevel
-            }
-          }
-
-          if (posting.submissionDeadline) {
-            if (subtitle2 === '') {
-              subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
-            } else {
-              subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
-            }
-          }
-
-          if (posting.startDate) {
-            if (subtitle2 === '') {
-              subtitle2 = convertDateToString(posting.startDate,"datetime")
-            } else {
-              subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
-            }
-          }
-
-          // if (posting.createdAt) {
-          //   if (subtitle2 === '') {
-          //     subtitle2 = 'Created :' + convertDateToString(posting.createdAt,"datetime")
-          //   } else {
-          //     subtitle2 = subtitle2 + ' | Created: ' + convertDateToString(posting.createdAt,"datetime")
-          //   }
-          // }
-
-          let pathname = '/' + subpath + '/' + tempVarForPostings + '/' + posting._id
-          if (this.state.pageSource === 'landingPage') {
-            if (this.state.activeOrg && this.state.activeOrg !== '') {
-              pathname = '/opportunities/organizations/' + this.state.activeOrg + '/' + posting._id
-            } else {
-              pathname = '/opportunities/' + posting._id
-            }
-          }
-
-
-          rows.push(
-            <View key={i}>
-              <View style={styles.spacer} />
-
-              <View style={[styles.rowDirection]}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
-                  <View style={[styles.width70]}>
-                    {(posting.matchScore) ? (
-                      <View style={styles.padding10}>
-                        <CircularProgressBar
-                          percentage={posting.matchScore}
-                          text={`${posting.matchScore}%`}
-                          styles={{
-                            path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
-                            text: { fill: '#6EBEFA', fontSize: '26px' },
-                            trail: { stroke: 'transparent' }
-                          }}
-                        />
-                      </View>
-                    ) : (
-                      <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem]} />
-                    )}
-                  </View>
-                  <View style={[styles.calcColumn180]}>
-                    <Text style={[styles.headingText5]}>{title}</Text>
-                    <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
-                    <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
-                    {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
-                      <View>
-                        <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
-                      </View>
-                    )}
-                    {(posting.createdAt) && (
-                      <View style={[styles.topPadding,styles.horizontalPadding5]}>
-                        <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth]}>{convertDateToString(posting.createdAt,"daysAgo")}</Text>
-                      </View>
-                    )}
-                  </View>
-                </TouchableOpacity>
-                <View>
-                  <View style={[styles.leftPadding,styles.rowDirection]}>
-                    <View style={[styles.rightPadding]}>
-                      {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
-                        <View style={[styles.topMargin]}>
-                          <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
-                        </View>
-                      ) : (
-                        <View>
-                          {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
-                            <View style={[styles.topMargin]}>
-                              <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain,styles.pinRight]}/>
-                            </View>
-                          )}
-                        </View>
-                      )}
-
-                      <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
-                        <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                      </TouchableOpacity>
-                    </View>
-                    <View>
-                      <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
-                        <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              {(posting.sortCriteria || this.state.sortCriteriaArray) && (
-                <View style={[styles.leftPadding70]}>
-                  {(this.state.sortCriteriaArray.length > 0) && (
-                    <View>
-                      <View style={styles.halfSpacer} />
-                      <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
-                    </View>
-                  )}
-                </View>
-              )}
-              {(posting.filterCriteria || this.state.filterCriteriaArray) && (
-                <View style={[styles.leftPadding70]}>
-                  <View style={styles.halfSpacer} />
-                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-                </View>
-              )}
-              <View style={styles.spacer} /><View style={styles.spacer} />
-              <View style={[styles.horizontalLine]} />
-
-              <View style={styles.spacer} />
-            </View>
-          )
-        }
-      }
     }
+
+    // if (type === 'featured') {
+    //   const filteredFeaturedOpportunities = this.state.filteredFeaturedOpportunities
+    //   console.log('test 1', filteredFeaturedOpportunities)
+    //
+    //   for (let i = 1; i <= filteredFeaturedOpportunities.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     if (filteredFeaturedOpportunities[index].postType === 'Scholarship' || filteredFeaturedOpportunities[index].postType === 'Individual' || filteredFeaturedOpportunities[index].postType === 'Track' || filteredFeaturedOpportunities[index].postType === 'Internship' || filteredFeaturedOpportunities[index].postType === 'Work') {
+    //       if (filteredFeaturedOpportunities[index].isActive === true) {
+    //         let imgSrc = internIconBlue
+    //         if (filteredFeaturedOpportunities[index].postType === 'Scholarship') {
+    //           imgSrc = moneyIconBlue
+    //         }
+    //         if (filteredFeaturedOpportunities[index].imageURL) {
+    //           imgSrc = filteredFeaturedOpportunities[index].imageURL
+    //         }
+    //
+    //         rows.push(
+    //           <View key={i}>
+    //             <View style={styles.spacer} />
+    //
+    //             <View style={[styles.fullScreenWidth,styles.rowDirection]}>
+    //               <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })} style={styles.rowDirection,styles.calcColumn80}>
+    //                 <View style={styles.width70}>
+    //                   {(filteredFeaturedOpportunities[index].matchScore) ? (
+    //                     <View style={styles.padding10}>
+    //                       <CircularProgressBar
+    //                         percentage={filteredFeaturedOpportunities[index].matchScore}
+    //                         text={`${filteredFeaturedOpportunities[index].matchScore}%`}
+    //                         styles={{
+    //                           path: { stroke: `rgba(110, 190, 250, ${filteredFeaturedOpportunities[index].matchScore / 100})` },
+    //                           text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                           trail: { stroke: 'transparent' }
+    //                         }}
+    //                       />
+    //                     </View>
+    //                   ) : (
+    //                     <Image source={{ uri: imgSrc}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //                   )}
+    //                   {(filteredFeaturedOpportunities[index].createdAt) && (
+    //                     <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                       <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
+    //                     </View>
+    //                   )}
+    //                 </View>
+    //                 <View style={styles.calcColumn150}>
+    //                   <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].title}</Text>
+    //                   <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].orgName}  | {filteredFeaturedOpportunities[i - 1].postType}</Text>
+    //
+    //                   {(filteredFeaturedOpportunities[i - 1].payRange && (filteredFeaturedOpportunities[i - 1].subPostType === 'Full-Time' || filteredFeaturedOpportunities[i - 1].subPostType === 'Part-Time')) && (
+    //                     <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{filteredFeaturedOpportunities[i - 1].payRange}</Text>
+    //                   )}
+    //                 </View>
+    //               </TouchableOpacity>
+    //               <View style={[styles.width80,styles.rowDirection]}>
+    //                 <View style={[styles.rowDirection,styles.rightPadding15]}>
+    //                   {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+    //                     <View style={[styles.topMargin]}>
+    //                       <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                     </View>
+    //                   ) : (
+    //                     <View>
+    //                       {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
+    //                         <View style={[styles.topMargin]}>
+    //                           <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                         </View>
+    //                       )}
+    //                     </View>
+    //                   )}
+    //                   <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
+    //                     <Image source={(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+    //                   </TouchableOpacity>
+    //                 </View>
+    //                 <View>
+    //                   <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //                   <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index] })}>
+    //                     <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //                   </TouchableOpacity>
+    //                 </View>
+    //               </View>
+    //             </View>
+    //
+    //             <View style={styles.spacer} /><View style={styles.spacer} />
+    //             <View style={[styles.horizontalLine]} />
+    //
+    //             <View style={styles.spacer} />
+    //
+    //           </View>
+    //         )
+    //       }
+    //     } else if (filteredFeaturedOpportunities[index].postType === 'Assignment') {
+    //
+    //       rows.push(
+    //         <View key={i}>
+    //           <View style={styles.spacer} />
+    //           <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.rowDirection,styles.calcColumn150]}>
+    //             <View style={styles.width70}>
+    //               <Image source={(filteredFeaturedOpportunities[index].imageURL) ? { uri: filteredFeaturedOpportunities[index].imageURL} : { uri: assignmentsIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //               {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
+    //                 <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                   <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
+    //                 </View>
+    //               )}
+    //             </View>
+    //             <View style={styles.calcColumn220}>
+    //               <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].name}</Text>
+    //               <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
+    //               <Text style={[styles.descriptionText2]}>{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
+    //             </View>
+    //           </TouchableOpacity>
+    //           <View style={[styles.width150,styles.leftPadding]}>
+    //             <View style={[styles.rightPadding15,styles.width110,styles.rightText]}>
+    //               <View style={styles.topPadding}>
+    //                 {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+    //                   <View style={styles.topMargin}>
+    //                     <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                   </View>
+    //                 ) : (
+    //                   <View>
+    //                     {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
+    //                       <View style={styles.topMargin}>
+    //                         <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                       </View>
+    //                     )}
+    //                   </View>
+    //                 )}
+    //                 <TouchableOpacity onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
+    //                   {(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? (
+    //                     <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+    //                       <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
+    //                         <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
+    //                       </View>
+    //                       <View style={[styles.row5,styles.rightPadding,styles.centerText]}>
+    //                         <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
+    //                       </View>
+    //
+    //                     </View>
+    //                   ) : (
+    //                     <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+    //                       <View style={[styles.row5,styles.horizontalPadding10,styles.centerText]}>
+    //                         <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
+    //                       </View>
+    //
+    //                     </View>
+    //                   )}
+    //                 </TouchableOpacity>
+    //               </View>
+    //               <TouchableOpacity onPress={() => this.voteOnItem(filteredFeaturedOpportunities[index], 'up', index, true) }>
+    //                 <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+    //                   <View style={styles.padding7}>
+    //                     <Image source={(filteredFeaturedOpportunities[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
+    //                   </View>
+    //                   <View style={[styles.verticalSeparator30]} />
+    //                   <View style={styles.horizontalPadding10}>
+    //                     <View style={styles.halfSpacer} />
+    //                     <Text style={[styles.descriptionText2,styles.boldText]}>{filteredFeaturedOpportunities[index].upvotes.length}</Text>
+    //                   </View>
+    //                 </View>
+    //               </TouchableOpacity>
+    //             </View>
+    //             <View>
+    //               <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //               <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[index]})}>
+    //                 <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //               </TouchableOpacity>
+    //             </View>
+    //           </View>
+    //
+    //           <View style={styles.spacer} /><View style={styles.spacer} />
+    //           <View style={[styles.horizontalLine]} />
+    //
+    //           <View style={styles.spacer} />
+    //         </View>
+    //       )
+    //     } else if (filteredFeaturedOpportunities[index].postType === 'Problem' || filteredFeaturedOpportunities[index].postType === 'Challenge') {
+    //
+    //       let imgSrc = problemIconBlue
+    //       if (filteredFeaturedOpportunities[index].postType === 'Challenge') {
+    //         imgSrc = challengeIconBlue
+    //       }
+    //
+    //       if (filteredFeaturedOpportunities[index].imageURL) {
+    //         imgSrc = filteredFeaturedOpportunities[index].imageURL
+    //       }
+    //
+    //       rows.push(
+    //         <View key={i}>
+    //           <View style={styles.spacer} />
+    //           <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.rowDirection,styles.calcColumn150]}>
+    //             <View style={styles.width70}>
+    //               {(filteredFeaturedOpportunities[index].matchScore) ? (
+    //                 <View style={styles.padding10}>
+    //                   <CircularProgressBar
+    //                     percentage={filteredFeaturedOpportunities[index].matchScore}
+    //                     text={`${filteredFeaturedOpportunities[index].matchScore}%`}
+    //                     styles={{
+    //                       path: { stroke: `rgba(110, 190, 250, ${filteredFeaturedOpportunities[index].matchScore / 100})` },
+    //                       text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                       trail: { stroke: 'transparent' }
+    //                     }}
+    //                   />
+    //                 </View>
+    //               ) : (
+    //                 <Image source={{ uri: imgSrc}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //               )}
+    //               {(filteredFeaturedOpportunities[index].createdAt) && (
+    //                 <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                   <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
+    //                 </View>
+    //               )}
+    //             </View>
+    //             <View style={styles.calcColumn220}>
+    //               <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].name}</Text>
+    //               <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].firstName} {filteredFeaturedOpportunities[i - 1].contributorTitle} @ {filteredFeaturedOpportunities[i - 1].employerName} | {filteredFeaturedOpportunities[i - 1].industry} Industry</Text>
+    //               <Text style={[styles.descriptionText2]}>{filteredFeaturedOpportunities[i - 1].industry} Industry | {filteredFeaturedOpportunities[i - 1].difficultyLevel} Difficulty | {filteredFeaturedOpportunities[i - 1].upvotes - filteredFeaturedOpportunities[i - 1].downvotes} Popularity Score</Text>
+    //             </View>
+    //           </TouchableOpacity>
+    //
+    //           <View style={[styles.width150,styles.leftPadding]}>
+    //             <View style={[styles.width110,styles.rightPadding15,styles.rightText]}>
+    //               {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+    //                 <View style={styles.topMargin}>
+    //                   <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]} />
+    //                 </View>
+    //               ) : (
+    //                 <View>
+    //                   {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
+    //                     <View style={styles.topMargin}>
+    //                       <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                     </View>
+    //                   )}
+    //                 </View>
+    //               )}
+    //               <View style={styles.topPadding}>
+    //                 <TouchableOpacity onPress={() => this.favoriteItem(filteredFeaturedOpportunities[i - 1]) }>
+    //                   {(this.state.favorites.includes(filteredFeaturedOpportunities[i - 1]._id)) ? (
+    //                     <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+    //                       <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
+    //                         <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
+    //                       </View>
+    //                       <View style={[styles.row5,styles.rightPadding10,styles.centerText]}>
+    //                         <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
+    //                       </View>
+    //
+    //                     </View>
+    //                   ) : (
+    //                     <View style={[styles.standardBorder,styles.roundedCorners]}>
+    //                       <View style={[styles.row5,styles.horizontalPadding10,styles.centerText]}>
+    //                         <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
+    //                       </View>
+    //
+    //                     </View>
+    //                   )}
+    //                 </TouchableOpacity>
+    //               </View>
+    //               {(filteredFeaturedOpportunities[i - 1].postType === 'Challenge') ? (
+    //                 <View>
+    //                   {(filteredFeaturedOpportunities[i - 1].prizes && filteredFeaturedOpportunities[index].prizes.length > 0) ? (
+    //                     <Text style={[styles.headingText3,styles.ctaColor,styles.rightText,styles.fullScreenWidth]}>${filteredFeaturedOpportunities[index].prizes[0]}</Text>
+    //                   ) : (
+    //                     <Text style={[styles.headingText3,styles.ctaColor,styles.rightText]}>$0</Text>
+    //                   )}
+    //                 </View>
+    //               ) : (
+    //                 <TouchableOpacity onPress={() => this.voteOnItem(filteredFeaturedOpportunities[index], 'up', index, true) }>
+    //                   <View style={[styles.standardBorder,styles.roundedCorners]}>
+    //                     <View style={styles.padding7}>
+    //                       <Image source={(filteredFeaturedOpportunities[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
+    //                     </View>
+    //                     <View style={[styles.verticalSeparator30]} />
+    //                     <View style={styles.horizontalPadding10}>
+    //                       <View style={styles.halfSpacer} />
+    //                       <Text style={[styles.descriptionText2,styles.boldText]}>{filteredFeaturedOpportunities[index].upvotes.length}</Text>
+    //                     </View>
+    //
+    //                   </View>
+    //                 </TouchableOpacity>
+    //               )}
+    //             </View>
+    //             <View>
+    //               <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //               <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredFeaturedOpportunities[i - 1]})}>
+    //                 <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //               </TouchableOpacity>
+    //             </View>
+    //           </View>
+    //
+    //           <View style={styles.spacer} /><View style={styles.spacer} />
+    //           <View style={[styles.horizontalLine]} />
+    //
+    //           <View style={styles.spacer} />
+    //         </View>
+    //       )
+    //     } else {
+    //       //is event
+    //       rows.push(
+    //         <View key={i}>
+    //           <View style={styles.spacer} />
+    //           <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+    //             <View style={styles.width70}>
+    //               <Image source={(this.state.filteredFeaturedOpportunities[index].imageURL) ? { uri: this.state.filteredFeaturedOpportunities[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //               {(this.state.filteredFeaturedOpportunities[index].createdAt) && (
+    //                 <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                   <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredFeaturedOpportunities[index].createdAt,"daysAgo")}</Text>
+    //                 </View>
+    //               )}
+    //             </View>
+    //             <View style={styles.calcColumn150}>
+    //               <Text style={[styles.headingText5]}>{filteredFeaturedOpportunities[i - 1].title}</Text>
+    //               <Text style={[styles.descriptionText1]}>{filteredFeaturedOpportunities[i - 1].orgName} | {filteredFeaturedOpportunities[i - 1].postType}</Text>
+    //               <Text style={[styles.descriptionText2]}>{convertDateToString(filteredFeaturedOpportunities[i - 1].startDate,"datetime")} - {convertDateToString(filteredFeaturedOpportunities[i - 1].endDate,"datetime")}</Text>
+    //             </View>
+    //           </TouchableOpacity>
+    //           <View style={[styles.width80,styles.leftPadding,styles.rowDirection]}>
+    //             <View style={styles.rightPadding15}>
+    //               <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredFeaturedOpportunities[i - 1]) }>
+    //                 <Image source={(this.state.favorites.includes(this.state.filteredFeaturedOpportunities[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+    //               </TouchableOpacity>
+    //             </View>
+    //             {((this.state.applications && this.state.applications.some(app => app.postingId === filteredFeaturedOpportunities[index]._id)) || (filteredFeaturedOpportunities[index].submissions && filteredFeaturedOpportunities[index].submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+    //               <View style={styles.topMargin}>
+    //                 <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+    //               </View>
+    //             ) : (
+    //               <View>
+    //                 {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredFeaturedOpportunities[index]._id)) && (
+    //                   <View style={styles.topMargin}>
+    //                     <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                   </View>
+    //                 )}
+    //               </View>
+    //             )}
+    //             <View>
+    //               <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //               <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredFeaturedOpportunities[index]})}>
+    //                 <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //               </TouchableOpacity>
+    //             </View>
+    //           </View>
+    //
+    //           <View style={styles.spacer} /><View style={styles.spacer} />
+    //
+    //           <View style={[styles.horizontalLine]} />
+    //
+    //           <View style={styles.spacer} />
+    //         </View>
+    //       )
+    //     }
+    //   }
+    //
+    // } else if (type === 'assignments') {
+    //   const filteredAssignments = this.state.filteredAssignments
+    //   for (let i = 1; i <= filteredAssignments.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
+    //           <View style={[styles.width70]}>
+    //             <Image source={(this.state.filteredAssignments[index].imageURL) ? { uri: this.state.filteredAssignments[index].imageURL} : { uri: assignmentsIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //             <Text style={[styles.headingText5]}>{filteredAssignments[i - 1].name}</Text>
+    //             <Text style={[styles.descriptionText1]}>{filteredAssignments[i - 1].firstName} {filteredAssignments[i - 1].contributorTitle} @ {filteredAssignments[i - 1].employerName} | {filteredAssignments[i - 1].industry} Industry</Text>
+    //             <Text style={[styles.descriptionText2]}>{filteredAssignments[i - 1].industry} Industry | {filteredAssignments[i - 1].difficultyLevel} Difficulty | {filteredAssignments[i - 1].upvotes - filteredAssignments[i - 1].downvotes} Popularity Score</Text>
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View style={[styles.rightPadding15]}>
+    //             <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredAssignments[i - 1]) }>
+    //               <Image source={(this.state.favorites.includes(this.state.filteredAssignments[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square30,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredAssignments[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //         </View>
+    //
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'problems') {
+    //   const filteredProblems = this.state.filteredProblems
+    //   for (let i = 1; i <= filteredProblems.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
+    //           <View style={[styles.width70]}>
+    //             <Image source={(this.state.filteredProblems[index].imageURL) ? { uri: this.state.filteredProblems[index].imageURL} : { uri: problemIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //             <Text style={[styles.headingText5]}>{filteredProblems[i - 1].name}</Text>
+    //             <Text style={[styles.descriptionText1]}>{filteredProblems[i - 1].firstName} {filteredProblems[i - 1].contributorTitle} @ {filteredProblems[i - 1].employerName} | {filteredProblems[i - 1].industry} Industry</Text>
+    //             <Text style={[styles.descriptionText2]}>{filteredProblems[i - 1].industry} Industry | {filteredProblems[i - 1].difficultyLevel} Difficulty | {filteredProblems[i - 1].upvotes - filteredProblems[i - 1].downvotes} Popularity Score</Text>
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View style={[styles.rightPadding15]}>
+    //             <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredProblems[i - 1]) }>
+    //               <Image source={(this.state.favorites.includes(this.state.filteredProblems[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredProblems[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //         </View>
+    //
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'challenges') {
+    //   const filteredChallenges = this.state.filteredChallenges
+    //   for (let i = 1; i <= filteredChallenges.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})} style={[styles.rowDirection,styles.calcColumn80]}>
+    //           <View style={[styles.width70]}>
+    //             <Image source={(this.state.filteredChallenges[index].imageURL) ? { uri: this.state.filteredChallenges[index].imageURL} : { uri: challengeIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //             <Text style={[styles.headingText5]}>{filteredChallenges[i - 1].name}</Text>
+    //             <Text style={[styles.descriptionText1]}>{filteredChallenges[i - 1].firstName} {filteredChallenges[i - 1].contributorTitle} @ {filteredChallenges[i - 1].employerName} | {filteredChallenges[i - 1].industry} Industry</Text>
+    //             <Text style={[styles.descriptionText2]}>{filteredChallenges[i - 1].industry} Industry | {filteredChallenges[i - 1].difficultyLevel} Difficulty | {filteredChallenges[i - 1].upvotes - filteredChallenges[i - 1].downvotes} Popularity Score</Text>
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View style={[styles.rightPadding15]}>
+    //             <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredChallenges[i - 1]) }>
+    //               <Image source={(this.state.favorites.includes(this.state.filteredChallenges[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredChallenges[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //         </View>
+    //
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'projectWork') {
+    //   console.log('rendering projectWork opps')
+    //   const filteredProjectWork = this.state.filteredProjectWork
+    //   for (let i = 1; i <= filteredProjectWork.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     let subtitle1 = ''
+    //     let subtitle2 = ''
+    //     let projectImg
+    //     if (filteredProjectWork[i - 1].postType === 'Assignment') {
+    //       subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].duration + ' Hours | ' + filteredProjectWork[i - 1].industry + ' Industry'
+    //       subtitle2 = 'Deadline: ' + convertDateToString(filteredProjectWork[i - 1].submissionDeadline,"datetime") + ' | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
+    //       projectImg = assignmentsIconBlue
+    //     } else if (filteredProjectWork[i - 1].postType === 'Problem') {
+    //       subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].contributorFirstName + ' ' + filteredProjectWork[i - 1].contributorLastName +  ' @ ' + filteredProjectWork[i - 1].employerName
+    //       subtitle2 = filteredProjectWork[i - 1].industry + ' Industry | ' + filteredProjectWork[i - 1].difficultyLevel +  ' Difficulty | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
+    //       projectImg = problemIconBlue
+    //     } else if (filteredProjectWork[i - 1].postType === 'Challenge') {
+    //       subtitle1 = filteredProjectWork[i - 1].postType + ' | ' + filteredProjectWork[i - 1].contributorFirstName + ' ' + filteredProjectWork[i - 1].contributorLastName +  ' @ ' + filteredProjectWork[i - 1].employerName
+    //       subtitle2 = filteredProjectWork[i - 1].industry + ' Industry | ' + filteredProjectWork[i - 1].difficultyLevel +  ' Difficulty | Last Updated: ' + convertDateToString(filteredProjectWork[i - 1].updatedAt,"date")
+    //       projectImg = challengeIconBlue
+    //     }
+    //
+    //     if (filteredProjectWork[i - 1].imageURL) {
+    //       projectImg = filteredProjectWork[i - 1].imageURL
+    //     }
+    //
+    //     if (this.props.pageSource === 'landingPage') {
+    //       fullPath = '/opportunities/organizations/' + filteredProjectWork[index].orgCode + '/' + filteredProjectWork[index]._id
+    //     }
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredProjectWork[index]})} style={[styles.calcColumn150,styles.rowDirection]}>
+    //           <View style={[styles.width70]}>
+    //             {(filteredProjectWork[index].matchScore) ? (
+    //               <View style={styles.padding10}>
+    //                 <CircularProgressBar
+    //                   percentage={filteredProjectWork[index].matchScore}
+    //                   text={`${filteredProjectWork[index].matchScore}%`}
+    //                   styles={{
+    //                     path: { stroke: `rgba(110, 190, 250, ${filteredProjectWork[index].matchScore / 100})` },
+    //                     text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                     trail: { stroke: 'transparent' }
+    //                   }}
+    //                 />
+    //               </View>
+    //             ) : (
+    //               <Image source={{ uri: projectImg}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //             )}
+    //
+    //             {(filteredProjectWork[index].createdAt) && (
+    //               <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                 <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(filteredProjectWork[index].createdAt,"daysAgo")}</Text>
+    //               </View>
+    //             )}
+    //
+    //           </View>
+    //           <View style={styles.calcColumn220}>
+    //             <Text style={[styles.headingText5]}>{filteredProjectWork[i - 1].name}</Text>
+    //             <Text style={[styles.descriptionText2]}>{subtitle1}</Text>
+    //             <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
+    //             {(this.props.pageSource === 'landingPage') && (
+    //               <View style={[styles.row5]}>
+    //                 <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredProjectWork[i - 1].orgName}</Text></Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //         </TouchableOpacity>
+    //
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View style={[styles.rightPadding15,styles.width110,styles.rightText,styles.rowDirection]}>
+    //             {(filteredProjectWork[i - 1].postType === 'Challenge') ? (
+    //               <View style={styles.rowDirection}>
+    //                 {(filteredProjectWork[index].prizes && filteredProjectWork[index].prizes.length > 0) ? (
+    //                   <Text style={[styles.headingText3,styles.ctaColor,styles.fullScreenWidth]}>${filteredProjectWork[index].prizes[0]}</Text>
+    //                 ) : (
+    //                   <Text style={[styles.headingText2,styles.fullScreenWidth]}>$0</Text>
+    //                 )}
+    //               </View>
+    //             ) : (
+    //               <View style={[styles.width150,styles.rowDirection]}>
+    //                 <TouchableOpacity onPress={() => this.voteOnItem(filteredProjectWork[index], 'up', index, false) }>
+    //                   <View style={[styles.standardBorder,styles.roundedCorners,styles.pinRight,styles.rowDirection]}>
+    //                     <View style={styles.padding7}>
+    //                       <Image source={(filteredProjectWork[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
+    //                     </View>
+    //                     <View style={[styles.verticalSeparator30]} />
+    //                     <View style={styles.horizontalPadding10}>
+    //                       <View style={styles.halfSpacer} />
+    //                       <Text style={[styles.descriptionText2,styles.boldText]}>{filteredProjectWork[index].upvotes.length}</Text>
+    //                     </View>
+    //
+    //                   </View>
+    //                 </TouchableOpacity>
+    //               </View>
+    //             )}
+    //
+    //             <View style={[styles.topMargin,styles.rowDirection]}>
+    //               <TouchableOpacity onPress={() => this.favoriteItem(filteredProjectWork[i - 1]) }>
+    //                 {(this.state.favorites.includes(filteredProjectWork[i - 1]._id)) ? (
+    //                   <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+    //                     <View style={[styles.row7,styles.leftPadding5,styles.rightPadding5]}>
+    //                       <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
+    //                     </View>
+    //                     <View style={[styles.row5,styles.rightPadding10,styles.centerText]}>
+    //                       <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
+    //                     </View>
+    //
+    //                   </View>
+    //                 ) : (
+    //                   <View style={[styles.standardBorder,styles.roundedCorners]}>
+    //                     <View style={[styles.row5,styles.horizontalPadding10,styles.centerTex]}>
+    //                       <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
+    //                     </View>
+    //                   </View>
+    //                 )}
+    //               </TouchableOpacity>
+    //
+    //               {(filteredProjectWork[i - 1].submissions && filteredProjectWork[i - 1].submissions.some(sub => sub.userEmail === this.state.emailId)) ? (
+    //                 <View style={styles.topMargin}>
+    //                   <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                 </View>
+    //               ) : (
+    //                 <View>
+    //                   {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === filteredProjectWork[i - 1]._id)) && (
+    //                     <View style={styles.topMargin}>
+    //                       <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                     </View>
+    //                   )}
+    //                 </View>
+    //               )}
+    //             </View>
+    //           </View>
+    //
+    //
+    //         </View>
+    //
+    //         {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[i - 1] && this.state.sortCriteriaArray[i - 1].name) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             <View style={styles.halfSpacer} />
+    //             <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+    //           </View>
+    //         )}
+    //         {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             <View style={styles.halfSpacer} />
+    //             <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+    //           </View>
+    //         )}
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'internships') {
+    //
+    //   const filteredInternships = this.state.filteredInternships
+    //   for (let i = 1; i <= filteredInternships.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+    //           <View style={[styles.width70]}>
+    //             <Image source={(this.state.filteredInternships[index].imageURL) ? { uri: this.state.filteredInternships[index].imageURL} : { uri: internIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //           <Text style={[styles.headingText5]}>{filteredInternships[i - 1].title}</Text>
+    //           <Text style={[styles.descriptionText1]}>{filteredInternships[i - 1].employerName}</Text>
+    //           <Text style={[styles.descriptionText2]}>{filteredInternships[i - 1].industry}</Text>
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredInternships[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           {(this.state.path && this.state.path.includes('/app')) && (
+    //             <View style={[styles.rightPadding15]}>
+    //               <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredInternships[i - 1]) }>
+    //                 <Image source={(this.state.favorites.includes(this.state.filteredInternships[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
+    //               </TouchableOpacity>
+    //             </View>
+    //           )}
+    //         </View>
+    //
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'work') {
+    //
+    //   const filteredWork = this.state.filteredWork
+    //   for (let i = 1; i <= filteredWork.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     let subtitle = ''
+    //     if (this.state.filteredWork[i - 1].politicalParty && this.state.filteredWork[i - 1].politicalParty !== '') {
+    //       subtitle = this.state.filteredWork[i - 1].politicalParty
+    //     }
+    //
+    //     if (this.state.filteredWork[i - 1].field && this.state.filteredWork[i - 1].field !== '') {
+    //       if (subtitle === '') {
+    //         subtitle = this.state.filteredWork[i - 1].field.split("|")[0].trim()
+    //       } else {
+    //         subtitle = subtitle + ' | ' + this.state.filteredWork[i - 1].field.split("|")[0].trim()
+    //       }
+    //     }
+    //
+    //     if (this.state.filteredWork[i - 1].submissionDeadline && this.state.filteredWork[i - 1].submissionDeadline) {
+    //       if (subtitle === '') {
+    //         subtitle = convertDateToString(this.state.filteredWork[i - 1].submissionDeadline,"datetime")
+    //       } else {
+    //         subtitle = subtitle + ' | Deadline: ' + convertDateToString(this.state.filteredWork[i - 1].submissionDeadline,"datetime")
+    //       }
+    //     }
+    //
+    //     if (this.state.filteredWork[i - 1].startDate && this.state.filteredWork[i - 1].startDate) {
+    //       if (subtitle === '') {
+    //         subtitle = convertDateToString(this.state.filteredWork[i - 1].startDate,"date")
+    //       } else {
+    //         subtitle = subtitle + ' | Start Date: ' + convertDateToString(this.state.filteredWork[i - 1].startDate,"date")
+    //       }
+    //     }
+    //
+    //     rows.push(
+    //       <View key={i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredWork[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+    //           <View style={[styles.width70]}>
+    //             {(this.state.filteredWork[index].matchScore) ? (
+    //               <View style={styles.padding10}>
+    //                 <CircularProgressBar
+    //                   percentage={this.state.filteredWork[index].matchScore}
+    //                   text={`${this.state.filteredWork[index].matchScore}%`}
+    //                   styles={{
+    //                     path: { stroke: `rgba(110, 190, 250, ${this.state.filteredWork[index].matchScore / 100})` },
+    //                     text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                     trail: { stroke: 'transparent' }
+    //                   }}
+    //                 />
+    //               </View>
+    //             ) : (
+    //               <Image source={(this.state.filteredWork[index].imageURL) ? { uri: this.state.filteredWork[index].imageURL} : { uri: internIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
+    //             )}
+    //             {(this.state.filteredWork[index].createdAt) && (
+    //               <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                 <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredWork[index].createdAt,"daysAgo")}</Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //             <Text style={[styles.headingText5]}>{filteredWork[i - 1].title}</Text>
+    //             <Text style={[styles.descriptionText1]}>{filteredWork[i - 1].employerName}</Text>
+    //             <Text style={[styles.descriptionText2]}>{subtitle}</Text>
+    //             {(filteredWork[i - 1].payRange && (filteredWork[i - 1].subPostType === 'Full-Time' || filteredWork[i - 1].subPostType === 'Part-Time')) && (
+    //               <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{filteredWork[i - 1].payRange}</Text>
+    //             )}
+    //             {(this.props.pageSource === 'landingPage') && (
+    //               <View style={[styles.row5]}>
+    //                 <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredWork[i - 1].orgName}</Text></Text>
+    //               </View>
+    //             )}
+    //
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: filteredWork[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           {(this.state.path && this.state.path.includes('/app')) && (
+    //             <View style={[styles.rightPadding15]}>
+    //               {(this.state.applications && this.state.applications.some(app => app.postingId === filteredWork[index]._id)) && (
+    //                 <View style={[styles.topMargin]}>
+    //                   <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]} />
+    //                 </View>
+    //               )}
+    //               <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(filteredWork[i - 1]) }>
+    //                 <Image source={(this.state.favorites.includes(this.state.filteredWork[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
+    //               </TouchableOpacity>
+    //             </View>
+    //           )}
+    //         </View>
+    //
+    //         {(this.state.filteredWork[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             {(this.state.sortCriteriaArray.length > 0) && (
+    //               <View>
+    //                 <View style={styles.halfSpacer} />
+    //                 <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //         )}
+    //         {(this.state.filteredWork[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             <View style={styles.halfSpacer} />
+    //             <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+    //           </View>
+    //         )}
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'events') {
+    //   console.log('show events: ', this.state.events.length, this.state.filteredUpcomingEvents.length)
+    //   //renderUpcomingEvents
+    //   rows.push(
+    //     <View key="upcoming" style={[styles.row30]}>
+    //       <Text style={[styles.headingText3]}>Upcoming Events</Text>
+    //     </View>
+    //   )
+    //
+    //   const filteredUpcomingEvents = this.state.filteredUpcomingEvents
+    //   for (let i = 1; i <= filteredUpcomingEvents.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={"upcoming|" +i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.upcomingEvents[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+    //           <View style={[styles.width70]}>
+    //             {(this.state.filteredUpcomingEvents[index].matchScore) ? (
+    //               <View style={styles.padding10}>
+    //                 <CircularProgressBar
+    //                   percentage={this.state.filteredUpcomingEvents[index].matchScore}
+    //                   text={`${this.state.filteredUpcomingEvents[index].matchScore}%`}
+    //                   styles={{
+    //                     path: { stroke: `rgba(110, 190, 250, ${this.state.filteredUpcomingEvents[index].matchScore / 100})` },
+    //                     text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                     trail: { stroke: 'transparent' }
+    //                   }}
+    //                 />
+    //               </View>
+    //             ) : (
+    //               <Image source={(this.state.filteredUpcomingEvents[index].imageURL) ? { uri: this.state.filteredUpcomingEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
+    //             )}
+    //             {(this.state.filteredUpcomingEvents[index].createdAt) && (
+    //               <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                 <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredUpcomingEvents[index].createdAt,"daysAgo")}</Text>
+    //               </View>
+    //             )}
+    //
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //           <Text style={[styles.headingText5]}>{filteredUpcomingEvents[i - 1].title}</Text>
+    //           <Text style={[styles.descriptionText1]}>{filteredUpcomingEvents[i - 1].orgName}</Text>
+    //           <Text style={[styles.descriptionText2]}>{convertDateToString(filteredUpcomingEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredUpcomingEvents[i - 1].endDate,"datetime")}</Text>
+    //           {(this.props.pageSource === 'landingPage') && (
+    //             <View style={[styles.row5]}>
+    //               <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredUpcomingEvents[i - 1].orgName}</Text></Text>
+    //             </View>
+    //           )}
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredUpcomingEvents[index]})}>
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           <View style={[styles.rightPadding15]}>
+    //
+    //             {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === this.state.filteredUpcomingEvents[index]._id)) && (
+    //               <View style={[styles.topMargin]}>
+    //                 <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]}/>
+    //               </View>
+    //             )}
+    //             <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredUpcomingEvents[i - 1]) }>
+    //               <Image source={(this.state.favorites.includes(this.state.filteredUpcomingEvents[index]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
+    //             </TouchableOpacity>
+    //           </View>
+    //         </View>
+    //
+    //         {(this.state.filteredUpcomingEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             {(this.state.sortCriteriaArray.length > 0) && (
+    //               <View>
+    //                 <View style={styles.halfSpacer} />
+    //                 <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //         )}
+    //         {(this.state.filteredUpcomingEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             <View style={styles.halfSpacer} />
+    //             <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+    //           </View>
+    //         )}
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    //
+    //   //renderPastEvents
+    //   rows.push(
+    //     <View key="past" style={[styles.row30]}>
+    //       <Text style={[styles.headingText3]}>Past Events</Text>
+    //     </View>
+    //   )
+    //
+    //   const filteredPastEvents = this.state.filteredPastEvents
+    //   for (let i = 1; i <= filteredPastEvents.length; i++) {
+    //     console.log(i);
+    //
+    //     const index = i - 1
+    //
+    //     rows.push(
+    //       <View key={"past|" +i}>
+    //         <View style={styles.spacer} />
+    //         <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+    //           <View style={[styles.width70]}>
+    //             {(this.state.filteredPastEvents[index].matchScore) ? (
+    //               <View style={styles.padding10}>
+    //                 <CircularProgressBar
+    //                   percentage={this.state.filteredPastEvents[index].matchScore}
+    //                   text={`${this.state.filteredPastEvents[index].matchScore}%`}
+    //                   styles={{
+    //                     path: { stroke: `rgba(110, 190, 250, ${this.state.filteredPastEvents[index].matchScore / 100})` },
+    //                     text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                     trail: { stroke: 'transparent' }
+    //                   }}
+    //                 />
+    //               </View>
+    //             ) : (
+    //               <Image source={(this.state.filteredPastEvents[index].imageURL) ? { uri: this.state.filteredPastEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]} />
+    //             )}
+    //             {(this.state.filteredPastEvents[index].createdAt) && (
+    //               <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                 <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredPastEvents[index].createdAt,"daysAgo")}</Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //           <View style={[styles.calcColumn150]}>
+    //             <Text style={[styles.headingText5]}>{filteredPastEvents[i - 1].title}</Text>
+    //             <Text style={[styles.descriptionText1]}>{filteredPastEvents[i - 1].orgName}</Text>
+    //             <Text style={[styles.descriptionText2]}>{convertDateToString(filteredPastEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredPastEvents[i - 1].endDate,"datetime")}</Text>
+    //             {(this.props.pageSource === 'landingPage') && (
+    //               <View style={[styles.row5]}>
+    //                 <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredPastEvents[i - 1].orgName}</Text></Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //         </TouchableOpacity>
+    //         <View style={[styles.leftPadding,styles.rowDirection]}>
+    //           <View>
+    //             <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} >
+    //               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+    //             </TouchableOpacity>
+    //           </View>
+    //           {(this.state.path && this.state.path.includes('/app')) && (
+    //             <View style={[styles.rightPadding15]}>
+    //               {(this.state.rsvps && this.state.rsvps.some(app => app.postingId === this.state.filteredPastEvents[index]._id)) && (
+    //                 <View style={[styles.topMargin]}>
+    //                   <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]} />
+    //                 </View>
+    //               )}
+    //               <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredPastEvents[i - 1]) }>
+    //                 <Image source={(this.state.favorites.includes(this.state.filteredPastEvents[index]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
+    //               </TouchableOpacity>
+    //             </View>
+    //           )}
+    //         </View>
+    //
+    //         {(this.state.filteredPastEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             {(this.state.sortCriteriaArray.length > 0) && (
+    //               <View>
+    //                 <View style={styles.halfSpacer} />
+    //                 <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+    //               </View>
+    //             )}
+    //           </View>
+    //         )}
+    //         {(this.state.filteredPastEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
+    //           <View style={[styles.leftPadding70]}>
+    //             <View style={styles.halfSpacer} />
+    //             <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+    //           </View>
+    //         )}
+    //         <View style={styles.spacer} /><View style={styles.spacer} />
+    //         <View style={[styles.horizontalLine]} />
+    //
+    //         <View style={styles.spacer} />
+    //       </View>
+    //     )
+    //   }
+    // } else if (type === 'all') {
+    //
+    //   const filteredPostings = this.state.filteredPostings
+    //
+    //   for (let i = 1; i <= filteredPostings.length; i++) {
+    //     console.log(i);
+    //
+    //     // const index = i - 1
+    //     const posting = filteredPostings[i - 1]
+    //     let isActive = true
+    //
+    //     let postingIcon = internIconBlue
+    //     let postingIconClassName = "image-auto-50 center-item"
+    //
+    //     if (posting.postType === 'Event') {
+    //       postingIcon = eventIconBlue
+    //       postingIconClassName = "image-auto-48 center-item"
+    //     } else if (posting.postType === 'Assignment') {
+    //       postingIcon = assignmentsIconBlue
+    //       postingIconClassName = "image-auto-50 top-margin-5 center-item"
+    //     } else if (posting.postType === 'Problem') {
+    //       postingIcon = problemIconBlue
+    //       postingIconClassName = "image-auto-50 top-margin-5 center-item"
+    //     } else if (posting.postType === 'Challenge') {
+    //       postingIcon = challengeIconBlue
+    //       postingIconClassName = "image-auto-50 top-margin-5 center-item"
+    //     } else if (posting.postType === 'Internship') {
+    //       if (!posting.isActive) {
+    //         isActive = false
+    //       }
+    //     } else if (posting.postType === 'Work') {
+    //       // none of these yet
+    //       if (!posting.isActive) {
+    //         isActive = false
+    //       }
+    //     } else if (posting.postType === 'Scholarship') {
+    //       postingIcon = moneyIconBlue
+    //       postingIconClassName = "image-auto-50 top-margin-5 center-item"
+    //     }
+    //
+    //     if (posting.imageURL) {
+    //       postingIcon = posting.imageURL
+    //       postingIconClassName = "image-50-fit top-margin-5 center-item"
+    //     }
+    //
+    //     if (isActive) {
+    //       let title = posting.title
+    //       if (!posting.title) {
+    //         title = posting.name
+    //       }
+    //
+    //       let subtitle1 = posting.employerName
+    //
+    //       let subtitle2 = posting.postType
+    //       if (posting.politicalParty && posting.politicalParty !== '') {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = posting.politicalParty
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | ' + posting.politicalParty
+    //         }
+    //       }
+    //
+    //       if (posting.field && posting.field !== '') {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = posting.field.split("|")[0].trim()
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | ' + posting.field.split("|")[0].trim()
+    //         }
+    //       }
+    //
+    //       if (posting.industry && posting.industry !== '') {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = posting.industry
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | Industry: ' + posting.industry
+    //         }
+    //       }
+    //
+    //       if (posting.difficultyLevel && posting.difficultyLevel !== '') {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = posting.difficultyLevel
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | Difficulty Level: ' + posting.difficultyLevel
+    //         }
+    //       }
+    //
+    //       if (posting.submissionDeadline) {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
+    //         }
+    //       }
+    //
+    //       if (posting.startDate) {
+    //         if (subtitle2 === '') {
+    //           subtitle2 = convertDateToString(posting.startDate,"datetime")
+    //         } else {
+    //           subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
+    //         }
+    //       }
+    //
+    //       // if (posting.createdAt) {
+    //       //   if (subtitle2 === '') {
+    //       //     subtitle2 = 'Created :' + convertDateToString(posting.createdAt,"datetime")
+    //       //   } else {
+    //       //     subtitle2 = subtitle2 + ' | Created: ' + convertDateToString(posting.createdAt,"datetime")
+    //       //   }
+    //       // }
+    //
+    //       if (this.state.pageSource === 'landingPage') {
+    //         if (this.state.activeOrg && this.state.activeOrg !== '') {
+    //           pathname = '/opportunities/organizations/' + this.state.activeOrg + '/' + posting._id
+    //         } else {
+    //           pathname = '/opportunities/' + posting._id
+    //         }
+    //       }
+    //
+    //
+    //       rows.push(
+    //         <View key={i}>
+    //           <View style={styles.spacer} />
+    //
+    //           <View style={[styles.rowDirection]}>
+    //             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
+    //               <View style={[styles.width70]}>
+    //                 {(posting.matchScore) ? (
+    //                   <View style={styles.padding10}>
+    //                     <CircularProgressBar
+    //                       percentage={posting.matchScore}
+    //                       text={`${posting.matchScore}%`}
+    //                       styles={{
+    //                         path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
+    //                         text: { fill: '#6EBEFA', fontSize: '26px' },
+    //                         trail: { stroke: 'transparent' }
+    //                       }}
+    //                     />
+    //                   </View>
+    //                 ) : (
+    //                   <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem]} />
+    //                 )}
+    //               </View>
+    //               <View style={[styles.calcColumn180]}>
+    //                 <Text style={[styles.headingText5]}>{title}</Text>
+    //                 <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
+    //                 <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
+    //                 {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
+    //                   <View>
+    //                     <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
+    //                   </View>
+    //                 )}
+    //                 {(posting.createdAt) && (
+    //                   <View style={[styles.topPadding,styles.horizontalPadding5]}>
+    //                     <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth]}>{convertDateToString(posting.createdAt,"daysAgo")}</Text>
+    //                   </View>
+    //                 )}
+    //               </View>
+    //             </TouchableOpacity>
+    //             <View>
+    //               <View style={[styles.leftPadding,styles.rowDirection]}>
+    //                 <View style={[styles.rightPadding]}>
+    //                   {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+    //                     <View style={[styles.topMargin]}>
+    //                       <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+    //                     </View>
+    //                   ) : (
+    //                     <View>
+    //                       {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
+    //                         <View style={[styles.topMargin]}>
+    //                           <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain,styles.pinRight]}/>
+    //                         </View>
+    //                       )}
+    //                     </View>
+    //                   )}
+    //
+    //                   <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
+    //                     <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+    //                   </TouchableOpacity>
+    //                 </View>
+    //                 <View>
+    //                   <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+    //                   <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
+    //                     <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
+    //                   </TouchableOpacity>
+    //                 </View>
+    //               </View>
+    //             </View>
+    //           </View>
+    //
+    //           {(posting.sortCriteria || this.state.sortCriteriaArray) && (
+    //             <View style={[styles.leftPadding70]}>
+    //               {(this.state.sortCriteriaArray.length > 0) && (
+    //                 <View>
+    //                   <View style={styles.halfSpacer} />
+    //                   <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+    //                 </View>
+    //               )}
+    //             </View>
+    //           )}
+    //           {(posting.filterCriteria || this.state.filterCriteriaArray) && (
+    //             <View style={[styles.leftPadding70]}>
+    //               <View style={styles.halfSpacer} />
+    //               <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+    //             </View>
+    //           )}
+    //           <View style={styles.spacer} /><View style={styles.spacer} />
+    //           <View style={[styles.horizontalLine]} />
+    //
+    //           <View style={styles.spacer} />
+    //         </View>
+    //       )
+    //     }
+    //   }
+    // }
 
     return rows;
   }
@@ -3997,7 +4291,8 @@ class Opportunities extends Component {
     console.log('subNavClicked called', pageName)
 
     this.setState({ subNavSelected: pageName })
-    localStorage.setItem('opportunitiesNavSelected', pageName)
+    AsyncStorage.setItem('opportunitiesNavSelected', pageName)
+
   }
 
   closeModal() {
@@ -4169,9 +4464,8 @@ class Opportunities extends Component {
             <View>
               {(this.props.pageSource !== 'Goal') && (
                 <View>
-                  <View style={[styles.row10,styles.horizontalPadding30]}>
+                  <View style={[styles.row10,styles.horizontalPadding30,styles.cardClearPadding,styles.bottomMargin20]}>
                     <View>
-
                       <View style={styles.rowDirection}>
                         <View style={(this.state.matchingView) ? [styles.row7,styles.horizontalPadding3,styles.topMarginNegative2,styles.fullScreenWidth] : [styles.row7,styles.horizontalPadding3,styles.topMargin]}>
                           <TouchableOpacity onPress={(this.state.matchingView) ? () => this.calculateMatches(false, false, false) : () => this.calculateMatches(true, true, false)} >
@@ -4198,9 +4492,9 @@ class Opportunities extends Component {
 
                         {(!this.state.matchingView) && (
                           <View style={styles.rowDirection}>
-                            <View style={[styles.calcColumn100,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
+                            <View style={[styles.calcColumn130,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
                               <View style={[styles.row7,styles.horizontalPadding3]}>
-                                <Image source={{ uri: searchIcon}} style={[styles.square20,styles.contain,styles.padding5]}/>
+                                <Image source={{ uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                               </View>
                               <View style={[styles.calcColumn230]}>
                                 {(this.props.passedType) ? (
@@ -4233,11 +4527,11 @@ class Opportunities extends Component {
                       </View>
 
                       <View style={[styles.fullScreenWidth]}>
-                        <View style={[styles.carousel,styles.rowDirection]} onScroll={this.handleScroll}>
+                        <ScrollView horizontal={true}>
                           {this.state.subNavCategories.map((value, index) =>
                             <View style={[styles.row10,styles.rightPadding20]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
-                                <View key={value} style={styles.selectedCarouselItem2}>
+                                <View key={value} style={[styles.selectedCarouselItem,styles.height40,styles.flexCenter,styles.horizontalPadding10]}>
                                   <Text>{value}</Text>
                                 </View>
                               ) : (
@@ -4245,14 +4539,14 @@ class Opportunities extends Component {
                                   {(value === 'All') && (
                                     <View>
                                       {(this.state.filteredPostings.length > 0) ? (
-                                        <TouchableOpacity key={value} style={styles.menuButtonNotiBubble} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
                                             <Text style={styles.leftMargin18}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.lightBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredPostings.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={styles.menuButton2} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <Text>{value}</Text>
                                         </TouchableOpacity>
                                       )}
@@ -4261,14 +4555,14 @@ class Opportunities extends Component {
                                   {(value === 'Featured') && (
                                     <View>
                                       {(this.state.filteredFeaturedOpportunities.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButtonNotiBubble]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
                                             <Text style={styles.leftMargin18}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredFeaturedOpportunities.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <Text>{value}</Text>
                                         </TouchableOpacity>
                                       )}
@@ -4277,14 +4571,14 @@ class Opportunities extends Component {
                                   {(value === 'Work') && (
                                     <View>
                                       {(this.state.filteredWork.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButtonNotiBubble]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
                                             <Text style={styles.leftMargin18}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <Text>{value}</Text>
                                         </TouchableOpacity>
                                       )}
@@ -4293,14 +4587,14 @@ class Opportunities extends Component {
                                   {(value === 'Projects') && (
                                     <View>
                                       {(this.state.filteredProjectWork.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButtonNotiBubble]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
                                             <Text style={styles.leftMargin18}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredProjectWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <Text>{value}</Text>
                                         </TouchableOpacity>
                                       )}
@@ -4309,14 +4603,14 @@ class Opportunities extends Component {
                                   {(value === 'Events') && (
                                     <View>
                                       {(this.state.filteredEvents.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButtonNotiBubble]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
                                             <Text style={styles.leftMargin18}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredEvents.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
                                           <Text>{value}</Text>
                                         </TouchableOpacity>
                                       )}
@@ -4333,7 +4627,7 @@ class Opportunities extends Component {
                               )}
                             </View>
                           )}
-                        </View>
+                        </ScrollView>
                       </View>
                     </View>
                   </View>
