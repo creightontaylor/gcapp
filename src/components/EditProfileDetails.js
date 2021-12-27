@@ -4,9 +4,9 @@ import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
 
-import SubEditProfile from './subcomponents/EditProfile';
+import SubEditProfileDetails from './subcomponents/EditProfileDetails';
 
-class EditProfile extends Component {
+class EditProfileDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -16,7 +16,7 @@ class EditProfile extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount editProfile')
+    console.log('componentDidMount EditProfileDetails')
 
     this.retrieveData()
   }
@@ -25,9 +25,20 @@ class EditProfile extends Component {
     try {
       const email = await AsyncStorage.getItem('email')
 
+      console.log('show me values in EditProfileDetails', email, this.props);
+
       if (email !== null) {
         // We have data!!
-        console.log('what is the email of this user', email);
+
+        let category = null
+        if (this.props) {
+          console.log('show params: ', this.props.route)
+
+          category = this.props.route.params.category
+          this.setState({ category })
+
+
+        }
 
       }
      } catch (error) {
@@ -39,10 +50,10 @@ class EditProfile extends Component {
   render() {
     return (
       <View>
-        <SubEditProfile navigation={this.props.navigation} />
+        <SubEditProfileDetails navigation={this.props.navigation} category={this.state.category}/>
       </View>
     )
   }
 }
 
-export default EditProfile;
+export default EditProfileDetails;

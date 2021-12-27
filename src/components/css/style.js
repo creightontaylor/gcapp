@@ -915,6 +915,15 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: faintColor,
+  },
+  textInput: {
+    height: 40,
+    backgroundColor: '#fff',
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10
   }
 
 });

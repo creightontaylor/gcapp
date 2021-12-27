@@ -17,6 +17,7 @@ import Community from './src/components/Community';
 import Paths from './src/components/Paths';
 import Opportunities from './src/components/Opportunities';
 import EditProfile from './src/components/EditProfile';
+import EditProfileDetails from './src/components/EditProfileDetails';
 import Settings from './src/components/Settings';
 import Notifications from './src/components/Notifications';
 import Messages from './src/components/Messages';
@@ -284,6 +285,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Auth" component={Auth} options={{ headerShown: false }} />
           <Stack.Screen name="Notifications" component={Notifications} />
           <Stack.Screen name="Messages" component={Messages} />
+          <Stack.Screen name="EditProfileDetails" component={EditProfileDetails} />
           <Stack.Screen name="Settings" component={Settings} />
         </Stack.Navigator>
       </NavigationContainer>

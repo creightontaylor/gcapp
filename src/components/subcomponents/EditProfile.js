@@ -479,7 +479,7 @@ class EditProfile extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Profile Details'})}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width50}>
                               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />

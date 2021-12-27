@@ -334,23 +334,23 @@ class Careers extends Component {
      }
   }
 
-  formChangeHandler(event) {
+  formChangeHandler(name, value) {
     console.log('formChangeHandler called')
 
-    if (event.target.name === 'search') {
-      this.setState({ searchString: event.target.value, animating: true })
-      this.filterResults(event.target.value, null, null, null, true)
-    } else if (event.target.name.includes('filter|')) {
+    if (name === 'search') {
+      this.setState({ searchString: value, animating: true })
+      this.filterResults(value, null, null, null, true)
+    } else if (name.includes('filter|')) {
 
       let itemFilters = this.state.itemFilters
 
-      const nameArray = event.target.name.split("|")
+      const nameArray = name.split("|")
       const field = nameArray[1]
 
       let index = 0
       for (let i = 1; i <= itemFilters.length; i++) {
         if (itemFilters[i - 1].name === field) {
-          itemFilters[i - 1]['value'] = event.target.value
+          itemFilters[i - 1]['value'] = value
           index = i - 1
         }
       }
@@ -370,17 +370,17 @@ class Careers extends Component {
 
       this.setState({ animating: true, searchString, itemFilters, itemSorters })
 
-      this.filterResults(this.state.searchString, event.target.value, itemFilters, index, false)
+      this.filterResults(this.state.searchString, value, itemFilters, index, false)
 
-    } else if (event.target.name.includes('sort|')) {
+    } else if (name.includes('sort|')) {
 
       let itemSorters = this.state.itemSorters
-      const nameArray = event.target.name.split("|")
+      const nameArray = name.split("|")
       const field = nameArray[1]
 
       for (let i = 1; i <= itemSorters.length; i++) {
         if (itemSorters[i - 1].name === field) {
-          itemSorters[i - 1]['value'] = event.target.value
+          itemSorters[i - 1]['value'] = value
         }
       }
 
@@ -400,14 +400,14 @@ class Careers extends Component {
       this.setState({ searchString, itemFilters, itemSorters, animating: true })
 
 
-      this.sortResults(event.target.value, field)
+      this.sortResults(value, field)
 
-    } else if (event.target.name.includes('useCase')) {
-      const nameArray = event.target.name.split("|")
+    } else if (name.includes('useCase')) {
+      const nameArray = name.split("|")
       const index = Number(nameArray[1].trim())
 
       let useCases = this.state.useCases
-      // useCases[index]["value"] = event.target.value
+      // useCases[index]["value"] = value
       for (let i = 1; i <= useCases.length; i++) {
         if (i - 1 === index) {
           useCases[index]["selected"] = true
@@ -510,16 +510,16 @@ class Careers extends Component {
       }
 
       this.setState({ useCases, matchingCriteria })
-    } else if (event.target.name.includes('custom')) {
-      const nameArray = event.target.name.split("|")
+    } else if (name.includes('custom')) {
+      const nameArray = name.split("|")
       const index = Number(nameArray[1].trim())
 
       const ogValue = this.state.matchingCriteria[index].value
-      const diff = event.target.value - ogValue
+      const diff = value - ogValue
       const totalPercent = this.state.totalPercent + diff
 
       let matchingCriteria = this.state.matchingCriteria
-      matchingCriteria[index]["value"] = Number(event.target.value)
+      matchingCriteria[index]["value"] = Number(value)
       this.setState({ matchingCriteria, totalPercent })
     }
   }
@@ -837,7 +837,7 @@ class Careers extends Component {
     const index = Number(nameArray[1].trim())
 
     let useCases = this.state.useCases
-    // useCases[index]["value"] = event.target.value
+    // useCases[index]["value"] = value
     for (let i = 1; i <= useCases.length; i++) {
       console.log('compare indices: ', i - 1, index)
       if (i - 1 === index) {
@@ -1064,7 +1064,7 @@ class Careers extends Component {
                         </View>
                         <View style={[styles.width210,styles.calcColumn100,styles.topPadding5]}>
                           <TextInput
-                            onChangeText={(text) => this.formChangeHandler(text, 'search')}
+                            onChangeText={(text) => this.formChangeHandler('search',text)}
                             value={this.state.searchString}
                             placeholder="Search 1,000+ careers..."
                             placeholderTextColor="grey"
