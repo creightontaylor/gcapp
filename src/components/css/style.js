@@ -244,11 +244,20 @@ module.exports = StyleSheet.create({
   topMarginNegative2: {
     marginTop: -2
   },
+  topMarginNegative3: {
+    marginTop: -3
+  },
+  topMarginNegative4: {
+    marginTop: -4
+  },
   topMarginNegative40: {
     marginTop: -40
   },
   topMarginNegative36: {
     marginTop: -36
+  },
+  rightMarginNegative12: {
+    marginRight: -12
   },
   rightMargin: {
     marginRight: 10
@@ -431,6 +440,9 @@ module.exports = StyleSheet.create({
   width10: {
     width: 10
   },
+  width20: {
+    width: 20
+  },
   width25: {
     width: 25
   },
@@ -458,6 +470,9 @@ module.exports = StyleSheet.create({
   width80: {
     width: 80
   },
+  width90: {
+    width: 90
+  },
   width100: {
     width: 100
   },
@@ -466,6 +481,9 @@ module.exports = StyleSheet.create({
   },
   width120: {
     width: 120
+  },
+  width130: {
+    width: 130
   },
   width140: {
     width: 140
@@ -476,14 +494,23 @@ module.exports = StyleSheet.create({
   width160: {
     width: 160
   },
+  width170: {
+    width: 170
+  },
   width180: {
     width: 180
   },
   width190: {
     width: 190
   },
+  width200: {
+    width: 200
+  },
   width210: {
     width: 210
+  },
+  width220: {
+    width: 220
   },
   height5: {
     height: 5
@@ -503,11 +530,20 @@ module.exports = StyleSheet.create({
   calcColumn40: {
     width: Dimensions.get('window').width - 40
   },
+  calcColumn50: {
+    width: Dimensions.get('window').width - 50
+  },
   calcColumn60: {
     width: Dimensions.get('window').width - 60
   },
+  calcColumn70: {
+    width: Dimensions.get('window').width - 70
+  },
   calcColumn80: {
     width: Dimensions.get('window').width - 80
+  },
+  calcColumn90: {
+    width: Dimensions.get('window').width - 90
   },
   calcColumn100: {
     width: Dimensions.get('window').width - 100
@@ -555,7 +591,7 @@ module.exports = StyleSheet.create({
     width: Dimensions.get('window').width - 200
   },
   calcColumn208: {
-    width: Dimensions.get('window').width - 200
+    width: Dimensions.get('window').width - 208
   },
   calcColumn210: {
     width: Dimensions.get('window').width - 210
@@ -565,6 +601,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn230: {
     width: Dimensions.get('window').width - 230
+  },
+  calcColumn280: {
+    width: Dimensions.get('window').width - 280
   },
   calcColumn60Of50: {
     width: (Dimensions.get('window').width / 2) - 60
@@ -971,6 +1010,9 @@ module.exports = StyleSheet.create({
     marginBottom: 20,
     paddingTop: 20,
     paddingBottom: 20
+  },
+  zIndex1: {
+    zIndex: 1
   }
 
 });
