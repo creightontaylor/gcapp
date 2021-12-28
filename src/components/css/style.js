@@ -96,6 +96,10 @@ module.exports = StyleSheet.create({
     height: 12,
     width: 12
   },
+  square14: {
+    height: 14,
+    width: 14
+  },
   square15: {
     height: 15,
     width: 15
@@ -151,6 +155,10 @@ module.exports = StyleSheet.create({
   square100: {
     height: 100,
     width: 100
+  },
+  square150: {
+    height: 150,
+    width: 150
   },
   profileThumbnail25: {
     height: 25,
@@ -230,6 +238,9 @@ module.exports = StyleSheet.create({
   topMargin20: {
     marginTop: 20
   },
+  topMargin50: {
+    marginTop: 50
+  },
   topMarginNegative2: {
     marginTop: -2
   },
@@ -281,6 +292,9 @@ module.exports = StyleSheet.create({
   },
   bottomPadding: {
     paddingBottom: 10
+  },
+  bottomPadding20: {
+    paddingBottom: 20
   },
   bottomPadding30: {
     paddingBottom: 30
@@ -342,6 +356,10 @@ module.exports = StyleSheet.create({
   horizontalPadding10: {
     paddingLeft: 10,
     paddingRight: 10
+  },
+  horizontalPadding20: {
+    paddingLeft: 20,
+    paddingRight: 20
   },
   horizontalPadding30: {
     paddingLeft: 30,
@@ -572,6 +590,9 @@ module.exports = StyleSheet.create({
   flex15: {
     flex: 15
   },
+  flex25: {
+    flex: 25
+  },
   flex33: {
     flex: 33
   },
@@ -580,6 +601,9 @@ module.exports = StyleSheet.create({
   },
   flex70: {
     flex: 70
+  },
+  flex75: {
+    flex: 75
   },
   flex80: {
     flex: 80
@@ -833,6 +857,12 @@ module.exports = StyleSheet.create({
   absolutePosition: {
       position: 'absolute'
   },
+  absoluteBottom0: {
+    bottom: 0
+  },
+  absoluteRight0: {
+    right: 0
+  },
   absoluteTop5: {
     top: '5%'
   },
@@ -924,6 +954,20 @@ module.exports = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 10,
     paddingRight: 10
+  },
+  contrastingContainer1: {
+    backgroundColor: 'rgba(135,206,250,0.2)',
+    marginTop: 20,
+    marginBottom: 20,
+    paddingTop: 20,
+    paddingBottom: 20
+  },
+  contrastingContainer2: {
+    backgroundColor: 'rgba(245,166,25,0.2)',
+    marginTop: 20,
+    marginBottom: 20,
+    paddingTop: 20,
+    paddingBottom: 20
   }
 
 });

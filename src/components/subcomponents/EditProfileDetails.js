@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -1041,28 +1041,72 @@ class EditProfileDetails extends Component {
     console.log('show data: ', eventName, eventValue)
 
     if (eventName === 'profilePic') {
-      console.log('profilePicSelectedHandler changed', event.target.files[0])
+      console.log('profilePicSelectedHandler changed')
 
-      if (event.target.files[0]) {
-        if (event.target.files[0].size > 1 * 1024 * 1024) {
-          console.log('file is too big')
+      const options = {
+        selectionLimit: 1,
+        mediaType: 'photo',
+        includeBase64: false,
+      };
 
-          const errorMessage = 'File must be less than 1MB.'
-          this.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
+      // const launch = async () => {
+      //   const result = await launchImageLibrary(options?);
+      //   console.log('show result: ', result)
+      // }
+      //
+      // launch()
+      const self = this
+      function pickedImage(callbackObject) {
+        console.log('callback called, ', callbackObject)
 
-        } else {
-          console.log('file is small enough', event.target.files[0].size)
+        if (callbackObject && callbackObject.assets && callbackObject.assets[0]) {
+          const file = callbackObject.assets[0]
+          const mbLimit = 10
+          if (file.fileSize > mbLimit * 1024 * 1024) {
+            console.log('file is too big')
 
-          let reader = new FileReader();
-          reader.onload = (e) => {
-              this.setState({ profilePicImage: e.target.result });
-              console.log('how do i access the image', e.target.result)
-          };
-          reader.readAsDataURL(event.target.files[0]);
-          // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-          this.saveFile(eventName, event.target.files[0])
+            const errorMessage = 'File must be less than ' + mbLimit + 'MB.'
+            self.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
+
+          } else {
+            console.log('file is small enough')
+
+            self.setState({ profilePicImage: file.uri, profilePicHasChanged: true })
+            // let reader = new FileReader();
+            // reader.onload = (e) => {
+            //     self.setState({ profilePicImage: file.uri });
+            //     console.log('how do i access the image', e.target.result)
+            // };
+            // reader.readAsDataURL(file);
+            // // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+            // self.saveFile(eventName, file)
+          }
         }
       }
+      launchImageLibrary(options,pickedImage);
+      // const result = await launchImageLibrary(options?);
+      // console.log('show result: ', result)
+
+      // if (event.target.files[0]) {
+      //   if (event.target.files[0].size > 1 * 1024 * 1024) {
+      //     console.log('file is too big')
+      //
+      //     const errorMessage = 'File must be less than 1MB.'
+      //     this.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
+      //
+      //   } else {
+      //     console.log('file is small enough', event.target.files[0].size)
+      //
+      //     let reader = new FileReader();
+      //     reader.onload = (e) => {
+      //         this.setState({ profilePicImage: e.target.result });
+      //         console.log('how do i access the image', e.target.result)
+      //     };
+      //     reader.readAsDataURL(event.target.files[0]);
+      //     // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+      //     this.saveFile(eventName, event.target.files[0])
+      //   }
+      // }
 
     } else if (eventName === 'pictureURL') {
       //only covers Google Drive for now
@@ -2333,7 +2377,7 @@ class EditProfileDetails extends Component {
     }
   }
 
-  handleSubmit(event) {
+  handleSubmit() {
     console.log('handleSubmit called in EditProfileDetails')
 
     this.setState({
@@ -2341,6 +2385,47 @@ class EditProfileDetails extends Component {
       serverErrorMessageText: '',
       serverSuccessMessageText: '',
     })
+
+    if (this.state.profilePicHasChanged === true) {
+      console.log('used has changed profile pic just now!!!')
+
+      if (this.state.profilePicImage) {
+          console.log('profile pic was uploaded')
+          let profilePicData = new FormData();
+          profilePicData.append('profileImage', { uri: this.state.profilePicImage.uri, name: emailId, type: 'image/png'})
+
+          fetch("https://www.guidedcompass.com/api/users/profile/profile-pic", {
+            mode: 'no-cors',
+            method: "POST",
+            body: profilePicData
+          }).then(function (res) {
+            console.log('what is the profile pic response', res.body);
+            if (res.ok) {
+              console.log('response was ok')
+              //success
+              this.setState({
+                  serverSuccessProfilePic: true,
+                  serverSuccessMessageProfilePic: 'Profile pic saved successfully!'
+              })
+            } else if (res.status === 401) {
+              console.log('response was unauthorized')
+              //unauthorized
+              this.setState({
+                  serverSuccessProfilePic: false,
+                  serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
+              })
+            }
+          }.bind(this), function (e) {
+            console.log('response was an error', e)
+            //there was an error
+            this.setState({
+                serverSuccessProfilePic: false,
+                serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
+            })
+          }.bind(this));
+
+      }
+    }
 
     const emailId = this.state.emailId
     let updatedAt = new Date();
@@ -3267,7 +3352,7 @@ class EditProfileDetails extends Component {
           <View key={rowKey}>
             {(showModule) ? (
               <View>
-                {i > 1 && <View><View className="spacer"/><View className="half-spacer"/></View>}
+                {i > 1 && <View><View style={styles.spacer}/><View style={styles.halfSpacer}/></View>}
                 <EditProject selectedProject={this.state.projects[i - 1]} selectedIndex={index}
                   projectCategoryOptions={this.state.projectCategoryOptions} dateOptions={this.state.dateOptions}
                   collaboratorOptions={this.state.collaboratorOptions}  hourOptions={this.state.hourOptions}
@@ -3307,72 +3392,70 @@ class EditProfileDetails extends Component {
         rows.push(
           <View key={rowKey}>
             <View className="fixed-column-70 right-padding">
-              <Text numberOfLines={1} className="heading-text-2 cta-color">{hoursShorthand}</Text>
-              <Text numberOfLines={1} className="description-text-1">hours</Text>
+              <Text numberOfLines={1} style={[styles.headingText2,styles.ctaColor]}>{hoursShorthand}</Text>
+              <Text numberOfLines={1} style={styles.descriptionText1}>hours</Text>
             </View>
             <View className="float-left right-padding calc-column-offset-150">
-              <Text className="heading-text-5">{this.state.projects[i - 1].name}</Text>
-              <Text className="description-text-1">{this.state.projects[i - 1].startDate} - {this.state.projects[i - 1].endDate}</Text>
+              <Text style={styles.headingText5}>{this.state.projects[i - 1].name}</Text>
+              <Text style={styles.descriptionText1}>{this.state.projects[i - 1].startDate} - {this.state.projects[i - 1].endDate}</Text>
 
               <View>
-                <View className="spacer" />
+                <View style={styles.spacer} />
 
                 <View className="float-left">
-                  <TouchableOpacity className="btn bordered-background-button float-left clear-margin" type="button" onClick={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showGrade: false, selectedIndex: index, showJobFunction: false, showIndustry: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
+                  <TouchableOpacity className="btn bordered-background-button float-left clear-margin" onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showGrade: false, selectedIndex: index, showJobFunction: false, showIndustry: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
                     <View className="float-left right-margin">
                       <View>
-                        <Image source={detailsIconGrey} alt="GC icon" className="image-auto-20" />
+                        <Image source={detailsIconGrey} style={[styles.square20,styles.contain]} />
                       </View>
                     </View>
                     <View className="float-left top-margin-negative-4">
-                      <Text className="description-text-2 description-text-color left-text">Preview</Text>
+                      <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Preview</Text>
                     </View>
                   </TouchableOpacity>
-                  <View className="clear"/>
+
                 </View>
 
                 {(this.state.projects[i - 1].grades && this.state.projects[i - 1].grades.length > 0) && (
                   <View className="float-left">
                     <View className="vertical-spacer" />
 
-                    <TouchableOpacity className="btn bordered-background-button-2 cta-border-color float-left clear-margin" type="button" onClick={() => this.setState({ showGrade: true, modalIsOpen: true, selectedIndex: index, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
+                    <TouchableOpacity className="btn bordered-background-button-2 cta-border-color float-left clear-margin" onPress={() => this.setState({ showGrade: true, modalIsOpen: true, selectedIndex: index, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
                       <View className="float-left right-padding-5">
                         <View>
-                          <Image source={feedbackIconBlue} alt="Feedback icon logo" className="image-auto-30" />
+                          <Image source={feedbackIconBlue} style={[styles.square30,styles.contain]} />
                         </View>
                       </View>
                       <View className="float-left">
-                        <Text className="description-text-2 cta-color">View Feedback</Text>
+                        <Text style={[styles.descriptionText2,styles.ctaColor]}>View Feedback</Text>
                       </View>
                     </TouchableOpacity>
-                    <View className="clear"/>
+
                   </View>
                 )}
 
-                <View className="clear"/>
+
               </View>
             </View>
 
             {(this.state.projects[i - 1].emailId === this.state.emailId) ? (
               <View className="fixed-column-80">
-                <TouchableOpacity type="button" onClick={() => this.formChangeHandler(event)} className="background-button right-padding" name={"isEditingProjectsArray|" + index}>
-                  <Image source={editIconGrey} className="image-auto-20" alt="Compass edit icon icon" />
+                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding]} name={"isEditingProjectsArray|" + index}>
+                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
-                <TouchableOpacity type="button" onClick={() => this.deleteItem('project', index)} className="background-button">
-                  <Image source={closeIcon} className="image-auto-20" alt="Compass close icon icon" />
+                <TouchableOpacity onPress={() => this.deleteItem('project', index)}>
+                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
             ) : (
               <View className="fixed-column-80">
-                <View className="tag-container-inactive top-margin">
-                  <Text className="description-text-3 half-bold-text">Collab</Text>
+                <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.lightBorder,styles.lightBackground]}>
+                  <Text style={[styles.descriptionText3,styles.boldText]}>Collab</Text>
                 </View>
               </View>
             )}
 
-            <View className="clear"/>
-
-            <View className="spacer" /><View className="half-spacer" />
+            <View style={styles.spacer} /><View style={styles.halfSpacer} />
           </View>
         )
       }
@@ -3481,28 +3564,28 @@ class EditProfileDetails extends Component {
 
         rows.push(
           <View key={rowKey}>
-            {i > 1 && <View><View className="spacer" /><View className="half-spacer" /></View>}
-            <View className="flex-container row-direction">
-              <View className="flex-75">
+            {i > 1 && <View><View style={styles.spacer} /><View style={styles.halfSpacer} /></View>}
+            <View style={[styles.rowDirection]}>
+              <View style={[styles.flex75]}>
                 {(this.state.experience[i - 1].jobTitle && this.state.experience[i - 1].jobTitle !== '') ? (
-                  <Text className="heading-text-5">Edit {this.state.experience[i - 1].jobTitle}</Text>
+                  <Text style={styles.headingText5}>Edit {this.state.experience[i - 1].jobTitle}</Text>
                 ) : (
-                  <Text className="heading-text-5">Edit experience below</Text>
+                  <Text style={styles.headingText5}>Edit experience below</Text>
                 )}
               </View>
-              <View className="flex-25 right-text right-padding-20">
-                <TouchableOpacity type="button" onClick={() => this.saveExperience(rowKey)} className="background-button clear-margin">
+              <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+                <TouchableOpacity onPress={() => this.saveExperience(rowKey)}>
                   <View>
-                    <Text className="heading-text-5 cta-color">Done</Text>
+                    <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
                   </View>
                 </TouchableOpacity>
               </View>
             </View>
-            <View className="spacer" /><View className="half-spacer" />
+            <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Job Title<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
                   onChangeText={(text) => this.formChangeHandler("jobTitle|" + index, text)}
@@ -3512,7 +3595,7 @@ class EditProfileDetails extends Component {
                 />
               </View>
               <View className="name-container">
-                <Text className="profile-label">Employer Name<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>Employer Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
                   onChangeText={(text) => this.formChangeHandler("employerName|" + index, text)}
@@ -3521,20 +3604,20 @@ class EditProfileDetails extends Component {
                   placeholderTextColor="grey"
                 />
               </View>
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
-              <Text className="profile-label">Are you still working here?</Text>
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10]}>Are you still working here?</Text>
               <Switch
                  onValueChange = {(value) => this.changeContinual(index, value,'experience')}
                  value = {this.state.experience[i - 1].isContinual}
               />
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Start Date<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].startDate}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3548,14 +3631,14 @@ class EditProfileDetails extends Component {
                 <View className="name-container">
                   {(!this.state.isMobile) && (
                     <View>
-                      <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
+                      <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
                     </View>
                   )}
-                  <Text className="heading-text-5">Still Working On This</Text>
+                  <Text style={styles.headingText5}>Still Working On This</Text>
                 </View>
               ) : (
                 <View className="name-container">
-                  <Text className="profile-label">End Date<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.experience[i - 1].endDate}
                     onValueChange={(itemValue, itemIndex) =>
@@ -3566,24 +3649,22 @@ class EditProfileDetails extends Component {
                 </View>
               )}
 
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
                 <View className="float-left">
-                  <Text className="profile-label">Job Function<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Job Function<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
                 <View>
-                  <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
+                  <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View className="float-left left-margin noti-bubble-info-7-9">
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: true, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} alt="Guided Compass dashboard icon" className="image-auto-14 center-item" />
+                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
-
                 </View>
-                <View className="clear" />
 
                 <Picker
                   selectedValue={this.state.experience[i - 1].jobFunction}
@@ -3595,18 +3676,18 @@ class EditProfileDetails extends Component {
               </View>
               <View className="name-container">
                 <View className="float-left">
-                  <Text className="profile-label">Job Industry<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Job Industry<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
                 <View>
-                  <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
+                  <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View className="float-left left-margin noti-bubble-info-7-9">
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: true, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} alt="Guided Compass dashboard icon" className="image-auto-14 center-item" />
+                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
 
                 </View>
-                <View className="clear" />
+
 
                 <Picker
                   selectedValue={this.state.experience[i - 1].industry}
@@ -3616,12 +3697,12 @@ class EditProfileDetails extends Component {
                   {this.state.industryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                 </Picker>
               </View>
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Were you paid?<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>Were you paid?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].wasPaid}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3631,7 +3712,7 @@ class EditProfileDetails extends Component {
                 </Picker>
               </View>
               <View className="name-container">
-                <Text className="profile-label">Hours per Week<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].hoursPerWeek}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3640,24 +3721,24 @@ class EditProfileDetails extends Component {
                   {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                 </Picker>
               </View>
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View>
                 <View className="float-left">
-                  <Text className="profile-label">Skill Tags</Text>
+                  <Text style={[styles.row10]}>Skill Tags</Text>
                 </View>
                 <View>
-                  <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
+                  <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View className="float-left left-margin noti-bubble-info-7-9">
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: true, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} alt="Guided Compass dashboard icon" className="image-auto-14 center-item" />
+                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
 
                 </View>
-                <View className="clear" />
+
               </View>
               <TextInput
                 style={styles.textInput}
@@ -3670,9 +3751,9 @@ class EditProfileDetails extends Component {
 
             {(this.state.activeOrg === 'exp') && (
               <View>
-                <View className="edit-profile-row">
+                <View style={[styles.row10]}>
                   <View className="name-container">
-                    <Text className="profile-label">Supervisor First Name<Text className="error-color bold-text">*</Text></Text>
+                    <Text style={[styles.row10]}>Supervisor First Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler("experienceSupervisorFirstName|" + index, text)}
@@ -3682,7 +3763,7 @@ class EditProfileDetails extends Component {
                     />
                   </View>
                   <View className="name-container">
-                    <Text className="profile-label">Supervisor Last Name<Text className="error-color bold-text">*</Text></Text>
+                    <Text style={[styles.row10]}>Supervisor Last Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler("experienceSupervisorLastName|" + index, text)}
@@ -3691,12 +3772,12 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View className="clear"/>
+
                 </View>
 
-                <View className="edit-profile-row">
+                <View style={[styles.row10]}>
                   <View className="name-container">
-                    <Text className="profile-label">Supervisor Title<Text className="error-color bold-text">*</Text></Text>
+                    <Text style={[styles.row10]}>Supervisor Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler("experienceSupervisorTitle|" + index, text)}
@@ -3706,7 +3787,7 @@ class EditProfileDetails extends Component {
                     />
                   </View>
                   <View className="name-container">
-                    <Text className="profile-label">Supervisor Email<Text className="error-color bold-text">*</Text></Text>
+                    <Text style={[styles.row10]}>Supervisor Email<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler("experienceSupervisorEmail|" + index, text)}
@@ -3715,20 +3796,28 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View className="clear"/>
+
                 </View>
 
               </View>
             )}
 
-            <View className="edit-profile-row">
-              <Text className="profile-label">Description of Your Work<Text className="error-color bold-text">*</Text></Text>
-              <textarea className="text-field" type="text" placeholder="Add a description" name={"experienceDescription|" + index} value={this.state.experience[i - 1].description} onChange={this.formChangeHandler} />
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10]}>Description of Your Work<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={(text) => this.formChangeHandler("experienceDescription|" + index, text)}
+                value={this.state.experience[i - 1].description}
+                placeholder="Add a description"
+                placeholderTextColor="grey"
+                multiline={true}
+                numberOfLines={4}
+              />
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Did you like the work?</Text>
+                <Text style={[styles.row10]}>Did you like the work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workInterest}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3741,10 +3830,10 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="2" value="Not My Cup of Tea" />
                   <Picker.Item label="1" value="I Just Did it For the Money" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
               <View className="name-container">
-                <Text className="profile-label">Do you think you are skilled in this work?</Text>
+                <Text style={[styles.row10]}>Do you think you are skilled in this work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workSkill}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3757,14 +3846,14 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="2" value="I have a lot of work to do compared to peers" />
                   <Picker.Item label="1" value="I don't think this is my calling" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Did you like the team?</Text>
+                <Text style={[styles.row10]}>Did you like the team?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].teamInterest}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3777,10 +3866,10 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="2" value="The team didn't mesh well with me" />
                   <Picker.Item label="1" value="Avoiding teams like this at all costs" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
               <View className="name-container">
-                <Text className="profile-label">Did you like the employer?</Text>
+                <Text style={[styles.row10]}>Did you like the employer?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].employerInterest}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3791,14 +3880,14 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="3" value="Not sure" />
                   <Picker.Item label="1" value="No" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="clear" />
+
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
               <View className="name-container">
-                <Text className="profile-label">Would the pay be acceptable if full-time?</Text>
+                <Text style={[styles.row10]}>Would the pay be acceptable if full-time?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].payInterest}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3811,10 +3900,10 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="2" value="Initial pay and career trajectory pay are a little low" />
                   <Picker.Item label="1" value="Initial pay and career trajectory pay are likely far too low" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
               <View className="name-container">
-                <Text className="profile-label">What do you rate the overall fit?<Text className="error-color bold-text">*</Text></Text>
+                <Text style={[styles.row10]}>What do you rate the overall fit?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].overallFit}
                   onValueChange={(itemValue, itemIndex) =>
@@ -3827,17 +3916,17 @@ class EditProfileDetails extends Component {
                   <Picker.Item label="2" value="Not Ideal" />
                   <Picker.Item label="1" value="Avoiding employers like this at all costs" />
                 </Picker>
-                <Text className="description-text-2">Note: this answer is not shared with employers; it's used for career advising.</Text>
+                <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="clear"/>
+
             </View>
 
             <View className="float-right">
-              <TouchableOpacity type="button" onClick={() => this.saveExperience(rowKey)} className="btn btn-secondary">Save Experience</TouchableOpacity>
+              <TouchableOpacity onPress={() => this.saveExperience(rowKey)} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Experience</TouchableOpacity>
             </View>
-            <View className="clear"/>
-            {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
-            <View className="spacer" />
+
+            {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+            <View style={styles.spacer} />
           </View>
         )
 
@@ -3848,24 +3937,24 @@ class EditProfileDetails extends Component {
         rows.push(
           <View key={rowKey}>
             <View className="fixed-column-70 right-padding">
-              <Text numberOfLines={1} className="heading-text-2 cta-color">{this.state.experience[i - 1].overallFit}</Text>
-              <Text numberOfLines={1} className="description-text-2">of 5 match</Text>
+              <Text numberOfLines={1} style={[styles.headingText2,styles.ctaColor]}>{this.state.experience[i - 1].overallFit}</Text>
+              <Text numberOfLines={1} style={[styles.descriptionText2]}>of 5 match</Text>
             </View>
             <View className="calc-column-offset-150 float-left right-padding">
-              <Text className="heading-text-5">{this.state.experience[i - 1].jobTitle}</Text>
-              <Text className="description-text-1">{this.state.experience[i - 1].employerName}</Text>
-              <Text className="description-text-1">{this.state.experience[i - 1].startDate} - {this.state.experience[i - 1].endDate}</Text>
+              <Text style={styles.headingText5}>{this.state.experience[i - 1].jobTitle}</Text>
+              <Text style={styles.descriptionText1}>{this.state.experience[i - 1].employerName}</Text>
+              <Text style={styles.descriptionText1}>{this.state.experience[i - 1].startDate} - {this.state.experience[i - 1].endDate}</Text>
             </View>
             <View className="fixed-column-80">
-              <TouchableOpacity type="button" onClick={() => this.formChangeHandler(event)} className="background-button right-padding-20" name={"isEditingExperienceArray|" + index}>
-                <Image source={editIconGrey} className="image-auto-20" alt="Compass edit icon icon" />
+              <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExperienceArray|" + index}>
+                <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
-              <TouchableOpacity type="button" onClick={() => this.deleteItem('experience', index)} className="background-button">
-                <Image source={closeIcon} className="image-auto-20" alt="Compass close icon icon" />
+              <TouchableOpacity onPress={() => this.deleteItem('experience', index)}>
+                <Image source={closeIcon} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
             </View>
-            <View className="clear"/>
-            <View className="spacer" /><View className="half-spacer" />
+
+            <View style={styles.spacer} /><View style={styles.halfSpacer} />
           </View>
         )
       }
@@ -3890,28 +3979,28 @@ class EditProfileDetails extends Component {
 
           rows.push(
             <View key={rowKey}>
-              {i > 1 && <View><View className="spacer" /><View className="half-spacer" /></View>}
-              <View className="flex-container row-direction">
-                <View className="flex-75">
+              {i > 1 && <View><View style={styles.spacer} /><View style={styles.halfSpacer} /></View>}
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.flex75]}>
                   {(this.state.extracurriculars[i - 1].name && this.state.extracurriculars[i - 1].name !== '') ? (
-                    <Text className="heading-text-5">Edit {this.state.extracurriculars[i - 1].name}</Text>
+                    <Text style={styles.headingText5}>Edit {this.state.extracurriculars[i - 1].name}</Text>
                   ) : (
-                    <Text className="heading-text-5">Edit extracurricular below</Text>
+                    <Text style={styles.headingText5}>Edit extracurricular below</Text>
                   )}
                 </View>
-                <View className="flex-25 right-text right-padding-20">
-                  <TouchableOpacity type="button" onClick={() => this.saveExtras(rowKey,"extracurricular")} className="background-button clear-margin">
+                <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+                  <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")}>
                     <View>
-                      <Text className="heading-text-5 cta-color">Done</Text>
+                      <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
-              <View className="spacer" /><View className="half-spacer" />
+              <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-              <View className="edit-profile-row">
+              <View style={[styles.row10]}>
                 <View className="name-container">
-                  <Text className="profile-label">Activity Name<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Activity Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => this.formChangeHandler("activityName|" + index, text)}
@@ -3921,7 +4010,7 @@ class EditProfileDetails extends Component {
                   />
                 </View>
                 <View className="name-container">
-                  <Text className="profile-label">Your Role<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Your Role<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => this.formChangeHandler("roleName|" + index, text)}
@@ -3930,12 +4019,12 @@ class EditProfileDetails extends Component {
                     placeholderTextColor="grey"
                   />
                 </View>
-                <View className="clear" />
+
               </View>
 
-              <View className="edit-profile-row">
+              <View style={[styles.row10]}>
                 <View className="name-container">
-                  <Text className="profile-label">Start Date<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].startDate}
                     onValueChange={(itemValue, itemIndex) =>
@@ -3949,14 +4038,14 @@ class EditProfileDetails extends Component {
                   <View className="name-container">
                     {(!this.state.isMobile) && (
                       <View>
-                        <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
+                        <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
                       </View>
                     )}
-                    <Text className="heading-text-5">Still Working On This</Text>
+                    <Text style={styles.headingText5}>Still Working On This</Text>
                   </View>
                 ) : (
                   <View className="name-container">
-                    <Text className="profile-label">End Date<Text className="error-color bold-text">*</Text></Text>
+                    <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <Picker
                       selectedValue={this.state.extracurriculars[i - 1].endDate}
                       onValueChange={(itemValue, itemIndex) =>
@@ -3967,12 +4056,12 @@ class EditProfileDetails extends Component {
                   </View>
                 )}
 
-                <View className="clear" />
+
               </View>
 
-              <View className="edit-profile-row">
+              <View style={[styles.row10]}>
                 <View className="name-container">
-                  <Text className="profile-label">Hours per Week<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].hoursPerWeek}
                     onValueChange={(itemValue, itemIndex) =>
@@ -3981,20 +4070,28 @@ class EditProfileDetails extends Component {
                     {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                   </Picker>
                 </View>
-                <View className="clear" />
+
               </View>
 
-              <View className="edit-profile-row">
-                <Text className="profile-label">Description<Text className="error-color bold-text">*</Text></Text>
-                <textarea className="text-field" name={"extracurricularDescription|" + index} placeholder="Add a description of your extracurricular.." value={this.state.extracurriculars[i - 1].description} onChange={this.formChangeHandler}/>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10]}>Description<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={(text) => this.formChangeHandler("extracurricularDescription|" + index, text)}
+                  value={this.state.extracurriculars[i - 1].description}
+                  placeholder="Add a description of your extracurricular.."
+                  placeholderTextColor="grey"
+                  multiline={true}
+                  numberOfLines={4}
+                />
               </View>
 
               <View className="float-right">
-                <TouchableOpacity type="button" onClick={() => this.saveExtras(rowKey,"extracurricular")} className="btn btn-secondary">Save Extracurricular</TouchableOpacity>
+                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Extracurricular</TouchableOpacity>
               </View>
-              <View className="clear"/>
-              {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
-              <View className="spacer" />
+
+              {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+              <View style={styles.spacer} />
             </View>
           )
 
@@ -4005,23 +4102,23 @@ class EditProfileDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View className="fixed-column-70 right-padding">
-                <Image source={reachIcon} alt="GC" className="image-auto-50" />
+                <Image source={reachIcon} style={[styles.square50,styles.contain]} />
               </View>
               <View className="calc-column-offset-150 float-left right-padding">
-                <Text className="heading-text-5">{this.state.extracurriculars[i - 1].activityName}</Text>
-                <Text className="description-text-1">{this.state.extracurriculars[i - 1].roleName}</Text>
-                <Text className="description-text-1">{this.state.extracurriculars[i - 1].startDate} - {this.state.extracurriculars[i - 1].endDate}</Text>
+                <Text style={styles.headingText5}>{this.state.extracurriculars[i - 1].activityName}</Text>
+                <Text style={styles.descriptionText1}>{this.state.extracurriculars[i - 1].roleName}</Text>
+                <Text style={styles.descriptionText1}>{this.state.extracurriculars[i - 1].startDate} - {this.state.extracurriculars[i - 1].endDate}</Text>
               </View>
               <View className="fixed-column-80">
-                <TouchableOpacity type="button" onClick={() => this.formChangeHandler(event)} className="background-button right-padding-20" name={"isEditingExtracurricularArray|" + index}>
-                  <Image source={editIconGrey} className="image-auto-20" alt="Compass edit icon icon" />
+                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExtracurricularArray|" + index}>
+                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
-                <TouchableOpacity type="button" onClick={() => this.deleteItem('extracurricular', index)} className="background-button">
-                  <Image source={closeIcon} className="image-auto-20" alt="Compass close icon icon" />
+                <TouchableOpacity onPress={() => this.deleteItem('extracurricular', index)}>
+                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
-              <View className="clear"/>
-              <View className="spacer" /><View className="half-spacer" />
+
+              <View style={styles.spacer} /><View style={styles.halfSpacer} />
             </View>
           )
         }
@@ -4036,28 +4133,28 @@ class EditProfileDetails extends Component {
 
           rows.push(
             <View key={rowKey}>
-              {i > 1 && <View><View className="spacer" /><View className="half-spacer" /></View>}
-              <View className="flex-container row-direction">
-                <View className="flex-75">
+              {i > 1 && <View><View style={styles.spacer} /><View style={styles.halfSpacer} /></View>}
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.flex75]}>
                   {(this.state.awards[i - 1].name && this.state.awards[i - 1].name !== '') ? (
-                    <Text className="heading-text-5">Edit {this.state.awards[i - 1].name}</Text>
+                    <Text style={styles.headingText5}>Edit {this.state.awards[i - 1].name}</Text>
                   ) : (
-                    <Text className="heading-text-5">Edit award below</Text>
+                    <Text style={styles.headingText5}>Edit award below</Text>
                   )}
                 </View>
-                <View className="flex-25 right-text right-padding-20">
-                  <TouchableOpacity type="button" onClick={() => this.saveExtras(rowKey,"award")} className="background-button clear-margin">
+                <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+                  <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")}>
                     <View>
-                      <Text className="heading-text-5 cta-color">Done</Text>
+                      <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
-              <View className="spacer" /><View className="half-spacer" />
+              <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-              <View className="edit-profile-row">
+              <View style={[styles.row10]}>
                 <View className="name-container">
-                  <Text className="profile-label">Name of Award<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Name of Award<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => this.formChangeHandler("awardName|" + index, text)}
@@ -4067,27 +4164,35 @@ class EditProfileDetails extends Component {
                   />
                 </View>
                 <View className="name-container">
-                  <Text className="profile-label">Date Awarded<Text className="error-color bold-text">*</Text></Text>
+                  <Text style={[styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   {/*<input type="date" className="date-picker white-background" name={"awardDate|" + index} value={this.state.awards[i - 1].awardDate} onChange={this.formChangeHandler}></input>*/}
                   <DatePicker
                     date={this.state.awards[i - 1].awardDate}
                     onDateChange={(date) => this.formChangeHandler("awardDate|" + index,date)}
                   />
                 </View>
-                <View className="clear" />
+
               </View>
 
-              <View className="edit-profile-row">
-                <Text className="profile-label">Description of the Award<Text className="error-color bold-text">*</Text></Text>
-                <textarea className="text-field" name={"awardDescription|" + index} placeholder="Add a description of your award.." value={this.state.awards[i - 1].description} onChange={this.formChangeHandler}/>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10]}>Description of the Award<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={(text) => this.formChangeHandler("awardDescription|" + index, text)}
+                  value={this.state.awards[i - 1].description}
+                  placeholder="Add a description of your award.."
+                  placeholderTextColor="grey"
+                  multiline={true}
+                  numberOfLines={4}
+                />
               </View>
 
               <View className="float-right">
-                <TouchableOpacity type="button" onClick={() => this.saveExtras(rowKey,"award")} className="btn btn-secondary">Save Award</TouchableOpacity>
+                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Award</TouchableOpacity>
               </View>
-              <View className="clear"/>
-              {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
-              <View className="spacer" />
+
+              {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+              <View style={styles.spacer} />
             </View>
           )
 
@@ -4098,22 +4203,22 @@ class EditProfileDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View className="fixed-column-70 right-padding">
-                <Image source={prizeIcon} alt="GC" className="image-auto-50" />
+                <Image source={prizeIcon} style={[styles.square50,styles.contain]} />
               </View>
               <View className="calc-column-offset-150 float-left right-padding">
-                <Text className="heading-text-5">{this.state.awards[i - 1].name}</Text>
-                <Text className="description-text-1">{this.state.awards[i - 1].awardDate}</Text>
+                <Text style={styles.headingText5}>{this.state.awards[i - 1].name}</Text>
+                <Text style={styles.descriptionText1}>{this.state.awards[i - 1].awardDate}</Text>
               </View>
               <View className="fixed-column-80">
-                <TouchableOpacity type="button" onClick={() => this.formChangeHandler(event)} className="background-button right-padding-20" name={"isEditingAwardArray|" + index}>
-                  <Image source={editIconGrey} className="image-auto-20" alt="Compass edit icon icon" />
+                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingAwardArray|" + index}>
+                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
-                <TouchableOpacity type="button" onClick={() => this.deleteItem('award', index)} className="background-button">
-                  <Image source={closeIcon} className="image-auto-20" alt="Compass close icon icon" />
+                <TouchableOpacity onPress={() => this.deleteItem('award', index)}>
+                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
-              <View className="clear"/>
-              <View className="spacer" /><View className="half-spacer" />
+
+              <View style={styles.spacer} /><View style={styles.halfSpacer} />
             </View>
           )
         }
@@ -4294,27 +4399,27 @@ class EditProfileDetails extends Component {
   //
   //       rows.push(
   //         <View key={"collaborator" + i.toString()}>
-  //           <View className="spacer" /><View className="half-pacer" />
+  //           <View style={styles.spacer} />
   //
   //           <View className="fixed-column-50">
-  //             <Image source={collaborators[i - 1].pictureURL ? collaborators[i - 1].pictureURL : profileIconBig} alt="pic" className="profile-thumbnail-2"/>
+  //             <Image source={collaborators[i - 1].pictureURL ? collaborators[i - 1].pictureURL : profileIconBig} style={[styles.square50,styles.contain,{ borderRadius: 25 }]}/>
   //           </View>
   //           <View className="calc-column-offset-100 left-padding">
   //             <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
-  //             <View className="half-spacer" />
+  //             <View style={styles.halfSpacer} />
   //             {(collaborators[i - 1].joined) ? (
-  //               <Text className="description-text-2">{collaborators[i - 1].roleName}</Text>
+  //               <Text style={[styles.descriptionText2]}>{collaborators[i - 1].roleName}</Text>
   //             ) : (
-  //               <Text className="description-text-2">(This user has not joined Guided Compass)</Text>
+  //               <Text style={[styles.descriptionText2]}>(This user has not joined Guided Compass)</Text>
   //             )}
   //           </View>
   //           <View className="fixed-column-50">
-  //               <View className="spacer" />
-  //             <a className="background-link" onClick={() => this.removeItem(passedIndex, index)}>
-  //               <Image source={xIcon} alt="pic" className="image-auto-20"/>
+  //               <View style={styles.spacer} />
+  //             <a onPress={() => this.removeItem(passedIndex, index)}>
+  //               <Image source={xIcon} style={[styles.square20,styles.contain]}/>
   //             </a>
   //           </View>
-  //           <View className="clear" />
+  //
   //         </View>
   //       )
   //     }
@@ -4464,20 +4569,20 @@ class EditProfileDetails extends Component {
     // if (type === 'project') {
       return (
         <View key={type + "|0"}>
-          <View className="spacer" />
+          <View style={styles.spacer} />
           {passedArray.map((value, optionIndex) =>
             <View key={type + "|" + optionIndex} className="float-left">
               <View className="close-button-container-1" >
-                <TouchableOpacity className="background-button" onClick={() => this.removeTag(type, optionIndex)}>
-                  <Image source={deniedIcon} alt="Compass target icon" className="image-auto-20" />
+                <TouchableOpacity onPress={() => this.removeTag(type, optionIndex)}>
+                  <Image source={deniedIcon} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
               <View className="float-left right-padding-5">
-                <View className="half-spacer" />
-                <View className="tag-container-inactive">
-                  <Text className="description-text-2">{value}</Text>
+                <View style={styles.halfSpacer} />
+                <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.lightBorder,styles.lightBackground]}>
+                  <Text style={[styles.descriptionText2]}>{value}</Text>
                 </View>
-                <View className="half-spacer" />
+                <View style={styles.halfSpacer} />
               </View>
             </View>
           )}
@@ -4544,85 +4649,81 @@ class EditProfileDetails extends Component {
               <View className="calc-column-offset-50">
                 {(this.props.category === 'Basics') && (
                   <View>
-                    <Text className="heading-text-2">Edit Basic Info</Text>
+                    <Text style={[styles.headingText2]}>Edit Basic Info</Text>
                   </View>
                 )}
                 {(this.props.category === 'Details') && (
                   <View>
-                    <Text className="heading-text-2">Edit Projects, Experience, & Other Details</Text>
+                    <Text style={[styles.headingText2]}>Edit Projects, Experience, & Other Details</Text>
                   </View>
                 )}
                 {(this.props.category === 'Visibility Preferences') && (
                   <View>
-                    <Text className="heading-text-2">Profile Visibility Preferences</Text>
+                    <Text style={[styles.headingText2]}>Profile Visibility Preferences</Text>
                   </View>
                 )}
               </View>
 
-              <View className="clear" />
+
             </View>
 
-            <View className="row-10">
-              <View className="upload-image">
-                <View className="width-150">
-                  <View className="relative-position">
-                    <Text for="profilePic" className="profile-pic-button">
+            <View style={[styles.row10]}>
+              <View>
+                <View style={[styles.fullScreenWidth]}>
+                  <View style={styles.relativePosition}>
+                    <TouchableOpacity onPress={() => this.formChangeHandler("profilePic",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
                       <Image source={
-                        this.state.profilePicImage ? ( this.state.profilePicImage )
-                        : this.state.pictureURL ? ( this.state.pictureURL )
-                        : this.state.profilePicPath ? ( this.state.profilePicPath )
-                        : ( addProfilePhotoIcon)}
-                      alt="Compass add profile pic" for="profilePic" className={(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) ? "profile-image-largish" : "profile-image-largish-squared"}/>
+                        this.state.profilePicImage ? ( { uri: this.state.profilePicImage} )
+                        : this.state.pictureURL ? ( { uri: this.state.pictureURL} )
+                        : this.state.profilePicPath ? ( { uri: this.state.profilePicPath})
+                        : ( { uri: addProfilePhotoIcon})}
+                      style={(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) ? [styles.square150,styles.contain,styles.centerItem,{ borderRadius: (150/2)}] : [styles.square150,styles.contain,styles.centerItem]}/>
                       {(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) && (
-                        <View className="bottom-right-overlay">
-                          <View className="bottom-right-subcontainer">
-                            <Image source={addIcon} alt="Compass add icon" className="image-auto-18 center-item"/>
+                        <View style={[styles.absolutePosition,styles.justifyEnd, styles.absoluteBottom0, styles.absoluteRight0]}>
+                          <View style={[styles.marginTopNegative40,styles.padding10,styles.square40,styles.whiteBackground,{ borderRadius: (20)}]}>
+                            <Image source={{ uri: addIcon}} style={[styles.square18,styles.contain,styles.centerItem]}/>
                           </View>
-                          <View className="clear" />
                         </View>
                       )}
-
-                    </Text>
-                    <input type="file" id="profilePic" name="profilePic" onChange={this.formChangeHandler} accept="image/*" />
+                    </TouchableOpacity>
                   </View>
                 </View>
 
-                <View className="clear" />
-                <View className="spacer" />
-                <Text className="description-text-color description-text-2">Dimensions: 150 x 150</Text>
+                <View style={styles.spacer} />
+                <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Dimensions: 150 x 150</Text>
 
                 { (this.state.serverSuccessProfilePic) ? (
-                  <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+                  <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                 ) : (
-                  <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+                  <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                 )}
               </View>
 
             </View>
 
-            <View className="edit-profile-row">
-                <Text className="heading-text-3">Basic Info</Text>
+            <View style={[styles.row10]}>
+                <Text style={[styles.headingText3]}>Basic Info</Text>
             </View>
 
-            <View className="edit-profile-row">
+            <View style={[styles.row10]}>
                 <View className="container-left">
-                    <Text className="profile-label">First Name</Text>
+                    <Text style={[styles.row10]}>First Name</Text>
                     <input className="text-field" type="text" placeholder="First Name" name="firstName" value={this.state.firstNameValue} onChange={this.formChangeHandler} />
                 </View>
                 <View className="container-right">
-                    <Text className="profile-label">Last Name</Text>
+                    <Text style={[styles.row10]}>Last Name</Text>
                     <input className="text-field" type="text" placeholder="Last Name" name="lastName" value={this.state.lastNameValue} onChange={this.formChangeHandler}/>
                 </View>
-                <View className="clear" />
+
             </View>
 
             {(this.state.roleName === 'Mentor') && (
-              <View className="edit-profile-row">
-                <Text className="profile-label">LinkedIn URL (Optional)</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10]}>LinkedIn URL (Optional)</Text>
                 <input className="text-field" type="text" placeholder="LinkedIn Profile URL" name="linkedInURL" value={this.state.linkedInURL} onChange={this.formChangeHandler} />
                 {(this.state.linkedInURL && this.state.linkedInURL !== '' && !this.state.linkedInURL.startsWith('http')) && (
                   <View>
-                    <Text className="error-message">Please start your link with http</Text>
+                    <Text style={[styles.errorColor]}>Please start your link with http</Text>
                   </View>
                 )}
               </View>
@@ -4630,27 +4731,27 @@ class EditProfileDetails extends Component {
 
             {(this.state.roleName === 'Mentor') && (
               <View>
-                <View className="edit-profile-row">
-                  <Text className="profile-label">Resume URL (Optional)</Text>
+                <View style={[styles.row10]}>
+                  <Text style={[styles.row10]}>Resume URL (Optional)</Text>
                   <input className="text-field" type="text" placeholder="Google Drive Link? Website Link?" name="resumeURL" value={this.state.resumeURLValue} onChange={this.formChangeHandler}/>
                   {(this.state.resumeURLValue && this.state.resumeURLValue !== '' && !this.state.resumeURLValue.startsWith('http')) && (
                     <View>
-                      <Text className="error-message">Please start your link with http</Text>
+                      <Text style={[styles.errorColor]}>Please start your link with http</Text>
                     </View>
                   )}
                 </View>
-                <View className="edit-profile-row">
-                  <Text className="profile-label">Custom Website URL (Optional)</Text>
+                <View style={[styles.row10]}>
+                  <Text style={[styles.row10]}>Custom Website URL (Optional)</Text>
                   <input className="text-field" type="text" placeholder="Custom Website URL" name="customWebsiteURL" value={this.state.customWebsiteURL} onChange={this.formChangeHandler}/>
                   {(this.state.customWebsiteURL && this.state.customWebsiteURL !== '' && !this.state.customWebsiteURL.startsWith('http')) && (
                     <View>
-                      <Text className="error-message">Please start your link with http</Text>
+                      <Text style={[styles.errorColor]}>Please start your link with http</Text>
                     </View>
                   )}
                 </View>
 
-                <View className="spacer" />
-                <View className="spacer" />
+                <View style={styles.spacer} />
+                <View style={styles.spacer} />
 
                 <View style={styles.horizontalLine} />
               </View>
@@ -4658,26 +4759,26 @@ class EditProfileDetails extends Component {
 
             {(this.state.roleName === 'Mentor') ? (
               <View>
-                <View className="spacer" />
+                <View style={styles.spacer} />
 
-                <View className="edit-profile-row">
+                <View style={[styles.row10]}>
                   <View className="container-left">
-                    <Text className="profile-label">Current Job Title</Text>
+                    <Text style={[styles.row10]}>Current Job Title</Text>
                     <input className="text-field" type="text" placeholder="Job Title" name="jobTitle" value={this.state.jobTitle} onChange={this.formChangeHandler}/>
                   </View>
                   <View className="container-right">
-                    <Text className="profile-label">Employer Name{(this.state.activeOrg === 'c2c') && " Or Congressional Office"}</Text>
+                    <Text style={[styles.row10]}>Employer Name{(this.state.activeOrg === 'c2c') && " Or Congressional Office"}</Text>
                     <input className="text-field" type="text" placeholder="Employer Name" name="employerName" value={this.state.employerName} onChange={this.formChangeHandler}/>
                   </View>
-                  <View className="clear" />
+
 
                 </View>
 
                 {(this.state.activeOrg === 'c2c') && (
                   <View>
 
-                    <View className="edit-profile-row">
-                      <Text className="profile-label">Is there a career track below that you want to advise {(this.state.studentAlias && this.state.studentAlias !== '') ? this.state.studentAlias + 's' : 'students'} in?</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.row10]}>Is there a career track below that you want to advise {(this.state.studentAlias && this.state.studentAlias !== '') ? this.state.studentAlias + 's' : 'students'} in?</Text>
                       <select name="careerTrack" value={this.state.careerTrack} onChange={this.formChangeHandler} className="dropdown">
                         {this.state.functionOptions.map(value =>
                           <option key={value} value={value}>{value}</option>
@@ -4685,124 +4786,133 @@ class EditProfileDetails extends Component {
                       </select>
                     </View>
 
-                    <View className="edit-profile-row">
-                      <Text className="profile-label">Political Alignment</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.row10]}>Political Alignment</Text>
                       <select name="politicalAlignment" className="dropdown" value={this.state.politicalAlignment} onChange={this.formChangeHandler}>
                           {this.state.politicalAlignmentOptions.map(value => <option key={value} value={value}>{value}</option>)}
                       </select>
                     </View>
 
-                    <View className="edit-profile-row">
-                      <Text className="profile-label">Current U.S. State Registered to Vote</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.row10]}>Current U.S. State Registered to Vote</Text>
                       <select name="stateRegistration" className="dropdown" value={this.state.stateRegistration} onChange={this.formChangeHandler}>
                           {this.state.registrationOptions.map(value => <option key={value} value={value}>{value}</option>)}
                       </select>
                     </View>
 
-                    <View className="edit-profile-row">
-                        <Text className="profile-label">Current Congressional District</Text>
+                    <View style={[styles.row10]}>
+                        <Text style={[styles.row10]}>Current Congressional District</Text>
                         <input className="text-field" type="text" placeholder="e.g. 12" name="currentCongressionalDistrict" value={this.state.currentCongressionalDistrict} onChange={this.formChangeHandler}/>
                     </View>
 
-                    <View className="edit-profile-row">
-                      <Text className="profile-label">Hometown (U.S. State)</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.row10]}>Hometown (U.S. State)</Text>
                       <select name="hometown" className="dropdown" value={this.state.hometown} onChange={this.formChangeHandler}>
                           {this.state.hometownOptions.map(value => <option key={value} value={value}>{value}</option>)}
                       </select>
                     </View>
 
-                    <View className="edit-profile-row">
-                        <Text className="profile-label">Hometown Congressional District</Text>
+                    <View style={[styles.row10]}>
+                        <Text style={[styles.row10]}>Hometown Congressional District</Text>
                         <input className="text-field" type="text" placeholder="e.g. 12" name="homeCongressionalDistrict" value={this.state.homeCongressionalDistrict} onChange={this.formChangeHandler}/>
                     </View>
 
                   </View>
                 )}
-                <View className="edit-profile-row">
+                <View style={[styles.row10]}>
                   <View className="container-left">
-                    <Text className="profile-label">What zipcode do you work in? (Optional)</Text>
+                    <Text style={[styles.row10]}>What zipcode do you work in? (Optional)</Text>
                     <input className="text-field" type="text" placeholder="Zipcode" name="zipcode" value={this.state.zipcode} onChange={this.formChangeHandler}/>
                   </View>
                   <View className="container-right">
-                    <Text className="profile-label">How long have you been this field? (Optional)</Text>
+                    <Text style={[styles.row10]}>How long have you been this field? (Optional)</Text>
                     <select name="workTenure" className="dropdown" value={this.state.workTenure} onChange={this.formChangeHandler}>
                         {this.state.tenureOptions.map(value => <option key={value.value} value={value.value}>{value.value}</option>)}
                     </select>
                   </View>
-                  <View className="clear"/>
+
                 </View>
 
-                <View className="edit-profile-row">
+                <View style={[styles.row10]}>
                   <View className="container-left">
-                    <Text className="profile-label">Highest Degree Attained (Optional)</Text>
+                    <Text style={[styles.row10]}>Highest Degree Attained (Optional)</Text>
                     <select name="degreeAttained" className="dropdown" value={this.state.degreeAttained} onChange={this.formChangeHandler}>
                         {this.state.degreeOptions.map(value => <option key={value} value={value}>{value}</option>)}
                     </select>
                   </View>
                   <View className="container-right">
-                    <Text className="profile-label">Add The Last School You Attended(Optional)</Text>
+                    <Text style={[styles.row10]}>Add The Last School You Attended(Optional)</Text>
                     <input className="text-field" type="text" placeholder="Add your school name..." name="schoolName" value={this.state.schoolName} onChange={this.formChangeHandler}/>
                   </View>
-                  <View className="clear" />
+
                 </View>
 
-                <View className="edit-profile-row">
-                    <Text className="profile-label">Study Area Tags (Optional)</Text>
+                <View style={[styles.row10]}>
+                    <Text style={[styles.row10]}>Study Area Tags (Optional)</Text>
                     <input className="text-field" type="text" placeholder="Tag your areas of study in school, separated by commas..." name="studyFields" value={this.state.studyFields} onChange={this.formChangeHandler}/>
                 </View>
-                <View className="spacer" /><View className="spacer" />
+                <View style={styles.spacer} /><View style={styles.spacer} />
               </View>
             ) : (
               <View>
-                <View className="row-10">
+                <View style={[styles.row10]}>
                   <View className="container-left">
-                    <Text className="profile-label">Role Name</Text>
+                    <Text style={[styles.row10]}>Role Name</Text>
                     <Text>{this.state.roleName}</Text>
                   </View>
                   <View className="container-right">
-                    <Text className="profile-label">School Name</Text>
+                    <Text style={[styles.row10]}>School Name</Text>
                     <Text>{this.state.schoolName}</Text>
                   </View>
-                  <View className="clear" />
+
                 </View>
 
                 {(this.state.schoolDistrict) && (
-                  <View className="row-10">
+                  <View style={[styles.row10]}>
                     <View className="container-left">
-                      <Text className="profile-label">School District</Text>
+                      <Text style={[styles.row10]}>School District</Text>
                       <Text>{this.state.schoolDistrict}</Text>
                     </View>
-                    <View className="clear" />
-                    <View className="spacer" /><View className="spacer" />
+
+                    <View style={styles.spacer} /><View style={styles.spacer} />
                   </View>
                 )}
 
-                <View className="row-10">
-                  <Text className="profile-label">Define Success with Guided Compass</Text>
-                  <textarea className="text-field" type="text" placeholder="How would you define success using Guided Compass? What do you want out of it? What should students get out of it?" name="successDefined" value={this.state.successDefined} onChange={this.formChangeHandler} />
+                <View style={[styles.row10]}>
+                  <Text style={[styles.row10]}>Define Success with Guided Compass</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    onChangeText={(text) => this.formChangeHandler("successDefined", text)}
+                    value={this.state.successDefined}
+                    placeholder="How would you define success using Guided Compass? What do you want out of it? What should students get out of it?"
+                    placeholderTextColor="grey"
+                    multiline={true}
+                    numberOfLines={4}
+                  />
+                </View>
                 </View>
 
-                <View className="spacer" /><View className="spacer" />
+                <View style={styles.spacer} /><View style={styles.spacer} />
 
 
               </View>
             )}
 
-            <TouchableOpacity onClick={this.handleSubmit} className="btn btn-primary">Save Changes</TouchableOpacity>
+            <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]}>Save Changes</TouchableOpacity>
             { (this.state.serverSuccessText) ? (
-              <Text className="success-message">{this.state.serverSuccessMessageText}</Text>
+              <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
             ) : (
-              <Text className="error-message">{this.state.serverErrorMessageText}</Text>
+              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
             )}
             { (this.state.serverSuccessProfilePic) ? (
-              <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+              <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
             ) : (
-              <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
             )}
             { (this.state.serverSuccessCoverPic) ? (
-              <Text className="success-message">{this.state.serverSuccessMessageCoverPic}</Text>
+              <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
             ) : (
-              <Text className="error-message">{this.state.serverErrorMessageCoverPic}</Text>
+              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
             )}*/}
             {/*
             <Modal
@@ -4816,16 +4926,16 @@ class EditProfileDetails extends Component {
            >
 
             {(this.state.showGrade) && (
-              <View key="gradeProject" className="full-width padding-20">
+              <View key="gradeProject" style={[styles.fullScreenWidth,styles.padding20]}>
                 {(this.state.projects) && (
                   <View>
-                    <Text className="heading-text-2">Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
+                    <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
 
-                    <View className="spacer" /><View className="spacer" />
+                    <View style={styles.spacer} /><View style={styles.spacer} />
 
                     {this.state.projects[this.state.selectedIndex].grades.map((value, index) =>
                       <View key={value}>
-                        <View className="row-10">
+                        <View style={[styles.row10]}>
                           {(value.isTransparent) ? (
                             <View>
                               <View>
@@ -4837,68 +4947,68 @@ class EditProfileDetails extends Component {
                                   )}
                                 </View>
                                 <View className="calc-column-offset-60">
-                                  <Text className="description-text-2">{value.contributorFirstName} {value.contributorLastName}</Text>
-                                  <Text className="heading-text-6">{value.feedback}</Text>
+                                  <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName}</Text>
+                                  <Text style={[styles.headingText6]}>{value.feedback}</Text>
                                 </View>
-                                <View className="clear" />
+
                               </View>
                             </View>
                           ) : (
                             <View>
                               <View className="fixed-column-60 heading-text-2">
-                                <View className="half-spacer" />
-                                <Image source={confidentialityIcon} alt="Feedback icon logo" className="image-auto-40" />
+                                <View style={styles.halfSpacer} />
+                                <Image source={confidentialityIcon} style={[styles.square40,styles.contain]} />
                               </View>
                               <View className="calc-column-offset-60">
                                 <Text>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
                               </View>
-                              <View className="clear" />
+
                             </View>
                           )}
                         </View>
 
-                        <View className="spacer"/><View className="spacer"/>
-                        <hr className="clear-margin clear-padding" />
+                        <View style={styles.spacer}/><View style={styles.spacer}/>
+                        <View style={styles.horizontalLine} />
 
                       </View>
                     )}
 
-                    <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
-                    <Text className="description-text-3 half-bold-text cta-color">Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
-                    <View className="spacer"/><View className="spacer"/>
+                    <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
+                    <Text style={[styles.descriptionText3,styles.boldText,styles.ctaColor]}>Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
+                    <View style={styles.spacer}/><View style={styles.spacer}/>
                   </View>
                 )}
               </View>
             )}
 
             {(this.state.showJobFunction) && (
-              <View key="showJobFunction" className="full-width padding-20">
-                <Text className="heading-text-2">Job Function</Text>
-                <View className="spacer" />
-                <Text>We define <Text className="half-bold-text cta-color">job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
+              <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
+                <Text style={[styles.headingText2]}>Job Function</Text>
+                <View style={styles.spacer} />
+                <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
               </View>
             )}
 
             {(this.state.showIndustry) && (
-              <View key="showIndustry" className="full-width padding-20">
-                <Text className="heading-text-2">Industry</Text>
-                <View className="spacer" />
-                <Text>We define <Text className="half-bold-text cta-color">industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                <Text style={[styles.headingText2]}>Industry</Text>
+                <View style={styles.spacer} />
+                <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
               </View>
             )}
 
             {(this.state.skillTagsInfo) && (
-              <View key="showIndustry" className="full-width padding-20">
-                <Text className="heading-text-2">Skill Tags Info</Text>
-                <View className="spacer" />
-                <Text><Text className="half-bold-text cta-color">Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
+              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                <Text style={[styles.headingText2]}>Skill Tags Info</Text>
+                <View style={styles.spacer} />
+                <Text><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
               </View>
             )}
 
             {(this.state.showSettings) && (
-              <View key="showIndustry" className="full-width padding-20">
-                <Text className="heading-text-2">Settings</Text>
-                <View className="spacer" />
+              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                <Text style={[styles.headingText2]}>Settings</Text>
+                <View style={styles.spacer} />
 
                 <View>
                   <EditSubscription />
@@ -4913,8 +5023,8 @@ class EditProfileDetails extends Component {
                   />
                 </View>
 
-                <View className="row-10">
-                  <TouchableOpacity className="btn btn-secondary" onClick={() => signOut(
+                <View style={[styles.row10]}>
+                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
                     this.state.email, this.state.activeOrg, this.state.orgFocus,
                     this.state.accountCode, this.state.roleName, this.props.history
                   )}>Sign Out</TouchableOpacity>
@@ -4923,8 +5033,8 @@ class EditProfileDetails extends Component {
               </View>
             )}
 
-            <View className="row-20">
-             <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+            <View style={[styles.row20]}>
+             <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
             </View>
            </Modal>*/}
         </ScrollView>
@@ -4934,78 +5044,75 @@ class EditProfileDetails extends Component {
 
       return (
           <ScrollView>
-              <View>
+              <View style={styles.card}>
                   {(!this.props.fromApply) && (
                     <View>
-                      <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
+                      <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
 
                       <View className="calc-column-offset-50">
                         {(this.props.category === 'Basics') && (
                           <View>
-                            <Text className="heading-text-2">Edit Basic Info</Text>
+                            <Text style={[styles.headingText2]}>Edit Basic Info</Text>
                           </View>
                         )}
                         {(this.props.category === 'Details') && (
                           <View>
-                            <Text className="heading-text-2">Edit Projects, Experience, & Other Details</Text>
+                            <Text style={[styles.headingText2]}>Edit Projects, Experience, & Other Details</Text>
                           </View>
                         )}
                         {(this.props.category === 'Visibility Preferences') && (
                           <View>
-                            <Text className="heading-text-2">Profile Visibility Preferences</Text>
+                            <Text style={[styles.headingText2]}>Profile Visibility Preferences</Text>
                           </View>
                         )}
                       </View>
 
-                      <View className="clear" />
+
                     </View>
                   )}
               </View>
 
               {(this.props.category === 'Basics' || this.props.passedType === 'Basic') && (
                 <View>
-                  <View className="edit-profile-row">
+                  <View style={styles.row10}>
                     <View>
-                      <View className="row-10">
-                        <View className="upload-image">
-                          <View className="width-150">
-                            <View className="relative-position">
-                              <Text for="profilePic" className="profile-pic-button">
+                      <View style={styles.row10}>
+                        <View>
+                          <View style={[styles.fullScreenWidth]}>
+                            <View style={styles.relativePosition}>
+                              <TouchableOpacity onPress={() => this.formChangeHandler("profilePic",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
                                 <Image source={
-                                  this.state.profilePicImage ? ( this.state.profilePicImage )
-                                  : this.state.pictureURL ? ( this.state.pictureURL )
-                                  : this.state.profilePicPath ? ( this.state.profilePicPath )
-                                  : ( addProfilePhotoIcon)}
-                                alt="Compass add profile pic" for="profilePic" className={(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) ? "profile-image-largish" : "profile-image-largish-squared"}/>
+                                  this.state.profilePicImage ? ( { uri: this.state.profilePicImage} )
+                                  : this.state.pictureURL ? ( { uri: this.state.pictureURL} )
+                                  : this.state.profilePicPath ? ( { uri: this.state.profilePicPath})
+                                  : ( { uri: addProfilePhotoIcon})}
+                                style={(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) ? [styles.square150,styles.contain,styles.centerItem,{ borderRadius: (150/2)}] : [styles.square150,styles.contain,styles.centerItem]}/>
                                 {(this.state.profilePicImage || this.state.profilePicPath || this.state.pictureURL) && (
-                                  <View className="bottom-right-overlay">
-                                    <View className="bottom-right-subcontainer">
-                                      <Image source={addIcon} alt="Compass add icon" className="image-auto-18 center-item"/>
+                                  <View style={[styles.absolutePosition,styles.justifyEnd, styles.absoluteBottom0, styles.absoluteRight0]}>
+                                    <View style={[styles.marginTopNegative40,styles.padding10,styles.square40,styles.whiteBackground,{ borderRadius: (20)}]}>
+                                      <Image source={{ uri: addIcon}} style={[styles.square18,styles.contain,styles.centerItem]}/>
                                     </View>
-                                    <View className="clear" />
                                   </View>
                                 )}
-
-                              </Text>
+                              </TouchableOpacity>
                               {/*<input type="file" id="profilePic" name="profilePic" onChange={this.formChangeHandler} accept="image/*" />*/}
-                              
                             </View>
                           </View>
 
-                          <View className="clear" />
-                          <View className="spacer" />
-                          <Text className="description-text-color description-text-2">Dimensions: 150 x 150</Text>
+
+                          <View style={styles.spacer} />
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Dimensions: 150 x 150</Text>
 
                           {(this.state.oauthUid) && (
                             <View>
-                              <Text className="error-color top-margin description-text-2">UID: {this.state.oauthUid}</Text>
+                              <Text style={[styles.errorColor,styles.descriptionText2,styles.topMargin]}>UID: {this.state.oauthUid}</Text>
                             </View>
                           )}
 
                           { (this.state.serverSuccessProfilePic) ? (
-                            <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+                            <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                           ) : (
-                            <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+                            <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                           )}
                         </View>
 
@@ -5015,14 +5122,14 @@ class EditProfileDetails extends Component {
                   </View>
 
                   {(!this.props.fromApply) && (
-                    <View className="row-10">
-                      <Text className="heading-text-3">Basic Info</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.headingText3]}>Basic Info</Text>
                     </View>
                   )}
 
-                  <View className="edit-profile-row">
+                  <View style={[styles.row10]}>
                     <View className="container-left">
-                      <Text className="profile-label">First Name<Text className="error-color bold-text">*</Text></Text>
+                      <Text style={[styles.row10]}>First Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                       <TextInput
                         style={styles.textInput}
                         onChangeText={(text) => this.formChangeHandler('firstName', text)}
@@ -5032,7 +5139,7 @@ class EditProfileDetails extends Component {
                       />
                     </View>
                     <View className="container-right">
-                      <Text className="profile-label">Last Name<Text className="error-color bold-text">*</Text></Text>
+                      <Text style={[styles.row10]}>Last Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                       <TextInput
                         style={styles.textInput}
                         onChangeText={(text) => this.formChangeHandler('lasttName', text)}
@@ -5041,13 +5148,13 @@ class EditProfileDetails extends Component {
                         placeholderTextColor="grey"
                       />
                     </View>
-                    <View className="clear" />
+
                   </View>
 
                   {(!this.props.fromApply) && (
-                    <View className="row-10">
+                    <View style={[styles.row10]}>
                       <View className="container-left">
-                        <Text className="profile-label">Headline (Optional) (70 chars max)</Text>
+                        <Text style={[styles.row10]}>Headline (Optional) (70 chars max)</Text>
                         <TextInput
                           style={styles.textInput}
                           onChangeText={(text) => this.formChangeHandler('headline', text)}
@@ -5058,7 +5165,7 @@ class EditProfileDetails extends Component {
                         />
                       </View>
                       <View className="container-right">
-                        <Text className="profile-label">Current Location</Text>
+                        <Text style={[styles.row10]}>Current Location</Text>
                         <TextInput
                           style={styles.textInput}
                           onChangeText={(text) => this.formChangeHandler('location', text)}
@@ -5067,13 +5174,13 @@ class EditProfileDetails extends Component {
                           placeholderTextColor="grey"
                         />
                       </View>
-                      <View className="clear" />
+
                     </View>
                   )}
 
-                  <View className="row-10">
+                  <View style={[styles.row10]}>
                     <View className="container-left">
-                      <Text className="profile-label">LinkedIn URL (Optional)</Text>
+                      <Text style={[styles.row10]}>LinkedIn URL (Optional)</Text>
                       <TextInput
                         style={styles.textInput}
                         onChangeText={(text) => this.formChangeHandler('linkedInURL', text)}
@@ -5083,7 +5190,7 @@ class EditProfileDetails extends Component {
                       />
                       {(this.state.linkedInURL && this.state.linkedInURL !== '' && !this.state.linkedInURL.startsWith('http')) ? (
                         <View>
-                          <Text className="error-message">Please start your link with http</Text>
+                          <Text style={[styles.errorColor]}>Please start your link with http</Text>
                         </View>
                       ) : (
                         <View />
@@ -5091,7 +5198,7 @@ class EditProfileDetails extends Component {
                     </View>
 
                     <View className="container-right">
-                      <Text className="profile-label">Portfolio URL / Personal Website (Optional)</Text>
+                      <Text style={[styles.row10]}>Portfolio URL / Personal Website (Optional)</Text>
                       <TextInput
                         style={styles.textInput}
                         onChangeText={(text) => this.formChangeHandler("customWebsiteURL", text)}
@@ -5099,57 +5206,57 @@ class EditProfileDetails extends Component {
                         placeholder="https://www.guidedcompass/joeschmo/profile"
                         placeholderTextColor="grey"
                       />
-                      <View className="clear" />
 
-                      <Text className="description-text-3 row-5">If you make your profile public, you can use it as your portfolio</Text>
+
+                      <Text style={[styles.descriptionText3,styles.row5]}>If you make your profile public, you can use it as your portfolio</Text>
 
                       {(this.state.customWebsiteURL && this.state.customWebsiteURL !== '' && !this.state.customWebsiteURL.startsWith('http')) ? (
                         <View>
-                          <Text className="error-message">Please start your link with http</Text>
+                          <Text style={[styles.errorColor]}>Please start your link with http</Text>
                         </View>
                       ) : (
                         <View />
                       )}
                     </View>
-                    <View className="clear" />
+
                   </View>
 
                   {(!this.props.fromApply) ? (
                     <View>
 
-                      <View className="spacer" /><View className="spacer" />
+                      <View style={styles.spacer} /><View style={styles.spacer} />
                       <View style={styles.horizontalLine} />
 
-                      <View className="edit-profile-row">
-                        <View className="spacer"/><View className="half-spacer"/>
+                      <View style={[styles.row10]}>
+                        <View style={styles.spacer}/><View style={styles.halfSpacer}/>
                         <View className="float-left">
-                          <Text className="heading-text-3">Resumes</Text>
+                          <Text style={[styles.headingText3]}>Resumes</Text>
                         </View>
                         <View className="float-left left-padding">
-                          <View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                          <Text for="resumeUpload" className="background-button padding-7 standard-border circle-radius">
-                            <Image source={addIcon} alt="Compass add icon" className="image-auto-12"/>
+                          <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                          <Text for="resumeUpload" style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
+                            <Image source={addIcon} style={[styles.square12,styles.contain]}/>
                           </Text>
 
                           {/*<input type="file" id="resumeUpload" name="resume" onChange={this.formChangeHandler} accept="application/pdf" />*/}
                         </View>
-                        <View className="clear" />
 
-                        <View className="top-padding">
-                          <Text className="description-text-2 row-5">(Only PDF files are accepted. Please convert Word files to PDF.)</Text>
+
+                        <View style={[styles.topPadding]}>
+                          <Text style={[styles.descriptionText2,styles.row5]}>(Only PDF files are accepted. Please convert Word files to PDF.)</Text>
                         </View>
 
                         {(!this.props.fromWalkthrough) ? (
-                          <View className="row-10">
+                          <View style={[styles.row10]}>
                             <TouchableOpacity onPress={() => this.props.navigations.navigate('Resume Builder')}>
                               <View className="fixed-column-30">
-                                <View className="half-spacer" /><View className="mini-spacer" />
-                                <Image source={skillsIcon} alt="GC" className="image-auto-15" />
+                                <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} />
+                                <Image source={skillsIcon} style={[styles.square15,styles.contain]} />
                               </View>
                               <View className="calc-column-offset-30">
-                                <Text className="description-text-3 cta-color bold-text row-5">Need help? Use our resume builder. <Text className="cta-color bold-text heading-text-6 left-padding-5">>></Text></Text>
+                                <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.row5]}>Need help? Use our resume builder. <Text style={[styles.ctaColor,styles.boldText,styles.headingText6,styles.leftPadding5]}>>></Text></Text>
                               </View>
-                              <View className="clear" />
+
                             </TouchableOpacity>
                           </View>
                         ) : (
@@ -5158,22 +5265,22 @@ class EditProfileDetails extends Component {
 
                       </View>
 
-                      <View className="top-padding-5 bottom-padding">
+                      <View style={[styles.topPadding5,styles.bottomPadding]}>
                         {(this.state.resumes && this.state.resumes.length > 0) ? (
                           <View>
                             {this.state.resumes.map((item, optionIndex) =>
                               <View key={item}>
-                                <View className="bottom-padding-20">
+                                <View style={[styles.bottomPadding20]}>
                                   <View className="calc-column-offset-20">
-                                    <Text className="right-padding">{optionIndex + 1}.</Text>
+                                    <Text style={[styles.rightPadding]}>{optionIndex + 1}.</Text>
                                     <TouchableOpacity onPress={() => Linking.openURL(item)}><Text>{this.state.resumeNames[optionIndex]}</Text></TouchableOpacity>
                                   </View>
                                   <View className="fixed-column-20">
-                                    <TouchableOpacity type="button" className="background-button full-width right-text" onClick={() => this.deleteItem('resume', optionIndex)}>
-                                      <Image source={deleteIconDark} alt="GC" className="image-auto-15 pin-right" />
+                                    <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('resume', optionIndex)}>
+                                      <Image source={deleteIconDark} style={[styles.square15,styles.contain,styles.pinRight]} />
                                     </TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
+
 
                                 </View>
                               </View>
@@ -5181,13 +5288,13 @@ class EditProfileDetails extends Component {
                           </View>
                         ) : (
                           <View>
-                            <Text className="error-color description-text-2">No resumes have been uploaded yet</Text>
+                            <Text style={[styles.errorColor,styles.descriptionText2]}>No resumes have been uploaded yet</Text>
                           </View>
                         )}
                       </View>
 
-                      {(this.state.serverSuccessMessageResume && this.state.serverSuccessMessageResume !== '') ? <Text className="description-text-2 cta-color">{this.state.serverSuccessMessageResume}</Text> : <View />}
-                      {(this.state.serverErrorMessageResume && this.state.serverErrorMessageResume !== '') ? <Text className="description-text-2 cta-color">{this.state.serverErrorMessageResume}</Text> : <View />}
+                      {(this.state.serverSuccessMessageResume && this.state.serverSuccessMessageResume !== '') ? <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.serverSuccessMessageResume}</Text> : <View />}
+                      {(this.state.serverErrorMessageResume && this.state.serverErrorMessageResume !== '') ? <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.serverErrorMessageResume}</Text> : <View />}
 
                     </View>
                   ) : (
@@ -5196,20 +5303,20 @@ class EditProfileDetails extends Component {
 
                   {(this.state.activeOrg === 'yearup') ? (
                     <View>
-                      <View className="spacer" /><View className="spacer" />
+                      <View style={styles.spacer} /><View style={styles.spacer} />
                       <View style={styles.horizontalLine} />
 
-                      <View className="edit-profile-row">
-                        <View className="spacer"/><View className="half-spacer"/>
+                      <View style={[styles.row10]}>
+                        <View style={styles.spacer}/><View style={styles.halfSpacer}/>
                         <View className="float-left">
-                          <Text className="heading-text-3">Video Resume</Text>
+                          <Text style={[styles.headingText3]}>Video Resume</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
 
-                      <View className="row-10">
+                      <View style={[styles.row10]}>
                         <View className="container-left">
-                          <Text className="profile-label">Add a link to your video</Text>
+                          <Text style={[styles.row10]}>Add a link to your video</Text>
                           <TextInput
                             style={styles.textInput}
                             onChangeText={(text) => this.formChangeHandler("videoResumeURL" , text)}
@@ -5219,13 +5326,13 @@ class EditProfileDetails extends Component {
                           />
                           {(this.state.videoResumeURL && this.state.videoResumeURL !== '' && !this.state.videoResumeURL.startsWith('http')) ? (
                             <View>
-                              <Text className="error-message">Please start your link with http</Text>
+                              <Text style={[styles.errorColor]}>Please start your link with http</Text>
                             </View>
                           ) : (
                             <View />
                           )}
                         </View>
-                        <View className="clear" />
+
                       </View>
                     </View>
                   ) : (
@@ -5233,20 +5340,20 @@ class EditProfileDetails extends Component {
                   )}
 
                   <View>
-                    <View className="spacer" /><View className="spacer" />
+                    <View style={styles.spacer} /><View style={styles.spacer} />
                     <View style={styles.horizontalLine} />
-                    <View className="edit-profile-row">
-                      <View className="spacer"/><View className="half-spacer"/>
+                    <View style={[styles.row10]}>
+                      <View style={styles.spacer}/><View style={styles.halfSpacer}/>
                       <View className="float-left">
-                        <Text className="heading-text-3">Education</Text>
+                        <Text style={[styles.headingText3]}>Education</Text>
                       </View>
                       <View className="float-left left-padding">
-                        <View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                        <TouchableOpacity onClick={() => this.addItem('education')} className="background-button padding-7 standard-border circle-radius" type="button">
-                          <Image source={addIcon} alt="Compass add icon" className="image-auto-12"/>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                        <TouchableOpacity onPress={() => this.addItem('education')} style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
+                          <Image source={addIcon} style={[styles.square12,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
-                      <View className="clear" />
+
 
                     </View>
                   </View>
@@ -5257,24 +5364,24 @@ class EditProfileDetails extends Component {
                         <View>
                           {this.state.education.map((item, optionIndex) =>
                             <View key={optionIndex}>
-                              <View className="spacer" />
-                              <View className="row-10">
+                              <View style={styles.spacer} />
+                              <View style={[styles.row10]}>
                                 <View>
                                   <View className="calc-column-offset-20">
-                                    <Text className="heading-text-6">Education #{optionIndex + 1}{(item.name) ? ": " + item.name : ""}</Text>
+                                    <Text style={[styles.headingText6]}>Education #{optionIndex + 1}{(item.name) ? ": " + item.name : ""}</Text>
                                   </View>
                                   <View className="fixed-column-20">
-                                    <TouchableOpacity className="background-button full-width right-text" onClick={() => this.deleteItem('education', optionIndex)}>
-                                      <Image source={deleteIconDark} alt="GC" className="image-auto-15 pin-right" />
+                                    <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('education', optionIndex)}>
+                                      <Image source={deleteIconDark} style={[styles.square15,styles.contain,styles.pinRight]} />
                                     </TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
                               </View>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text className="error-color bold-text">*</Text></Text>
+                                  <Text style={[styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   {(this.state.activeOrg === 'exp') ? (
                                     <Picker
                                       selectedValue={item.name}
@@ -5294,9 +5401,9 @@ class EditProfileDetails extends Component {
                                   )}
 
                                   {(this.state.schoolsAreLoading) ? (
-                                    <View className="flex-container flex-center full-space">
+                                    <View style={[styles.flexCenter,styles.calcColumn60]}>
                                       <View>
-                                        <View className="super-spacer" />
+                                        <View style={[styles.superSpacer]} />
 
                                         <ActivityIndicator
                                            animating = {this.state.animating}
@@ -5304,30 +5411,30 @@ class EditProfileDetails extends Component {
                                            size = "large"
                                            style={[styles.square80, styles.centerHorizontally]}/>
 
-                                        <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                                        <Text className="center-text cta-color bold-text">Searching...</Text>
+                                        <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                        <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                                       </View>
                                     </View>
                                   ) : (
                                     <View>
-                                      <View className="clear" />
-                                      <View className="spacer"/>
+
+                                      <View style={styles.spacer}/>
 
                                       {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
-                                        <View className="full-width">
-                                          <View className="spacer"/>
+                                        <View style={styles.calcColumn60}>
+                                          <View style={styles.spacer}/>
                                           {this.state.schoolOptions.map((value2, optionIndex2) =>
-                                            <View key={value2._id} className="bottom-padding">
+                                            <View key={value2._id} style={[styles.bottomPadding]}>
                                               {(value2 && value2 !== '') ? (
-                                                <View className="left-text bottom-margin-5 full-width standard-color">
-                                                  <TouchableOpacity type="button" className="background-button" onClick={() => this.optionClicked(optionIndex2, "education|name|" + optionIndex)}>
-                                                    <View className="full-width">
+                                                <View style={[styles.calcColumn60]}>
+                                                  <TouchableOpacity onPress={() => this.optionClicked(optionIndex2, "education|name|" + optionIndex)}>
+                                                    <View style={styles.calcColumn60}>
                                                       <View className="float-left right-padding">
-                                                        <Image source={courseIconDark} alt="Compass employer icon icon" className="image-auto-22" />
+                                                        <Image source={courseIconDark} style={[styles.square22,styles.contain]} />
                                                       </View>
                                                       <View className="float-left">
-                                                        <Text className="cta-color">{value2}</Text>
+                                                        <Text style={[styles.ctaColor]}>{value2}</Text>
                                                       </View>
                                                     </View>
                                                   </TouchableOpacity>
@@ -5347,7 +5454,7 @@ class EditProfileDetails extends Component {
                                 <View className="container-right">
                                   {(!this.state.orgDegree) ? (
                                     <View>
-                                      <Text className="profile-label">Degree Type<Text className="error-color bold-text">*</Text></Text>
+                                      <Text style={[styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                       <Picker
                                         selectedValue={item.degree}
                                         onValueChange={(itemValue, itemIndex) =>
@@ -5360,14 +5467,14 @@ class EditProfileDetails extends Component {
                                     <View />
                                   )}
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
                                   {(this.state.activeOrg === 'dpscd') ? (
                                     <View>
-                                      <Text className="profile-label">Career Pathway<Text className="error-color bold-text">*</Text></Text>
+                                      <Text style={[styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                       <Picker
                                         selectedValue={item.pathway}
                                         onValueChange={(itemValue, itemIndex) =>
@@ -5378,7 +5485,7 @@ class EditProfileDetails extends Component {
                                     </View>
                                   ) : (
                                     <View>
-                                      <Text className="profile-label">School Major / Pathway<Text className="error-color bold-text">*</Text></Text>
+                                      <Text style={[styles.row10]}>School Major / Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                       {(this.state.activeOrg === 'exp') ? (
                                         <Picker
                                           selectedValue={item.major}
@@ -5400,7 +5507,7 @@ class EditProfileDetails extends Component {
                                   )}
                                 </View>
                                 <View className="container-right">
-                                  <Text className="profile-label">Location</Text>
+                                  <Text style={[styles.row10]}>Location</Text>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("education|location|" + optionIndex , text)}
@@ -5409,20 +5516,20 @@ class EditProfileDetails extends Component {
                                     placeholderTextColor="grey"
                                   />
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="edit-profile-row">
-                                <Text className="profile-label">Are you still at this school?</Text>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Are you still at this school?</Text>
                                 <Switch
                                    onValueChange = {(value) => this.changeContinual(optionIndex, value,'education')}
                                    value = {this.state.isContinual}
                                 />
                               </View>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">Start Date<Text className="error-color bold-text">*</Text></Text>
+                                  <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   <Picker
                                     selectedValue={item.startDate}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5432,7 +5539,7 @@ class EditProfileDetails extends Component {
                                   </Picker>
                                 </View>
                                 <View className="container-right">
-                                  <Text className="profile-label">Grad Year / End Date<Text className="error-color bold-text">*</Text></Text>
+                                  <Text style={[styles.row10]}>Grad Year / End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
                                     <Picker
                                       selectedValue={item.gradYear}
@@ -5452,11 +5559,11 @@ class EditProfileDetails extends Component {
                                   )}
                                 </View>
 
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="row-30">
-                                <Text className="profile-label">Summary</Text>
+                              <View style={styles.row30}>
+                                <Text style={[styles.row10]}>Summary</Text>
                                 <TextInput
                                   style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("education|summary|" + optionIndex, text)}
@@ -5469,7 +5576,7 @@ class EditProfileDetails extends Component {
                               </View>
 
                               {(this.state.education[optionIndex + 1]) ? (
-                                <View className="row-10 horizontal-padding-2">
+                                <View style={[styles.row10,styles.horizontalPadding30]}>
                                   <View style={styles.horizontalLine} />
                                 </View>
                               ) : (
@@ -5484,7 +5591,7 @@ class EditProfileDetails extends Component {
                       )}
 
                       {(this.props.fromApply) ? (
-                        <View className="top-margin-20">
+                        <View style={[styles.topMargin20]}>
                           <View style={styles.horizontalLine} />
                         </View>
                       ) : (
@@ -5493,9 +5600,9 @@ class EditProfileDetails extends Component {
                     </View>
                   ) : (
                     <View>
-                      <View className="row-10">
+                      <View style={[styles.row10]}>
                         <View className="container-left">
-                          <Text className="profile-label">{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text className="error-color bold-text">*</Text></Text>
+                          <Text style={[styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                           {(this.state.activeOrg === 'exp') ? (
                             <Picker
                               selectedValue={this.state.schoolName}
@@ -5515,9 +5622,9 @@ class EditProfileDetails extends Component {
                           )}
 
                           {(this.state.schoolsAreLoading) ? (
-                            <View className="flex-container flex-center full-space">
+                            <View style={[styles.flexCenter,styles.calcColumn60]}>
                               <View>
-                                <View className="super-spacer" />
+                                <View style={[styles.superSpacer]} />
 
                                 <ActivityIndicator
                                    animating = {this.state.animating}
@@ -5525,30 +5632,30 @@ class EditProfileDetails extends Component {
                                    size = "large"
                                    style={[styles.square80, styles.centerHorizontally]}/>
 
-                                <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                                <Text className="center-text cta-color bold-text">Searching...</Text>
+                                <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                               </View>
                             </View>
                           ) : (
                             <View>
-                              <View className="clear" />
-                              <View className="spacer"/>
+
+                              <View style={styles.spacer}/>
 
                               {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
-                                <View className="full-width">
-                                  <View className="spacer"/>
+                                <View style={[styles.fullScreenWidth]}>
+                                  <View style={styles.spacer}/>
                                   {this.state.schoolOptions.map((value, optionIndex) =>
-                                    <View key={value._id} className="bottom-padding">
+                                    <View key={value._id} style={[styles.bottomPadding]}>
                                       {(value && value !== '') ? (
-                                        <View className="left-text bottom-margin-5 full-width standard-color">
-                                          <TouchableOpacity className="background-button" onClick={() => this.optionClicked(optionIndex, 'school')}>
-                                            <View className="full-width">
+                                        <View style={[styles.calcColumn60]}>
+                                          <TouchableOpacity onPress={() => this.optionClicked(optionIndex, 'school')}>
+                                            <View style={styles.calcColumn60}>
                                               <View className="float-left right-padding">
-                                                <Image source={courseIconDark} alt="Compass employer icon icon" className="image-auto-22" />
+                                                <Image source={courseIconDark} style={[styles.square22,styles.contain]} />
                                               </View>
                                               <View className="float-left">
-                                                <Text className="cta-color">{value}</Text>
+                                                <Text style={[styles.ctaColor]}>{value}</Text>
                                               </View>
                                             </View>
                                           </TouchableOpacity>
@@ -5568,7 +5675,7 @@ class EditProfileDetails extends Component {
                         <View className="container-right">
                           {(!this.state.orgDegree) ? (
                             <View>
-                              <Text className="profile-label">Degree Type<Text className="error-color bold-text">*</Text></Text>
+                              <Text style={[styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                               <Picker
                                 selectedValue={this.state.degree}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -5581,14 +5688,14 @@ class EditProfileDetails extends Component {
                             <View />
                           )}
                         </View>
-                        <View className="clear" />
+
                       </View>
 
-                      <View className="row-10">
+                      <View style={[styles.row10]}>
                         <View className="container-left">
                           {(this.state.activeOrg === 'dpscd') ? (
                             <View>
-                              <Text className="profile-label">Career Pathway<Text className="error-color bold-text">*</Text></Text>
+                              <Text style={[styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                               <Picker
                                 selectedValue={this.state.pathway}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -5599,7 +5706,7 @@ class EditProfileDetails extends Component {
                             </View>
                           ) : (
                             <View>
-                              <Text className="profile-label">School Major / Pathway<Text className="error-color bold-text">*</Text></Text>
+                              <Text style={[styles.row10]}>School Major / Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                               {(this.state.activeOrg === 'exp') ? (
                                 <Picker
                                   selectedValue={this.state.major}
@@ -5621,7 +5728,7 @@ class EditProfileDetails extends Component {
                           )}
                         </View>
                         <View className="container-right">
-                          <Text className="profile-label">Grad Year<Text className="error-color bold-text">*</Text></Text>
+                          <Text style={[styles.row10]}>Grad Year<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                           {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
                             <Picker
                               selectedValue={this.state.gradYear}
@@ -5641,7 +5748,7 @@ class EditProfileDetails extends Component {
                             />
                           )}
                         </View>
-                        <View className="clear" />
+
                       </View>
                     </View>
                   )}
@@ -5650,18 +5757,18 @@ class EditProfileDetails extends Component {
                     <View>
                       {((this.props.fromWalkthrough && this.state.requirePersonalInfo) || !this.props.fromWalkthrough) ? (
                         <View>
-                          <View className="spacer" /><View className="spacer" />
+                          <View style={styles.spacer} /><View style={styles.spacer} />
                           <View style={styles.horizontalLine} />
 
-                          <View className="edit-profile-row">
-                            <View className="spacer"/><View className="half-spacer"/>
-                            <Text className="heading-text-3">Self-Identification / Personal Info</Text>
-                            <Text className="top-margin-20">This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
+                          <View style={[styles.row10]}>
+                            <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                            <Text style={[styles.headingText3]}>Self-Identification / Personal Info</Text>
+                            <Text style={[styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
                           </View>
 
-                          <View className="edit-profile-row">
+                          <View style={[styles.row10]}>
                             <View className="container-left">
-                              <Text className="profile-label">Street Address{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Street Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => this.formChangeHandler('address', text)}
@@ -5671,7 +5778,7 @@ class EditProfileDetails extends Component {
                               />
                             </View>
                             <View className="container-right">
-                              <Text className="profile-label">City{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>City{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => this.formChangeHandler('city', text)}
@@ -5680,12 +5787,12 @@ class EditProfileDetails extends Component {
                                 placeholderTextColor="grey"
                               />
                             </View>
-                            <View className="clear" />
+
                           </View>
 
-                          <View className="edit-profile-row">
+                          <View style={[styles.row10]}>
                             <View className="container-left">
-                              <Text className="profile-label">Zip Code{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Zip Code{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => this.formChangeHandler('zipcode', text)}
@@ -5695,7 +5802,7 @@ class EditProfileDetails extends Component {
                               />
                             </View>
                             <View className="container-right">
-                              <Text className="profile-label">Phone Number{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => this.formChangeHandler('phoneNumber', text)}
@@ -5704,12 +5811,12 @@ class EditProfileDetails extends Component {
                                 placeholderTextColor="grey"
                               />
                             </View>
-                            <View className="clear" />
+
                           </View>
 
-                          <View className="edit-profile-row">
+                          <View style={[styles.row10]}>
                             <View className="container-left">
-                              <Text className="profile-label">Date of Birth{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               {/*<input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>*/}
                               <DatePicker
                                 date={this.state.dateOfBirth}
@@ -5718,14 +5825,14 @@ class EditProfileDetails extends Component {
                                 maximumDate={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")}
                               />
                             </View>
-                            <View className="clear" />
+
                           </View>
 
                           {(this.state.activeOrg === 'exp') ? (
                             <View>
-                              <View className="edit-profile-row">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">Last 4 Digits of Social Security Number{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Last 4 Digits of Social Security Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("lastOfSocialSecurity", text)}
@@ -5735,7 +5842,7 @@ class EditProfileDetails extends Component {
                                   />
                                 </View>
                                 <View className="container-right">
-                                  <Text className="profile-label">IEP or 504 Plan{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>IEP or 504 Plan{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("IEPPlan", text)}
@@ -5744,17 +5851,17 @@ class EditProfileDetails extends Component {
                                     placeholderTextColor="grey"
                                   />
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="contrasting-container-1">
-                                <View className="edit-profile-row">
-                                  <Text className="heading-text-4">Parent/Guardian Information</Text>
+                              <View style={styles.contrastingContainer1}>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.headingText4]}>Parent/Guardian Information</Text>
                                 </View>
 
-                                <View className="edit-profile-row">
+                                <View style={[styles.row10]}>
                                   <View className="container-left">
-                                    <Text className="profile-label">Parent/Guardian First Name and Last Name{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Parent/Guardian First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("parentName", text)}
@@ -5764,7 +5871,7 @@ class EditProfileDetails extends Component {
                                     />
                                   </View>
                                   <View className="container-right">
-                                    <Text className="profile-label">Parent/Guardian Relationship to Student{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Parent/Guardian Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("parentRelationship", text)}
@@ -5773,12 +5880,12 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
 
-                                <View className="edit-profile-row">
+                                <View style={[styles.row10]}>
                                   <View className="container-left">
-                                    <Text className="profile-label">Parent/Guardian Phone Number{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Parent/Guardian Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("parentPhone", text)}
@@ -5788,7 +5895,7 @@ class EditProfileDetails extends Component {
                                     />
                                   </View>
                                   <View className="container-right">
-                                    <Text className="profile-label">Parent/Guardian Email Address{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Parent/Guardian Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("parentEmail", text)}
@@ -5797,18 +5904,18 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
                               </View>
 
-                              <View className="contrasting-container-2">
-                                <View className="edit-profile-row">
-                                  <Text className="heading-text-4">Emergency Contact Information</Text>
+                              <View style={styles.contrastingContainer2}>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.headingText4]}>Emergency Contact Information</Text>
                                 </View>
 
-                                <View className="edit-profile-row">
+                                <View style={[styles.row10]}>
                                   <View className="container-left">
-                                    <Text className="profile-label">Emergency Contact First Name and Last Name{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Emergency Contact First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("emergencyContactName", text)}
@@ -5818,7 +5925,7 @@ class EditProfileDetails extends Component {
                                     />
                                   </View>
                                   <View className="container-right">
-                                    <Text className="profile-label">Emergency Contact Relationship to Student{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Emergency Contact Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("emergencyContactRelationship", text)}
@@ -5827,12 +5934,12 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
 
-                                <View className="edit-profile-row">
+                                <View style={[styles.row10]}>
                                   <View className="container-left">
-                                    <Text className="profile-label">Emergency Contact Phone Number{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Emergency Contact Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("emergencyContactPhone", text)}
@@ -5842,7 +5949,7 @@ class EditProfileDetails extends Component {
                                     />
                                   </View>
                                   <View className="container-right">
-                                    <Text className="profile-label">Emergency Contact Email Address{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                    <Text style={[styles.row10]}>Emergency Contact Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("emergencyContactEmail", text)}
@@ -5851,7 +5958,7 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
                               </View>
 
@@ -5860,9 +5967,9 @@ class EditProfileDetails extends Component {
                             <View />
                           )}
 
-                          <View className="edit-profile-row">
+                          <View style={[styles.row10]}>
                             <View className="container-left">
-                              <Text className="profile-label">Race{(this.state.requirePersonalInfo) ? <Text className="error-color bold-text"> *</Text> : ""}</Text>
+                              <Text style={[styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
                               <Picker
                                 selectedValue={this.state.race}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -5872,7 +5979,7 @@ class EditProfileDetails extends Component {
                               </Picker>
                             </View>
                             <View className="container-right">
-                              <Text className="profile-label">Gender{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <Picker
                                 selectedValue={this.state.gender}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -5881,16 +5988,16 @@ class EditProfileDetails extends Component {
                                 {this.state.genderOptions.map(value => <Picker.Item label={value} value={value} />)}
                               </Picker>
                             </View>
-                            <View className="clear" />
+
                           </View>
 
-                          <View className="edit-profile-row">
+                          <View style={[styles.row10]}>
                             <View className="container-left">
-                              <Text className="profile-label">Authorized to work in the U.S.?{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <Text style={[styles.row10]}>Authorized to work in the U.S.?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               {(this.state.activeOrg === 'exp') && (
-                                <Text className="description-text-2 row-5">Note: You will not be automatically rejected from the program if you are not authorized.</Text>
+                                <Text style={[styles.descriptionText2,styles.row5]}>Note: You will not be automatically rejected from the program if you are not authorized.</Text>
                               )}
-                              <View className="clear" />
+
 
                               <Picker
                                 selectedValue={this.state.workAuthorization}
@@ -5902,7 +6009,7 @@ class EditProfileDetails extends Component {
                             </View>
                             {(!this.state.remoteAuth && this.state.activeOrg !== 'unite-la') && (
                               <View className="container-right">
-                                <Text className="profile-label">Veteran Status{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                <Text style={[styles.row10]}>Veteran Status{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                 <Picker
                                   selectedValue={this.state.veteranStatus}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -5912,13 +6019,13 @@ class EditProfileDetails extends Component {
                                 </Picker>
                               </View>
                             )}
-                            <View className="clear" />
+
 
                           </View>
 
                           {(this.state.activeOrg === 'c2c') && (
-                            <View className="edit-profile-row">
-                              <Text className="profile-label">Do you have DACA status?{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.row10]}>Do you have DACA status?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <Picker
                                 selectedValue={this.state.dacaStatus}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -5931,9 +6038,9 @@ class EditProfileDetails extends Component {
 
                           {(this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'guidedcompass') && (
                             <View>
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">Number of Members in Household{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Number of Members in Household{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.numberOfMembers}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5943,7 +6050,7 @@ class EditProfileDetails extends Component {
                                   </Picker>
                                 </View>
                                 <View className="container-right">
-                                  <Text className="profile-label">Estimated Household Income{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Estimated Household Income{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.householdIncome}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5952,12 +6059,12 @@ class EditProfileDetails extends Component {
                                     {this.state.householdIncomeOptions.map(value => <Picker.Item label={value} value={value} />)}
                                   </Picker>
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="edit-profile-row">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.fosterYouth}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5967,7 +6074,7 @@ class EditProfileDetails extends Component {
                                   </Picker>
                                 </View>
                                 <View className="container-right">
-                                  <Text className="profile-label">Are you currently or formerly homeless?{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Are you currently or formerly homeless?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.homeless}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5976,12 +6083,12 @@ class EditProfileDetails extends Component {
                                     {this.state.homelessOptions.map(value => <Picker.Item label={value} value={value} />)}
                                   </Picker>
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="edit-profile-row">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="profile-label">Were you previously incarcerated?{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                                  <Text style={[styles.row10]}>Were you previously incarcerated?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.incarcerated}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5990,28 +6097,28 @@ class EditProfileDetails extends Component {
                                     {this.state.incarceratedOptions.map(value => <Picker.Item label={value} value={value} />)}
                                   </Picker>
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
-                              <View className="edit-profile-row">
-                                <Text className="profile-label clear-margin clear-padding">Designate all that apply.{(this.state.requirePersonalInfo) && <Text className="error-color bold-text"> *</Text>}</Text>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Designate all that apply.{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
 
                                 {this.state.adversityListOptions.map((value, optionIndex) =>
                                   <View key={value + optionIndex}>
                                     <View className="float-left right-padding top-padding">
                                       {(this.state.adversityList && this.state.adversityList.includes(value)) ? (
-                                        <TouchableOpacity type="button" className="background-button selected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'adversityList')}>
+                                        <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
                                           <View>
                                             <View className="float-left">
-                                              <Text className="description-text-2 white-text nowrap">{value}</Text>
+                                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
                                             </View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity type="button" className="background-button unselected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'adversityList')}>
+                                        <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
                                           <View>
                                             <View className="float-left">
-                                              <Text className="description-text-2 nowrap">{value}</Text>
+                                              <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
                                             </View>
                                           </View>
                                         </TouchableOpacity>
@@ -6026,17 +6133,17 @@ class EditProfileDetails extends Component {
                           {(this.state.activeOrg === 'c2c') && (
                             <View>
 
-                              <View className="clear" />
-                              <View className="spacer" /><View className="spacer" />
+
+                              <View style={styles.spacer} /><View style={styles.spacer} />
                               <View style={styles.horizontalLine} />
 
-                              <View className="edit-profile-row">
-                                  <View className="spacer"/><View className="half-spacer"/>
-                                  <Text className="heading-text-3">Political Information</Text>
+                              <View style={[styles.row10]}>
+                                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                                  <Text style={[styles.headingText3]}>Political Information</Text>
                               </View>
 
-                              <View className="edit-profile-row">
-                                <Text className="profile-label">Political Alignment<Text className="error-color bold-text">*</Text></Text>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Political Alignment<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.politicalAlignment}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -6046,8 +6153,8 @@ class EditProfileDetails extends Component {
                                 </Picker>
                               </View>
 
-                              <View className="edit-profile-row">
-                                <Text className="profile-label">U.S. State Registered to Vote<Text className="error-color bold-text">*</Text></Text>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>U.S. State Registered to Vote<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.stateRegistration}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -6057,8 +6164,8 @@ class EditProfileDetails extends Component {
                                 </Picker>
                               </View>
 
-                              <View className="edit-profile-row">
-                                  <Text className="profile-label">Current Congressional District<Text className="error-color bold-text">*</Text></Text>
+                              <View style={[styles.row10]}>
+                                  <Text style={[styles.row10]}>Current Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   <Picker
                                     selectedValue={this.state.currentCongressionalDistrict}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -6068,8 +6175,8 @@ class EditProfileDetails extends Component {
                                   </Picker>
                               </View>
 
-                              <View className="edit-profile-row">
-                                <Text className="profile-label">Hometown (U.S. State)<Text className="error-color bold-text">*</Text></Text>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Hometown (U.S. State)<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.hometown}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -6079,8 +6186,8 @@ class EditProfileDetails extends Component {
                                 </Picker>
                               </View>
 
-                              <View className="edit-profile-row">
-                                  <Text className="profile-label">Hometown Congressional District<Text className="error-color bold-text">*</Text></Text>
+                              <View style={[styles.row10]}>
+                                  <Text style={[styles.row10]}>Hometown Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("homeCongressionalDistrict", text)}
@@ -6101,47 +6208,45 @@ class EditProfileDetails extends Component {
                     <View />
                   )}
 
-                  <View className="clear" />
-
                   {(!this.props.fromApply) && (
                     <View>
-                      <View className="spacer" /><View className="spacer" />
+                      <View style={styles.spacer} /><View style={styles.spacer} />
 
-                      {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
+                      {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
 
                       { (this.state.serverSuccessText) ? (
-                        <Text className="success-message">{this.state.serverSuccessMessageText}</Text>
+                        <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                       ) : (
-                        <Text className="error-message">{this.state.serverErrorMessageText}</Text>
+                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                       )}
                       { (this.state.serverSuccessProfilePic) ? (
-                        <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+                        <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                       ) : (
-                        <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                       )}
                       { (this.state.serverSuccessCoverPic) ? (
-                        <Text className="success-message">{this.state.serverSuccessMessageCoverPic}</Text>
+                        <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                       ) : (
-                        <Text className="error-message">{this.state.serverErrorMessageCoverPic}</Text>
+                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                       )}
 
                       {(this.props.fromWalkthrough) ? (
-                        <View className="full-width top-margin-50">
+                        <View style={[styles.calcColumn60,styles.topMargin50]}>
                           <View style={styles.horizontalLine} />
 
-                          <View className="full-width top-margin-50">
+                          <View style={[styles.calcColumn60,styles.topMargin50]}>
                             <View className="container-left-static left-text">
-                              <TouchableOpacity className="btn btn-primary medium-background standard-border" onClick={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
                             </View>
                             <View className="container-right-static right-text">
-                              <TouchableOpacity className="btn btn-primary" type="button" onClick={() => this.handleSubmit()}><Text>Next step</Text></TouchableOpacity>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.handleSubmit()}><Text>Next step</Text></TouchableOpacity>
                             </View>
-                            <View className="clear" />
+
                           </View>
                         </View>
                       ) : (
-                        <View className="row-10">
-                          <TouchableOpacity onClick={this.handleSubmit} type="button" className="btn btn-primary"><Text>Save Profile Changes</Text></TouchableOpacity>
+                        <View style={[styles.row10]}>
+                          <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]}><Text>Save Profile Changes</Text></TouchableOpacity>
                         </View>
                       )}
 
@@ -6152,123 +6257,123 @@ class EditProfileDetails extends Component {
 
               {(this.props.category === 'Details' || this.props.passedType === 'Details') && (
                 <View>
-                  <View className="edit-profile-row">
+                  <View style={[styles.row10]}>
                     <View className="calc-column-offset-50">
-                      <View className="spacer" /><View className="half-spacer" />
-                      <Text className="heading-text-3">Projects (Optional)</Text>
-                      <View className="half-spacer" />
-                      <Text className="profile-descriptor">Add school, personal or professional projects relevant to employment. Examples include research papers, design projects, engineering projects, science projects, and business case studies.</Text>
+                      <View style={styles.spacer} /><View style={styles.halfSpacer} />
+                      <Text style={[styles.headingText3]}>Projects (Optional)</Text>
+                      <View style={styles.halfSpacer} />
+                      <Text style={[styles.descriptionText2,styles.bottomPadding5]}>Add school, personal or professional projects relevant to employment. Examples include research papers, design projects, engineering projects, science projects, and business case studies.</Text>
 
                       {(this.state.projects.length > 0 && this.state.publicProfile) && (
-                        <View className="row-5 description-text-2">
-                          <Text>Your portfolio: <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text>https://www.guidedcompass.com/{this.state.username}/projects</Text></TouchableOpacity></Text>
+                        <View style={styles.row5}>
+                          <Text style={styles.descriptionText2}>Your portfolio: <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text>https://www.guidedcompass.com/{this.state.username}/projects</Text></TouchableOpacity></Text>
                         </View>
                       )}
                     </View>
                     <View className="fixed-column-50 right-padding top-margin-20">
-                      <TouchableOpacity onClick={() => this.addItem('projects')} className="background-button" type="button">
-                        <Image source={addIcon} alt="Compass add icon" className="add-icon"/>
+                      <TouchableOpacity onPress={() => this.addItem('projects')}>
+                        <Image source={addIcon} style={[styles.square25,styles.contain]}/>
                       </TouchableOpacity>
                     </View>
-                    <View className="clear"/>
+
                   </View>
 
-                  {this.state.clientErrorMessage !== '' ? <Text className="error-message">{this.state.clientErrorMessage}</Text> : <View />}
+                  {this.state.clientErrorMessage !== '' ? <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text> : <View />}
 
                   { (this.state.serverSuccessText) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageText}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageText}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                   )}
                   { (this.state.serverSuccessProfilePic) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                   )}
                   { (this.state.serverSuccessCoverPic) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageCoverPic}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageCoverPic}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                   )}
 
                   {(this.state.projects.length > 0) && (
-                    <View className="edit-profile-row">
+                    <View style={[styles.row10]}>
                       {this.renderProjects()}
                     </View>
                   )}
 
                   <View>
-                    <View className="spacer" /><View className="spacer" />
+                    <View style={styles.spacer} /><View style={styles.spacer} />
                     <View style={styles.horizontalLine} />
 
-                    <View className="edit-profile-row">
+                    <View style={[styles.row10]}>
                       <View className="calc-column-offset-50">
-                        <View className="spacer" /><View className="half-spacer" />
-                        <Text className="heading-text-3">Experience (Optional)</Text>
-                        <View className="half-spacer" />
-                        <Text className="profile-descriptor">{(this.state.activeOrg === 'c2c') ? "Provide information about current or past jobs and experiences relevant to interning on Capitol Hill. This should include any leadership, political, government, customer service, or volunteer experiences from your resume that you want to highlight." : "Provide information about current or past jobs and experiences relevant to your target internships. This should include any leadership, volunteer, or paid experiences from your resume that you want to highlight."}</Text>
+                        <View style={styles.spacer} /><View style={styles.halfSpacer} />
+                        <Text style={[styles.headingText3]}>Experience (Optional)</Text>
+                        <View style={styles.halfSpacer} />
+                        <Text style={[styles.descriptionText2,styles.bottomPadding5]}>{(this.state.activeOrg === 'c2c') ? "Provide information about current or past jobs and experiences relevant to interning on Capitol Hill. This should include any leadership, political, government, customer service, or volunteer experiences from your resume that you want to highlight." : "Provide information about current or past jobs and experiences relevant to your target internships. This should include any leadership, volunteer, or paid experiences from your resume that you want to highlight."}</Text>
                       </View>
                       <View className="fixed-column-50 right-padding top-margin-20">
-                        <TouchableOpacity onClick={() => this.addItem('experience')} className="background-button" type="button">
-                          <Image source={addIcon} alt="Compass add icon" className="add-icon"/>
+                        <TouchableOpacity onPress={() => this.addItem('experience')}>
+                          <Image source={addIcon} style={[styles.square25,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
-                      <View className="clear"/>
+
                     </View>
 
                     {(this.state.experience.length > 0) && (
-                      <View className="edit-profile-row">
+                      <View style={[styles.row10]}>
                         {this.renderExperience()}
                       </View>
                     )}
                   </View>
 
-                  <View className="spacer" /><View className="spacer" />
+                  <View style={styles.spacer} /><View style={styles.spacer} />
                   <View style={styles.horizontalLine} />
 
                   {(this.state.activeOrg === 'exp' || this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'guidedcompass') ? (
                     <View>
-                      <View className="edit-profile-row">
+                      <View style={[styles.row10]}>
                         <View className="calc-column-offset-50">
-                          <View className="spacer" /><View className="half-spacer" />
-                          <Text className="heading-text-3">Extracurriculars (Optional)</Text>
-                          <View className="half-spacer" />
-                          <Text className="profile-descriptor">List all activities, clubs, or teams that you are / were involved in.</Text>
+                          <View style={styles.spacer} /><View style={styles.halfSpacer} />
+                          <Text style={[styles.headingText3]}>Extracurriculars (Optional)</Text>
+                          <View style={styles.halfSpacer} />
+                          <Text style={[styles.descriptionText2,styles.bottomPadding5]}>List all activities, clubs, or teams that you are / were involved in.</Text>
                         </View>
                         <View className="fixed-column-50 right-padding">
-                          <TouchableOpacity onClick={() => this.addItem('extracurricular')} className="background-button" type="button">
-                            <Image source={addIcon} alt="Compass add icon" className="add-icon"/>
+                          <TouchableOpacity onPress={() => this.addItem('extracurricular')}>
+                            <Image source={addIcon} style={[styles.square25,styles.contain]}/>
                           </TouchableOpacity>
                         </View>
-                        <View className="clear"/>
+
                       </View>
 
                       {(this.state.extracurriculars.length > 0) && (
-                        <View className="edit-profile-row">
+                        <View style={[styles.row10]}>
                           {this.renderExtras('extracurriculars')}
                         </View>
                       )}
 
-                      <View className="spacer" /><View className="spacer" />
+                      <View style={styles.spacer} /><View style={styles.spacer} />
                       <View style={styles.horizontalLine} />
 
-                      <View className="edit-profile-row">
+                      <View style={[styles.row10]}>
                         <View className="calc-column-offset-50">
-                          <View className="spacer" /><View className="half-spacer" />
-                          <Text className="heading-text-3">Awards (Optional)</Text>
-                          <View className="half-spacer" />
-                          <Text className="profile-descriptor">List any awards or special recognition earned in high school (Student of the Month, Perfect Attendance, Honor Roll, Citizenship, etc.) and the year received.</Text>
+                          <View style={styles.spacer} /><View style={styles.halfSpacer} />
+                          <Text style={[styles.headingText3]}>Awards (Optional)</Text>
+                          <View style={styles.halfSpacer} />
+                          <Text style={[styles.descriptionText2,styles.bottomPadding5]}>List any awards or special recognition earned in high school (Student of the Month, Perfect Attendance, Honor Roll, Citizenship, etc.) and the year received.</Text>
                         </View>
                         <View className="fixed-column-50 right-padding">
-                          <TouchableOpacity onClick={() => this.addItem('award')} className="background-button" type="button">
-                            <Image source={addIcon} alt="Compass add icon" className="add-icon"/>
+                          <TouchableOpacity onPress={() => this.addItem('award')}>
+                            <Image source={addIcon} style={[styles.square25,styles.contain]}/>
                           </TouchableOpacity>
                         </View>
-                        <View className="clear"/>
+
                       </View>
 
                       {(this.state.awards.length > 0) && (
-                        <View className="edit-profile-row">
+                        <View style={[styles.row10]}>
                           {this.renderExtras('awards')}
                         </View>
                       )}
@@ -6277,22 +6382,22 @@ class EditProfileDetails extends Component {
                     <View />
                   )}
 
-                  {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
+                  {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
 
                   { (this.state.serverSuccessText) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageText}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageText}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                   )}
                   { (this.state.serverSuccessProfilePic) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageProfilePic}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageProfilePic}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                   )}
                   { (this.state.serverSuccessCoverPic) ? (
-                    <Text className="success-message">{this.state.serverSuccessMessageCoverPic}</Text>
+                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                   ) : (
-                    <Text className="error-message">{this.state.serverErrorMessageCoverPic}</Text>
+                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                   )}
                 </View>
               )}
@@ -6301,16 +6406,16 @@ class EditProfileDetails extends Component {
                 <View>
 
                   {(!this.props.fromAdvisor) && (
-                    <View className="edit-profile-row">
-                      <Text className="row-10">Making your profile visible allows you to use the link as a portfolio link, add the link to your resume, connect with others, get feedback from mentors, and get shortlisted by employers for work opportunities.*</Text>
-                      <Text className="row-10 description-text-2">* Note that this is separate from applying to opportunities. In that case, only your application is shared with the reviewers.</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.row10]}>Making your profile visible allows you to use the link as a portfolio link, add the link to your resume, connect with others, get feedback from mentors, and get shortlisted by employers for work opportunities.*</Text>
+                      <Text style={[styles.row10,styles.descriptionText2]}>* Note that this is separate from applying to opportunities. In that case, only your application is shared with the reviewers.</Text>
 
                       <View>
-                        <View className="row-20">
-                          <View className="spacer"/><View className="half-spacer"/>
-                          <Text className="heading-text-4">Can Others View Your Profile?</Text>
+                        <View style={[styles.row20]}>
+                          <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                          <Text style={[styles.headingText4]}>Can Others View Your Profile?</Text>
 
-                          <View className="row-10">
+                          <View style={[styles.row10]}>
                             <View className="float-left right-padding">
                               <Switch
                                  onValueChange = {(value) => this.switchPreferences(value)}
@@ -6319,34 +6424,34 @@ class EditProfileDetails extends Component {
                               />
                             </View>
 
-                            <View className="float-left top-margin-3">{(this.state.publicProfile) ? <Text className="description-text-2 cta-color bold-text">(Open)</Text> : <Text className="description-text-2">(Private)</Text>}</View>
+                            <View className="float-left top-margin-3">{(this.state.publicProfile) ? <Text style={[styles.ctaColor,styles.descriptionText2,styles.boldText]}>(Open)</Text> : <Text style={[styles.descriptionText2]}>(Private)</Text>}</View>
 
-                            <View className="clear"/>
+
                           </View>
 
-                          {(this.state.publicPreferencesErrorMessage) && <Text className="description-text-2 error-color">{this.state.publicPreferencesErrorMessage}</Text>}
-                          {(this.state.publicPreferencesSuccessMessage) && <Text className="description-text-2 cta-color">{this.state.publicPreferencesSuccessMessage}</Text>}
+                          {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
+                          {(this.state.publicPreferencesSuccessMessage) && <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.publicPreferencesSuccessMessage}</Text>}
 
                           {(this.state.publicProfile) ? (
-                            <View className="row-10">
+                            <View style={[styles.row10]}>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View>
                                   <View className="float-left">
-                                    <Text className="heading-text-5">Who Can View Your Profile?</Text>
+                                    <Text style={styles.headingText5}>Who Can View Your Profile?</Text>
                                   </View>
                                   <View>
                                     <View className="float-left left-margin noti-bubble-info-7-9">
                                       <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPublicProfileExtentInfo: true })}>
-                                        <Image source={questionMarkBlue} alt="Guided Compass dashboard icon" className="image-auto-14 center-item" />
+                                        <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                                       </TouchableOpacity>
                                     </View>
 
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
 
-                                <View className="spacer" />
+                                <View style={styles.spacer} />
                                 <Picker
                                   selectedValue={this.state.publicProfileExtent}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -6354,31 +6459,31 @@ class EditProfileDetails extends Component {
                                   }>
                                   {this.state.publicProfileExtentOptions.map(value => <Picker.Item label={value} value={value} />)}
                                 </Picker>
-                                <View className="spacer" />
+                                <View style={styles.spacer} />
                               </View>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View className="container-left">
-                                  <Text className="heading-text-5">Profile Link (Within Portal)</Text>
+                                  <Text style={styles.headingText5}>Profile Link (Within Portal)</Text>
                                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}><Text>Preview in Portal</Text></TouchableOpacity>
-                                  <View className="spacer" />
+                                  <View style={styles.spacer} />
                                 </View>
                                 {(this.state.publicProfileExtent === 'Public') ? (
                                   <View className="container-right">
-                                    <Text className="heading-text-5">Public Profile Link</Text>
+                                    <Text style={styles.headingText5}>Public Profile Link</Text>
                                     <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/profile")}><Text>https://www.guidedcompass.com/ + {this.state.username} + /profile</Text></TouchableOpacity>
-                                    <View className="spacer" />
+                                    <View style={styles.spacer} />
                                   </View>
                                 ) : (
                                   <View />
                                 )}
-                                <View className="clear" />
+
                               </View>
 
                               {(!this.props.fromWalkthrough) ? (
-                                <View className="row-10">
-                                  <View className="bottom-padding">
-                                    <Text className="heading-text-5">Headline</Text>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.bottomPadding]}>
+                                    <Text style={styles.headingText5}>Headline</Text>
                                   </View>
                                   <TextInput
                                     style={styles.textInput}
@@ -6392,16 +6497,16 @@ class EditProfileDetails extends Component {
                                 <View />
                               )}
 
-                              <View className="spacer" />
+                              <View style={styles.spacer} />
 
-                              <View className="top-padding">
+                              <View style={[styles.topPadding]}>
                                 <Text>What would you like public?</Text>
                               </View>
 
-                              <View className="row-10">
-                                <View className="row-5">
+                              <View style={[styles.row10]}>
+                                <View style={[styles.row5]}>
                                   <View className="calc-column-offset-100-static">
-                                    <Text className="top-padding">1. Posts</Text>
+                                    <Text style={[styles.topPadding]}>1. Posts</Text>
                                   </View>
                                   <View className="fixed-column-100">
                                     <Picker
@@ -6412,16 +6517,16 @@ class EditProfileDetails extends Component {
                                       {['','All','None'].map(value => <Picker.Item label={value} value={value} />)}
                                     </Picker>
                                   </View>
-                                  <View className="clear" />
+
 
                                   {(this.state.postPublicPreference === 'Some') && (
                                     <View>
                                       {(!this.state.postOptions || this.state.postOptions.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no posts to publicize. Add a post to the news feed.</Text>
+                                          <Text style={[styles.errorColor]}>You have no posts to publicize. Add a post to the news feed.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedPost}
@@ -6432,22 +6537,22 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'post', this.state.selectedPost)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'post', this.state.selectedPost)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('post', this.state.publicPosts)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
-                                <View className="row-5">
+                                <View style={[styles.row5]}>
                                   <View className="calc-column-offset-100-static">
-                                    <Text className="top-padding">2. Projects</Text>
+                                    <Text style={[styles.topPadding]}>2. Projects</Text>
                                   </View>
                                   <View className="fixed-column-100">
                                     <Picker
@@ -6458,11 +6563,11 @@ class EditProfileDetails extends Component {
                                       {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                     </Picker>
                                   </View>
-                                  <View className="clear" />
+
 
                                   {(this.state.projectPublicPreference !== 'None') && (
-                                    <View className="row-10 description-text-2 bold-text">
-                                      <Text className="right-padding">Portfolio Link:</Text>
+                                    <View style={[styles.row10,styles.descriptionText2,styles.boldText]}>
+                                      <Text style={[styles.rightPadding]}>Portfolio Link:</Text>
                                       <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text>https://www.guidedcompass.com/ + {this.state.username} + /projects</Text></TouchableOpacity>
                                     </View>
                                   )}
@@ -6471,10 +6576,10 @@ class EditProfileDetails extends Component {
                                     <View>
                                       {(!this.state.projects || this.state.projects.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no projects to publicize. Add projects below.</Text>
+                                          <Text style={[styles.errorColor]}>You have no projects to publicize. Add projects below.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedProject}
@@ -6485,23 +6590,23 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'project', this.state.selectedProject)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'project', this.state.selectedProject)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('project', this.state.publicProjects)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
-                                <View className="row-5">
+                                <View style={[styles.row5]}>
                                   <View>
                                     <View className="calc-column-offset-100-static">
-                                      <Text className="top-padding">3. Goals</Text>
+                                      <Text style={[styles.topPadding]}>3. Goals</Text>
                                     </View>
                                     <View className="fixed-column-100">
                                       <Picker
@@ -6512,17 +6617,17 @@ class EditProfileDetails extends Component {
                                         {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                       </Picker>
                                     </View>
-                                    <View className="clear" />
+
                                   </View>
 
                                   {(this.state.goalPublicPreference === 'Some') && (
                                     <View>
                                       {(!this.state.goalOptions || this.state.goalOptions.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no goals to publicize. Add goals in the career goals tab.</Text>
+                                          <Text style={[styles.errorColor]}>You have no goals to publicize. Add goals in the career goals tab.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedGoal}
@@ -6533,23 +6638,23 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'goal', this.state.selectedGoal)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'goal', this.state.selectedGoal)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('goal', this.state.publicGoals)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
-                                <View className="row-5">
+                                <View style={[styles.row5]}>
                                   <View>
                                     <View className="calc-column-offset-100-static">
-                                      <Text className="top-padding">4. Passions</Text>
+                                      <Text style={[styles.topPadding]}>4. Passions</Text>
                                     </View>
                                     <View className="fixed-column-100">
                                       <Picker
@@ -6560,17 +6665,17 @@ class EditProfileDetails extends Component {
                                         {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                       </Picker>
                                     </View>
-                                    <View className="clear" />
+
                                   </View>
 
                                   {(this.state.passionPublicPreference === 'Some') && (
                                     <View>
                                       {(!this.state.passionOptions || this.state.passionOptions.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no passions to publicize. Add passions in the career goals tab.</Text>
+                                          <Text style={[styles.errorColor]}>You have no passions to publicize. Add passions in the career goals tab.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedPassion}
@@ -6581,23 +6686,23 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'passion', this.state.selectedPassion)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'passion', this.state.selectedPassion)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('passion', this.state.publicPassions)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
-                                <View className="row-5">
+                                <View style={[styles.row5]}>
                                   <View>
                                     <View className="calc-column-offset-100-static">
-                                      <Text className="top-padding">5. Career Assessments</Text>
+                                      <Text style={[styles.topPadding]}>5. Career Assessments</Text>
                                     </View>
                                     <View className="fixed-column-100">
                                       <Picker
@@ -6608,17 +6713,17 @@ class EditProfileDetails extends Component {
                                         {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                       </Picker>
                                     </View>
-                                    <View className="clear" />
+
                                   </View>
 
                                   {(this.state.assessmentPublicPreference === 'Some') && (
                                     <View>
                                       {(!this.state.assessmentOptions || this.state.assessmentOptions.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no assessment results to publicize. Take assessments in the assessments tab.</Text>
+                                          <Text style={[styles.errorColor]}>You have no assessment results to publicize. Take assessments in the assessments tab.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedAssessment}
@@ -6629,23 +6734,23 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'assessment', this.state.selectedAssessment)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'assessment', this.state.selectedAssessment)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('assessment', this.state.publicAssessments)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
-                                <View className="row-5">
+                                <View style={[styles.row5]}>
                                   <View>
                                     <View className="calc-column-offset-100-static">
-                                      <Text className="top-padding">6. Skill & Knowledge Endorsements</Text>
+                                      <Text style={[styles.topPadding]}>6. Skill & Knowledge Endorsements</Text>
                                     </View>
                                     <View className="fixed-column-100">
                                       <Picker
@@ -6656,17 +6761,17 @@ class EditProfileDetails extends Component {
                                         {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                       </Picker>
                                     </View>
-                                    <View className="clear" />
+
                                   </View>
 
                                   {(this.state.endorsementPublicPreference === 'Some') && (
                                     <View>
                                       {(!this.state.endorsementOptions || this.state.endorsementOptions.length === 0) ? (
                                         <View>
-                                          <Text className="error-color">You have no skill endorsements to publicize. Request endorsements in the endorsements tab.</Text>
+                                          <Text style={[styles.errorColor]}>You have no skill endorsements to publicize. Request endorsements in the endorsements tab.</Text>
                                         </View>
                                       ) : (
-                                        <View className="calc-column-offset-220"><View className="half-spacer" />
+                                        <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                           <View className="fixed-column-320 right-margin-5">
                                             <Picker
                                               selectedValue={this.state.selectedEndorsement}
@@ -6677,24 +6782,24 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View className="fixed-column-100">
-                                            <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'endorsement', this.state.selectedEndorsement)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'endorsement', this.state.selectedEndorsement)}><Text>Add</Text></TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
                                       )}
 
-                                      <View className="clear" />
+
                                       {this.renderTags('endorsement', this.state.publicEndorsements)}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
 
                                 {(!this.state.remoteAuth) && (
-                                  <View className="row-5">
+                                  <View style={[styles.row5]}>
                                     <View>
                                       <View className="calc-column-offset-100-static">
-                                        <Text className="top-padding">7. Primary Resume</Text>
+                                        <Text style={[styles.topPadding]}>7. Primary Resume</Text>
                                       </View>
                                       <View className="fixed-column-100">
                                         <Picker
@@ -6705,17 +6810,17 @@ class EditProfileDetails extends Component {
                                           {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
                                         </Picker>
                                       </View>
-                                      <View className="clear" />
+
                                     </View>
 
                                     {(this.state.resumePublicPreference === 'Yes') && (
                                       <View>
                                         {(!this.state.resumes || this.state.resumes.length === 0) ? (
                                           <View>
-                                            <Text className="error-color">You have no resumes to publicize. Add resumes in the "Basic Info" section of your profile or by using the Resume Builder.</Text>
+                                            <Text style={[styles.errorColor]}>You have no resumes to publicize. Add resumes in the "Basic Info" section of your profile or by using the Resume Builder.</Text>
                                           </View>
                                         ) : (
-                                          <View className="calc-column-offset-220"><View className="half-spacer" />
+                                          <View className="calc-column-offset-220"><View style={styles.halfSpacer} />
                                             <View className="fixed-column-320 right-margin-5">
                                               <Picker
                                                 selectedValue={this.state.selectedResume}
@@ -6726,15 +6831,15 @@ class EditProfileDetails extends Component {
                                               </Picker>
                                             </View>
                                             <View className="fixed-column-100">
-                                              <TouchableOpacity className="btn btn-squarish" onClick={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text>Add</Text></TouchableOpacity>
+                                              <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text>Add</Text></TouchableOpacity>
                                             </View>
-                                            <View className="clear" />
+
                                           </View>
                                         )}
 
-                                        <View className="clear" />
+
                                         {this.renderTags('resume', null)}
-                                        <View className="clear" />
+
                                       </View>
                                     )}
                                   </View>
@@ -6742,25 +6847,25 @@ class EditProfileDetails extends Component {
 
                               </View>
 
-                              <View className="row-10">
+                              <View style={[styles.row10]}>
                                 <View>
                                   <Text>Automatically Included:</Text>
                                 </View>
 
-                                <View className="row-10">
-                                  <View className="public-profile-checkmarks">
-                                    <View><Image source={checkmarkIcon} className="image-auto-20 center-item" alt="GC" /><Text className="description-text-2 bold-text top-margin-3">Portfolio Link</Text></View>
-                                    <View><Image source={checkmarkIcon} className="image-auto-20 center-item" alt="GC" /><Text className="description-text-2 bold-text top-margin-3">LinkedIn</Text></View>
+                                <View style={[styles.row10]}>
+                                  <View >
+                                    <View><Image source={checkmarkIcon} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>Portfolio Link</Text></View>
+                                    <View><Image source={checkmarkIcon} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>LinkedIn</Text></View>
                                   </View>
                                 </View>
                               </View>
 
-                              {(this.state.publicPreferencesErrorMessage) && <Text className="description-text-2 error-color">{this.state.publicPreferencesErrorMessage}</Text>}
-                              {(this.state.publicPreferencesSuccessMessage) && <Text className="description-text-2 cta-color">{this.state.publicPreferencesSuccessMessage}</Text>}
+                              {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
+                              {(this.state.publicPreferencesSuccessMessage) && <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.publicPreferencesSuccessMessage}</Text>}
 
                               {(!this.props.fromWalkthrough) && (
-                                <View className="row-10">
-                                  <TouchableOpacity className="btn btn-secondary" disabled={this.state.isSaving} onClick={() => this.savePreferences(false, false)}><Text>Save Profile Visibility Preferences></Text></TouchableOpacity>
+                                <View style={[styles.row10]}>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false)}><Text>Save Profile Visibility Preferences></Text></TouchableOpacity>
                                 </View>
                               )}
 
@@ -6770,18 +6875,18 @@ class EditProfileDetails extends Component {
                           )}
 
                           {(this.props.fromWalkthrough) ? (
-                            <View className="full-width top-margin-30">
+                            <View style={[styles.calcColumn60,styles.topMargin30]}>
                               <View style={styles.horizontalLine} />
 
-                              <View className="full-width top-margin-30">
+                              <View style={[styles.calcColumn60,styles.topMargin30]}>
                                 <View className="container-left-static left-text">
-                                  <TouchableOpacity className="btn btn-primary medium-background standard-border" onClick={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
                                 </View>
 
                                 <View className="container-right-static right-text">
-                                  <TouchableOpacity className="btn btn-primary" disabled={this.state.isSaving} onClick={() => this.savePreferences(false, false, true)}><Text>Submit & Get Started</Text></TouchableOpacity>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text>Submit & Get Started</Text></TouchableOpacity>
                                 </View>
-                                <View className="clear" />
+
                               </View>
                             </View>
                           ) : (
@@ -6813,16 +6918,16 @@ class EditProfileDetails extends Component {
                >
 
                 {(this.state.showGrade) && (
-                  <View key="gradeProject" className="full-width padding-20">
+                  <View key="gradeProject" style={[styles.fullScreenWidth,styles.padding20]}>
                     {(this.state.projects) && (
                       <View>
-                        <Text className="heading-text-2">Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
+                        <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
 
-                        <View className="spacer" /><View className="spacer" />
+                        <View style={styles.spacer} /><View style={styles.spacer} />
 
                         {this.state.projects[this.state.selectedIndex].grades.map((value, index) =>
                           <View key={value}>
-                            <View className="row-10">
+                            <View style={[styles.row10]}>
                               {(value.isTransparent) ? (
                                 <View>
                                   <View>
@@ -6834,107 +6939,107 @@ class EditProfileDetails extends Component {
                                       )}
                                     </View>
                                     <View className="calc-column-offset-60">
-                                      <Text className="description-text-2">{value.contributorFirstName} {value.contributorLastName}</Text>
-                                      <Text className="heading-text-6">{value.feedback}</Text>
+                                      <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName}</Text>
+                                      <Text style={[styles.headingText6]}>{value.feedback}</Text>
                                     </View>
-                                    <View className="clear" />
+
                                   </View>
                                 </View>
                               ) : (
                                 <View>
                                   <View className="fixed-column-60 heading-text-2">
-                                    <View className="half-spacer" />
-                                    <Image source={confidentialityIcon} alt="Feedback icon logo" className="image-auto-40" />
+                                    <View style={styles.halfSpacer} />
+                                    <Image source={confidentialityIcon} style={[styles.square40,styles.contain]} />
                                   </View>
                                   <View className="calc-column-offset-60">
                                     <Text>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
                               )}
                             </View>
 
-                            <View className="spacer"/><View className="spacer"/>
-                            <hr className="clear-margin clear-padding" />
+                            <View style={styles.spacer}/><View style={styles.spacer}/>
+                            <View style={styles.horizontalLine} />
 
                           </View>
                         )}
 
-                        <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
-                        <Text className="description-text-3 half-bold-text cta-color">Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
-                        <View className="spacer"/><View className="spacer"/>
+                        <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
+                        <Text style={[styles.descriptionText3,styles.boldText,styles.ctaColor]}>Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
+                        <View style={styles.spacer}/><View style={styles.spacer}/>
                       </View>
                     )}
 
-                    <View className="row-20">
-                     <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                    <View style={[styles.row20]}>
+                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                     </View>
                   </View>
                 )}
 
                 {(this.state.showJobFunction) && (
-                  <View key="showJobFunction" className="full-width padding-20">
-                    <Text className="heading-text-2">Job Function</Text>
-                    <View className="spacer" />
-                    <Text>We define <Text className="half-bold-text cta-color">job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
+                  <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Job Function</Text>
+                    <View style={styles.spacer} />
+                    <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
 
-                    <View className="row-20">
-                     <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                    <View style={[styles.row20]}>
+                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                     </View>
                   </View>
                 )}
 
                 {(this.state.showIndustry) && (
-                  <View key="showIndustry" className="full-width padding-20">
-                    <Text className="heading-text-2">Industry</Text>
-                    <View className="spacer" />
-                    <Text>We define <Text className="half-bold-text cta-color">industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Industry</Text>
+                    <View style={styles.spacer} />
+                    <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
 
-                    <View className="row-20">
-                     <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                    <View style={[styles.row20]}>
+                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                     </View>
                   </View>
                 )}
 
                 {(this.state.skillTagsInfo) && (
-                  <View key="showIndustry" className="full-width padding-20">
-                    <Text className="heading-text-2">Skill Tags Info</Text>
-                    <View className="spacer" />
-                    <Text><Text className="half-bold-text cta-color">Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
+                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Skill Tags Info</Text>
+                    <View style={styles.spacer} />
+                    <Text><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
 
-                    <View className="row-20">
-                     <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                    <View style={[styles.row20]}>
+                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                     </View>
                   </View>
                 )}
 
                 {(this.state.showPublicProfileExtentInfo) && (
-                  <View key="showIndustry" className="full-width padding-20">
-                    <Text className="heading-text-2">Who Can See Your Profile?</Text>
-                    <View className="spacer" />
+                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Who Can See Your Profile?</Text>
+                    <View style={styles.spacer} />
 
-                    <View className="row-10">
-                      <Text><Text className="half-bold-text cta-color">Only Connections</Text> means that only those who you are connected with on Guided Compass can view the items you select as public.</Text>
+                    <View style={[styles.row10]}>
+                      <Text><Text style={[styles.boldText,styles.ctaColor]}>Only Connections</Text> means that only those who you are connected with on Guided Compass can view the items you select as public.</Text>
                     </View>
 
-                    <View className="row-10">
-                      <Text><Text className="half-bold-text cta-color">Only Connections and Members</Text> means that only those who you are either connected with on Guided Compass or those who are part of the {this.state.orgName} community can view the items you select as public.</Text>
+                    <View style={[styles.row10]}>
+                      <Text><Text style={[styles.boldText,styles.ctaColor]}>Only Connections and Members</Text> means that only those who you are either connected with on Guided Compass or those who are part of the {this.state.orgName} community can view the items you select as public.</Text>
                     </View>
 
-                    <View className="row-10">
-                      <Text><Text className="half-bold-text cta-color">Public</Text> means that not only connections and the {this.state.orgName} community can view the items you select as public, others can view as well. Just share your public profile link with whomever you like. This also means that the Guided Compass team can share your public profile with employers.</Text>
+                    <View style={[styles.row10]}>
+                      <Text><Text style={[styles.boldText,styles.ctaColor]}>Public</Text> means that not only connections and the {this.state.orgName} community can view the items you select as public, others can view as well. Just share your public profile link with whomever you like. This also means that the Guided Compass team can share your public profile with employers.</Text>
                     </View>
 
-                    <View className="row-20">
-                     <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                    <View style={[styles.row20]}>
+                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                     </View>
                   </View>
                 )}
 
                 {(this.state.showSettings) && (
-                  <View key="showIndustry" className="full-width padding-20">
-                    <Text className="heading-text-2">Settings</Text>
-                    <View className="spacer" />
+                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Settings</Text>
+                    <View style={styles.spacer} />
 
                     <View>
                       <EditSubscription />
@@ -6949,8 +7054,8 @@ class EditProfileDetails extends Component {
                       />
                     </View>
 
-                    <View className="row-10">
-                      <TouchableOpacity className="btn btn-secondary" onClick={() => signOut(
+                    <View style={[styles.row10]}>
+                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
                         this.state.email, this.state.activeOrg, this.state.orgFocus,
                         this.state.accountCode, this.state.roleName, this.props.history
                       )}>Sign Out</TouchableOpacity>
@@ -6961,29 +7066,29 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showBirthdate) && (
-                  <View key="showIndustry" className="full-width padding-20">
-                    <Text className="heading-text-2">Are you over 18?</Text>
-                    <View className="spacer" />
+                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                    <Text style={[styles.headingText2]}>Are you over 18?</Text>
+                    <View style={styles.spacer} />
                     <Text>Currently, you must be over 18 to set your profile to public.</Text>
 
-                    <View className="row-15">
+                    <View style={[styles.row15]}>
                       <View className="container-left">
-                        <Text className="profile-label">Date of Birth</Text>
+                        <Text style={[styles.row10]}>Date of Birth</Text>
                         <input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>
                       </View>
-                      <View className="clear" />
+
                     </View>
 
-                    {(this.state.publicPreferencesErrorMessage) && <Text className="description-text-2 error-color">{this.state.publicPreferencesErrorMessage}</Text>}
+                    {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
 
-                    <View className="row-20">
+                    <View style={[styles.row20]}>
                       <View className="float-left right-padding">
-                        <TouchableOpacity className="btn btn-primary" onClick={() => this.verifyLegalAge()}>Make Profile Public</TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.verifyLegalAge()}>Make Profile Public</TouchableOpacity>
                       </View>
                       <View className="float-left">
-                        <TouchableOpacity className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                       </View>
-                      <View className="clear" />
+
 
                     </View>
                   </View>
