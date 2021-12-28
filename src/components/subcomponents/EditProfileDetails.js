@@ -6,6 +6,7 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const addProfilePhotoIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-profile-photo-icon.png';
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
@@ -27,10 +28,10 @@ const courseIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 import ProjectDetails from './ProjectDetails';
 import EditProject from './EditProject';
 import SwitchOrgs from '../common/SwitchOrgs';
-import DatePicker from '../common/DatePicker';
 import {signOut} from '../services/AuthRoutes'
 
 import {convertDateToString} from '../functions/convertDateToString';
+import {convertStringToDate} from '../functions/convertStringToDate';
 
 class EditProfileDetails extends Component {
   constructor(props) {
@@ -174,6 +175,29 @@ class EditProfileDetails extends Component {
     this.segueToApp = this.segueToApp.bind(this)
 
   }
+
+  // const [date, setDate] = useState(new Date(1598051730000));
+  // const [mode, setMode] = useState('date');
+  // const [show, setShow] = useState(false);
+  //
+  // const onChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setShow(Platform.OS === 'ios');
+  //   setDate(currentDate);
+  // };
+  //
+  // const showMode = (currentMode) => {
+  //   setShow(true);
+  //   setMode(currentMode);
+  // };
+  //
+  // const showDatepicker = () => {
+  //   showMode('date');
+  // };
+  //
+  // const showTimepicker = () => {
+  //   showMode('time');
+  // };
 
   componentDidMount() {
     console.log('home component did mount');
@@ -419,7 +443,7 @@ class EditProfileDetails extends Component {
                       if (objectId) {
 
                         // let objectId = this.props.location.state.objectId
-                        let localObjectId = localStorage.getItem('objectId');
+                        let localObjectId = AsyncStorage.getItem('objectId');
 
                         console.log('compare projectids: ', projects[i]._id, objectId)
                         if (localObjectId && projects[i]._id === objectId) {
@@ -433,7 +457,7 @@ class EditProfileDetails extends Component {
 
                     const projectOptions = [{ name: 'Select a project' }].concat(projects)
 
-                    //need to save to localStorage instead, and turn it off when closeModal is tapped
+                    //need to save to AsyncStorage instead, and turn it off when closeModal is tapped
                     this.setState({
                       projects, isEditingProjectsArray, projectHasChangedArray,
                       showGrade, modalIsOpen, selectedIndex, projectOptions
@@ -1038,7 +1062,7 @@ class EditProfileDetails extends Component {
   }
 
   formChangeHandler = (eventName,eventValue) => {
-    console.log('show data: ', eventName, eventValue)
+    console.log('formChangeHandler called: ', eventName, eventValue)
 
     if (eventName === 'profilePic') {
       console.log('profilePicSelectedHandler changed')
@@ -1881,6 +1905,7 @@ class EditProfileDetails extends Component {
     } else if (eventName === 'dacaStatus') {
       this.setState({ dacaStatus: eventValue, textFormHasChanged: true })
     } else if (eventName === 'dateOfBirth') {
+      console.log('dateOfBirth called: ', eventValue, typeof eventValue, new Date(eventValue))
       this.setState({ dateOfBirth: eventValue, textFormHasChanged: true })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
@@ -2223,7 +2248,7 @@ class EditProfileDetails extends Component {
                   console.log('unique username query worked')
 
                   const username = response.data.username
-                  localStorage.setItem('username', username)
+                  AsyncStorage.setItem('username', username)
 
                   this.setState({ publicProfile: true, isSaving: false, username, confirmUsername: false })
                   if (this.props.fromWalkthrough) {
@@ -2619,10 +2644,10 @@ class EditProfileDetails extends Component {
             if (response.data.success) {
               console.log('successfully saved profile')
 
-              localStorage.setItem('firstName', firstNameValue)
-              localStorage.setItem('lastName', lastNameValue)
-              localStorage.setItem('pictureURL', pictureURL)
-              console.log('saved lastName: ', lastNameValue)
+              AsyncStorage.setItem('firstName', firstNameValue)
+              AsyncStorage.setItem('lastName', lastNameValue)
+              AsyncStorage.setItem('pictureURL', pictureURL)
+              // console.log('saved lastName: ', lastNameValue)
 
               if (this.props.fromWalkthrough) {
                 this.props.movePage(true)
@@ -3407,7 +3432,7 @@ class EditProfileDetails extends Component {
                     <TouchableOpacity style={[styles.btnPrimary,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showGrade: false, selectedIndex: index, showJobFunction: false, showIndustry: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
                       <View style={styles.rightMargin}>
                         <View>
-                          <Image source={detailsIconGrey} style={[styles.square20,styles.contain]} />
+                          <Image source={{ uri: detailsIconGrey}} style={[styles.square20,styles.contain]} />
                         </View>
                       </View>
                       <View style={styles.topMarginNegative4}>
@@ -3423,7 +3448,7 @@ class EditProfileDetails extends Component {
                       <TouchableOpacity style={[styles.ctaBorder,styles.slightlyRoundedCorners,styles.rowDirection]} onPress={() => this.setState({ showGrade: true, modalIsOpen: true, selectedIndex: index, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
                         <View style={styles.rightPadding5}>
                           <View>
-                            <Image source={feedbackIconBlue} style={[styles.square30,styles.contain]} />
+                            <Image source={{ uri: feedbackIconBlue}} style={[styles.square30,styles.contain]} />
                           </View>
                         </View>
                         <View>
@@ -3441,10 +3466,10 @@ class EditProfileDetails extends Component {
             {(this.state.projects[i - 1].emailId === this.state.emailId) ? (
               <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding]} name={"isEditingProjectsArray|" + index}>
-                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('project', index)}>
-                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
             ) : (
@@ -3660,7 +3685,7 @@ class EditProfileDetails extends Component {
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: true, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -3681,7 +3706,7 @@ class EditProfileDetails extends Component {
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: true, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
 
@@ -3732,7 +3757,7 @@ class EditProfileDetails extends Component {
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                   <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: true, showSettings: false, showBirthdate: false })}>
-                      <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
                   </View>
 
@@ -3946,10 +3971,10 @@ class EditProfileDetails extends Component {
             </View>
             <View style={[styles.width80]}>
               <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExperienceArray|" + index}>
-                <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
+                <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.deleteItem('experience', index)}>
-                <Image source={closeIcon} style={[styles.square20,styles.contain]} />
+                <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
             </View>
 
@@ -4098,7 +4123,7 @@ class EditProfileDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View style={[styles.width70,styles.rightPadding]}>
-                <Image source={reachIcon} style={[styles.square50,styles.contain]} />
+                <Image source={{ uri: reachIcon}} style={[styles.square50,styles.contain]} />
               </View>
               <View style={[styles.calcColumn210,styles.rightPadding]}>
                 <Text style={styles.headingText5}>{this.state.extracurriculars[i - 1].activityName}</Text>
@@ -4107,10 +4132,10 @@ class EditProfileDetails extends Component {
               </View>
               <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExtracurricularArray|" + index}>
-                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('extracurricular', index)}>
-                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
 
@@ -4161,11 +4186,12 @@ class EditProfileDetails extends Component {
                 </View>
                 <View style={[stules.flex50,styles.leftPadding]}>
                   <Text style={[styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                  {/*<input type="date" className="date-picker white-background" name={"awardDate|" + index} value={this.state.awards[i - 1].awardDate} onChange={this.formChangeHandler}></input>*/}
+                  {/*<input type="date" className="date-picker white-background" name={"awardDate|" + index} value={this.state.awards[i - 1].awardDate} onChange={this.formChangeHandler}></input>
                   <DatePicker
                     date={this.state.awards[i - 1].awardDate}
                     onDateChange={(date) => this.formChangeHandler("awardDate|" + index,date)}
-                  />
+                  />*/}
+
                 </View>
 
               </View>
@@ -4199,7 +4225,7 @@ class EditProfileDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View style={[styles.width70,styles.rightPadding]}>
-                <Image source={prizeIcon} style={[styles.square50,styles.contain]} />
+                <Image source={{ uri: prizeIcon}} style={[styles.square50,styles.contain]} />
               </View>
               <View style={[styles.calcColumn210,styles.rightPadding]}>
                 <Text style={styles.headingText5}>{this.state.awards[i - 1].name}</Text>
@@ -4207,10 +4233,10 @@ class EditProfileDetails extends Component {
               </View>
               <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingAwardArray|" + index}>
-                  <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('award', index)}>
-                  <Image source={closeIcon} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
 
@@ -4398,7 +4424,7 @@ class EditProfileDetails extends Component {
   //           <View style={styles.spacer} />
   //
   //           <View style={styles.width50}>
-  //             <Image source={collaborators[i - 1].pictureURL ? collaborators[i - 1].pictureURL : profileIconBig} style={[styles.square50,styles.contain,{ borderRadius: 25 }]}/>
+  //             <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square50,styles.contain,{ borderRadius: 25 }]}/>
   //           </View>
   //           <View style={[styles.calcColumn160,styles.leftPadding]}>
   //             <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
@@ -4412,7 +4438,7 @@ class EditProfileDetails extends Component {
   //           <View style={styles.width50}>
   //               <View style={styles.spacer} />
   //             <a onPress={() => this.removeItem(passedIndex, index)}>
-  //               <Image source={xIcon} style={[styles.square20,styles.contain]}/>
+  //               <Image source={{ uri: xIcon}} style={[styles.square20,styles.contain]}/>
   //             </a>
   //           </View>
   //
@@ -4440,7 +4466,7 @@ class EditProfileDetails extends Component {
     this.setState({ modalIsOpen: false, showPublicProfileExtentInfo: false, showGrade: false, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false });
 
     // remove object
-    localStorage.removeItem('objectId')
+    AsyncStorage.removeItem('objectId')
   }
 
   imgError(image) {
@@ -4570,7 +4596,7 @@ class EditProfileDetails extends Component {
             <View key={type + "|" + optionIndex} style={styles.rowDirection}>
               <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                 <TouchableOpacity onPress={() => this.removeTag(type, optionIndex)}>
-                  <Image source={deniedIcon} style={[styles.square20,styles.contain]} />
+                  <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
               </View>
               <View style={styles.rightPadding5}>
@@ -4637,7 +4663,7 @@ class EditProfileDetails extends Component {
     if (this.props.fromAdvisor) {
 
       return (
-        <ScrollView style={styles.card}>
+        <ScrollView style={[styles.card]}>
             {/*
             <View style={styles.superSpacer} />
 
@@ -4665,7 +4691,7 @@ class EditProfileDetails extends Component {
 
             <View style={[styles.row10]}>
               <View>
-                <View style={[styles.fullScreenWidth]}>
+                <View style={[styles.calcColumn60]}>
                   <View style={styles.relativePosition}>
                     <TouchableOpacity onPress={() => this.formChangeHandler("profilePic",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
                       <Image source={
@@ -4922,7 +4948,7 @@ class EditProfileDetails extends Component {
            >
 
             {(this.state.showGrade) && (
-              <View key="gradeProject" style={[styles.fullScreenWidth,styles.padding20]}>
+              <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
                 {(this.state.projects) && (
                   <View>
                     <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
@@ -4953,7 +4979,7 @@ class EditProfileDetails extends Component {
                             <View>
                               <View style={[styles.width60,styles.headingText2]}>
                                 <View style={styles.halfSpacer} />
-                                <Image source={confidentialityIcon} style={[styles.square40,styles.contain]} />
+                                <Image source={{ uri: confidentialityIcon}} style={[styles.square40,styles.contain]} />
                               </View>
                               <View style={styles.calcColumn60}>
                                 <Text>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
@@ -4978,7 +5004,7 @@ class EditProfileDetails extends Component {
             )}
 
             {(this.state.showJobFunction) && (
-              <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
+              <View key="showJobFunction" style={[styles.calcColumn60,styles.padding20]}>
                 <Text style={[styles.headingText2]}>Job Function</Text>
                 <View style={styles.spacer} />
                 <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
@@ -4986,7 +5012,7 @@ class EditProfileDetails extends Component {
             )}
 
             {(this.state.showIndustry) && (
-              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+              <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                 <Text style={[styles.headingText2]}>Industry</Text>
                 <View style={styles.spacer} />
                 <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
@@ -4994,7 +5020,7 @@ class EditProfileDetails extends Component {
             )}
 
             {(this.state.skillTagsInfo) && (
-              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+              <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                 <Text style={[styles.headingText2]}>Skill Tags Info</Text>
                 <View style={styles.spacer} />
                 <Text><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
@@ -5002,7 +5028,7 @@ class EditProfileDetails extends Component {
             )}
 
             {(this.state.showSettings) && (
-              <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+              <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                 <Text style={[styles.headingText2]}>Settings</Text>
                 <View style={styles.spacer} />
 
@@ -5039,8 +5065,8 @@ class EditProfileDetails extends Component {
     } else {
 
       return (
-          <ScrollView>
-              <View style={styles.card}>
+          <ScrollView style={[styles.card]}>
+              <View>
                   {(!this.props.fromApply) && (
                     <View style={[styles.rowDirection]}>
                       <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
@@ -5048,17 +5074,17 @@ class EditProfileDetails extends Component {
                       <View style={styles.calcColumn110}>
                         {(this.props.category === 'Basics') && (
                           <View>
-                            <Text style={[styles.headingText2]}>Edit Basic Info</Text>
+                            <Text style={[styles.headingText2,styles.calcColumn60,styles.centerText]}>Edit Basic Info</Text>
                           </View>
                         )}
                         {(this.props.category === 'Details') && (
                           <View>
-                            <Text style={[styles.headingText2]}>Edit Projects, Experience, & Other Details</Text>
+                            <Text style={[styles.headingText2,styles.calcColumn60,styles.centerHorizontally,styles.centerText]}>Edit Projects, Experience, & Other Details</Text>
                           </View>
                         )}
                         {(this.props.category === 'Visibility Preferences') && (
                           <View>
-                            <Text style={[styles.headingText2]}>Profile Visibility Preferences</Text>
+                            <Text style={[styles.headingText2,styles.calcColumn60,styles.centerText]}>Profile Visibility Preferences</Text>
                           </View>
                         )}
                       </View>
@@ -5074,7 +5100,7 @@ class EditProfileDetails extends Component {
                     <View>
                       <View style={styles.row10}>
                         <View>
-                          <View style={[styles.fullScreenWidth]}>
+                          <View style={[styles.calcColumn60]}>
                             <View style={styles.relativePosition}>
                               <TouchableOpacity onPress={() => this.formChangeHandler("profilePic",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
                                 <Image source={
@@ -5097,7 +5123,7 @@ class EditProfileDetails extends Component {
 
 
                           <View style={styles.spacer} />
-                          <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Dimensions: 150 x 150</Text>
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText2,styles.calcColumn60,styles.centerText]}>Dimensions: 150 x 150</Text>
 
                           {(this.state.oauthUid) && (
                             <View>
@@ -5225,17 +5251,19 @@ class EditProfileDetails extends Component {
 
                       <View style={styles.spacer}/><View style={styles.halfSpacer}/>
 
-                      <View style={[styles.row10,styles.rowDirection]}>
-                        <View>
-                          <Text style={[styles.headingText3]}>Resumes</Text>
-                        </View>
-                        <View style={[styles.leftPadding]}>
-                          <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                          <Text style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
-                            <Image source={addIcon} style={[styles.square12,styles.contain]}/>
-                          </Text>
+                      <View>
+                        <View style={[styles.row10]}>
+                          <View style={styles.rowDirection}>
+                            <Text style={[styles.headingText3]}>Resumes</Text>
+                            <View style={[styles.leftPadding]}>
+                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                              <View style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
+                                <Image source={{ uri: addIcon}} style={[styles.square12,styles.contain]}/>
+                              </View>
 
-                          {/*<input type="file" id="resumeUpload" name="resume" onChange={this.formChangeHandler} accept="application/pdf" />*/}
+                              {/*<input type="file" id="resumeUpload" name="resume" onChange={this.formChangeHandler} accept="application/pdf" />*/}
+                            </View>
+                          </View>
                         </View>
 
                         <View style={[styles.topPadding]}>
@@ -5247,7 +5275,7 @@ class EditProfileDetails extends Component {
                             <TouchableOpacity onPress={() => this.props.navigations.navigate('Resume Builder')} style={styles.rowDirection}>
                               <View style={styles.width30}>
                                 <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} />
-                                <Image source={skillsIcon} style={[styles.square15,styles.contain]} />
+                                <Image source={{ uri: skillsIcon}} style={[styles.square15,styles.contain]} />
                               </View>
                               <View style={styles.calcColumn90}>
                                 <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.row5]}>Need help? Use our resume builder. <Text style={[styles.ctaColor,styles.boldText,styles.headingText6,styles.leftPadding5]}>>></Text></Text>
@@ -5267,13 +5295,13 @@ class EditProfileDetails extends Component {
                             {this.state.resumes.map((item, optionIndex) =>
                               <View key={item}>
                                 <View style={[styles.bottomPadding20,styles.rowDirection]}>
-                                  <View style={styles.calcColumn80}>
+                                  <View style={[styles.calcColumn90,styles.rowDirection]}>
                                     <Text style={[styles.rightPadding]}>{optionIndex + 1}.</Text>
                                     <TouchableOpacity onPress={() => Linking.openURL(item)}><Text>{this.state.resumeNames[optionIndex]}</Text></TouchableOpacity>
                                   </View>
                                   <View style={styles.width20}>
                                     <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('resume', optionIndex)}>
-                                      <Image source={deleteIconDark} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                      <Image source={{ uri: deleteIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
                                     </TouchableOpacity>
                                   </View>
 
@@ -5349,8 +5377,8 @@ class EditProfileDetails extends Component {
                       </View>
                       <View style={styles.leftPadding}>
                         <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                        <TouchableOpacity onPress={() => this.addItem('education')} style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
-                          <Image source={addIcon} style={[styles.square12,styles.contain]}/>
+                        <TouchableOpacity onPress={() => this.addItem('education')} style={[styles.padding7,styles.standardBorder, { borderRadius: 10 }]}>
+                          <Image source={{ uri: addIcon}} style={[styles.square12,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -5369,7 +5397,7 @@ class EditProfileDetails extends Component {
                                 </View>
                                 <View style={styles.width20}>
                                   <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('education', optionIndex)}>
-                                    <Image source={deleteIconDark} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                    <Image source={{ uri: deleteIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
                                   </TouchableOpacity>
                                 </View>
                               </View>
@@ -5426,7 +5454,7 @@ class EditProfileDetails extends Component {
                                                   <TouchableOpacity onPress={() => this.optionClicked(optionIndex2, "education|name|" + optionIndex)}>
                                                     <View style={[styles.calcColumn60,styles.rowDirection]}>
                                                       <View style={styles.rightPadding}>
-                                                        <Image source={courseIconDark} style={[styles.square22,styles.contain]} />
+                                                        <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain]} />
                                                       </View>
                                                       <View>
                                                         <Text style={[styles.ctaColor]}>{value2}</Text>
@@ -5638,7 +5666,7 @@ class EditProfileDetails extends Component {
                               <View style={styles.spacer}/>
 
                               {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
-                                <View style={[styles.fullScreenWidth]}>
+                                <View style={[styles.calcColumn60]}>
                                   <View style={styles.spacer}/>
                                   {this.state.schoolOptions.map((value, optionIndex) =>
                                     <View key={value._id} style={[styles.bottomPadding]}>
@@ -5647,7 +5675,7 @@ class EditProfileDetails extends Component {
                                           <TouchableOpacity onPress={() => this.optionClicked(optionIndex, 'school')}>
                                             <View style={[styles.calcColumn60,styles.rowDirection]}>
                                               <View style={styles.rightPadding}>
-                                                <Image source={courseIconDark} style={[styles.square22,styles.contain]} />
+                                                <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain]} />
                                               </View>
                                               <View>
                                                 <Text style={[styles.ctaColor]}>{value}</Text>
@@ -5812,12 +5840,22 @@ class EditProfileDetails extends Component {
                           <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
                             <View style={[styles.flex50,styles.rightPadding]}>
                               <Text style={[styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              {/*<input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>*/}
+                              {/*<input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>
                               <DatePicker
                                 date={this.state.dateOfBirth}
                                 onDateChange={(date) => this.formChangeHandler("dateOfBirth",date)}
                                 minimumDate={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")}
                                 maximumDate={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")}
+                              />*/}
+                              <DateTimePicker
+                                testID="DateTimePicker"
+                                value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                                mode={'date'}
+                                is24Hour={true}
+                                display="default"
+                                onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                                minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                                maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
                               />
                             </View>
 
@@ -6241,9 +6279,11 @@ class EditProfileDetails extends Component {
                         </View>
                       ) : (
                         <View style={[styles.row10]}>
-                          <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]}><Text>Save Profile Changes</Text></TouchableOpacity>
+                          <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Save Profile Changes</Text></TouchableOpacity>
                         </View>
                       )}
+
+                      <View style={styles.superSpacer} />
 
                     </View>
                   )}
@@ -6267,7 +6307,7 @@ class EditProfileDetails extends Component {
                     </View>
                     <View style={[styles.width50,styles.rightPadding,styles.topMargin20]}>
                       <TouchableOpacity onPress={() => this.addItem('projects')}>
-                        <Image source={addIcon} style={[styles.square25,styles.contain]}/>
+                        <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                       </TouchableOpacity>
                     </View>
 
@@ -6310,7 +6350,7 @@ class EditProfileDetails extends Component {
                       </View>
                       <View style={[styles.width50,styles.rightPadding,styles.topMargin20]}>
                         <TouchableOpacity onPress={() => this.addItem('experience')}>
-                          <Image source={addIcon} style={[styles.square25,styles.contain]}/>
+                          <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
 
@@ -6337,7 +6377,7 @@ class EditProfileDetails extends Component {
                         </View>
                         <View style={[styles.width50,styles.rightPadding]}>
                           <TouchableOpacity onPress={() => this.addItem('extracurricular')}>
-                            <Image source={addIcon} style={[styles.square25,styles.contain]}/>
+                            <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                           </TouchableOpacity>
                         </View>
 
@@ -6361,7 +6401,7 @@ class EditProfileDetails extends Component {
                         </View>
                         <View style={[styles.width50,styles.rightPadding]}>
                           <TouchableOpacity onPress={() => this.addItem('award')}>
-                            <Image source={addIcon} style={[styles.square25,styles.contain]}/>
+                            <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                           </TouchableOpacity>
                         </View>
 
@@ -6438,7 +6478,7 @@ class EditProfileDetails extends Component {
                                   <View>
                                     <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                                       <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPublicProfileExtentInfo: true })}>
-                                        <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
+                                        <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain,styles.centerItem]} />
                                       </TouchableOpacity>
                                     </View>
 
@@ -6851,8 +6891,8 @@ class EditProfileDetails extends Component {
 
                                 <View style={[styles.row10]}>
                                   <View >
-                                    <View><Image source={checkmarkIcon} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>Portfolio Link</Text></View>
-                                    <View><Image source={checkmarkIcon} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>LinkedIn</Text></View>
+                                    <View><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>Portfolio Link</Text></View>
+                                    <View><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>LinkedIn</Text></View>
                                   </View>
                                 </View>
                               </View>
@@ -6915,7 +6955,7 @@ class EditProfileDetails extends Component {
                >
 
                 {(this.state.showGrade) && (
-                  <View key="gradeProject" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
                     {(this.state.projects) && (
                       <View>
                         <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
@@ -6946,7 +6986,7 @@ class EditProfileDetails extends Component {
                                 <View style={styles.rowDirection}>
                                   <View style={[styles.width60,styles.headingText2]}>
                                     <View style={styles.halfSpacer} />
-                                    <Image source={confidentialityIcon} style={[styles.square40,styles.contain]} />
+                                    <Image source={{ uri: confidentialityIcon}} style={[styles.square40,styles.contain]} />
                                   </View>
                                   <View style={styles.calcColumn120}>
                                     <Text>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
@@ -6975,7 +7015,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showJobFunction) && (
-                  <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showJobFunction" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Job Function</Text>
                     <View style={styles.spacer} />
                     <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
@@ -6987,7 +7027,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showIndustry) && (
-                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Industry</Text>
                     <View style={styles.spacer} />
                     <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
@@ -6999,7 +7039,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.skillTagsInfo) && (
-                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Skill Tags Info</Text>
                     <View style={styles.spacer} />
                     <Text><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
@@ -7011,7 +7051,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showPublicProfileExtentInfo) && (
-                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Who Can See Your Profile?</Text>
                     <View style={styles.spacer} />
 
@@ -7034,7 +7074,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showSettings) && (
-                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Settings</Text>
                     <View style={styles.spacer} />
 
@@ -7063,7 +7103,7 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showBirthdate) && (
-                  <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
                     <Text style={[styles.headingText2]}>Are you over 18?</Text>
                     <View style={styles.spacer} />
                     <Text>Currently, you must be over 18 to set your profile to public.</Text>
