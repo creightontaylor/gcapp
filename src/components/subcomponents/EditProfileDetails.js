@@ -3390,56 +3390,56 @@ class EditProfileDetails extends Component {
         const event = { target: { name: "isEditingProjectsArray|" + index, value: ''}}
 
         rows.push(
-          <View key={rowKey}>
-            <View className="fixed-column-70 right-padding">
+          <View key={rowKey} style={styles.rowDirection}>
+            <View style={[styles.width70,styles.rightPadding]}>
               <Text numberOfLines={1} style={[styles.headingText2,styles.ctaColor]}>{hoursShorthand}</Text>
               <Text numberOfLines={1} style={styles.descriptionText1}>hours</Text>
             </View>
-            <View className="float-left right-padding calc-column-offset-150">
+            <View style={[styles.rightPadding,styles.calcColumn210]}>
               <Text style={styles.headingText5}>{this.state.projects[i - 1].name}</Text>
               <Text style={styles.descriptionText1}>{this.state.projects[i - 1].startDate} - {this.state.projects[i - 1].endDate}</Text>
 
               <View>
                 <View style={styles.spacer} />
 
-                <View className="float-left">
-                  <TouchableOpacity className="btn bordered-background-button float-left clear-margin" onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showGrade: false, selectedIndex: index, showJobFunction: false, showIndustry: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
-                    <View className="float-left right-margin">
-                      <View>
-                        <Image source={detailsIconGrey} style={[styles.square20,styles.contain]} />
-                      </View>
-                    </View>
-                    <View className="float-left top-margin-negative-4">
-                      <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Preview</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                </View>
-
-                {(this.state.projects[i - 1].grades && this.state.projects[i - 1].grades.length > 0) && (
-                  <View className="float-left">
-                    <View className="vertical-spacer" />
-
-                    <TouchableOpacity className="btn bordered-background-button-2 cta-border-color float-left clear-margin" onPress={() => this.setState({ showGrade: true, modalIsOpen: true, selectedIndex: index, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
-                      <View className="float-left right-padding-5">
+                <View style={styles.rowDirection}>
+                  <View>
+                    <TouchableOpacity className="btn bordered-background-button float-left clear-margin" onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showGrade: false, selectedIndex: index, showJobFunction: false, showIndustry: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
+                      <View className="float-left right-margin">
                         <View>
-                          <Image source={feedbackIconBlue} style={[styles.square30,styles.contain]} />
+                          <Image source={detailsIconGrey} style={[styles.square20,styles.contain]} />
                         </View>
                       </View>
-                      <View className="float-left">
-                        <Text style={[styles.descriptionText2,styles.ctaColor]}>View Feedback</Text>
+                      <View className="float-left top-margin-negative-4">
+                        <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Preview</Text>
                       </View>
                     </TouchableOpacity>
-
                   </View>
-                )}
 
+                  {(this.state.projects[i - 1].grades && this.state.projects[i - 1].grades.length > 0) && (
+                    <View style={styles.rowDirection}>
+                      <View style={[styles.width10,styles.height30]} />
+
+                      <TouchableOpacity style={[styles.ctaBorder,styles.slightlyRoundedCorners,styles.rowDirection]} onPress={() => this.setState({ showGrade: true, modalIsOpen: true, selectedIndex: index, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false }) }>
+                        <View style={styles.rightPadding5}>
+                          <View>
+                            <Image source={feedbackIconBlue} style={[styles.square30,styles.contain]} />
+                          </View>
+                        </View>
+                        <View>
+                          <Text style={[styles.descriptionText2,styles.ctaColor]}>View Feedback</Text>
+                        </View>
+                      </TouchableOpacity>
+
+                    </View>
+                  )}
+                </View>
 
               </View>
             </View>
 
             {(this.state.projects[i - 1].emailId === this.state.emailId) ? (
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding]} name={"isEditingProjectsArray|" + index}>
                   <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
@@ -3448,7 +3448,7 @@ class EditProfileDetails extends Component {
                 </TouchableOpacity>
               </View>
             ) : (
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.lightBorder,styles.lightBackground]}>
                   <Text style={[styles.descriptionText3,styles.boldText]}>Collab</Text>
                 </View>
@@ -3583,8 +3583,8 @@ class EditProfileDetails extends Component {
             </View>
             <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rightPadding]}>
                 <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
@@ -3594,7 +3594,7 @@ class EditProfileDetails extends Component {
                   placeholderTextColor="grey"
                 />
               </View>
-              <View className="name-container">
+              <View style={[styles.flex50,styles.leftPadding]}>
                 <Text style={[styles.row10]}>Employer Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
@@ -3604,7 +3604,6 @@ class EditProfileDetails extends Component {
                   placeholderTextColor="grey"
                 />
               </View>
-
             </View>
 
             <View style={[styles.row10]}>
@@ -3615,8 +3614,8 @@ class EditProfileDetails extends Component {
               />
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50],styles.rightPadding}>
                 <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].startDate}
@@ -3628,7 +3627,7 @@ class EditProfileDetails extends Component {
               </View>
 
               {(this.state.experience[i - 1].isContinual) ? (
-                <View className="name-container">
+                <View style={[styles.flex50,styles.leftPadding]}>
                   {(!this.state.isMobile) && (
                     <View>
                       <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
@@ -3637,7 +3636,7 @@ class EditProfileDetails extends Component {
                   <Text style={styles.headingText5}>Still Working On This</Text>
                 </View>
               ) : (
-                <View className="name-container">
+                <View style={[styles.flex50,styles.leftPadding]}>
                   <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.experience[i - 1].endDate}
@@ -3652,14 +3651,14 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
-                <View className="float-left">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rowDirection,styles.rightPadding]}>
+                <View>
                   <Text style={[styles.row10]}>Job Function<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
                 <View>
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                  <View className="float-left left-margin noti-bubble-info-7-9">
+                  <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: true, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
                       <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
@@ -3674,13 +3673,13 @@ class EditProfileDetails extends Component {
                   {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                 </Picker>
               </View>
-              <View className="name-container">
-                <View className="float-left">
+              <View style={[styles.flex50,styles.rowDirection,styles.leftPadding]}>
+                <View>
                   <Text style={[styles.row10]}>Job Industry<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
                 <View>
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                  <View className="float-left left-margin noti-bubble-info-7-9">
+                  <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: true, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false })}>
                       <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
@@ -3700,8 +3699,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rightPadding]}>
                 <Text style={[styles.row10]}>Were you paid?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].wasPaid}
@@ -3711,7 +3710,7 @@ class EditProfileDetails extends Component {
                   {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                 </Picker>
               </View>
-              <View className="name-container">
+              <View style={[styles.flex50,styles.leftPadding]}>
                 <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].hoursPerWeek}
@@ -3724,14 +3723,14 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10]}>
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
               <View>
-                <View className="float-left">
+                <View>
                   <Text style={[styles.row10]}>Skill Tags</Text>
                 </View>
                 <View>
                   <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                  <View className="float-left left-margin noti-bubble-info-7-9">
+                  <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGrade: false, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: true, showSettings: false, showBirthdate: false })}>
                       <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                     </TouchableOpacity>
@@ -3751,8 +3750,8 @@ class EditProfileDetails extends Component {
 
             {(this.state.activeOrg === 'exp') && (
               <View>
-                <View style={[styles.row10]}>
-                  <View className="name-container">
+                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                  <View style={[styles.flex50,styles.rightPadding]}>
                     <Text style={[styles.row10]}>Supervisor First Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3762,7 +3761,7 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View className="name-container">
+                  <View style={[styles.flex50,styles.leftPadding]}>
                     <Text style={[styles.row10]}>Supervisor Last Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3775,8 +3774,8 @@ class EditProfileDetails extends Component {
 
                 </View>
 
-                <View style={[styles.row10]}>
-                  <View className="name-container">
+                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                  <View style={[styles.flex50,styles.rightPadding]}>
                     <Text style={[styles.row10]}>Supervisor Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3786,7 +3785,7 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View className="name-container">
+                  <View style={[styles.flex50,styles.leftPadding]}>
                     <Text style={[styles.row10]}>Supervisor Email<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3815,8 +3814,8 @@ class EditProfileDetails extends Component {
               />
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rightPadding]}>
                 <Text style={[styles.row10]}>Did you like the work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workInterest}
@@ -3832,7 +3831,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="name-container">
+              <View style={[styles.flex50,styles.leftPadding]}>
                 <Text style={[styles.row10]}>Do you think you are skilled in this work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workSkill}
@@ -3851,8 +3850,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rightPadding]}>
                 <Text style={[styles.row10]}>Did you like the team?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].teamInterest}
@@ -3868,7 +3867,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="name-container">
+              <View style={[styles.flex50,styles.leftPadding]}>
                 <Text style={[styles.row10]}>Did you like the employer?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].employerInterest}
@@ -3885,8 +3884,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10]}>
-              <View className="name-container">
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex50,styles.rightPadding]}>
                 <Text style={[styles.row10]}>Would the pay be acceptable if full-time?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].payInterest}
@@ -3902,7 +3901,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View className="name-container">
+              <View style={[styles.flex50,styles.leftPadding]}>
                 <Text style={[styles.row10]}>What do you rate the overall fit?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].overallFit}
@@ -3921,7 +3920,7 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View className="float-right">
+            <View style={[styles.calcColumn60,styles.alignEnd,styles.justifyEnd]}>
               <TouchableOpacity onPress={() => this.saveExperience(rowKey)} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Experience</TouchableOpacity>
             </View>
 
@@ -3935,17 +3934,17 @@ class EditProfileDetails extends Component {
         const event = { target: { name: "isEditingExperienceArray|" + index, value: ''}}
 
         rows.push(
-          <View key={rowKey}>
-            <View className="fixed-column-70 right-padding">
+          <View key={rowKey} style={[styles.rowDirection]}>
+            <View style={[styles.width70,styles.rightPadding]}>
               <Text numberOfLines={1} style={[styles.headingText2,styles.ctaColor]}>{this.state.experience[i - 1].overallFit}</Text>
               <Text numberOfLines={1} style={[styles.descriptionText2]}>of 5 match</Text>
             </View>
-            <View className="calc-column-offset-150 float-left right-padding">
+            <View style={[styles.calcColumn210,styles.rightPadding]}>
               <Text style={styles.headingText5}>{this.state.experience[i - 1].jobTitle}</Text>
               <Text style={styles.descriptionText1}>{this.state.experience[i - 1].employerName}</Text>
               <Text style={styles.descriptionText1}>{this.state.experience[i - 1].startDate} - {this.state.experience[i - 1].endDate}</Text>
             </View>
-            <View className="fixed-column-80">
+            <View style={[styles.width80]}>
               <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExperienceArray|" + index}>
                 <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
@@ -3998,8 +3997,8 @@ class EditProfileDetails extends Component {
               </View>
               <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-              <View style={[styles.row10]}>
-                <View className="name-container">
+              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                <View style={[styles.flex50,styles.rightPadding]}>
                   <Text style={[styles.row10]}>Activity Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
@@ -4009,7 +4008,7 @@ class EditProfileDetails extends Component {
                     placeholderTextColor="grey"
                   />
                 </View>
-                <View className="name-container">
+                <View style={[styles.flex50,styles.leftPadding]}>
                   <Text style={[styles.row10]}>Your Role<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
@@ -4022,8 +4021,8 @@ class EditProfileDetails extends Component {
 
               </View>
 
-              <View style={[styles.row10]}>
-                <View className="name-container">
+              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                <View style={[styles.flex50,styles.rightPadding]}>
                   <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].startDate}
@@ -4035,7 +4034,7 @@ class EditProfileDetails extends Component {
                 </View>
 
                 {(this.state.extracurriculars[i - 1].isContinual) ? (
-                  <View className="name-container">
+                  <View style={[styles.flex50,styles.leftPadding]}>
                     {(!this.state.isMobile) && (
                       <View>
                         <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
@@ -4044,7 +4043,7 @@ class EditProfileDetails extends Component {
                     <Text style={styles.headingText5}>Still Working On This</Text>
                   </View>
                 ) : (
-                  <View className="name-container">
+                  <View style={[styles.flex50,styles.leftPadding]}>
                     <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <Picker
                       selectedValue={this.state.extracurriculars[i - 1].endDate}
@@ -4055,12 +4054,10 @@ class EditProfileDetails extends Component {
                     </Picker>
                   </View>
                 )}
-
-
               </View>
 
-              <View style={[styles.row10]}>
-                <View className="name-container">
+              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                <View style={[styles.flex50,styles.rightPadding]}>
                   <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].hoursPerWeek}
@@ -4070,7 +4067,6 @@ class EditProfileDetails extends Component {
                     {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                   </Picker>
                 </View>
-
               </View>
 
               <View style={[styles.row10]}>
@@ -4086,7 +4082,7 @@ class EditProfileDetails extends Component {
                 />
               </View>
 
-              <View className="float-right">
+              <View style={[styles.calcColumn60,styles.alignEnd,styles.justifyEnd]}>
                 <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Extracurricular</TouchableOpacity>
               </View>
 
@@ -4101,15 +4097,15 @@ class EditProfileDetails extends Component {
 
           rows.push(
             <View key={rowKey}>
-              <View className="fixed-column-70 right-padding">
+              <View style={[styles.width70,styles.rightPadding]}>
                 <Image source={reachIcon} style={[styles.square50,styles.contain]} />
               </View>
-              <View className="calc-column-offset-150 float-left right-padding">
+              <View style={[styles.calcColumn210,styles.rightPadding]}>
                 <Text style={styles.headingText5}>{this.state.extracurriculars[i - 1].activityName}</Text>
                 <Text style={styles.descriptionText1}>{this.state.extracurriculars[i - 1].roleName}</Text>
                 <Text style={styles.descriptionText1}>{this.state.extracurriculars[i - 1].startDate} - {this.state.extracurriculars[i - 1].endDate}</Text>
               </View>
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExtracurricularArray|" + index}>
                   <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
@@ -4202,14 +4198,14 @@ class EditProfileDetails extends Component {
 
           rows.push(
             <View key={rowKey}>
-              <View className="fixed-column-70 right-padding">
+              <View style={[styles.width70,styles.rightPadding]}>
                 <Image source={prizeIcon} style={[styles.square50,styles.contain]} />
               </View>
               <View className="calc-column-offset-150 float-left right-padding">
                 <Text style={styles.headingText5}>{this.state.awards[i - 1].name}</Text>
                 <Text style={styles.descriptionText1}>{this.state.awards[i - 1].awardDate}</Text>
               </View>
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingAwardArray|" + index}>
                   <Image source={editIconGrey} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
@@ -6441,7 +6437,7 @@ class EditProfileDetails extends Component {
                                     <Text style={styles.headingText5}>Who Can View Your Profile?</Text>
                                   </View>
                                   <View>
-                                    <View className="float-left left-margin noti-bubble-info-7-9">
+                                    <View style={[styles.leftMargin,styles.row7,styles.horizontalPadding10,styles.ctaBorder, { borderRadius: 11 }]}>
                                       <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPublicProfileExtentInfo: true })}>
                                         <Image source={questionMarkBlue} style={[styles.square14,styles.contain,styles.centerItem]} />
                                       </TouchableOpacity>

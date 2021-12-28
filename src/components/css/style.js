@@ -428,6 +428,9 @@ module.exports = StyleSheet.create({
   boldText: {
     fontWeight: 'bold'
   },
+  width10: {
+    width: 10
+  },
   width25: {
     width: 25
   },
