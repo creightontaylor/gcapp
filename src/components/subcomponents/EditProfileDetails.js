@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from "react-native-modal";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -2015,6 +2016,10 @@ class EditProfileDetails extends Component {
     //adjust file
     passedFile['name'] = passedFile.fileName
     passedFile['size'] = passedFile.fileSize
+    passedFile['uri'] = passedFile.uri
+    if (Platform.OS === 'ios') {
+      passedFile['uri'] = passedFile.uri.replace('file://', '')
+    }
     // passedFile['lastModified'] = passedFile.fileSize
     // passedFile['lastModifiedDate'] = passedFile.fileSize
     // passedFile['buffer'] = pas
@@ -2023,7 +2028,11 @@ class EditProfileDetails extends Component {
     // const fileName = 'newFile'
     fileData.append('baseFileName', passedFile, originalName)
 
-    console.log('show file info: ', passedFile, originalName)
+    console.log('essentials 1:', originalName)
+    console.log('essentials 2:', passedFile.name)
+    console.log('essentials 3:', passedFile.size)
+    console.log('essentials 4:', passedFile.uri)
+    console.log('essentials 5:', passedFile.type)
 
     fetch("https://www.guidedcompass.com/api/file-upload", {
         mode: 'no-cors',
@@ -6972,7 +6981,6 @@ class EditProfileDetails extends Component {
                 </View>
               )}
 
-              {/*
               {(this.state.showProjectDetail) ? (
                 <View>
                   {console.log('showProjectDetail 2: ', this.state.showProjectDetail)}
@@ -6980,15 +6988,7 @@ class EditProfileDetails extends Component {
                   {console.log('showProjectDetail 3: ', this.state.showProjectDetail)}
                 </View>
               ) : (
-                <Modal
-                 isOpen={this.state.modalIsOpen}
-                 onAfterOpen={this.afterOpenModal}
-                 onRequestClose={this.closeModal}
-                 className="modal"
-                 overlayClassName="modal-overlay"
-                 contentLabel="Example Modal"
-                 ariaHideApp={false}
-               >
+                <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
                 {(this.state.showGrade) && (
                   <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
@@ -7087,9 +7087,24 @@ class EditProfileDetails extends Component {
                 )}
 
                 {(this.state.showPublicProfileExtentInfo) && (
-                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Who Can See Your Profile?</Text>
-                    <View style={styles.spacer} />
+                  <View key="showPublicProfileExtentInfo" style={[styles.flex1,styles.padding20]}>
+                    <View style={[styles.rowDirection,styles.calcColumn80,styles.row10]}>
+                      <View style={[styles.width30,styles.topPadding]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+
+                      <View style={styles.calcColumn140}>
+                        <Text style={[styles.headingText4,styles.centerText,styles.calcColumn140]}>Who Can See Your Profile?</Text>
+                      </View>
+                      <View style={[styles.width30,styles.height30]}>
+                      </View>
+                    </View>
+
+                    <View style={styles.lightHorizontalLine} />
+
+                    <View style={styles.spacer} /><View style={styles.spacer} />
 
                     <View style={[styles.row10]}>
                       <Text><Text style={[styles.boldText,styles.ctaColor]}>Only Connections</Text> means that only those who you are connected with on Guided Compass can view the items you select as public.</Text>
@@ -7103,9 +7118,6 @@ class EditProfileDetails extends Component {
                       <Text><Text style={[styles.boldText,styles.ctaColor]}>Public</Text> means that not only connections and the {this.state.orgName} community can view the items you select as public, others can view as well. Just share your public profile link with whomever you like. This also means that the Guided Compass team can share your public profile with employers.</Text>
                     </View>
 
-                    <View style={[styles.row20]}>
-                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-                    </View>
                   </View>
                 )}
 
@@ -7168,7 +7180,7 @@ class EditProfileDetails extends Component {
                 )}
 
                </Modal>
-              )}*/}
+              )}
 
           </ScrollView>
       )

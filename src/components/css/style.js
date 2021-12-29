@@ -190,6 +190,10 @@ module.exports = StyleSheet.create({
     resizeMode: 'contain',
     borderRadius: (80/2)
   },
+  lightHorizontalLine: {
+    borderBottomColor: slightFaintColor,
+    borderBottomWidth: 1
+  },
   horizontalLine: {
     borderBottomColor: 'black',
     borderBottomWidth: 1
@@ -1013,6 +1017,10 @@ module.exports = StyleSheet.create({
   },
   zIndex1: {
     zIndex: 1
+  },
+  modal: {
+    backgroundColor: '#fff',
+    borderRadius: 5
   }
 
 });
