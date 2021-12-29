@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 import SubOpportunities from './subcomponents/Opportunities';
 

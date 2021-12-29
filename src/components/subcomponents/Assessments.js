@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, ActivityIndicator, TextInput, Platform } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 import Modal from 'react-native-modal';
 
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
@@ -521,7 +519,7 @@ class Assessments extends Component {
               </View>
             ) : (
               <View style={[styles.row10]}>
-                <TouchableOpacity style={[styles.calcColumn60,styles.rowDirection]} onPress={() => this.props.navigation.navigate('Assessment Details', { assessments: this.state.assessments, index: i - 1, assessment: this.state.assessments[i - 1], resultsData })} >
+                <TouchableOpacity style={[styles.calcColumn60,styles.rowDirection]} onPress={() => this.props.navigation.navigate('AssessmentDetails', { assessments: this.state.assessments, index: i - 1, assessment: this.state.assessments[i - 1], resultsData })} >
                   <View style={[styles.calcColumn130]}>
                     <View>
                       <Text style={styles.headingText5}>{this.state.assessments[i - 1].title}{(this.state.assessments[i - 1].required) && <Text style={styles.errorColor}> *</Text>}</Text>

@@ -6,10 +6,7 @@ import Axios from 'axios';
 // const styles = require('./css/style');
 import NewsFeed from './subcomponents/NewsFeed';
 //import { configurePushNotifications } from '../services/PushNotifications';
-import Icon from 'react-native-vector-icons/Ionicons';
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
-
-Icon.loadFont()
 
 class Home extends Component {
   constructor(props) {

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 import SubEditProfileDetails from './subcomponents/EditProfileDetails';
 
@@ -32,7 +30,7 @@ class EditProfileDetails extends Component {
 
         let category = null
         if (this.props) {
-          console.log('show params: ', this.props.route)
+          // console.log('show params: ', this.props.route)
 
           category = this.props.route.params.category
           this.setState({ category })

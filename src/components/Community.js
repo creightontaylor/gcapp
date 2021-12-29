@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform } from 'react-native';
 import { Card, CardSection } from './common';
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 import SubCommunity from './subcomponents/Community';
 

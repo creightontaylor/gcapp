@@ -462,6 +462,9 @@ module.exports = StyleSheet.create({
   width40: {
     width: 40
   },
+  width42: {
+    width: 42
+  },
   width50: {
     width: 50
   },
@@ -684,6 +687,9 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'transparent',
   },
+  ctaBorderColor: {
+    borderColor: primaryColor,
+  },
   roundedCorners: {
     borderRadius: 10
   },
@@ -818,6 +824,48 @@ module.exports = StyleSheet.create({
   },
   whiteBackground: {
     backgroundColor: 'white'
+  },
+  primaryBackground: {
+    backgroundColor: primaryColor
+  },
+  primaryBackgrounLight: {
+    backgroundColor: 'rgba(82,166,229,0.5)'
+  },
+  secondaryBackground: {
+    backgroundColor: '#70DBDB'
+  },
+  secondaryBackgroundLight: {
+    backgroundColor: 'rgba(112,219,219,0.5)'
+  },
+  tertiaryBackground: {
+    backgroundColor: 'rgba(0,190,160,1)'
+  },
+  tertiaryBackgroundLight: {
+    backgroundColor: 'rgba(0,190,160,0.5)'
+  },
+  quaternaryBackground: {
+    backgroundColor: '#AFEEEE'
+  },
+  quaternaryBackgroundLight: {
+    backgroundColor: 'rgba(13,152,186,0.5)'
+  },
+  quinaryBackground: {
+    backgroundColor: '#01796F'
+  },
+  quinaryBackgroundLight: {
+    backgroundColor: 'rgba(1,121,111,0.5)'
+  },
+  senaryBackground: {
+    backgroundColor: '#FFC8C8'
+  },
+  senaryBackgroundLight: {
+    backgroundColor: 'rgba(255,200,200,0.5)'
+  },
+  septaryBackground: {
+    backgroundColor: '#E6E6FA'
+  },
+  septaryBackgroundLight: {
+    backgroundColor: 'rgba(230,230,250,0.5)'
   },
   tagContainerThin: {
     paddingTop: 4,
@@ -1032,6 +1080,19 @@ module.exports = StyleSheet.create({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
+  },
+  rotate45: {
+    transform: [{ rotate: '45deg'}]
+  },
+  rotate90: {
+    transform: [{ rotate: '90deg'}]
+  },
+  rotate180: {
+    transform: [{ rotate: '180deg'}]
+
+  },
+  rotate270: {
+    transform: [{ rotate: '270deg'}]
   }
 
 });

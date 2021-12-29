@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, ActivityIndicator, TextInput, Platform } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 import Modal from 'react-native-modal';
 
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';

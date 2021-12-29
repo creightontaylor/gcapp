@@ -4,7 +4,7 @@ import { View, Text, TextInput, Image, ImageBackground, StyleSheet, ScrollView,
 import Axios from 'axios';
 import Swiper from 'react-native-swiper';
 import { Dropdown } from 'react-native-material-dropdown';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 
 class WalkthroughScreen extends Component {

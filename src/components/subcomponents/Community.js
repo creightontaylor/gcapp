@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 // import CircularProgressBar from 'react-circular-progressbar';
 import Modal from 'react-native-modal';

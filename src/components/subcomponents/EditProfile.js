@@ -3,8 +3,6 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 
 const styles = require('../css/style');
 import Axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/interests-icon.png';
 const logIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/log-icon-dark.png';

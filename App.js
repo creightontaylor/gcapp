@@ -22,6 +22,7 @@ import Settings from './src/components/Settings';
 import Notifications from './src/components/Notifications';
 import Messages from './src/components/Messages';
 import Assessments from './src/components/Assessments';
+import AssessmentDetails from './src/components/AssessmentDetails';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -289,6 +290,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="EditProfileDetails" component={EditProfileDetails} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Assessments" component={Assessments} />
+          <Stack.Screen name="AssessmentDetails" component={AssessmentDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     );

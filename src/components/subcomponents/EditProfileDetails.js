@@ -5,8 +5,7 @@ import Axios from 'axios';
 import Modal from "react-native-modal";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {Picker} from '@react-native-picker/picker';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const addProfilePhotoIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-profile-photo-icon.png';

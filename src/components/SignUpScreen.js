@@ -3,7 +3,7 @@ import { View, Text, TextInput, Image, ImageBackground, StyleSheet, ActivityIndi
   TouchableOpacity, AsyncStorage, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
 import Axios from 'axios';
 //import PushNotification from 'react-native-push-notification';
-import Icon from 'react-native-vector-icons/Ionicons'
+
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 //import { configurePushNotifications } from '../services/PushNotifications';
 
