@@ -1089,13 +1089,13 @@ class EditProfileDetails extends Component {
           if (file.fileSize > mbLimit * 1024 * 1024) {
             console.log('file is too big')
 
-            const errorMessage = 'File must be less than ' + mbLimit + 'MB.'
+            const errorMessage = 'File must be less than ' + mbLimit + 'MB. This file is ' + (file.fileSize / (1024 * 1024)).toFixed() + 'MB'
             self.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
 
           } else {
             console.log('file is small enough')
 
-            self.setState({ profilePicImage: file.uri, profilePicHasChanged: true })
+            self.setState({ profilePicFile: file, profilePicImage: file.uri })
             // let reader = new FileReader();
             // reader.onload = (e) => {
             //     self.setState({ profilePicImage: file.uri });
@@ -1103,7 +1103,7 @@ class EditProfileDetails extends Component {
             // };
             // reader.readAsDataURL(file);
             // // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-            // self.saveFile(eventName, file)
+            self.saveFile(eventName, file)
           }
         }
       }
@@ -2009,21 +2009,30 @@ class EditProfileDetails extends Component {
     this.setState({ serverErrorMessageResume: null, serverSuccessMessageResume: null })
 
     const emailId = this.state.emailId
-    const fileName = passedFile.name
+    const fileName = passedFile.fileName
     let originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
 
+    //adjust file
+    passedFile['name'] = passedFile.fileName
+    passedFile['size'] = passedFile.fileSize
+    // passedFile['lastModified'] = passedFile.fileSize
+    // passedFile['lastModifiedDate'] = passedFile.fileSize
+    // passedFile['buffer'] = pas
     let fileData = new FormData();
     // const fileName = 'profileImage'
     // const fileName = 'newFile'
     fileData.append('baseFileName', passedFile, originalName)
 
-    fetch("/api/file-upload", {
+    console.log('show file info: ', passedFile, originalName)
+
+    fetch("https://www.guidedcompass.com/api/file-upload", {
         mode: 'no-cors',
         method: "POST",
         body: fileData
     }).then(function (res) {
-      console.log('what is the profile pic response');
+      console.log('what is the profile pic response', res);
       if (res.ok) {
+        console.log('is ok?', category)
 
         if (category === 'profilePic') {
           const serverSuccessProfilePic = true
@@ -2040,119 +2049,146 @@ class EditProfileDetails extends Component {
         res.json()
         .then(function(data) {
           console.log('show data: ', data)
-          let newFilePath = data.filePath
-          console.log('show filePath: ', newFilePath)
 
-          if (this.props.fromApply && category === 'profilePic') {
-            self.props.passData('pictureURL', newFilePath, null, 'basic')
-          }
-
-          let existingFilePath = null
-          if (category === 'profilePic') {
-            if (self.state.pictureURL) {
-              existingFilePath = self.state.pictureURL
-            } else if (self.state.profilePicPath) {
-              existingFilePath = self.state.profilePicPath
-            }
-          } else if (category === 'resume') {
-            existingFilePath = self.state.resumeURLValue
-
-            let resumes = self.state.resumes
-            let resumeNames = self.state.resumeNames
-            if (resumes && resumes.length > 0) {
-              resumes.push(newFilePath)
-              if (newFilePath.split("%7C")[2]) {
-                resumeNames.push(newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+"))
-              } else {
-                resumeNames.push('Resume File #' + resumes.length)
-              }
-            } else {
-              resumes = [newFilePath]
-              if (newFilePath.split("%7C")[2]) {
-                resumeNames = [newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")]
-              } else {
-                resumeNames = ['Resume File #1']
-              }
+          if (!data.success) {
+            // console.log('category??', category)
+            if (category === 'profilePic') {
+              self.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: 'There was an error: ' + data.message.message })
+            } else if (category === 'resume') {
+              self.setState({ serverSuccessResume: false, serverErrorMessageResume: 'There was an error: ' + data.message.message })
             }
 
-            self.setState({
-              serverPostSuccess: true,
-              serverSuccessMessage: 'File was saved successfully', resumeURLValue: newFilePath, resumes, resumeNames
-            })
-          }
+          } else {
+            let newFilePath = data.filePath
+            console.log('show filePath: ', newFilePath)
 
-          // remove existing file
-          if (existingFilePath && !self.state.allowMultipleFiles) {
-            const deleteArray = existingFilePath.split("amazonaws.com/")
-            console.log('show deleteArrary: ', deleteArray)
-            const deleteKey = deleteArray[1].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")
-            console.log('show deleteKey: ', deleteKey)
+            if (self.props.fromApply && category === 'profilePic') {
+              self.props.passData('pictureURL', newFilePath, null, 'basic')
+            }
 
-            Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
-            .then((response) => {
-              console.log('tried to delete', response.data)
-              if (response.data.success) {
-                //save values
-                console.log('File delete worked');
+            let existingFilePath = null
+            if (category === 'profilePic') {
+              if (self.state.pictureURL) {
+                existingFilePath = self.state.pictureURL
+              } else if (self.state.profilePicPath) {
+                existingFilePath = self.state.profilePicPath
+              }
+            } else if (category === 'resume') {
+              existingFilePath = self.state.resumeURLValue
 
-                if (category === 'profilePic') {
-                  self.setState({
-                    serverPostSuccess: true,
-                    serverSuccessMessage: 'File was saved successfully',
-                    profilePicPath: newFilePath, pictureURL: newFilePath
-                  })
-                } else if (category === 'resume') {
+              let resumes = self.state.resumes
+              let resumeNames = self.state.resumeNames
+              if (resumes && resumes.length > 0) {
+                resumes.push(newFilePath)
+                if (newFilePath.split("%7C")[2]) {
+                  resumeNames.push(newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+"))
+                } else {
+                  resumeNames.push('Resume File #' + resumes.length)
+                }
+              } else {
+                resumes = [newFilePath]
+                if (newFilePath.split("%7C")[2]) {
+                  resumeNames = [newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")]
+                } else {
+                  resumeNames = ['Resume File #1']
+                }
+              }
 
-                  let resumes = this.state.resumes
-                  let resumeNames = this.state.resumes
-                  if (resumes && resumes.length > 0) {
-                    resumes.push(newFilePath)
-                    if (newFilePath.split("%7C")[2]) {
-                      resumeNames.push(newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+"))
+              self.setState({
+                serverPostSuccess: true,
+                serverSuccessMessage: 'File was saved successfully', resumeURLValue: newFilePath, resumes, resumeNames
+              })
+            }
+
+            // remove existing file
+            if (existingFilePath && !self.state.allowMultipleFiles) {
+              const deleteArray = existingFilePath.split("amazonaws.com/")
+              console.log('show deleteArrary: ', deleteArray)
+              const deleteKey = deleteArray[1].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")
+              console.log('show deleteKey: ', deleteKey)
+
+              Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
+              .then((response) => {
+                console.log('tried to delete', response.data)
+                if (response.data.success) {
+                  //save values
+                  console.log('File delete worked');
+
+                  if (category === 'profilePic') {
+                    self.setState({
+                      serverPostSuccess: true,
+                      serverSuccessMessage: 'File was saved successfully',
+                      profilePicPath: newFilePath, pictureURL: newFilePath
+                    })
+                  } else if (category === 'resume') {
+
+                    let resumes = this.state.resumes
+                    let resumeNames = this.state.resumes
+                    if (resumes && resumes.length > 0) {
+                      resumes.push(newFilePath)
+                      if (newFilePath.split("%7C")[2]) {
+                        resumeNames.push(newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+"))
+                      } else {
+                        resumeNames.push('Resume File #' + resumes.length)
+                      }
                     } else {
-                      resumeNames.push('Resume File #' + resumes.length)
+                      resumes = [newFilePath]
+                      if (newFilePath.split("%7C")[2]) {
+                        resumeNames = [newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")]
+                      } else {
+                        resumeNames = ['Resume File #1']
+                      }
                     }
-                  } else {
-                    resumes = [newFilePath]
-                    if (newFilePath.split("%7C")[2]) {
-                      resumeNames = [newFilePath.split("%7C")[2].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")]
-                    } else {
-                      resumeNames = ['Resume File #1']
-                    }
+
+                    self.setState({
+                      serverPostSuccess: true,
+                      serverSuccessMessage: 'File was saved successfully', resumeURLValue: newFilePath, resumes, resumeNames
+                    })
                   }
 
+                } else {
+                  console.error('there was an error saving the file: ', response.data.message);
                   self.setState({
-                    serverPostSuccess: true,
-                    serverSuccessMessage: 'File was saved successfully', resumeURLValue: newFilePath, resumes, resumeNames
+                    serverPostSuccess: false,
+                    serverErrorMessage: response.data.message,
                   })
                 }
-
-              } else {
-                console.error('there was an error saving the file');
-                self.setState({
-                  serverPostSuccess: false,
-                  serverErrorMessage: response.data.message,
-                })
-              }
-            }).catch((error) => {
-                console.log('The saving did not work', error);
-                self.setState({
-                  serverPostSuccess: false,
-                  serverErrorMessage: error,
-                })
-            });
+              }).catch((error) => {
+                  console.log('The saving did not work', error);
+                  self.setState({
+                    serverPostSuccess: false,
+                    serverErrorMessage: error,
+                  })
+              });
+            }
           }
         })
 
       } else if (res.status === 401) {
         //unauthorized
+
+        console.error('there was an error saving the file: unauthorized');
+
         this.setState({
             serverSuccessProfilePic: false,
             serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
         })
+      } else if (res.status === 413) {
+        //too large
+
+        const errorMessage = 'payload too large'
+        console.error(errorMessage);
+
+        this.setState({
+            serverSuccessProfilePic: false,
+            serverErrorMessageProfilePic: errorMessage
+        })
       }
     }.bind(this), function (e) {
       //there was an error
+
+      console.error('there was an error saving the file: ', e);
+
       this.setState({
           serverSuccessProfilePic: false,
           serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
@@ -2411,46 +2447,46 @@ class EditProfileDetails extends Component {
       serverSuccessMessageText: '',
     })
 
-    if (this.state.profilePicHasChanged === true) {
-      console.log('used has changed profile pic just now!!!')
-
-      if (this.state.profilePicImage) {
-          console.log('profile pic was uploaded')
-          let profilePicData = new FormData();
-          profilePicData.append('profileImage', { uri: this.state.profilePicImage.uri, name: emailId, type: 'image/png'})
-
-          fetch("https://www.guidedcompass.com/api/users/profile/profile-pic", {
-            mode: 'no-cors',
-            method: "POST",
-            body: profilePicData
-          }).then(function (res) {
-            console.log('what is the profile pic response', res.body);
-            if (res.ok) {
-              console.log('response was ok')
-              //success
-              this.setState({
-                  serverSuccessProfilePic: true,
-                  serverSuccessMessageProfilePic: 'Profile pic saved successfully!'
-              })
-            } else if (res.status === 401) {
-              console.log('response was unauthorized')
-              //unauthorized
-              this.setState({
-                  serverSuccessProfilePic: false,
-                  serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
-              })
-            }
-          }.bind(this), function (e) {
-            console.log('response was an error', e)
-            //there was an error
-            this.setState({
-                serverSuccessProfilePic: false,
-                serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
-            })
-          }.bind(this));
-
-      }
-    }
+    // if (this.state.profilePicHasChanged === true) {
+    //   console.log('used has changed profile pic just now!!!')
+    //
+    //   if (this.state.profilePicImage) {
+    //       console.log('profile pic was uploaded')
+    //       let profilePicData = new FormData();
+    //       profilePicData.append('profileImage', { uri: this.state.profilePicImage.uri, name: emailId, type: 'image/png'})
+    //
+    //       fetch("https://www.guidedcompass.com/api/users/profile/profile-pic", {
+    //         mode: 'no-cors',
+    //         method: "POST",
+    //         body: profilePicData
+    //       }).then(function (res) {
+    //         console.log('what is the profile pic response', res.body);
+    //         if (res.ok) {
+    //           console.log('response was ok')
+    //           //success
+    //           this.setState({
+    //               serverSuccessProfilePic: true,
+    //               serverSuccessMessageProfilePic: 'Profile pic saved successfully!'
+    //           })
+    //         } else if (res.status === 401) {
+    //           console.log('response was unauthorized')
+    //           //unauthorized
+    //           this.setState({
+    //               serverSuccessProfilePic: false,
+    //               serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
+    //           })
+    //         }
+    //       }.bind(this), function (e) {
+    //         console.log('response was an error', e)
+    //         //there was an error
+    //         this.setState({
+    //             serverSuccessProfilePic: false,
+    //             serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
+    //         })
+    //       }.bind(this));
+    //
+    //   }
+    // }
 
     const emailId = this.state.emailId
     let updatedAt = new Date();
@@ -2653,8 +2689,8 @@ class EditProfileDetails extends Component {
                 this.props.movePage(true)
               } else {
                 this.setState({ isWaiting: false, textFormHasChanged: false,
-                    serverSuccessText: true,
-                    serverSuccessMessageText: 'Profile details saved successfully!!!!!!'
+                  serverSuccessText: true,
+                  serverSuccessMessageText: 'Profile details saved successfully!!!!!!'
                 })
               }
 
@@ -5132,9 +5168,9 @@ class EditProfileDetails extends Component {
                           )}
 
                           { (this.state.serverSuccessProfilePic) ? (
-                            <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
+                            <Text style={[styles.ctaColor,styles.calcColumn60,styles.centerText,styles.boldText]}>{this.state.serverSuccessMessageProfilePic}</Text>
                           ) : (
-                            <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                            <Text style={[styles.errorColor,styles.calcColumn60,styles.centerText,styles.boldText]}>{this.state.serverErrorMessageProfilePic}</Text>
                           )}
                         </View>
 
