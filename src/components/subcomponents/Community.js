@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
 
 // import CircularProgressBar from 'react-circular-progressbar';
-// import Modal from 'react-modal';
+import Modal from 'react-native-modal';
 
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
 const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png'
@@ -1477,16 +1477,7 @@ class Community extends Component {
               </View>
             </View>
 
-            {/*
-            <Modal
-             isOpen={this.state.modalIsOpen}
-             onAfterOpen={this.afterOpenModal}
-             onRequestClose={this.closeModal}
-             className="modal"
-             overlayClassName="modal-overlay"
-             contentLabel="Example Modal"
-             ariaHideApp={false}
-           >
+          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
             <View className="row-20">
               {(this.state.showPeopleYouFollow) && (
                 <View>
@@ -1546,7 +1537,7 @@ class Community extends Component {
               )}
 
             </View>
-        </Modal>*/}
+        </Modal>
       </ScrollView>
     );
   }

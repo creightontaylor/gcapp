@@ -4,6 +4,7 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
+import Modal from 'react-native-modal';
 
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
 const searchIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png";
@@ -1257,16 +1258,7 @@ class Careers extends Component {
 
             </View>
           )}
-          {/*
-          <Modal
-           isOpen={this.state.modalIsOpen}
-           onAfterOpen={this.afterOpenModal}
-           onRequestClose={this.closeModal}
-           className="modal"
-           overlayClassName="modal-overlay"
-           contentLabel="Example Modal"
-           ariaHideApp={false}
-         >
+          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
           {(this.state.showMatchingCriteria) && (
             <View key="showMatchingCriteria" className="full-width padding-20">
@@ -1380,7 +1372,7 @@ class Careers extends Component {
 
             <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
           </View>
-         </Modal>*/}
+         </Modal>
 
         </View>
       </ScrollView>

@@ -333,6 +333,9 @@ module.exports = StyleSheet.create({
   leftPadding15: {
     paddingLeft: 15
   },
+  leftPadding40: {
+    paddingLeft: 40
+  },
   leftPadding50: {
     paddingLeft: 50
   },
@@ -635,6 +638,9 @@ module.exports = StyleSheet.create({
   },
   flex15: {
     flex: 15
+  },
+  flex20: {
+    flex: 20
   },
   flex25: {
     flex: 25
@@ -1021,6 +1027,11 @@ module.exports = StyleSheet.create({
   modal: {
     backgroundColor: '#fff',
     borderRadius: 5
+  },
+  curtailText: {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   }
 
 });

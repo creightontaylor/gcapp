@@ -4,6 +4,7 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
+import Modal from 'react-native-modal';
 
 const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png';
 const hideIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/hide-icon.png';
@@ -4729,131 +4730,122 @@ class Opportunities extends Component {
 
             </View>
 
-            {/*
-            <Modal
-             isOpen={this.state.modalIsOpen}
-             onAfterOpen={this.afterOpenModal}
-             onRequestClose={this.closeModal}
-             className="modal"
-             overlayClassName="modal-overlay"
-             contentLabel="Example Modal"
-             ariaHideApp={false}
-           >
+            <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
-            {(this.state.showMatchingCriteria) && (
-              <View key="showMatchingCriteria" className="full-width padding-20">
-                <Text className="heading-text-2">Adjust Matching Criteria</Text>
-                <View style={styles.spacer} />
-
-                <View className="row-10">
-                  <View className="flex-container">
-                    <TouchableOpacity className="background-button flex-50" onPress={() => this.setState({ customAdjustment: false })}>
-                      <View className={(this.state.customAdjustment) ? "cta-border center-item row-15 horizontal-padding center-text" : "cta-border center-item row-15 horizontal-padding center-text cta-background-color white-text"}>
-                        Adjust by Needs
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="background-button flex-50" onPress={() => this.setState({ customAdjustment: true })}>
-                      <View className={(this.state.customAdjustment) ? "cta-border center-item row-15 horizontal-padding center-text cta-background-color white-text" : "cta-border center-item row-15 horizontal-padding center-text"}>
-                        Custom Adjust
-                      </View>
-                    </TouchableOpacity>
-
-                  </View>
+              {(this.state.showMatchingCriteria) && (
+                <View key="showMatchingCriteria" className="full-width padding-20">
+                  <Text className="heading-text-2">Adjust Matching Criteria</Text>
                   <View style={styles.spacer} />
-                </View>
 
-                {(this.state.customAdjustment) ? (
-                  <View>
+                  <View className="row-10">
+                    <View className="flex-container">
+                      <TouchableOpacity className="background-button flex-50" onPress={() => this.setState({ customAdjustment: false })}>
+                        <View className={(this.state.customAdjustment) ? "cta-border center-item row-15 horizontal-padding center-text" : "cta-border center-item row-15 horizontal-padding center-text cta-background-color white-text"}>
+                          Adjust by Needs
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity className="background-button flex-50" onPress={() => this.setState({ customAdjustment: true })}>
+                        <View className={(this.state.customAdjustment) ? "cta-border center-item row-15 horizontal-padding center-text cta-background-color white-text" : "cta-border center-item row-15 horizontal-padding center-text"}>
+                          Custom Adjust
+                        </View>
+                      </TouchableOpacity>
 
-                    {(this.state.matchingCriteria) && (
-                      <View>
-                        {this.state.matchingCriteria.map((value ,index) =>
-                          <View key={"c" + index}>
-                            <View className="calc-column-offset-100-static">
-                              <Text className="half-bold-text">{index + 1}. {value.name}</Text>
-                              <View style={styles.halfSpacer} />
-                              <Text className="description-text-3">{value.description}</Text>
-                            </View>
-                            <View className="fixed-column-100 right-text">
-                              <View style={[styles.width70]}>
-                                <input type="number" className="text-field heading-text-2 cta-color bold-text full-width right-text standard-border" min="0" max="100" placeholder="0" name={"custom|" + index} value={value.value} onChange={this.formChangeHandler}></input>
-                              </View>
-                              <View className="fixed-column-30">
-                                <View className="mini-spacer"/><View className="mini-spacer"/>
-                                <Text className="heading-text-2 cta-color bold-text">%</Text>
-                              </View>
-                            </View>
+                    </View>
+                    <View style={styles.spacer} />
+                  </View>
 
+                  {(this.state.customAdjustment) ? (
+                    <View>
 
-                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
-
-                          </View>
-                        )}
-
+                      {(this.state.matchingCriteria) && (
                         <View>
-                          <View style={[styles.horizontalLine]} />
-                          <View style={styles.spacer} />
-                          <View className="float-left full-width right-text">
-                            <Text className="heading-text-2 cta-color bold-text">{this.state.totalPercent}%</Text>
-                          </View>
+                          {this.state.matchingCriteria.map((value ,index) =>
+                            <View key={"c" + index}>
+                              <View className="calc-column-offset-100-static">
+                                <Text className="half-bold-text">{index + 1}. {value.name}</Text>
+                                <View style={styles.halfSpacer} />
+                                <Text className="description-text-3">{value.description}</Text>
+                              </View>
+                              <View className="fixed-column-100 right-text">
+                                <View style={[styles.width70]}>
+                                  <input type="number" className="text-field heading-text-2 cta-color bold-text full-width right-text standard-border" min="0" max="100" placeholder="0" name={"custom|" + index} value={value.value} onChange={this.formChangeHandler}></input>
+                                </View>
+                                <View className="fixed-column-30">
+                                  <View className="mini-spacer"/><View className="mini-spacer"/>
+                                  <Text className="heading-text-2 cta-color bold-text">%</Text>
+                                </View>
+                              </View>
 
-                          {(this.state.totalPercent !== 100) && (
-                            <View style={[styles.fullScreenWidth]}>
-                              <Text className="error-message right-text">Please adjust percentages to equal 100%</Text>
+
+                              <View style={styles.spacer} /><View style={styles.halfSpacer} />
+
                             </View>
                           )}
-                        </View>
-                      </View>
-                    )}
-                  </View>
-                ) : (
-                  <View>
 
-                    {(this.state.useCases) && (
-                      <View>
-                        {this.state.useCases.map((value ,index) =>
-                          <View key={"u" + index} className={(value.name === 'Purpose') && "wash-out-2"}>
-                            <View className="calc-column-offset-50">
-                              <Text className="half-bold-text">{index + 1}. {value.name}</Text>
-                              <View style={styles.halfSpacer} />
-                              <Text className="description-text-3">{value.description}</Text>
-                            </View>
-                            <View className="fixed-column-50 horizontally-center center-text top-padding-5">
-
-                              <TouchableOpacity disabled={(value.name === 'Purpose') ? true : false} onPress={() => this.itemClicked('useCase|' + index, true)}>
-                                {(value.selected) ? (
-                                  <View className="circle-option-container-2 cta-border center-text" >
-                                    <View className="circle-selected-2"/>
-                                  </View>
-                                ) : (
-                                  <View className="circle-option-container-2 standard-border center-text" />
-                                )}
-                              </TouchableOpacity>
-
+                          <View>
+                            <View style={[styles.horizontalLine]} />
+                            <View style={styles.spacer} />
+                            <View className="float-left full-width right-text">
+                              <Text className="heading-text-2 cta-color bold-text">{this.state.totalPercent}%</Text>
                             </View>
 
-
-                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
-
+                            {(this.state.totalPercent !== 100) && (
+                              <View style={[styles.fullScreenWidth]}>
+                                <Text className="error-message right-text">Please adjust percentages to equal 100%</Text>
+                              </View>
+                            )}
                           </View>
-                        )}
+                        </View>
+                      )}
+                    </View>
+                  ) : (
+                    <View>
 
-                      </View>
-                    )}
-                  </View>
-                )}
+                      {(this.state.useCases) && (
+                        <View>
+                          {this.state.useCases.map((value ,index) =>
+                            <View key={"u" + index} className={(value.name === 'Purpose') && "wash-out-2"}>
+                              <View className="calc-column-offset-50">
+                                <Text className="half-bold-text">{index + 1}. {value.name}</Text>
+                                <View style={styles.halfSpacer} />
+                                <Text className="description-text-3">{value.description}</Text>
+                              </View>
+                              <View className="fixed-column-50 horizontally-center center-text top-padding-5">
 
-                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color">{this.state.errorMessage}</Text>}
+                                <TouchableOpacity disabled={(value.name === 'Purpose') ? true : false} onPress={() => this.itemClicked('useCase|' + index, true)}>
+                                  {(value.selected) ? (
+                                    <View className="circle-option-container-2 cta-border center-text" >
+                                      <View className="circle-selected-2"/>
+                                    </View>
+                                  ) : (
+                                    <View className="circle-option-container-2 standard-border center-text" />
+                                  )}
+                                </TouchableOpacity>
 
+                              </View>
+
+
+                              <View style={styles.spacer} /><View style={styles.halfSpacer} />
+
+                            </View>
+                          )}
+
+                        </View>
+                      )}
+                    </View>
+                  )}
+
+                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color">{this.state.errorMessage}</Text>}
+
+                </View>
+              )}
+
+              <View className="row-20 center-text">
+                <TouchableOpacity className="btn btn-primary right-margin" onPress={() => this.calculateMatches(true, true, true)}>Apply Changes</TouchableOpacity>
+
+                <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
               </View>
-            )}
-
-            <View className="row-20 center-text">
-              <TouchableOpacity className="btn btn-primary right-margin" onPress={() => this.calculateMatches(true, true, true)}>Apply Changes</TouchableOpacity>
-
-              <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-            </View>
-           </Modal>*/}
+           </Modal>
 
         </ScrollView>
 

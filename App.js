@@ -21,6 +21,7 @@ import EditProfileDetails from './src/components/EditProfileDetails';
 import Settings from './src/components/Settings';
 import Notifications from './src/components/Notifications';
 import Messages from './src/components/Messages';
+import Assessments from './src/components/Assessments';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -287,54 +288,9 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Messages" component={Messages} />
           <Stack.Screen name="EditProfileDetails" component={EditProfileDetails} />
           <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name="Assessments" component={Assessments} />
         </Stack.Navigator>
       </NavigationContainer>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  headerLeft: {
-  marginLeft: 15,
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  headerRight: {
-    marginRight: 15,
-  },
-  // drawer content
-  drawerLabel: {
-    fontSize: 14,
-  },
-  drawerLabelFocused: {
-    fontSize: 14,
-    color: '#551E18',
-    fontWeight: '500',
-  },
-  drawerItem: {
-    height: 50,
-    justifyContent: 'center'
-  },
-  drawerItemFocused: {
-    backgroundColor: '#ba9490',
-  },
-});

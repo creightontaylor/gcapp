@@ -4982,15 +4982,7 @@ class EditProfileDetails extends Component {
               <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
             )}*/}
             {/*
-            <Modal
-             isOpen={this.state.modalIsOpen}
-             onAfterOpen={this.afterOpenModal}
-             onRequestClose={this.closeModal}
-             className="modal"
-             overlayClassName="modal-overlay"
-             contentLabel="Example Modal"
-             ariaHideApp={false}
-           >
+            <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
             {(this.state.showGrade) && (
               <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
