@@ -385,8 +385,8 @@ class Endorsements extends Component {
                   </View>
                 </View>
               ) : (
-                <View style={[styles.row10,styles.horizontalPadding30,styles.descriptionText2]}>
-                  <Text>This endorsement has been marked confidential by the endorser. It will be imported into applications.</Text>
+                <View style={[styles.row10,styles.horizontalPadding30]}>
+                  <Text style={[styles.descriptionText2]}>This endorsement has been marked confidential by the endorser. It will be imported into applications.</Text>
                 </View>
               )}
 

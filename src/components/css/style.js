@@ -876,6 +876,10 @@ module.exports = StyleSheet.create({
   tertiaryBackgroundLight: {
     backgroundColor: 'rgba(0,190,160,0.5)'
   },
+  tertiaryBorder: {
+    borderWidth: 1,
+    borderColor: 'rgba(0,190,160,1)',
+  },
   quaternaryBackground: {
     backgroundColor: '#0d98ba'
   },
@@ -1148,8 +1152,8 @@ module.exports = StyleSheet.create({
     borderRadius: 50,
   },
   filler: {
-    borderRadius: 'inherit',
-    transition: 'width .2s ease-in'
+    transition: 'width .2s ease-in',
+    borderRadius: 50,
   }
 
 });
