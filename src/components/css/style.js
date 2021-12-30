@@ -461,6 +461,12 @@ module.exports = StyleSheet.create({
   boldText: {
     fontWeight: 'bold'
   },
+  underlineText: {
+    textDecoration: 'underline'
+  },
+  offsetUnderline: {
+    textUnderlineOffset: 5
+  },
   width10: {
     width: 10
   },

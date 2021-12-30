@@ -603,7 +603,7 @@ class Endorsements extends Component {
                         </View>
                       )}
                       <View style={[styles.width50]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GetEndorsements')}><Image source={{ uri: addIncomingIcon}} style={[styles.square50,styles.contain]}/></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RequestEndorsements')}><Image source={{ uri: addIncomingIcon}} style={[styles.square50,styles.contain]}/></TouchableOpacity>
                       </View>
                     </View>
 
@@ -620,7 +620,7 @@ class Endorsements extends Component {
                       <Text style={[styles.topMargin20]}>Use these endorsements as a pick me up, for advisors to reference, or to import into work applications.</Text>
 
                       <View style={[styles.topMargin30]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GetEndorsements')} style={[styles.btnPrimary,styles.ctaBackgroundColor]}><Text style={[styles.whiteColor]}>Get Endorsements</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RequestEndorsements')} style={[styles.btnPrimary,styles.ctaBackgroundColor]}><Text style={[styles.whiteColor]}>Get Endorsements</Text></TouchableOpacity>
                         {(this.state.showOutgoing) && (
                           <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement')} style={[styles.btnPrimary]}><Text style={[styles.ctaColor]}>Send Endorsement</Text></TouchableOpacity>
                         )}

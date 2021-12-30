@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 const styles = require('../css/style');
 import Axios from 'axios';
 
@@ -123,6 +124,7 @@ class RequestEndorsements extends Component {
       const orgName = await AsyncStorage.getItem('orgName');
       const roleName = await AsyncStorage.getItem('roleName');
       const remoteAuth = await AsyncStorage.getItem('remoteAuth');
+      let pathway = await AsyncStorage.getItem('pathway');
 
       let activeOrg = await AsyncStorage.getItem('activeOrg')
       if (!activeOrg) {
@@ -162,7 +164,7 @@ class RequestEndorsements extends Component {
         cuFirstName, cuLastName, activeOrg, senderFirstName, senderLastName, senderEmail, enableRequestEndorsement,
         placementAgency, orgFocus, pathway, goalTypeOptions })
 
-        Axios.get('/api/favorites', { params: { emailId: email } })
+        Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
        .then((response) => {
          console.log('Favorites query attempted', response.data);
 
@@ -172,7 +174,7 @@ class RequestEndorsements extends Component {
            const favorites = response.data.favorites
 
            if (favorites && favorites.length > 0) {
-             Axios.get('/api/favorites/detail', { params: { favorites, orgCode: activeOrg } })
+             Axios.get('https://www.guidedcompass.com/api/favorites/detail', { params: { favorites, orgCode: activeOrg } })
              .then((response2) => {
                console.log('Favorites detail query attempted', response2.data);
 
@@ -240,7 +242,7 @@ class RequestEndorsements extends Component {
            console.log('Favorites query did not work', error);
        });
 
-        Axios.get('/api/org', { params: { orgCode: activeOrg } })
+        Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
           console.log('Org info query attempted', response.data);
 
@@ -268,7 +270,7 @@ class RequestEndorsements extends Component {
           orgCode = activeOrg
         }
 
-        Axios.get('/api/benchmarks', { params: { orgCode } })
+        Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { orgCode } })
         .then((response) => {
 
           if (response.data.success) {
@@ -405,7 +407,7 @@ class RequestEndorsements extends Component {
             console.log('Benchmark query did not work', error);
         });
 
-        Axios.get('/api/users/profile/details', { params: { email } })
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
         .then((response) => {
           console.log('Profile query attempted', response.data);
 
@@ -433,27 +435,27 @@ class RequestEndorsements extends Component {
      }
   }
 
-  formChangeHandler(event) {
+  formChangeHandler(eventName,eventValue) {
 
-    if (event.target.name === 'anonymousCheckmark') {
-      const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    if (eventName === 'anonymousCheckmark') {
+      const value = event.target.type === 'checkbox' ? event.target.checked : eventValue;
       this.setState({ isAnonymousContribution: value });
-    } else if (event.target.name === 'firstName') {
-      this.setState({ recipientFirstName: event.target.value })
-    } else if (event.target.name === 'lastName') {
-      this.setState({ recipientLastName: event.target.value })
-    } else if (event.target.name === 'email') {
-      this.setState({ recipientEmail: event.target.value })
-    } else if (event.target.name === 'relationship') {
-      this.setState({ relationship: event.target.value })
-    } else if (event.target.name === 'senderFirstName') {
-      this.setState({ senderFirstName: event.target.value })
-    } else if (event.target.name === 'senderLastName') {
-      this.setState({ senderLastName: event.target.value })
-    } else if (event.target.name === 'senderEmail') {
-      this.setState({ senderEmail: event.target.value })
-    } else if (event.target.name === 'pathway') {
-      let selectedPathway = event.target.value
+    } else if (eventName === 'firstName') {
+      this.setState({ recipientFirstName: eventValue })
+    } else if (eventName === 'lastName') {
+      this.setState({ recipientLastName: eventValue })
+    } else if (eventName === 'email') {
+      this.setState({ recipientEmail: eventValue })
+    } else if (eventName === 'relationship') {
+      this.setState({ relationship: eventValue })
+    } else if (eventName === 'senderFirstName') {
+      this.setState({ senderFirstName: eventValue })
+    } else if (eventName === 'senderLastName') {
+      this.setState({ senderLastName: eventValue })
+    } else if (eventName === 'senderEmail') {
+      this.setState({ senderEmail: eventValue })
+    } else if (eventName === 'pathway') {
+      let selectedPathway = eventValue
 
       let skillTraits = []
       let competencies = []
@@ -479,50 +481,50 @@ class RequestEndorsements extends Component {
 
       this.setState({ selectedPathway, skillTraits, competencies, checked })
 
-    } else if (event.target.name.includes('skillName')) {
+    } else if (eventName.includes('skillName')) {
       console.log('show me what were working with', this.state.skillTraits)
       let skillTraits = this.state.skillTraits
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
 
-      const name = event.target.value
+      const name = eventValue
       const skillType = skillTraits[index].skillType
       const rating = skillTraits[index].rating
       skillTraits[index] = { name, skillType, rating }
       this.setState({ skillTraits })
 
       if (skillType !== 'Trait') {
-        this.searchSkillTraits(event.target.value, skillTraits[index].skillType, index)
+        this.searchSkillTraits(eventValue, skillTraits[index].skillType, index)
       }
 
-    } else if (event.target.name.includes('skillType')) {
+    } else if (eventName.includes('skillType')) {
       let skillTraits = this.state.skillTraits
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
-      skillTraits[index] = { name: skillTraits[index].name, skillType: event.target.value, rating: skillTraits[index].rating }
+      skillTraits[index] = { name: skillTraits[index].name, skillType: eventValue, rating: skillTraits[index].rating }
       this.setState({ skillTraits })
-    } else if (event.target.name.includes('skillRating')) {
+    } else if (eventName.includes('skillRating')) {
       let skillTraits = this.state.skillTraits
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
-      skillTraits[index]['rating'] = event.target.value
+      skillTraits[index]['rating'] = eventValue
       this.setState({ skillTraits })
-    } else if (event.target.name.includes('exampleSkillTrait')) {
+    } else if (eventName.includes('exampleSkillTrait')) {
       let examples = this.state.examples
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
-      examples[index] = { skillTrait: event.target.value, example: examples[index].example }
+      examples[index] = { skillTrait: eventValue, example: examples[index].example }
       this.setState({ examples })
-    } else if (event.target.name.includes('exampleExample')) {
+    } else if (eventName.includes('exampleExample')) {
       let examples = this.state.examples
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
-      examples[index] = { skillTrait: examples[index].skillTrait, example: event.target.value }
+      examples[index] = { skillTrait: examples[index].skillTrait, example: eventValue }
       this.setState({ examples })
-    } else if (event.target.name === 'goalType') {
+    } else if (eventName === 'goalType') {
       let goalType = { name: '' }
       for (let i = 1; i <= this.state.goalTypeOptions.length; i++) {
-        if (this.state.goalTypeOptions[i - 1].description === event.target.value) {
+        if (this.state.goalTypeOptions[i - 1].description === eventValue) {
           goalType = this.state.goalTypeOptions[i - 1]
         }
       }
@@ -531,16 +533,16 @@ class RequestEndorsements extends Component {
         pathway = 'Custom'
       }
       this.setState({ goalType, pathway })
-    } else if (event.target.name === 'searchCareers') {
-      this.searchItems(event.target.value, 'career')
-    } else if (event.target.name === 'searchOpportunities') {
-      this.searchItems(event.target.value, 'opportunity')
-    } else if (event.target.name === 'searchCompetencies') {
-      this.searchItems(event.target.value, 'competency')
-    } else if (event.target.name === 'searchMembers') {
-      this.searchItems(event.target.value, 'member')
+    } else if (eventName === 'searchCareers') {
+      this.searchItems(eventValue, 'career')
+    } else if (eventName === 'searchOpportunities') {
+      this.searchItems(eventValue, 'opportunity')
+    } else if (eventName === 'searchCompetencies') {
+      this.searchItems(eventValue, 'competency')
+    } else if (eventName === 'searchMembers') {
+      this.searchItems(eventValue, 'member')
     } else {
-      this.setState({ [event.target.name]: event.target.value })
+      this.setState({ [eventName]: eventValue })
     }
   }
 
@@ -562,7 +564,7 @@ class RequestEndorsements extends Component {
           const excludeMissingOutlookData = true
           const excludeMissingJobZone = true
 
-          Axios.put('/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
+          Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
           .then((response) => {
             console.log('Careers query attempted', response.data);
 
@@ -615,7 +617,7 @@ class RequestEndorsements extends Component {
           const postTypes = ['Internship','Work','Assignment','Problem','Challenge']
 
           // console.log('show the params: ', searchString, orgCode, placementPartners, accountCode, search, postTypes)
-          Axios.get('/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
+          Axios.get('https://www.guidedcompass.com/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
           .then((response) => {
             console.log('Opportunity search query attempted', response.data);
 
@@ -661,7 +663,7 @@ class RequestEndorsements extends Component {
 
           const types = ['General Skill','Hard Skill','Soft Skill','Ability','Knowledge','Work Style']
 
-          Axios.get('/api/competency/search', { params: { searchString, search, types } })
+          Axios.get('https://www.guidedcompass.com/api/competency/search', { params: { searchString, search, types } })
           .then((response) => {
             console.log('Opportunity search query attempted', response.data);
 
@@ -708,7 +710,7 @@ class RequestEndorsements extends Component {
           const excludeCurrentUser = true
           const emailId = self.state.emailId
 
-          Axios.get('/api/members/search', { params: { searchString, orgCode, roleNames, excludeCurrentUser, emailId } })
+          Axios.get('https://www.guidedcompass.com/api/members/search', { params: { searchString, orgCode, roleNames, excludeCurrentUser, emailId } })
           .then((response) => {
             console.log('Opportunity search query attempted', response.data);
 
@@ -753,7 +755,7 @@ class RequestEndorsements extends Component {
         const skillOptions = []
         this.setState({ skillOptions })
       } else {
-        Axios.get('/api/skilltrait/search', { params: { skillTrait, type } })
+        Axios.get('https://www.guidedcompass.com/api/skilltrait/search', { params: { skillTrait, type } })
         .then((response) => {
           console.log('Skilltrait search query attempted', response.data);
 
@@ -807,7 +809,7 @@ class RequestEndorsements extends Component {
       } else {
 
           //check if invite someone who can provide an endorsement in the portal
-          Axios.get('/api/users/profile/details', { params: { email: this.state.recipientEmail } })
+          Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: this.state.recipientEmail } })
           .then((response) => {
             console.log('Profile query attempted', response.data);
 
@@ -924,7 +926,7 @@ class RequestEndorsements extends Component {
     let createdAt = new Date();
     let updatedAt = createdAt
 
-    Axios.post('/api/story/request', {
+    Axios.post('https://www.guidedcompass.com/api/story/request', {
       senderFirstName, senderLastName, senderEmail, toEmails, isApproved: false, isDenied: false,
       recipientFirstName, recipientLastName, relationship, orgCode, orgName, orgProgramName, isInternal, recipientRole,
       orgContactEmail, orgURL,
@@ -981,47 +983,55 @@ class RequestEndorsements extends Component {
         // let ratingName = "skillRating|" + i.toString()
 
         rows.push(
-          <div key={i}>
-            <div>
-              <div className="fixed-column-40">
-                  <button className="background-button float-left" onClick={() => this.removeSkillTraits(index,'skill')}>
-                    <img src={deniedIcon} alt="Compass tap icon" className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
-                  </button>
-               </div>
-               <div className="calc-column-offset-40-of-75">
-                 <input type="text" className="text-field capitalize-text" placeholder="Skill Name" name={nameName} value={this.state.skillTraits[i - 1].name} onChange={this.formChangeHandler} />
-               </div>
-               <div className="relative-column-1 height-20"/>
-               <div className="relative-column-24">
-                 <select name={typeName} value={this.state.skillTraits[i - 1].skillType} className="dropdown" onChange={this.formChangeHandler}>
-                   {this.state.skillTypeOptions.map(value =>
-                     <option key={value.key} value={value}>{value}</option>
-                   )}
-                 </select>
-               </div>
-               <div className="clear" />
-               <div className="spacer"/>
+          <View key={i}>
+            <View>
+              <View className="fixed-column-40">
+                  <TouchableOpacity className="background-button float-left" onPress={() => this.removeSkillTraits(index,'skill')}>
+                    <Image source={{ uri: deniedIcon}} className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
+                  </TouchableOpacity>
+               </View>
+               <View className="calc-column-offset-40-of-75">
+                 <TextInput
+                   style={[styles.textInput,styles.capitalizeText]}
+                   onChangeText={(text) => this.formChangeHandler(nameName , text)}
+                   value={this.state.skillTraits[i - 1].name}
+                   placeholder="Skill Name"
+                   placeholderTextColor="grey"
+                 />
+               </View>
+               <View className="relative-column-1 height-20"/>
+               <View className="relative-column-24">
+                 <Picker
+                   selectedValue={this.state.skillTraits[i - 1].skillType}
+                   onValueChange={(itemValue, itemIndex) =>
+                     this.formChangeHandler(typeName,itemValue)
+                   }>
+                   {this.state.skillTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                 </Picker>
+               </View>
+               <View className="clear" />
+               <View className="spacer"/>
                {(this.state.selectedIndex === index && this.state.skillOptions.length > 0) && (
-                 <div className="full-width">
-                   <div className="spacer"/>
+                 <View className="full-width">
+                   <View className="spacer"/>
                    {this.state.skillOptions.map((value, optionIndex) =>
-                     <div key={value._id} className="left-text bottom-margin-5 full-width">
-                       <button className="background-button" onClick={() => this.skillTraitClicked(index, optionIndex, 'skill')}>
-                         <div className="horizontal-padding-50 full-width">
-                           <div className="float-left right-padding top-margin">
-                             <img src={skillsIcon} alt="Compass employer icon icon" className="image-auto-22" />
-                           </div>
-                           <div className="float-left">
-                             <p className="cta-color">{value.name}</p>
-                           </div>
-                         </div>
-                       </button>
-                     </div>
+                     <View key={value._id} className="left-text bottom-margin-5 full-width">
+                       <TouchableOpacity className="background-button" onPress={() => this.skillTraitClicked(index, optionIndex, 'skill')}>
+                         <View className="horizontal-padding-50 full-width">
+                           <View className="float-left right-padding top-margin">
+                             <Image source={{ uri: skillsIcon}} className="image-auto-22" />
+                           </View>
+                           <View className="float-left">
+                             <Text className="cta-color">{value.name}</Text>
+                           </View>
+                         </View>
+                       </TouchableOpacity>
+                     </View>
                    )}
-                 </div>
+                 </View>
                )}
-            </div>
-          </div>
+            </View>
+          </View>
         )
       }
     }
@@ -1045,25 +1055,28 @@ class RequestEndorsements extends Component {
         // let ratingName = "skillRating|" + i.toString()
 
         rows.push(
-          <div key={i}>
-            <div>
-              <div className="fixed-column-40">
-                  <button className="background-button float-left" onClick={() => this.removeSkillTraits(index,'skill')}>
-                    <img src={deniedIcon} alt="Compass tap icon" className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
-                  </button>
-               </div>
-               <div className="calc-column-offset-40">
-                 <select name={nameName} value={this.state.skillTraits[i - 1].name} className="dropdown capitalize-text" onChange={this.formChangeHandler}>
-                   {this.state.traitOptions.map(value =>
-                     <option key={value.key} value={value}>{value}</option>
-                   )}
-                 </select>
-               </div>
-               <div className="clear" />
-               <div className="spacer"/>
+          <View key={i}>
+            <View>
+              <View className="fixed-column-40">
+                  <TouchableOpacity className="background-button float-left" onPress={() => this.removeSkillTraits(index,'skill')}>
+                    <Image source={{ uri: deniedIcon}} className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
+                  </TouchableOpacity>
+               </View>
+               <View className="calc-column-offset-40">
+                 <Picker
+                   selectedValue={this.state.skillTraits[i - 1].name}
+                   onValueChange={(itemValue, itemIndex) =>
+                     this.formChangeHandler(nameName,itemValue)
+                   }>
+                   style={[styles.capitalizeText]}
+                   {this.state.traitOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                 </Picker>
+               </View>
+               <View className="clear" />
+               <View className="spacer"/>
 
-            </div>
-          </div>
+            </View>
+          </View>
         )
       }
     }
@@ -1121,14 +1134,24 @@ class RequestEndorsements extends Component {
       const exampleExample = "exampleExample|" + i.toString()
 
       rows.push(
-        <div key={i}>
-          <select name={exampleSkillTrait} value={this.state.examples[i - 1].skillTrait} className="dropdown" onChange={this.formChangeHandler}>
-            {skillOptions.map(value =>
-              <option key={value.key} value={value}>{value}</option>
-            )}
-          </select>
-          <textarea type="text" className="text-field" placeholder="Share an example where the endorsee exceptionally demonstrated this skill…." name={exampleExample}value={this.state.examples[i - 1].example} onChange={this.formChangeHandler}></textarea>
-        </div>
+        <View key={i}>
+          <Picker
+            selectedValue={this.state.examples[i - 1].skillTrait}
+            onValueChange={(itemValue, itemIndex) =>
+              this.formChangeHandler(exampleSkillTrait,itemValue)
+            }>
+            {skillOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+          </Picker>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={(text) => this.formChangeHandler(exampleExample, text)}
+            value={this.state.examples[i - 1].example}
+            placeholder="Share an example where the endorsee exceptionally demonstrated this skill…."
+            placeholderTextColor="grey"
+            multiline={true}
+            numberOfLines={4}
+          />
+        </View>
       )
     }
 
@@ -1226,28 +1249,28 @@ class RequestEndorsements extends Component {
       if (favoritedCareers && favoritedCareers.length > 0) {
 
         return (
-          <div key={"favoritedCareers"}>
-            <div className="spacer" />
+          <View key={"favoritedCareers"}>
+            <View className="spacer" />
             {favoritedCareers.map((value, optionIndex) =>
-              <div key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex} className="float-left">
 
-                <div className="close-button-container-1" >
-                  <button className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                    <img src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
-                  </button>
-                </div>
+                <View className="close-button-container-1" >
+                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                  </TouchableOpacity>
+                </View>
 
-                <button className="background-button float-left right-padding-5" onClick={() => this.addCompetencies(this.state.favoritedCareerDetails[optionIndex], type)}>
-                  <div className="half-spacer" />
-                  <div className={(this.state.selectedCareer === value) ? "tag-container-active" : "tag-container-inactive"}>
-                    <p className="description-text-2">{value}</p>
-                  </div>
-                  <div className="half-spacer" />
-                </button>
+                <TouchableOpacity className="background-button float-left right-padding-5" onPress={() => this.addCompetencies(this.state.favoritedCareerDetails[optionIndex], type)}>
+                  <View className="half-spacer" />
+                  <View className={(this.state.selectedCareer === value) ? "tag-container-active" : "tag-container-inactive"}>
+                    <Text className="description-text-2">{value}</Text>
+                  </View>
+                  <View className="half-spacer" />
+                </TouchableOpacity>
 
-              </div>
+              </View>
             )}
-          </div>
+          </View>
         )
       }
     } else if (type === 'opportunity') {
@@ -1255,27 +1278,27 @@ class RequestEndorsements extends Component {
       if (favoritedOpportunities && favoritedOpportunities.length > 0) {
         console.log('about to in', favoritedOpportunities)
         return (
-          <div key={"favoritedOpportunities"}>
-            <div className="spacer" />
+          <View key={"favoritedOpportunities"}>
+            <View className="spacer" />
             {favoritedOpportunities.map((value, optionIndex) =>
-              <div key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex} className="float-left">
 
-                <div className="close-button-container-1" >
-                  <button className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                    <img src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
-                  </button>
-                </div>
-                <button className="background-button float-left right-padding-5" onClick={() => this.addCompetencies(this.state.favoritedOpportunityDetails[optionIndex], type)}>
-                  <div className="half-spacer" />
-                  <div className={(this.state.selectedOpportunity === value) ? "tag-container-active" : "tag-container-inactive"}>
-                    <p className="description-text-2">{value}</p>
-                  </div>
-                  <div className="half-spacer" />
-                </button>
+                <View className="close-button-container-1" >
+                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity className="background-button float-left right-padding-5" onPress={() => this.addCompetencies(this.state.favoritedOpportunityDetails[optionIndex], type)}>
+                  <View className="half-spacer" />
+                  <View className={(this.state.selectedOpportunity === value) ? "tag-container-active" : "tag-container-inactive"}>
+                    <Text className="description-text-2">{value}</Text>
+                  </View>
+                  <View className="half-spacer" />
+                </TouchableOpacity>
 
-              </div>
+              </View>
             )}
-          </div>
+          </View>
         )
       }
     } else if (type === 'competency') {
@@ -1286,53 +1309,53 @@ class RequestEndorsements extends Component {
       if (competencies && competencies.length > 0) {
         console.log('compare 0')
         return (
-          <div key={"competencies"}>
-            <div className="spacer" />
+          <View key={"competencies"}>
+            <View className="spacer" />
             {competencies.map((value, optionIndex) =>
-              <div key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex} className="float-left">
 
-                <div className="close-button-container-1" >
-                  <button className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                    <img src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
-                  </button>
-                </div>
-                <div>
-                  <div className="half-spacer" />
+                <View className="close-button-container-1" >
+                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <View className="half-spacer" />
                   {(value.category === 'Ability') && (
-                    <div className="tag-container-8 primary-background primary-border white-text">
-                      <p className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</p>
-                    </div>
+                    <View className="tag-container-8 primary-background primary-border white-text">
+                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    </View>
                   )}
                   {(value.category === 'Knowledge') && (
-                    <div className="tag-container-8 secondary-background secondary-border white-text">
-                      <p className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</p>
-                    </div>
+                    <View className="tag-container-8 secondary-background secondary-border white-text">
+                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    </View>
                   )}
                   {(value.category === 'Soft Skill' || value.category === 'Work Style') && (
-                    <div className="tag-container-8 tertiary-background tertiary-border white-text">
-                      <p className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</p>
-                    </div>
+                    <View className="tag-container-8 tertiary-background tertiary-border white-text">
+                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    </View>
                   )}
                   {(value.category === 'Hard Skill' || value.category === 'Tech Skill' || value.category === 'General Skill') && (
-                    <div className="tag-container-8 quaternary-background quaternary-border white-text">
-                      <p className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</p>
-                    </div>
+                    <View className="tag-container-8 quaternary-background quaternary-border white-text">
+                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    </View>
                   )}
 
-                  <div className="half-spacer" />
-                </div>
+                  <View className="half-spacer" />
+                </View>
                 {console.log('compare 1: ',optionIndex, this.state.selectedCareer, value)}
 
-              </div>
+              </View>
             )}
-          </div>
+          </View>
         )
 
       } else {
         return (
-          <div key={"competencies"} className="top-padding-20">
-            {/*<p className="description-text-2 error-color">Specify a career path or opportunity above for learning objectives to populate.</p>*/}
-          </div>
+          <View key={"competencies"} className="top-padding-20">
+            {/*<Text className="description-text-2 error-color">Specify a career path or opportunity above for learning objectives to populate.</Text>*/}
+          </View>
         )
       }
     }
@@ -1530,7 +1553,7 @@ class RequestEndorsements extends Component {
         }
       }
 
-      Axios.get('/api/benchmarks/byid', { params: { _id: benchmarkId, jobFunction } })
+      Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: benchmarkId, jobFunction } })
       .then((response) => {
         console.log('Benchmarks query by id attempted', response.data);
 
@@ -1610,7 +1633,7 @@ class RequestEndorsements extends Component {
 
       const profile = this.state.profile
 
-      Axios.put('/api/learning-objectives', { profile, category: type })
+      Axios.put('https://www.guidedcompass.com/api/learning-objectives', { profile, category: type })
       .then((response) => {
         console.log('Learning objectives query attempted', response.data);
 
@@ -1651,7 +1674,7 @@ class RequestEndorsements extends Component {
         }
         // console.log('item to remove 2: ', favoritesArray, favoritesArray.length, favoritedCourseDetails.length)
 
-        Axios.post('/api/favorites/save', {
+        Axios.post('https://www.guidedcompass.com/api/favorites/save', {
           favoritesArray, emailId: this.state.emailId
         })
         .then((response) => {
@@ -1675,7 +1698,7 @@ class RequestEndorsements extends Component {
         console.log('adding item: ', favoritesArray, itemId, this.state.emailId)
 
         favoritesArray.push(itemId)
-        Axios.post('/api/favorites/save', {
+        Axios.post('https://www.guidedcompass.com/api/favorites/save', {
           favoritesArray, emailId: this.state.emailId
         })
         .then((response) => {
@@ -1769,321 +1792,381 @@ class RequestEndorsements extends Component {
   render() {
 
       return (
-          <div>
-              <div>
-                  <div className="row-20">
-                    {(!window.location.pathname.includes('/app/walkthrough')) && (
-                      <p className="heading-text-2">Request an Endorsement</p>
+          <View>
+              <View>
+                  <View className="row-20">
+                    {(!this.props.fromWalkthrough) && (
+                      <Text className="heading-text-2">Request an Endorsement</Text>
                     )}
-                    <p className="row-5 description-text-1">Request endorsements, where endorsers (e.g., teachers, supervisors, mentors) score you on skills relevant to specific career pathways or opportunities. The endorsements can be imported into applications, showcased to employers, and used for recommending opportunities. <button className="background-button cta-color underline-text offset-underline description-text-1" onClick={() => this.prepareExampleEndorsement()}>See Example Endorsement</button></p>
-                  </div>
+                    <Text className="row-5 description-text-1">Request endorsements, where endorsers (e.g., teachers, supervisors, mentors) score you on skills relevant to specific career pathways or opportunities. The endorsements can be imported into applications, showcased to employers, and used for recommending opportunities. <TouchableOpacity onPress={() => this.prepareExampleEndorsement()}><Text style={[styles.descriptionText1,styles.ctaColor,styles.underlineText,styles.offsetUnderline]}> See Example Endorsement</Text></TouchableOpacity></Text>
+                  </View>
 
-                  {(window.location.pathname.includes('/app/walkthrough')) && (
-                    <div className="row-10">
-                      <div className="container-left">
-                        <label className="profile-label">Would you like to request an endorsement?<label className="error-color">*</label></label>
-                        <select name="enableRequestEndorsement" value={this.state.enableRequestEndorsement} onChange={this.formChangeHandler} className="dropdown">
-                          {['','Yes','No'].map(value =>
-                            <option key={value} value={value}>{value}</option>
-                          )}
-                        </select>
-                      </div>
-                      <div className="clear" />
-                    </div>
+                  {(this.props.fromWalkthrough) && (
+                    <View className="row-10">
+                      <View className="container-left">
+                        <Text className="profile-label">Would you like to request an endorsement?<Text className="error-color">*</Text></Text>
+                        <Picker
+                          selectedValue={this.state.enableRequestEndorsement}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("enableRequestEndorsement",itemValue)
+                          }>
+                          {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      </View>
+                      <View className="clear" />
+                    </View>
                   )}
 
-                  {(this.state.enableRequestEndorsement === 'Yes' || !window.location.pathname.includes('/app/walkthrough')) && (
-                    <div>
+                  {(this.state.enableRequestEndorsement === 'Yes' || !this.props.fromWalkthrough) && (
+                    <View>
                       {(this.state.controlledRequest) ? (
-                        <div>
-                          <div>
-                            <div className="row-10">
-                              <div className="container-left">
-                                <p className="profile-label">Search Portal<label className="error-color">*</label></p>
-                                <div className="standard-border float-left full-width row-3 horizontal-padding-7">
-                                  <div className="search-icon-container">
-                                    <img src={searchIcon} alt="Compass search icon"/>
-                                  </div>
-                                  <div className="filter-search-container width-80-percent" >
-                                    <input type="text" className="text-field clear-border" placeholder="Search members of the portal..." name="searchMembers" autoComplete="off" value={this.state.searchStringMembers} onChange={this.formChangeHandler}/>
-                                  </div>
-                                </div>
+                        <View>
+                          <View>
+                            <View className="row-10">
+                              <View className="container-left">
+                                <Text className="profile-label">Search Portal<Text className="error-color">*</Text></Text>
+                                <View className="standard-border float-left full-width row-3 horizontal-padding-7">
+                                  <View className="search-icon-container">
+                                    <Image source={{ uri: searchIcon}}/>
+                                  </View>
+                                  <View className="filter-search-container width-80-percent" >
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("searchMembers" , text)}
+                                      value={this.state.searchStringMembers}
+                                      placeholder="Search members of the portal..."
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                </View>
 
                                 {(this.state.searchIsAnimating) ? (
-                                  <div className="flex-container flex-center full-space">
-                                    <div>
-                                      <div className="super-spacer" />
+                                  <View className="flex-container flex-center full-space">
+                                    <View>
+                                      <View className="super-spacer" />
 
-                                      <img src={loadingGIF} alt="Compass loading gif icon" className="image-auto-80 center-horizontally"/>
-                                      <div className="spacer" /><div className="spacer" /><div className="spacer" />
-                                      <p className="center-text cta-color bold-text">Searching...</p>
+                                      <ActivityIndicator
+                                         animating = {this.state.animating}
+                                         color = '#87CEFA'
+                                         size = "large"
+                                         style={[styles.square80, styles.centerHorizontally]}/>
 
-                                    </div>
-                                  </div>
+                                      <View className="spacer" /><View className="spacer" /><View className="spacer" />
+                                      <Text className="center-text cta-color bold-text">Searching...</Text>
+
+                                    </View>
+                                  </View>
                                 ) : (
-                                  <div>
+                                  <View>
                                     {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
-                                      <div>
+                                      <View>
                                         {this.state.memberOptions.map((value, optionIndex) =>
-                                          <div key={value._id} className="left-text bottom-margin-5 full-width">
-                                            <button className="background-button" onClick={() => this.searchItemClicked(value, 'member',optionIndex)}>
-                                              <div className="left-padding full-width top-padding">
-                                                <div className="float-left right-padding">
-                                                  <img src={profileIconDark} alt="Compass employer icon icon" className="image-auto-22" />
-                                                </div>
-                                                <div className="float-left">
-                                                  <p className="cta-color">{value.firstName} {value.lastName}</p>
-                                                  <p className="description-text-3 left-text">{value.roleName}</p>
-                                                </div>
-                                              </div>
-                                            </button>
-                                          </div>
+                                          <View key={value._id} className="left-text bottom-margin-5 full-width">
+                                            <TouchableOpacity className="background-button" onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
+                                              <View className="left-padding full-width top-padding">
+                                                <View className="float-left right-padding">
+                                                  <Image source={{ uri: profileIconDark}} className="image-auto-22" />
+                                                </View>
+                                                <View className="float-left">
+                                                  <Text className="cta-color">{value.firstName} {value.lastName}</Text>
+                                                  <Text className="description-text-3 left-text">{value.roleName}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          </View>
                                         )}
-                                      </div>
+                                      </View>
                                     )}
-                                  </div>
+                                  </View>
                                 )}
 
-                              </div>
-                              <div className="container-right">
-                                <p className="profile-label">Relationship<label className="error-color">*</label></p>
-                                <select name="relationship" value={this.state.relationship} className="dropdown" onChange={this.formChangeHandler}>
-                                    <option />
-                                    <option value="Friend">Friend</option>
-                                    <option value="Relative">Relative</option>
-                                    <option value="Classmate">Classmate</option>
-                                    <option value="Work Colleague">Work Colleague</option>
-                                    <option value="Project Teammate">Project Teammate</option>
-                                    <option value="Teacher">Teacher</option>
-                                    <option value="Direct Supervisor">Direct Supervisor</option>
-                                    <option value="Counselor">Counselor</option>
-                                    <option value="Mentor">Mentor</option>
-                                    <option value="Other">Other</option>
-                                    <option value="Anonymous">Anonymous</option>
-                                </select>
-                              </div>
-                              <div className="clear" />
-                            </div>
-                          </div>
-                        </div>
+                              </View>
+                              <View className="container-right">
+                                <Text className="profile-label">Relationship<Text className="error-color">*</Text></Text>
+                                <Picker
+                                  selectedValue={this.state.relationship}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("relationship",itemValue)
+                                  }>
+                                  <Picker.Item label="" value="" />
+                                  <Picker.Item label="Friend" value="Friend" />
+                                  <Picker.Item label="Relative" value="Relative" />
+                                  <Picker.Item label="Classmate" value="Classmate" />
+                                  <Picker.Item label="Work Colleague" value="Work Colleague" />
+                                  <Picker.Item label="Project Teammate" value="Project Teammate" />
+                                  <Picker.Item label="Teacher" value="Teacher" />
+                                  <Picker.Item label="Direct Supervisor" value="Direct Supervisor" />
+                                  <Picker.Item label="Counselor" value="Counselor" />
+                                  <Picker.Item label="Mentor" value="Mentor" />
+                                  <Picker.Item label="Other" value="Other" />
+                                  <Picker.Item label="Anonymous" value="Anonymous" />
+                                </Picker>
+                              </View>
+                              <View className="clear" />
+                            </View>
+                          </View>
+                        </View>
                       ) : (
-                        <div>
-                          <div>
-                            <div className="row-10">
-                              <div className="container-left">
-                                <label className="profile-label">Endorser First Name<label className="error-color">*</label></label>
-                                <input type="text" className="text-field" placeholder="Endorser first name..." name="firstName" value={this.state.recipientFirstName} onChange={this.formChangeHandler}></input>
-                              </div>
-                              <div className="container-right">
-                                <label className="profile-label">Endorser Last Name<label className="error-color">*</label></label>
-                                <input type="text" className="text-field" placeholder="Endorser last name..." name="lastName" value={this.state.recipientLastName} onChange={this.formChangeHandler}></input>
-                              </div>
-                              <div className="clear" />
-                            </div>
+                        <View>
+                          <View>
+                            <View className="row-10">
+                              <View className="container-left">
+                                <Text className="profile-label">Endorser First Name<Text className="error-color">*</Text></Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("firstName" , text)}
+                                  value={this.state.recipientFirstName}
+                                  placeholder="Endorser first name..."
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                              <View className="container-right">
+                                <Text className="profile-label">Endorser Last Name<Text className="error-color">*</Text></Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("lastName" , text)}
+                                  value={this.state.recipientLastName}
+                                  placeholder="Endorser last name..."
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                              <View className="clear" />
+                            </View>
 
-                            <div className="edit-profile-row">
-                              <div className="container-left">
-                                <label className="profile-label">Endorser Email<label className="error-color">*</label></label>
-                                <input type="text" className="text-field" placeholder="Endorser email..." name="email" value={this.state.recipientEmail} onChange={this.formChangeHandler}></input>
-                              </div>
-                              <div className="container-right">
-                                <p className="profile-label">Relationship<label className="error-color">*</label></p>
-                                <select name="relationship" value={this.state.relationship} className="dropdown" onChange={this.formChangeHandler}>
-                                    <option />
-                                    <option value="Friend">Friend</option>
-                                    <option value="Relative">Relative</option>
-                                    <option value="Classmate">Classmate</option>
-                                    <option value="Work Colleague">Work Colleague</option>
-                                    <option value="Project Teammate">Project Teammate</option>
-                                    <option value="Teacher">Teacher</option>
-                                    <option value="Direct Supervisor">Direct Supervisor</option>
-                                    <option value="Counselor">Counselor</option>
-                                    <option value="Mentor">Mentor</option>
-                                    <option value="Other">Other</option>
-                                    <option value="Anonymous">Anonymous</option>
-                                </select>
-                              </div>
-                              <div className="clear" />
-                            </div>
-                          </div>
-                        </div>
+                            <View className="edit-profile-row">
+                              <View className="container-left">
+                                <Text className="profile-label">Endorser Email<Text className="error-color">*</Text></Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("email" , text)}
+                                  value={this.state.recipientEmail}
+                                  placeholder="Endorser email..."
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                              <View className="container-right">
+                                <Text className="profile-label">Relationship<Text className="error-color">*</Text></Text>
+                                <Picker
+                                  selectedValue={this.state.relationship}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("relationship",itemValue)
+                                  }>
+                                  <Picker.Item label="" value="" />
+                                  <Picker.Item label="Friend" value="Friend" />
+                                  <Picker.Item label="Relative" value="Relative" />
+                                  <Picker.Item label="Classmate" value="Classmate" />
+                                  <Picker.Item label="Work Colleague" value="Work Colleague" />
+                                  <Picker.Item label="Project Teammate" value="Project Teammate" />
+                                  <Picker.Item label="Teacher" value="Teacher" />
+                                  <Picker.Item label="Direct Supervisor" value="Direct Supervisor" />
+                                  <Picker.Item label="Counselor" value="Counselor" />
+                                  <Picker.Item label="Mentor" value="Mentor" />
+                                  <Picker.Item label="Other" value="Other" />
+                                  <Picker.Item label="Anonymous" value="Anonymous" />
+                                </Picker>
+                              </View>
+                              <View className="clear" />
+                            </View>
+                          </View>
+                        </View>
                       )}
 
-                      <div className="row-10">
-                        <div className="container-left">
-                          <label className="profile-label">Select a Goal Type<label className="error-color">*</label></label>
-                          <select name="goalType" value={this.state.goalType.description} onChange={this.formChangeHandler} className="dropdown">
-                            {this.state.goalTypeOptions.map(value =>
-                              <option key={value.description} value={value.description}>{value.description}</option>
-                            )}
-                          </select>
-                          <div className="clear" />
-                        </div>
-                        <div className="container-right">
+                      <View className="row-10">
+                        <View className="container-left">
+                          <Text className="profile-label">Select a Goal Type<Text className="error-color">*</Text></Text>
+                          <Picker
+                            selectedValue={this.state.goalType.description}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("goalType",itemValue)
+                            }>
+                            {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
+                          </Picker>
+                          <View className="clear" />
+                        </View>
+                        <View className="container-right">
                           {(this.state.goalType.name === 'Career') && (
-                            <div>
-                              <p className="profile-label">Pathway<label className="error-color">*</label></p>
+                            <View>
+                              <Text className="profile-label">Pathway<Text className="error-color">*</Text></Text>
                               {(this.state.activeOrg === 'dpscd' && this.state.pathway) ? (
-                                <div>
-                                  <p className="heading-text-5 description-text-color">{this.state.pathway}</p>
-                                </div>
+                                <View>
+                                  <Text className="heading-text-5 description-text-color">{this.state.pathway}</Text>
+                                </View>
                               ) : (
-                                <div>
-                                  <select name="pathway" value={this.state.selectedPathway} className="dropdown" onChange={this.formChangeHandler}>
-                                    {this.state.pathwayOptions.map(value =>
-                                      <option key={value.key} value={value.value}>{value.value}</option>
-                                    )}
-                                  </select>
-                                </div>
+                                <View>
+                                  <Picker
+                                    selectedValue={this.state.selectedPathway}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("pathway",itemValue)
+                                    }>
+                                    {this.state.pathwayOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                  </Picker>
+                                </View>
                               )}
-                            </div>
+                            </View>
                           )}
                           {(this.state.goalType.name === 'Opportunity') && (
-                            <div>
-                              <label className="profile-label">Select an Opportunity</label>
-                              <div className="calc-column-offset-70">
-                                <input type="text" className="text-field" placeholder="Search work opportunities..." name="searchOpportunities" value={this.state.searchStringOpportunities} onChange={this.formChangeHandler}></input>
-                              </div>
-                              <div className="fixed-column-70 left-padding">
-                                <button className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('opportunity')}>Add</button>
-                              </div>
-                              <div className="clear" />
+                            <View>
+                              <Text className="profile-label">Select an Opportunity</Text>
+                              <View className="calc-column-offset-70">
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("searchOpportunities" , text)}
+                                  value={this.state.searchStringOpportunities}
+                                  placeholder="Search work opportunities..."
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                              <View className="fixed-column-70 left-padding">
+                                <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text>Add</Text></TouchableOpacity>
+                              </View>
+                              <View className="clear" />
 
                               {(this.state.searchIsAnimating) ? (
-                                <div className="flex-container flex-center full-space">
-                                  <div>
-                                    <div className="super-spacer" />
+                                <View className="flex-container flex-center full-space">
+                                  <View>
+                                    <View className="super-spacer" />
 
-                                    <img src={loadingGIF} alt="Compass loading gif icon" className="image-auto-80 center-horizontally"/>
-                                    <div className="spacer" /><div className="spacer" /><div className="spacer" />
-                                    <p className="center-text cta-color bold-text">Searching...</p>
+                                    <ActivityIndicator
+                                       animating = {this.state.animating}
+                                       color = '#87CEFA'
+                                       size = "large"
+                                       style={[styles.square80, styles.centerHorizontally]}/>
 
-                                  </div>
-                                </div>
+                                    <View className="spacer" /><View className="spacer" /><View className="spacer" />
+                                    <Text className="center-text cta-color bold-text">Searching...</Text>
+
+                                  </View>
+                                </View>
                               ) : (
-                                <div>
-                                  <div>
+                                <View>
+                                  <View>
                                     {(this.state.opportunityOptions) && (
-                                      <div className="card top-margin">
+                                      <View className="card top-margin">
                                         {this.state.opportunityOptions.map((value, optionIndex) =>
-                                          <div key={value._id} className="left-text bottom-margin-5 full-width">
-                                            <button className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value, 'opportunity')}>
-                                              <div className="full-width">
-                                                <div className="fixed-column-40">
-                                                  <div className="mini-spacer" />
-                                                  <img src={experienceIcon} alt="Compass employer icon icon" className="image-auto-22" />
-                                                </div>
-                                                <div className="calc-column-offset-40">
-                                                  <p className="cta-color">{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</p>
-                                                </div>
-                                              </div>
-                                            </button>
-                                          </div>
+                                          <View key={value._id} className="left-text bottom-margin-5 full-width">
+                                            <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'opportunity')}>
+                                              <View className="full-width">
+                                                <View className="fixed-column-40">
+                                                  <View className="mini-spacer" />
+                                                  <Image source={{ uri: experienceIcon}} className="image-auto-22" />
+                                                </View>
+                                                <View className="calc-column-offset-40">
+                                                  <Text className="cta-color">{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          </View>
                                         )}
-                                      </div>
+                                      </View>
                                     )}
-                                  </div>
+                                  </View>
 
-                                  <div>
+                                  <View>
 
                                     {this.renderTags('opportunity')}
-                                    <div className="clear" />
+                                    <View className="clear" />
 
-                                  </div>
+                                  </View>
 
-                                </div>
+                                </View>
                               )}
-                            </div>
+                            </View>
                           )}
 
-                        </div>
-                        <div className="clear" />
-                        {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="description-text-2 error-color row-5">{this.state.errorMessage}</p>}
-                        {(this.state.successMessage && this.state.successMessage !== '') && <p className="description-text-2 cta-color row-5">{this.state.successMessage}</p>}
+                        </View>
+                        <View className="clear" />
+                        {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text> : <View />}
+                        {(this.state.successMessage && this.state.successMessage !== '') ? <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text> : <View />}
                         {/*
                         {(this.state.orgFocus === 'Placement') ? (
-                          <div>
-                            <p className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</p>
-                          </div>
+                          <View>
+                            <Text className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</Text>
+                          </View>
                         ) : (
-                          <div>
-                            <p className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</p>
-                          </div>
+                          <View>
+                            <Text className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</Text>
+                          </View>
                         )}*/}
-                      </div>
+                      </View>
 
 
-                      <div>
+                      <View>
 
-                        <div className="row-10">
-                          <div className="container-left">
-                            <label className="profile-label">Add a Competency</label>
-                            <div className="calc-column-offset-70">
-                              <input type="text" className="text-field" placeholder="Search competencies..." name="searchCompetencies" value={this.state.searchStringCompetencies} onChange={this.formChangeHandler}></input>
-                            </div>
-                            <div className="fixed-column-70 left-padding">
-                              <button className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onClick={() => this.addItem('competency')}>Add</button>
-                            </div>
-                            <div className="clear" />
-                          </div>
-                          <div className="clear" />
+                        <View className="row-10">
+                          <View className="container-left">
+                            <Text className="profile-label">Add a Competency</Text>
+                            <View className="calc-column-offset-70">
+                              <TextInput
+                                style={styles.textInput}
+                                onChangeText={(text) => this.formChangeHandler("searchCompetencies" , text)}
+                                value={this.state.searchStringCompetencies}
+                                placeholder="Search competencies..."
+                                placeholderTextColor="grey"
+                              />
+                            </View>
+                            <View className="fixed-column-70 left-padding">
+                              <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onPress={() => this.addItem('competency')}><Text>Add</Text></TouchableOpacity>
+                            </View>
+                            <View className="clear" />
+                          </View>
+                          <View className="clear" />
 
                           {(this.state.competencyOptions && this.state.competencyOptions.length > 0) && (
-                            <div>
+                            <View>
                               {this.state.competencyOptions.map((value, optionIndex) =>
-                                <div key={value._id} className="left-text bottom-margin-5 full-width">
-                                  <button className="background-button" onClick={() => this.searchItemClicked(value, 'competency',optionIndex)}>
-                                    <div className="left-padding full-width top-padding">
-                                      <div className="float-left right-padding">
-                                        <img src={skillsIcon} alt="Compass employer icon icon" className="image-auto-22" />
-                                      </div>
-                                      <div className="float-left">
-                                        <p className="cta-color">{value.name}</p>
+                                <View key={value._id} className="left-text bottom-margin-5 full-width">
+                                  <TouchableOpacity className="background-button" onPress={() => this.searchItemClicked(value, 'competency',optionIndex)}>
+                                    <View className="left-padding full-width top-padding">
+                                      <View className="float-left right-padding">
+                                        <Image source={{ uri: skillsIcon}} className="image-auto-22" />
+                                      </View>
+                                      <View className="float-left">
+                                        <Text className="cta-color">{value.name}</Text>
                                         {(value.type) && (
-                                          <p className="description-text-3 left-text">{value.type}</p>
+                                          <Text className="description-text-3 left-text">{value.type}</Text>
                                         )}
-                                      </div>
-                                    </div>
-                                  </button>
-                                </div>
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>
                               )}
-                            </div>
+                            </View>
                           )}
-                        </div>
+                        </View>
 
                         {(this.state.competencies.length > 0) && (
-                          <div>
-                            <div className="top-padding">
-                              <label className="profile-label">Competencies You Are Requesting to be endorsed:</label>
-                            </div>
+                          <View>
+                            <View className="top-padding">
+                              <Text className="profile-label">Competencies You Are Requesting to be endorsed:</Text>
+                            </View>
 
                             {this.renderTags('competency')}
-                          </div>
+                          </View>
                         )}
 
-                        <div className="clear" />
-                      </div>
+                        <View className="clear" />
+                      </View>
 
-                      <div className="clear" />
+                      <View className="clear" />
 
-                      { (this.state.successMessage!== '') && <p className="success-message">{this.state.successMessage}</p> }
-                      { (this.state.errorMessage!== '') && <p className="error-message">{this.state.errorMessage}</p> }
+                      { (this.state.successMessage!== '') && <Text className="success-message">{this.state.successMessage}</Text> }
+                      { (this.state.errorMessage!== '') && <Text className="error-message">{this.state.errorMessage}</Text> }
 
-                      <div className="row-30">
-                        <div className="spacer" />
-                        <button className="btn btn-primary" onClick={() => this.handleSubmit()}>Request Endorsement</button>
-                      </div>
-                    </div>
+                      <View className="row-30">
+                        <View className="spacer" />
+                        <TouchableOpacity className="btn btn-primary" onPress={() => this.handleSubmit()}><Text>Request Endorsement</Text></TouchableOpacity>
+                      </View>
+                    </View>
                   )}
 
                   {(this.state.showEndorsementDetails) && (
-                    <div>
+                    <View>
                       <SubEndorsementDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedEndorsement={this.state.selectedEndorsement} orgCode={this.state.activeOrg} />
-                    </div>
+                    </View>
                   )}
 
-              </div>
-          </div>
+              </View>
+          </View>
 
       )
   }
