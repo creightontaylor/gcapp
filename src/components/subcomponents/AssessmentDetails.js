@@ -995,7 +995,7 @@ class AssessmentDetails extends Component {
                   <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
                   <View style={[styles.centerHorizontally, styles.flexCenter]}>
-                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.history.push({ pathname: assessmentDetailsPath + '/' + this.state.assessmentTitle.replace(" ", "-").toLowerCase(), state: { assessments: this.state.assessments, index: this.state.index, assessment: this.state.assessments[this.state.index], resultsData: this.state.resultsData }})}><Text style={[styles.whiteColor]}>{(this.state.resultsData && this.state.resultsData[this.state.index]) ? "Edit" : "Start"}</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.navigation.navigate("TakeAssessment", { assessments: this.state.assessments, index: this.state.index, assessment: this.state.assessments[this.state.index], resultsData: this.state.resultsData })}><Text style={[styles.whiteColor]}>{(this.state.resultsData && this.state.resultsData[this.state.index]) ? "Edit" : "Start"}</Text></TouchableOpacity>
                   </View>
                   <View style={[styles.centerHorizontally,styles.row10,styles.rowDirection,styles.flex1]}>
                     <View style={[styles.flex50,styles.alignEnd, styles.rightPadding]}>
@@ -1047,7 +1047,6 @@ class AssessmentDetails extends Component {
                           <Text style={[styles.whiteColor]}>Results</Text>
                         </View>
                       </View>
-
                     </View>
                   )}
 

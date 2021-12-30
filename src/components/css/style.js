@@ -242,6 +242,12 @@ module.exports = StyleSheet.create({
   topMargin20: {
     marginTop: 20
   },
+  topMargin30: {
+    marginTop: 30
+  },
+  topMargin40: {
+    marginTop: 40
+  },
   topMargin50: {
     marginTop: 50
   },
@@ -356,6 +362,9 @@ module.exports = StyleSheet.create({
   },
   padding30: {
     padding: 30
+  },
+  padding40: {
+    padding: 40
   },
   horizontalPadding3: {
     paddingLeft: 3,
@@ -1024,6 +1033,14 @@ module.exports = StyleSheet.create({
     borderRadius: 3,
     transition: 'background-color 0.2s, border 0.2s, color 0.2s'
   },
+  notiBubbleInfo7of9: {
+    paddingTop: 7,
+    paddingBottom: 7,
+    paddingLeft: 9,
+    paddingRight: 9,
+    borderWidth: 1,
+    borderColor: primaryColor
+  },
   filterFieldSearch: {
     borderWidth: 1,
     borderColor: faintColor,
@@ -1093,6 +1110,9 @@ module.exports = StyleSheet.create({
   },
   rotate270: {
     transform: [{ rotate: '270deg'}]
+  },
+  capitalizeText: {
+    textTransform: 'capitalize'
   }
 
 });
