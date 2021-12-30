@@ -294,6 +294,10 @@ module.exports = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10
   },
+  verticalMargin20: {
+    marginTop: 20,
+    marginBottom: 20
+  },
   topPadding: {
     paddingTop: 10
   },
@@ -381,6 +385,10 @@ module.exports = StyleSheet.create({
   horizontalPadding10: {
     paddingLeft: 10,
     paddingRight: 10
+  },
+  horizontalPadding15: {
+    paddingLeft: 15,
+    paddingRight: 15
   },
   horizontalPadding20: {
     paddingLeft: 20,
@@ -543,6 +551,9 @@ module.exports = StyleSheet.create({
   height40: {
     height: 40
   },
+  height76: {
+    height: 76
+  },
   height150: {
     height: 150
   },
@@ -624,6 +635,9 @@ module.exports = StyleSheet.create({
   calcColumn280: {
     width: Dimensions.get('window').width - 280
   },
+  calcColumn330: {
+    width: Dimensions.get('window').width - 330
+  },
   calcColumn60Of50: {
     width: (Dimensions.get('window').width / 2) - 60
   },
@@ -657,11 +671,17 @@ module.exports = StyleSheet.create({
   flex25: {
     flex: 25
   },
+  flex30: {
+    flex: 30
+  },
   flex33: {
     flex: 33
   },
   flex50: {
     flex: 50
+  },
+  flex65: {
+    flex: 65
   },
   flex70: {
     flex: 70
@@ -846,6 +866,10 @@ module.exports = StyleSheet.create({
   secondaryBackgroundLight: {
     backgroundColor: 'rgba(112,219,219,0.5)'
   },
+  secondaryBorder: {
+    borderWidth: 1,
+    borderColor: '#70DBDB',
+  },
   tertiaryBackground: {
     backgroundColor: 'rgba(0,190,160,1)'
   },
@@ -853,10 +877,14 @@ module.exports = StyleSheet.create({
     backgroundColor: 'rgba(0,190,160,0.5)'
   },
   quaternaryBackground: {
-    backgroundColor: '#AFEEEE'
+    backgroundColor: '#0d98ba'
   },
   quaternaryBackgroundLight: {
     backgroundColor: 'rgba(13,152,186,0.5)'
+  },
+  quaternaryBorder: {
+    borderWidth: 1,
+    borderColor: '#0d98ba',
   },
   quinaryBackground: {
     backgroundColor: '#01796F'
@@ -1113,6 +1141,15 @@ module.exports = StyleSheet.create({
   },
   capitalizeText: {
     textTransform: 'capitalize'
+  },
+  progressBar: {
+    position: 'relative',
+    height: 12,
+    borderRadius: 50,
+  },
+  filler: {
+    borderRadius: 'inherit',
+    transition: 'width .2s ease-in'
   }
 
 });

@@ -2672,7 +2672,7 @@ class TakeAssessment extends Component {
 
                                 {(!this.props.fromWalkthrough && (this.props.fromApply || this.state.type !== 'skills')) && (
                                   <View style={[styles.flexCenter, styles.flex1]}>
-                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerTex]}>Submit</Text></TouchableOpacity>
+                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerText]}>Submit</Text></TouchableOpacity>
                                   </View>
                                 )}
 

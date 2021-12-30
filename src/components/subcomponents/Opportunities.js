@@ -3415,7 +3415,7 @@ class Opportunities extends Component {
     //                   </View>
     //                 ) : (
     //                   <View style={[styles.standardBorder,styles.roundedCorners]}>
-    //                     <View style={[styles.row5,styles.horizontalPadding10,styles.centerTex]}>
+    //                     <View style={[styles.row5,styles.horizontalPadding10,styles.centerText]}>
     //                       <Text style={[styles.descriptionText3,styles.boldText]}>Follow</Text>
     //                     </View>
     //                   </View>
