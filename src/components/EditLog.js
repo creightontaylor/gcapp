@@ -1,30 +1,25 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
 
-import SubCommunity from './subcomponents/Community';
-
-class Community extends Component {
+class EditLog extends Component {
   constructor(props) {
     super(props)
     this.state = {
     }
 
     this.retrieveData = this.retrieveData.bind(this)
-
   }
 
   componentDidMount() {
-    console.log('home component did mount');
+    console.log('componentDidMount edit log')
 
     this.retrieveData()
-
   }
 
   retrieveData = async() => {
     try {
-      console.log('are is this causing the error?')
-      //testing badges
+      const email = await AsyncStorage.getItem('email')
 
       if (email !== null) {
         // We have data!!
@@ -38,14 +33,12 @@ class Community extends Component {
   }
 
   render() {
-    // console.log('show style: ', Style.styles)
     return (
-      <ScrollView>
-        <SubCommunity />
-      </ScrollView>
-    );
+      <View>
+        <Text>Editlog</Text>
+      </View>
+    )
   }
-
 }
 
-export default Community;
+export default EditLog;

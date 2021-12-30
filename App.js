@@ -26,6 +26,8 @@ import AssessmentDetails from './src/components/AssessmentDetails';
 import TakeAssessment from './src/components/TakeAssessment';
 import Endorsements from './src/components/Endorsements';
 import RequestEndorsements from './src/components/RequestEndorsements';
+import Logs from './src/components/Logs';
+import EditLog from './src/components/EditLog';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -297,6 +299,8 @@ export default class App extends Component<Props> {
           <Stack.Screen name="TakeAssessment" component={TakeAssessment} />
           <Stack.Screen name="Endorsements" component={Endorsements} />
           <Stack.Screen name="RequestEndorsements" component={RequestEndorsements} />
+          <Stack.Screen name="Logs" component={Logs} />
+          <Stack.Screen name="EditLog" component={EditLog} />
         </Stack.Navigator>
       </NavigationContainer>
     );

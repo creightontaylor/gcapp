@@ -185,18 +185,18 @@ class EndorsementDetails extends Component {
                 <View>
                   {(value.rating !== "I'm Not Sure") && (
                     <View>
-                      <View style={[styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex30]}>
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.flex80]}>
                           <Text style={[styles.descriptionText2,styles.boldText]}>{value.name}</Text>
                         </View>
-                        <View style={[styles.flex65]}>
-                          <View style={[styles.halfSpacer]}/>
-                          <View style={[styles.progressBar,styles.ctaBorder,styles.flex1]}>
-                            <View style={[styles.flex1, styles.ctaBackgroundColor,styles.filler,{ width: (value.rating * 20).toString() + '%'}]} />
-                          </View>
-                        </View>
-                        <View style={[styles.flex5]}>
+                        <View style={[styles.flex20,styles.alignEnd]}>
                           <Text style={[styles.descriptionText2,styles.boldText]}>{(value.rating * 20).toString() + '%'}</Text>
+                        </View>
+                      </View>
+                      <View>
+                        <View style={[styles.halfSpacer]}/>
+                        <View style={[styles.progressBar,styles.ctaBorder]}>
+                          <View style={[styles.flex1, styles.ctaBackgroundColor,styles.filler,{ width: (value.rating * 20).toString() + '%'}]} />
                         </View>
                       </View>
 
@@ -631,10 +631,12 @@ class EndorsementDetails extends Component {
                        <View style={[styles.centerText]}>
                          <Image source={{uri: confidentialityIcon}} style={[styles.square100,styles.contain,styles.verticalMargin20,styles.centerHorizontally]} />
 
-                         <Text style={[styles.headingText4]}>This Endorsement is Confidential</Text>
+                         <Text style={[styles.headingText4,styles.flex1,styles.centerText]}>This Endorsement is Confidential</Text>
                          <View style={[styles.spacer]}/>
                          <Text style={[styles.descriptionTextColor,styles.centerText]}>This endorsement has been marked confidential by the endorser. It will automatically be imported into internship applications.</Text>
                          <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+
+                         <TouchableOpacity style={[styles.btnPrimary,styles.flex1,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor,styles.centerText]}>Close Modal</Text></TouchableOpacity>
                        </View>
                      </View>
                    )}

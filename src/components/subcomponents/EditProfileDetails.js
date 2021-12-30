@@ -6377,7 +6377,7 @@ class EditProfileDetails extends Component {
                     <View style={styles.spacer} /><View style={styles.spacer} />
                     <View style={styles.horizontalLine} />
 
-                    <View style={[styles.row10,style.rowDirection]}>
+                    <View style={[styles.row10,styles.rowDirection]}>
                       <View style={styles.calcColumn110}>
                         <View style={styles.spacer} /><View style={styles.halfSpacer} />
                         <Text style={[styles.headingText3]}>Experience (Optional)</Text>

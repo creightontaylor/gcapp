@@ -61,7 +61,7 @@ class Messages extends Component {
 
   render() {
     return (
-      <View style={styles.tableView}>
+      <View>
         <Text>We're in messages!</Text>
       </View>
     )
@@ -69,79 +69,3 @@ class Messages extends Component {
 }
 
 export default Messages;
-
-const styles = {
-  tableView: {
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-    backgroundColor: 'white',
-    marginTop: 20,
-    marginLeft: 20,
-    marginRight: 20
-  },
-  tableViewCell: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    padding: 15,
-    flexDirection: 'row'
-  },
-  tableViewCellIconContainer: {
-    flex: 15,
-    paddingRight: 10
-  },
-  tableViewCellIcon: {
-    width: 50,
-    height: 50,
-    padding: 5
-  },
-  tableViewCellTextContainer: {
-    flex: 75,
-    paddingRight: 10
-  },
-  tableViewCellTitleContainer: {
-    flex: 2,
-    paddingBottom: 10,
-    marginBottom: -12
-  },
-  tableViewCellTitle: {
-    fontSize: 18
-  },
-  tableViewCellSubtitleContainer: {
-    flex: 1,
-  },
-  tableViewCellSubtitle: {
-    fontSize: 14
-  },
-  tableViewCellCTAContainer: {
-    flex: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tableViewCellCTA1container: {
-    width: 20,
-    height: 20,
-    marginBottom: -5
-  },
-  tableViewCellCTA2Container: {
-    width: 20,
-    height: 20,
-    marginTop: -10
-  },
-  successMessage: {
-    fontSize: 20,
-    color: '#73BAE6',
-    marginTop: 15
-  },
-  errorMessage: {
-    fontSize: 20,
-    color: '#FF8C00',
-    marginTop: 15
-  },
-};
