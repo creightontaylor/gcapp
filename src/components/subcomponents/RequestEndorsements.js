@@ -984,13 +984,13 @@ class RequestEndorsements extends Component {
 
         rows.push(
           <View key={i}>
-            <View>
-              <View className="fixed-column-40">
-                  <TouchableOpacity className="background-button float-left" onPress={() => this.removeSkillTraits(index,'skill')}>
-                    <Image source={{ uri: deniedIcon}} className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
+            <View style={[styles.rowDirection]}>
+              <View style={[styles.width40]}>
+                  <TouchableOpacity onPress={() => this.removeSkillTraits(index,'skill')}>
+                    <Image source={{ uri: deniedIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.padding3,styles.topMargin5]}/>
                   </TouchableOpacity>
                </View>
-               <View className="calc-column-offset-40-of-75">
+               <View style={[styles.calcColumn100]}>
                  <TextInput
                    style={[styles.textInput,styles.capitalizeText]}
                    onChangeText={(text) => this.formChangeHandler(nameName , text)}
@@ -999,38 +999,37 @@ class RequestEndorsements extends Component {
                    placeholderTextColor="grey"
                  />
                </View>
-               <View className="relative-column-1 height-20"/>
-               <View className="relative-column-24">
-                 <Picker
-                   selectedValue={this.state.skillTraits[i - 1].skillType}
-                   onValueChange={(itemValue, itemIndex) =>
-                     this.formChangeHandler(typeName,itemValue)
-                   }>
-                   {this.state.skillTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                 </Picker>
-               </View>
-               <View className="clear" />
-               <View className="spacer"/>
-               {(this.state.selectedIndex === index && this.state.skillOptions.length > 0) && (
-                 <View className="full-width">
-                   <View className="spacer"/>
-                   {this.state.skillOptions.map((value, optionIndex) =>
-                     <View key={value._id} className="left-text bottom-margin-5 full-width">
-                       <TouchableOpacity className="background-button" onPress={() => this.skillTraitClicked(index, optionIndex, 'skill')}>
-                         <View className="horizontal-padding-50 full-width">
-                           <View className="float-left right-padding top-margin">
-                             <Image source={{ uri: skillsIcon}} className="image-auto-22" />
-                           </View>
-                           <View className="float-left">
-                             <Text className="cta-color">{value.name}</Text>
-                           </View>
-                         </View>
-                       </TouchableOpacity>
-                     </View>
-                   )}
-                 </View>
-               )}
             </View>
+            <View>
+              <Picker
+                selectedValue={this.state.skillTraits[i - 1].skillType}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.formChangeHandler(typeName,itemValue)
+                }>
+                {this.state.skillTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+              </Picker>
+            </View>
+            <View style={[styles.spacer]}/>
+            {(this.state.selectedIndex === index && this.state.skillOptions.length > 0) && (
+              <View style={[styles.calcColumn60]}>
+                <View style={[styles.spacer]}/>
+                {this.state.skillOptions.map((value, optionIndex) =>
+                  <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn60]}>
+                    <TouchableOpacity onPress={() => this.skillTraitClicked(index, optionIndex, 'skill')}>
+                      <View style={[styles.horizontalPadding50,styles.rowDirection]}>
+                        <View style={[styles.rightPadding,styles.topMargin]}>
+                          <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
+                        </View>
+                        <View>
+                          <Text style={[styles.ctaColor]}>{value.name}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            )}
+
           </View>
         )
       }
@@ -1056,13 +1055,13 @@ class RequestEndorsements extends Component {
 
         rows.push(
           <View key={i}>
-            <View>
-              <View className="fixed-column-40">
-                  <TouchableOpacity className="background-button float-left" onPress={() => this.removeSkillTraits(index,'skill')}>
-                    <Image source={{ uri: deniedIcon}} className="image-auto-30 float-left right-margin padding-3 top-margin-5"/>
+            <View style={[styles.rowDirection]}>
+              <View style={[styles.width40]}>
+                  <TouchableOpacity onPress={() => this.removeSkillTraits(index,'skill')}>
+                    <Image source={{ uri: deniedIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.padding3,styles.topMargin5]}/>
                   </TouchableOpacity>
                </View>
-               <View className="calc-column-offset-40">
+               <View style={[styles.calcColumn100]}>
                  <Picker
                    selectedValue={this.state.skillTraits[i - 1].name}
                    onValueChange={(itemValue, itemIndex) =>
@@ -1072,8 +1071,8 @@ class RequestEndorsements extends Component {
                    {this.state.traitOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                  </Picker>
                </View>
-               <View className="clear" />
-               <View className="spacer"/>
+
+               <View style={[styles.spacer]}/>
 
             </View>
           </View>
@@ -1250,24 +1249,23 @@ class RequestEndorsements extends Component {
 
         return (
           <View key={"favoritedCareers"}>
-            <View className="spacer" />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {favoritedCareers.map((value, optionIndex) =>
-              <View key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex}>
 
-                <View className="close-button-container-1" >
-                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
-                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                  <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity className="background-button float-left right-padding-5" onPress={() => this.addCompetencies(this.state.favoritedCareerDetails[optionIndex], type)}>
-                  <View className="half-spacer" />
-                  <View className={(this.state.selectedCareer === value) ? "tag-container-active" : "tag-container-inactive"}>
-                    <Text className="description-text-2">{value}</Text>
+                <TouchableOpacity style={[styles.rightPadding5]} onPress={() => this.addCompetencies(this.state.favoritedCareerDetails[optionIndex], type)}>
+                  <View style={[styles.halfSpacer]} />
+                  <View style={(this.state.selectedCareer === value) ? [styles.padding7,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor,styles.whiteColor] : [styles.padding7,styles.horizontalPadding20,styles.roundedCorners,styles.standardBorder,styles.lightBackground,styles.whiteColor]}>
+                    <Text style={[styles.descriptionText2]}>{value}</Text>
                   </View>
-                  <View className="half-spacer" />
+                  <View style={[styles.halfSpacer]} />
                 </TouchableOpacity>
-
               </View>
             )}
           </View>
@@ -1279,21 +1277,20 @@ class RequestEndorsements extends Component {
         console.log('about to in', favoritedOpportunities)
         return (
           <View key={"favoritedOpportunities"}>
-            <View className="spacer" />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {favoritedOpportunities.map((value, optionIndex) =>
-              <View key={"career|" + optionIndex} className="float-left">
-
-                <View className="close-button-container-1" >
-                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
-                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+              <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
+                <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                  <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity className="background-button float-left right-padding-5" onPress={() => this.addCompetencies(this.state.favoritedOpportunityDetails[optionIndex], type)}>
-                  <View className="half-spacer" />
-                  <View className={(this.state.selectedOpportunity === value) ? "tag-container-active" : "tag-container-inactive"}>
-                    <Text className="description-text-2">{value}</Text>
+                <TouchableOpacity style={[styles.rightPadding5]} onPress={() => this.addCompetencies(this.state.favoritedOpportunityDetails[optionIndex], type)}>
+                  <View style={[styles.halfSpacer]} />
+                  <View style={(this.state.selectedOpportunity === value) ? [styles.padding7,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor,styles.whiteColor] : [styles.padding7,styles.horizontalPadding20,styles.roundedCorners,styles.standardBorder,styles.lightBackground,styles.whiteColor]}>
+                    <Text style={[styles.descriptionText2]}>{value}</Text>
                   </View>
-                  <View className="half-spacer" />
+                  <View style={[styles.halfSpacer]} />
                 </TouchableOpacity>
 
               </View>
@@ -1307,45 +1304,43 @@ class RequestEndorsements extends Component {
       const competencies = this.state.competencies
 
       if (competencies && competencies.length > 0) {
-        console.log('compare 0')
         return (
           <View key={"competencies"}>
-            <View className="spacer" />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {competencies.map((value, optionIndex) =>
-              <View key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
 
-                <View className="close-button-container-1" >
-                  <TouchableOpacity className="background-button" onPress={() => this.removeTag(optionIndex,type)}>
-                    <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                  <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
+                    <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
                 <View>
-                  <View className="half-spacer" />
+                  <View style={[styles.halfSpacer]} />
                   {(value.category === 'Ability') && (
-                    <View className="tag-container-8 primary-background primary-border white-text">
-                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    <View style={[styles.row7,styles.horizontalPadding20,styles.roundedCorners,styles.topMargin5,styles.bottomMargin5,styles.ctaBorder,styles.ctaBackgroundColor,styles.whiteColor]}>
+                      <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                     </View>
                   )}
+
                   {(value.category === 'Knowledge') && (
-                    <View className="tag-container-8 secondary-background secondary-border white-text">
-                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    <View style={[styles.row7,styles.horizontalPadding20,styles.roundedCorners,styles.topMargin5,styles.bottomMargin5,styles.secondaryBackground,styles.secondaryBorder,styles.whiteColor]}>
+                      <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                     </View>
                   )}
                   {(value.category === 'Soft Skill' || value.category === 'Work Style') && (
-                    <View className="tag-container-8 tertiary-background tertiary-border white-text">
-                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    <View style={[styles.row7,styles.horizontalPadding20,styles.roundedCorners,styles.topMargin5,styles.bottomMargin5,styles.tertiaryBackground,styles.tertiaryBorder,styles.whiteColor]}>
+                      <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                     </View>
                   )}
                   {(value.category === 'Hard Skill' || value.category === 'Tech Skill' || value.category === 'General Skill') && (
-                    <View className="tag-container-8 quaternary-background quaternary-border white-text">
-                      <Text className="description-text-2">{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                    <View style={[styles.row7,styles.horizontalPadding20,styles.roundedCorners,styles.topMargin5,styles.bottomMargin5,styles.quaternaryBackground,styles.quaternaryBorder,styles.whiteColor]}>
+                      <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                     </View>
                   )}
 
-                  <View className="half-spacer" />
+                  <View style={[styles.halfSpacer]} />
                 </View>
-                {console.log('compare 1: ',optionIndex, this.state.selectedCareer, value)}
-
               </View>
             )}
           </View>
@@ -1353,8 +1348,7 @@ class RequestEndorsements extends Component {
 
       } else {
         return (
-          <View key={"competencies"} className="top-padding-20">
-            {/*<Text className="description-text-2 error-color">Specify a career path or opportunity above for learning objectives to populate.</Text>*/}
+          <View key={"competencies"} style={[styles.topPadding20]}>
           </View>
         )
       }
@@ -1792,19 +1786,20 @@ class RequestEndorsements extends Component {
   render() {
 
       return (
-          <View>
-              <View>
-                  <View className="row-20">
+          <ScrollView>
+              <View style={[styles.card]}>
+                  <View style={[styles.row20]}>
                     {(!this.props.fromWalkthrough) && (
-                      <Text className="heading-text-2">Request an Endorsement</Text>
+                      <Text style={[styles.headingText2]}>Request an Endorsement</Text>
                     )}
-                    <Text className="row-5 description-text-1">Request endorsements, where endorsers (e.g., teachers, supervisors, mentors) score you on skills relevant to specific career pathways or opportunities. The endorsements can be imported into applications, showcased to employers, and used for recommending opportunities. <TouchableOpacity onPress={() => this.prepareExampleEndorsement()}><Text style={[styles.descriptionText1,styles.ctaColor,styles.underlineText,styles.offsetUnderline]}> See Example Endorsement</Text></TouchableOpacity></Text>
+                    <Text style={[styles.row5,styles.descriptionText1]}>Request endorsements, where endorsers (e.g., teachers, supervisors, mentors) score you on skills relevant to specific career pathways or opportunities. The endorsements can be imported into applications, showcased to employers, and used for recommending opportunities.</Text>
+                    <TouchableOpacity onPress={() => this.prepareExampleEndorsement()}><Text style={[styles.descriptionText1,styles.ctaColor,styles.underlineText,styles.offsetUnderline,styles.topPadding]}> See Example Endorsement</Text></TouchableOpacity>
                   </View>
 
                   {(this.props.fromWalkthrough) && (
-                    <View className="row-10">
-                      <View className="container-left">
-                        <Text className="profile-label">Would you like to request an endorsement?<Text className="error-color">*</Text></Text>
+                    <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                      <View style={[styles.flex50,styles.rightPadding]}>
+                        <Text style={[styles.row10]}>Would you like to request an endorsement?<Text style={[styles.errorColor]}>*</Text></Text>
                         <Picker
                           selectedValue={this.state.enableRequestEndorsement}
                           onValueChange={(itemValue, itemIndex) =>
@@ -1813,7 +1808,7 @@ class RequestEndorsements extends Component {
                           {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
                         </Picker>
                       </View>
-                      <View className="clear" />
+                      <View style={[styles.flex50]} />
                     </View>
                   )}
 
@@ -1822,14 +1817,14 @@ class RequestEndorsements extends Component {
                       {(this.state.controlledRequest) ? (
                         <View>
                           <View>
-                            <View className="row-10">
-                              <View className="container-left">
-                                <Text className="profile-label">Search Portal<Text className="error-color">*</Text></Text>
-                                <View className="standard-border float-left full-width row-3 horizontal-padding-7">
-                                  <View className="search-icon-container">
-                                    <Image source={{ uri: searchIcon}}/>
+                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                              <View style={[styles.flex50,styles.rightPadding]}>
+                                <Text style={[styles.row10]}>Search Portal<Text style={[styles.errorColor]}>*</Text></Text>
+                                <View style={[styles.standardBorder,styles.row3,styles.horizontalPadding5,styles.rowDirection]}>
+                                  <View style={[styles.topPadding,styles.leftPadding5]}>
+                                    <Image source={{ uri: searchIcon}} style={[styles.square15,styles.contain]}/>
                                   </View>
-                                  <View className="filter-search-container width-80-percent" >
+                                  <View style={[styles.calcColumn100]}>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("searchMembers" , text)}
@@ -1841,9 +1836,9 @@ class RequestEndorsements extends Component {
                                 </View>
 
                                 {(this.state.searchIsAnimating) ? (
-                                  <View className="flex-container flex-center full-space">
+                                  <View style={[styles.flexCenter,styles.flex1]}>
                                     <View>
-                                      <View className="super-spacer" />
+                                      <View style={[styles.superSpacer]} />
 
                                       <ActivityIndicator
                                          animating = {this.state.animating}
@@ -1851,8 +1846,8 @@ class RequestEndorsements extends Component {
                                          size = "large"
                                          style={[styles.square80, styles.centerHorizontally]}/>
 
-                                      <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                                      <Text className="center-text cta-color bold-text">Searching...</Text>
+                                      <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                      <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                                     </View>
                                   </View>
@@ -1861,15 +1856,15 @@ class RequestEndorsements extends Component {
                                     {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
                                       <View>
                                         {this.state.memberOptions.map((value, optionIndex) =>
-                                          <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                            <TouchableOpacity className="background-button" onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
-                                              <View className="left-padding full-width top-padding">
-                                                <View className="float-left right-padding">
-                                                  <Image source={{ uri: profileIconDark}} className="image-auto-22" />
+                                          <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn60]}>
+                                            <TouchableOpacity onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
+                                              <View style={[styles.leftPadding,styles.calcColumn60,styles.topPadding,styles.rowDirection]}>
+                                                <View style={[styles.rightPadding]}>
+                                                  <Image source={{ uri: profileIconDark}} style={[styles.square22,styles.contain]} />
                                                 </View>
-                                                <View className="float-left">
-                                                  <Text className="cta-color">{value.firstName} {value.lastName}</Text>
-                                                  <Text className="description-text-3 left-text">{value.roleName}</Text>
+                                                <View>
+                                                  <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
+                                                  <Text style={[styles.descriptionText3]}>{value.roleName}</Text>
                                                 </View>
                                               </View>
                                             </TouchableOpacity>
@@ -1881,8 +1876,8 @@ class RequestEndorsements extends Component {
                                 )}
 
                               </View>
-                              <View className="container-right">
-                                <Text className="profile-label">Relationship<Text className="error-color">*</Text></Text>
+                              <View style={[styles.flex50,styles.leftPadding]}>
+                                <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.relationship}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -1902,16 +1897,16 @@ class RequestEndorsements extends Component {
                                   <Picker.Item label="Anonymous" value="Anonymous" />
                                 </Picker>
                               </View>
-                              <View className="clear" />
+
                             </View>
                           </View>
                         </View>
                       ) : (
                         <View>
                           <View>
-                            <View className="row-10">
-                              <View className="container-left">
-                                <Text className="profile-label">Endorser First Name<Text className="error-color">*</Text></Text>
+                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                              <View style={[styles.flex50,styles.rightPadding]}>
+                                <Text style={[styles.row10]}>Endorser First Name<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("firstName" , text)}
@@ -1920,8 +1915,8 @@ class RequestEndorsements extends Component {
                                   placeholderTextColor="grey"
                                 />
                               </View>
-                              <View className="container-right">
-                                <Text className="profile-label">Endorser Last Name<Text className="error-color">*</Text></Text>
+                              <View style={[styles.flex50,styles.leftPadding]}>
+                                <Text style={[styles.row10]}>Endorser Last Name<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("lastName" , text)}
@@ -1930,12 +1925,12 @@ class RequestEndorsements extends Component {
                                   placeholderTextColor="grey"
                                 />
                               </View>
-                              <View className="clear" />
+
                             </View>
 
-                            <View className="edit-profile-row">
-                              <View className="container-left">
-                                <Text className="profile-label">Endorser Email<Text className="error-color">*</Text></Text>
+                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                              <View style={[styles.flex50,styles.rightPadding]}>
+                                <Text style={[styles.row10]}>Endorser Email<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("email" , text)}
@@ -1944,8 +1939,8 @@ class RequestEndorsements extends Component {
                                   placeholderTextColor="grey"
                                 />
                               </View>
-                              <View className="container-right">
-                                <Text className="profile-label">Relationship<Text className="error-color">*</Text></Text>
+                              <View style={[styles.flex50,styles.leftPadding]}>
+                                <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.relationship}
                                   onValueChange={(itemValue, itemIndex) =>
@@ -1965,15 +1960,15 @@ class RequestEndorsements extends Component {
                                   <Picker.Item label="Anonymous" value="Anonymous" />
                                 </Picker>
                               </View>
-                              <View className="clear" />
+
                             </View>
                           </View>
                         </View>
                       )}
 
-                      <View className="row-10">
-                        <View className="container-left">
-                          <Text className="profile-label">Select a Goal Type<Text className="error-color">*</Text></Text>
+                      <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                        <View style={[styles.flex50,styles.rightPadding]}>
+                          <Text style={[styles.row10]}>Select a Goal Type<Text style={[styles.errorColor]}>*</Text></Text>
                           <Picker
                             selectedValue={this.state.goalType.description}
                             onValueChange={(itemValue, itemIndex) =>
@@ -1981,15 +1976,15 @@ class RequestEndorsements extends Component {
                             }>
                             {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
                           </Picker>
-                          <View className="clear" />
+
                         </View>
-                        <View className="container-right">
+                        <View style={[styles.flex50,styles.leftPadding]}>
                           {(this.state.goalType.name === 'Career') && (
                             <View>
-                              <Text className="profile-label">Pathway<Text className="error-color">*</Text></Text>
+                              <Text style={[styles.row10]}>Pathway<Text style={[styles.errorColor]}>*</Text></Text>
                               {(this.state.activeOrg === 'dpscd' && this.state.pathway) ? (
                                 <View>
-                                  <Text className="heading-text-5 description-text-color">{this.state.pathway}</Text>
+                                  <Text style={[styles.headingText5,styles.descriptionTextColor]}>{this.state.pathway}</Text>
                                 </View>
                               ) : (
                                 <View>
@@ -2006,25 +2001,27 @@ class RequestEndorsements extends Component {
                           )}
                           {(this.state.goalType.name === 'Opportunity') && (
                             <View>
-                              <Text className="profile-label">Select an Opportunity</Text>
-                              <View className="calc-column-offset-70">
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("searchOpportunities" , text)}
-                                  value={this.state.searchStringOpportunities}
-                                  placeholder="Search work opportunities..."
-                                  placeholderTextColor="grey"
-                                />
+                              <Text style={[styles.row10]}>Select an Opportunity</Text>
+
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("searchOpportunities" , text)}
+                                    value={this.state.searchStringOpportunities}
+                                    placeholder="Search work opportunities..."
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder]} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
                               </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text>Add</Text></TouchableOpacity>
-                              </View>
-                              <View className="clear" />
 
                               {(this.state.searchIsAnimating) ? (
-                                <View className="flex-container flex-center full-space">
+                                <View style={[styles.flexCenter,styles.flex1]}>
                                   <View>
-                                    <View className="super-spacer" />
+                                    <View style={[styles.superSpacer]} />
 
                                     <ActivityIndicator
                                        animating = {this.state.animating}
@@ -2032,8 +2029,8 @@ class RequestEndorsements extends Component {
                                        size = "large"
                                        style={[styles.square80, styles.centerHorizontally]}/>
 
-                                    <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                                    <Text className="center-text cta-color bold-text">Searching...</Text>
+                                    <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                    <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                                   </View>
                                 </View>
@@ -2041,17 +2038,17 @@ class RequestEndorsements extends Component {
                                 <View>
                                   <View>
                                     {(this.state.opportunityOptions) && (
-                                      <View className="card top-margin">
+                                      <View style={[styles.card,styles.topMargin]}>
                                         {this.state.opportunityOptions.map((value, optionIndex) =>
-                                          <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                            <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'opportunity')}>
-                                              <View className="full-width">
-                                                <View className="fixed-column-40">
-                                                  <View className="mini-spacer" />
-                                                  <Image source={{ uri: experienceIcon}} className="image-auto-22" />
+                                          <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn60]}>
+                                            <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunity')}>
+                                              <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                <View style={[styles.width40]}>
+                                                  <View style={[styles.card,styles.miniSpacer]} />
+                                                  <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                 </View>
-                                                <View className="calc-column-offset-40">
-                                                  <Text className="cta-color">{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
+                                                <View style={[styles.calcColumn100]}>
+                                                  <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
                                                 </View>
                                               </View>
                                             </TouchableOpacity>
@@ -2064,7 +2061,7 @@ class RequestEndorsements extends Component {
                                   <View>
 
                                     {this.renderTags('opportunity')}
-                                    <View className="clear" />
+
 
                                   </View>
 
@@ -2074,56 +2071,49 @@ class RequestEndorsements extends Component {
                           )}
 
                         </View>
-                        <View className="clear" />
-                        {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text> : <View />}
-                        {(this.state.successMessage && this.state.successMessage !== '') ? <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text> : <View />}
-                        {/*
-                        {(this.state.orgFocus === 'Placement') ? (
-                          <View>
-                            <Text className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</Text>
-                          </View>
-                        ) : (
-                          <View>
-                            <Text className="description-text-2 cta-color half-bold-text bottom-padding-5">Selecting a career, pathway, or opportunity allows you to pre-fill skills based on the pathway you're targeting, but you can always add or remove skills yourself!</Text>
-                          </View>
-                        )}*/}
+
+                        {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text> : <View />}
+                        {(this.state.successMessage && this.state.successMessage !== '') ? <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text> : <View />}
+
                       </View>
 
 
                       <View>
-
-                        <View className="row-10">
-                          <View className="container-left">
-                            <Text className="profile-label">Add a Competency</Text>
-                            <View className="calc-column-offset-70">
-                              <TextInput
-                                style={styles.textInput}
-                                onChangeText={(text) => this.formChangeHandler("searchCompetencies" , text)}
-                                value={this.state.searchStringCompetencies}
-                                placeholder="Search competencies..."
-                                placeholderTextColor="grey"
-                              />
+                        <View style={[styles.row10]}>
+                          <View style={[styles.rowDirection,styles.flex1]}>
+                            <View style={[styles.flex50,styles.rightPadding]}>
+                              <Text style={[styles.row10]}>Add a Competency</Text>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("searchCompetencies" , text)}
+                                    value={this.state.searchStringCompetencies}
+                                    placeholder="Search competencies..."
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder]} disabled={this.state.unready} onPress={() => this.addItem('competency')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
+                              </View>
                             </View>
-                            <View className="fixed-column-70 left-padding">
-                              <TouchableOpacity className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready} onPress={() => this.addItem('competency')}><Text>Add</Text></TouchableOpacity>
-                            </View>
-                            <View className="clear" />
+                            <View style={[styles.flex50]}/>
                           </View>
-                          <View className="clear" />
 
                           {(this.state.competencyOptions && this.state.competencyOptions.length > 0) && (
                             <View>
                               {this.state.competencyOptions.map((value, optionIndex) =>
-                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                  <TouchableOpacity className="background-button" onPress={() => this.searchItemClicked(value, 'competency',optionIndex)}>
-                                    <View className="left-padding full-width top-padding">
-                                      <View className="float-left right-padding">
-                                        <Image source={{ uri: skillsIcon}} className="image-auto-22" />
+                                <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn60]}>
+                                  <TouchableOpacity onPress={() => this.searchItemClicked(value, 'competency',optionIndex)}>
+                                    <View style={[styles.leftPadding,styles.calcColumn60,styles.topPadding,styles.rowDirection]}>
+                                      <View style={[styles.rightPadding]}>
+                                        <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
                                       </View>
-                                      <View className="float-left">
-                                        <Text className="cta-color">{value.name}</Text>
+                                      <View>
+                                        <Text style={[styles.ctaColor]}>{value.name}</Text>
                                         {(value.type) && (
-                                          <Text className="description-text-3 left-text">{value.type}</Text>
+                                          <Text style={[styles.descriptionText3]}>{value.type}</Text>
                                         )}
                                       </View>
                                     </View>
@@ -2136,25 +2126,25 @@ class RequestEndorsements extends Component {
 
                         {(this.state.competencies.length > 0) && (
                           <View>
-                            <View className="top-padding">
-                              <Text className="profile-label">Competencies You Are Requesting to be endorsed:</Text>
+                            <View style={[styles.topPadding]}>
+                              <Text style={[styles.row10]}>Competencies You Are Requesting to be endorsed:</Text>
                             </View>
 
                             {this.renderTags('competency')}
                           </View>
                         )}
 
-                        <View className="clear" />
                       </View>
 
-                      <View className="clear" />
 
-                      { (this.state.successMessage!== '') && <Text className="success-message">{this.state.successMessage}</Text> }
-                      { (this.state.errorMessage!== '') && <Text className="error-message">{this.state.errorMessage}</Text> }
 
-                      <View className="row-30">
-                        <View className="spacer" />
-                        <TouchableOpacity className="btn btn-primary" onPress={() => this.handleSubmit()}><Text>Request Endorsement</Text></TouchableOpacity>
+                      { (this.state.successMessage!== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text> }
+                      { (this.state.errorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.errorMessage}</Text> }
+
+                      <View style={[styles.row30]}>
+                        <View style={[styles.spacer]} />
+                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.handleSubmit()}><Text style={[styles.whiteColor]}>Request Endorsement</Text></TouchableOpacity>
+                        <View style={[styles.superSpacer]} />
                       </View>
                     </View>
                   )}
@@ -2166,7 +2156,7 @@ class RequestEndorsements extends Component {
                   )}
 
               </View>
-          </View>
+          </ScrollView>
 
       )
   }
