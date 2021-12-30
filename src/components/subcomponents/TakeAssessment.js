@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+// import DraggableFlatList from 'react-native-draggable-flatlist'
 
 const dragIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/drag-icon.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
@@ -15,6 +16,8 @@ class TakeAssessment extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      excludeRankingQuestions: true,
+
       questions: [' '],
       descriptions: [],
       categories: [' '],
@@ -195,11 +198,11 @@ class TakeAssessment extends Component {
               let employerValues = []
 
               if (type === 'work preferences') {
-
+                let excludeRankingQuestions = this.state.excludeRankingQuestions
                 for (let i = 1; i <= response.data.assessments.workPreferenceQuestions.length; i++) {
                   console.log('show at: ', response.data.assessments.workPreferenceQuestions[i - 1].answerType)
 
-                  if ((response.data.assessments.workPreferenceQuestions[i - 1].answerType === 'Ranking') || (this.props.fromApply && response.data.assessments.workPreferenceQuestions[i - 1].answerType === 'Ranking')) {
+                  if ((excludeRankingQuestions) && (response.data.assessments.workPreferenceQuestions[i - 1].answerType === 'Ranking') || (this.props.fromApply && response.data.assessments.workPreferenceQuestions[i - 1].answerType === 'Ranking')) {
                     // skip until we have a solution
                   } else {
                     questions.push(response.data.assessments.workPreferenceQuestions[i - 1].name)
@@ -1857,7 +1860,7 @@ class TakeAssessment extends Component {
         rows.push(
           <View key={this.state.questions[passedIndex] + passedIndex} style={[styles.row10]}>
             {(this.state.answerChoices[passedIndex]) && (
-              <View style={[styles.rowDirection]}>
+              <View style={[styles.rowDirection,styles.calcColumn60,styles.flexWrap]}>
                 {this.state.answerChoices[passedIndex].map((value, optionIndex) =>
                   <View key={passedIndex}>
                     <View style={[styles.row5,styles.rightPadding]}>
@@ -1919,7 +1922,7 @@ class TakeAssessment extends Component {
         rows.push(
           <View key={this.state.questions[passedIndex] + passedIndex} style={[styles.row10]}>
             {(this.state.answerChoices[passedIndex]) && (
-              <View style={[styles.rowDirection]}>
+              <View style={[styles.rowDirection,styles.calcColumn60,styles.flexWrap]}>
                 {this.state.answerChoices[passedIndex].map((value, optionIndex) =>
                   <View key={passedIndex}>
                     <View style={[styles.row5,styles.rightPadding]}>
@@ -1974,6 +1977,7 @@ class TakeAssessment extends Component {
               <Text>Please drag & drop the below options to the order you prefer.</Text>
               <View style={styles.spacer} />
             </View>
+
             {/*
             {(answerChoices) && (
               <DragDropContext onDragEnd={this.onDragEnd}>
