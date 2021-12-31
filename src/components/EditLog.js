@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
 
+import SubEditLog from './subcomponents/EditLog';
+
 class EditLog extends Component {
   constructor(props) {
     super(props)
@@ -25,6 +27,27 @@ class EditLog extends Component {
         // We have data!!
         console.log('what is the email of this user', email);
 
+        let editExisting = false
+        let log = null
+        let logs = null
+        let selectedAdvisor = null
+        let passedLogType = null
+        if (this.props.route.params) {
+          editExisting = this.props.route.params.editExisting
+          log = this.props.route.params.log
+          logs = this.props.route.params.logs
+          selectedAdvisor = this.props.route.params.selectedAdvisor
+          passedLogType = this.props.route.params.passedLogType
+        }
+
+        // const { logId } = this.props.match.params
+        // let logId = null
+        // if (this.props.match.params) {
+        //   logId = this.props.match.params.logId
+        // }
+
+        this.setState({ editExisting, log, logs, passedLogType, selectedAdvisor });
+
       }
      } catch (error) {
        // Error retrieving data
@@ -35,7 +58,7 @@ class EditLog extends Component {
   render() {
     return (
       <View>
-        <Text>Editlog</Text>
+        <SubEditLog navigation={this.props.navigation} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType={this.state.passedLogType} selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId}/>
       </View>
     )
   }
