@@ -28,6 +28,7 @@ import Endorsements from './src/components/Endorsements';
 import RequestEndorsements from './src/components/RequestEndorsements';
 import Logs from './src/components/Logs';
 import EditLog from './src/components/EditLog';
+import Favorites from './src/components/Favorites';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -301,6 +302,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="RequestEndorsements" component={RequestEndorsements} />
           <Stack.Screen name="Logs" component={Logs} />
           <Stack.Screen name="EditLog" component={EditLog} />
+          <Stack.Screen name="Favorites" component={Favorites} />
         </Stack.Navigator>
       </NavigationContainer>
     );

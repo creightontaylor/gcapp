@@ -4832,7 +4832,6 @@ class EditLog extends Component {
                                   onChange={(e, d) => this.formChangeHandler("goalStartDate",d)}
                                 />
                               </View>
-
                             </View>
                             <View>
                               <Text style={[styles.row10]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>

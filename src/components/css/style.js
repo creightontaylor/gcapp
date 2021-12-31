@@ -633,6 +633,9 @@ module.exports = StyleSheet.create({
   calcColumn140: {
     width: Dimensions.get('window').width - 140
   },
+  calcColumn142: {
+    width: Dimensions.get('window').width - 142
+  },
   calcColumn150: {
     width: Dimensions.get('window').width - 150
   },
@@ -648,8 +651,14 @@ module.exports = StyleSheet.create({
   calcColumn190: {
     width: Dimensions.get('window').width - 190
   },
+  calcColumn195: {
+    width: Dimensions.get('window').width - 195
+  },
   calcColumn200: {
     width: Dimensions.get('window').width - 200
+  },
+  calcColumn202: {
+    width: Dimensions.get('window').width - 202
   },
   calcColumn208: {
     width: Dimensions.get('window').width - 208
@@ -662,6 +671,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn230: {
     width: Dimensions.get('window').width - 230
+  },
+  calcColumn240: {
+    width: Dimensions.get('window').width - 240
   },
   calcColumn280: {
     width: Dimensions.get('window').width - 280
