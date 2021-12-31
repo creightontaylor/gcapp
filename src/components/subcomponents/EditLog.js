@@ -2471,8 +2471,8 @@ class EditLog extends Component {
 
       rows.push(
         <View key={i}>
-          <View style={[styles.spacer]}/>
-          <View className="relative-column-90">
+          <View style={[styles.spacer,styles.rowDirection,styles.flex1]}/>
+          <View style={[styles.flex90]}>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.formChangeHandler(nameField, text)}
@@ -2481,7 +2481,7 @@ class EditLog extends Component {
               placeholderTextColor="grey"
             />
           </View>
-          <View className="relative-column-10 left-padding top-padding-5">
+          <View style={[styles.flex10,styles.leftPadding,styles.topPadding5]}>
             <TouchableOpacity onPress={() => this.addRemoveItems('Remove',index,type)}>
               <Image source={{ uri: exitIcon}} style={[styles.square30,styles.contain]}/>
             </TouchableOpacity>
@@ -2678,9 +2678,9 @@ class EditLog extends Component {
 
           return (
             <View key={"selectedCareers"}>
-              <View style={[styles.spacer]} />
+              <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
               {selectedCareers.map((value, optionIndex) =>
-                <View key={"career|" + optionIndex} className="float-left">
+                <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
 
                   <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                     <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
@@ -2688,7 +2688,7 @@ class EditLog extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View className="float-left right-padding-5">
+                  <View style={[styles.rightPadding5]}>
                     <View style={[styles.halfSpacer]} />
                     <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                       <Text style={[styles.descriptionText2]}>{value}</Text>
@@ -2712,8 +2712,8 @@ class EditLog extends Component {
         if (item) {
           return (
             <View key={"selectedCareer"}>
-              <View style={[styles.spacer]} />
-              <View key={"career"} className="float-left">
+              <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
+              <View key={"career"}>
 
                 <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                   <TouchableOpacity onPress={() => this.removeTag(null,type)}>
@@ -2721,7 +2721,7 @@ class EditLog extends Component {
                   </TouchableOpacity>
                 </View>
 
-                <View className="float-left right-padding-5">
+                <View style={[styles.rightPadding5]}>
                   <View style={[styles.halfSpacer]} />
                   <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                     <Text style={[styles.descriptionText2]}>{(item.name) ? item.name : item.title}</Text>
@@ -2743,16 +2743,16 @@ class EditLog extends Component {
           console.log('about to in', selectedOpportunities)
           return (
             <View key={"selectedOpportunities"}>
-              <View style={[styles.spacer]} />
+              <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
               {selectedOpportunities.map((value, optionIndex) =>
-                <View key={"career|" + optionIndex} className="float-left">
+                <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
 
                   <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                     <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                       <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
-                  <View className="float-left right-padding-5">
+                  <View style={[styles.rightPadding5]}>
                     <View style={[styles.halfSpacer]} />
                     <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                       <Text style={[styles.descriptionText2]}>{value}</Text>
@@ -2776,15 +2776,15 @@ class EditLog extends Component {
         if (item) {
           return (
             <View key={"selectedOpportunity"}>
-              <View style={[styles.spacer]} />
-              <View key={"career"} className="float-left">
+              <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
+              <View key={"career"} style={[styles.rowDirection]}>
 
                 <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                   <TouchableOpacity onPress={() => this.removeTag(null,type)}>
                     <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
-                <View className="float-left right-padding-5">
+                <View style={[styles.rightPadding5]}>
                   <View style={[styles.halfSpacer]} />
                   <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                     <Text style={[styles.descriptionText2]}>{(item.name) ? item.name : item.title}</Text>
@@ -2807,11 +2807,11 @@ class EditLog extends Component {
         console.log('compare 0')
         return (
           <View key={"competency"}>
-            <View style={[styles.spacer]} />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {competencies.map((value, optionIndex) =>
-              <View key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex}>
                 {(value) && (
-                  <View>
+                  <View style={[styles.rowDirection]}>
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                       <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
@@ -2820,28 +2820,29 @@ class EditLog extends Component {
                     <View>
                       <View style={[styles.halfSpacer]} />
                       {(value.category === 'Ability') && (
-                        <View className="tag-container-8 primary-background primary-border white-text">
-                          <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.topMargin5,styles.leftMargin5,styles.primaryBackground,styles.primaryBorder]}>
+                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                         </View>
                       )}
+
                       {(value.category === 'Knowledge') && (
-                        <View className="tag-container-8 secondary-background secondary-border white-text">
-                          <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.topMargin5,styles.leftMargin5,styles.secondaryBackground,styles.secondaryBorder]}>
+                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                         </View>
                       )}
                       {(value.category === 'Soft Skill') && (
-                        <View className="tag-container-8 tertiary-background tertiary-border white-text">
-                          <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.topMargin5,styles.leftMargin5,styles.tertiaryBackground,styles.tertiaryBorder]}>
+                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                         </View>
                       )}
                       {(value.category === 'General Hard Skill') && (
-                        <View className="tag-container-8 quaternary-background quaternary-border white-text">
-                          <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.topMargin5,styles.leftMargin5,styles.quaternaryBackground,styles.quaternaryBorder]}>
+                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                         </View>
                       )}
                       {(value.category === 'Tech Skill') && (
-                        <View className="tag-container-8 quinary-background quinary-border white-text">
-                          <Text style={[styles.descriptionText2]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
+                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.topMargin5,styles.leftMargin5,styles.quinaryBackground,styles.quinaryBorder]}>
+                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value.category}: {value.name}{(value.description) && " (" + value.description + ")"}</Text>
                         </View>
                       )}
 
@@ -2863,16 +2864,16 @@ class EditLog extends Component {
 
           return (
             <View key={"selectedSkills"}>
-              <View style={[styles.spacer]} />
+              <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
               {selectedSkills.map((value, optionIndex) =>
-                <View key={"career|" + optionIndex} className="float-left">
+                <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
 
                   <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                     <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                       <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>
                   </View>
-                  <View className="float-left right-padding-5">
+                  <View style={[styles.rightPadding5]}>
                     <View style={[styles.halfSpacer]} />
                     <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                       <Text style={[styles.descriptionText2]}>{value}</Text>
@@ -2895,9 +2896,9 @@ class EditLog extends Component {
         // console.log('show item: ', item, type)
         if (item) {
           return (
-            <View key={"selectedSkill"}>
+            <View key={"selectedSkill"} style={[styles.rowDirection,styles.flexWrap]}>
               <View style={[styles.spacer]} />
-              <View key={"career"} className="float-left">
+              <View key={"career"}>
 
                 <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                   <TouchableOpacity onPress={() => this.removeTag(null,type)}>
@@ -2905,7 +2906,7 @@ class EditLog extends Component {
                   </TouchableOpacity>
                 </View>
 
-                <View className="float-left right-padding-5">
+                <View style={[styles.rightPadding5]}>
                   <View style={[styles.halfSpacer]} />
                   <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                     <Text style={[styles.descriptionText2]}>{(item.name) ? item.name : item.title}</Text>
@@ -2926,16 +2927,16 @@ class EditLog extends Component {
         console.log('show selectedMembers: ', selectedMembers)
         return (
           <View key={"selectedMembers"}>
-            <View style={[styles.spacer]} />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {selectedMembers.map((value, optionIndex) =>
-              <View key={"career|" + optionIndex} className="float-left">
+              <View key={"career|" + optionIndex} style={[styles.rowDirection]}>
 
                 <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                   <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                     <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
-                <View className="float-left right-padding-5">
+                <View style={[styles.rightPadding5]}>
                   <View style={[styles.halfSpacer]} />
                   <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                     <Text style={[styles.descriptionText2]}>{value}</Text>
@@ -2971,15 +2972,15 @@ class EditLog extends Component {
         console.log('about to in', tags)
         return (
           <View key={type}>
-            <View style={[styles.spacer]} />
+            <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
             {tags.map((value, optionIndex) =>
-              <View key={type + "|" + optionIndex} className="float-left">
+              <View key={type + "|" + optionIndex} style={[styles.rowDirection]}>
                 <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                   <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                     <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
-                <View className="float-left right-padding-5">
+                <View style={[styles.rightPadding5]}>
                   <View style={[styles.halfSpacer]} />
                   <View style={[styles.row7,styles.horizontalPadding20,styles.standardBorder,styles.lightBackground]}>
                     <Text style={[styles.descriptionText2]}>{value}</Text>
@@ -3426,8 +3427,8 @@ class EditLog extends Component {
       <View key="everythingLogs">
         <View>
           <View>
-            <View style={[styles.row10]}>
-              <View className="calc-column-offset-40">
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.calcCoumn100]}>
                 {this.state.editExisting ? (
                   <View>
                     <Text style={[styles.headingText2]}>Edit {this.state.logType}</Text>
@@ -3443,7 +3444,7 @@ class EditLog extends Component {
                 )}
               </View>
               {(this.props.modalView) && (
-                <View className="fixed-column-40">
+                <View style={[styles.width40]}>
                   <TouchableOpacity onPress={() => this.closeModal()}>
                     <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
@@ -3504,22 +3505,22 @@ class EditLog extends Component {
               <View>
                 {(this.state.editExisting) && (
                   <View>
-                    <View className="full-width standard-border top-margin">
-                      <View className="carousel-3" onScroll={this.handleScroll}>
+                    <View style={[styles.calcColumn60,styles.standardBorder,styles.topMargin]}>
+                      <ScrollView style={[styles.carousel]} horizontal={true}>
                         {this.state.subNavCategories.map((value, index) =>
-                          <View className="display-inline right-padding-20">
+                          <View style={[styles.rightPadding20]}>
                             {(this.state.subNavCategories[index] === this.state.currentPage) ? (
-                              <View className="selected-carousel-item">
+                              <View style={[styles.selectedCarouselItem]}>
                                 <Text key={value}>{value}</Text>
                               </View>
                             ) : (
-                              <TouchableOpacity className="menu-button" onPress={() => this.subNavClicked(value)}>
+                              <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
                                 <Text key={value}>{value}</Text>
                               </TouchableOpacity>
                             )}
                           </View>
                         )}
-                      </View>
+                      </ScrollView>
                     </View>
                   </View>
                 )}
@@ -3557,7 +3558,7 @@ class EditLog extends Component {
                         <View>
 
                           <View style={[styles.topPadding20]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>What type of comparison?</Text>
                               <Picker
                                 selectedValue={this.state.comparisonType}
@@ -3567,7 +3568,7 @@ class EditLog extends Component {
                                 {this.state.comparisonTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                               </Picker>
                             </View>
-                            <View className="container-right">
+                            <View>
                               <View>
                                 <View style={[styles.bottomPadding5]}>
                                   <Text style={[styles.row10]}>Would you like to poll your connections?</Text>
@@ -3593,7 +3594,7 @@ class EditLog extends Component {
 
                           <View style={[styles.topPadding20]}>
                             <View>
-                              <View className="container-left standard-border padding-20">
+                              <View style={[styles.standardBorder,styles.padding20]}>
                                 <Text style={[styles.headingText6]}>Option A</Text>
 
                                 <View style={[styles.row10]}>
@@ -3611,17 +3612,20 @@ class EditLog extends Component {
                                   <View>
                                     <View style={[styles.row10]}>
                                       <Text style={[styles.row10]}>Tag a Career Path</Text>
-                                      <View className="calc-column-offset-70">
-                                        <TextInput
-                                          style={styles.textInput}
-                                          onChangeText={(text) => this.formChangeHandler("searchCareersA", text)}
-                                          value={this.state.searchStringA}
-                                          placeholder="Search 1,000+ career paths..."
-                                          placeholderTextColor="grey"
-                                        />
-                                      </View>
-                                      <View className="fixed-column-70 left-padding">
-                                        <TouchableOpacity className={(!this.state.searchStringA || this.state.searchStringA === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringA || this.state.searchStringA === '') ? true : false} onPress={() => this.addItem('careerA')}><Text>Add</Text></TouchableOpacity>
+
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn130]}>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("searchCareersA", text)}
+                                            value={this.state.searchStringA}
+                                            placeholder="Search 1,000+ career paths..."
+                                            placeholderTextColor="grey"
+                                          />
+                                        </View>
+                                        <View style={[styles.width70,styles.leftPadding]}>
+                                          <TouchableOpacity style={(!this.state.searchStringA || this.state.searchStringA === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringA || this.state.searchStringA === '') ? true : false} onPress={() => this.addItem('careerA')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                        </View>
                                       </View>
 
                                     </View>
@@ -3651,14 +3655,14 @@ class EditLog extends Component {
                                           {(this.state.careerOptionsA && this.state.careerOptionsA.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.careerOptionsA.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'careerA')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'careerA')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.miniSpacer]} />
                                                         <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{value.name}</Text>
                                                       </View>
                                                     </View>
@@ -3686,17 +3690,20 @@ class EditLog extends Component {
                                   <View>
                                     <View style={[styles.row10]}>
                                       <Text style={[styles.row10]}>Tag a Job</Text>
-                                      <View className="calc-column-offset-70">
-                                        <TextInput
-                                          style={styles.textInput}
-                                          onChangeText={(text) => this.formChangeHandler("searchOpportunitiesA", text)}
-                                          value={this.state.searchStringOpportunitiesA}
-                                          placeholder="Search work opportunities..."
-                                          placeholderTextColor="grey"
-                                        />
-                                      </View>
-                                      <View className="fixed-column-70 left-padding">
-                                        <TouchableOpacity className={(!this.state.searchStringOpportunitiesA || this.state.searchStringOpportunitiesA === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringOpportunitiesA || this.state.searchStringOpportunitiesA === '') ? true : false} onPress={() => this.addItem('opportunityA')}><Text>Add</Text></TouchableOpacity>
+
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn130]}>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("searchOpportunitiesA", text)}
+                                            value={this.state.searchStringOpportunitiesA}
+                                            placeholder="Search work opportunities..."
+                                            placeholderTextColor="grey"
+                                          />
+                                        </View>
+                                        <View style={[styles.width70,styles.leftPadding]}>
+                                          <TouchableOpacity style={(!this.state.searchStringOpportunitiesA || this.state.searchStringOpportunitiesA === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringOpportunitiesA || this.state.searchStringOpportunitiesA === '') ? true : false} onPress={() => this.addItem('opportunityA')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                        </View>
                                       </View>
 
                                     </View>
@@ -3728,14 +3735,14 @@ class EditLog extends Component {
                                           {(this.state.opportunityOptionsA && this.state.opportunityOptionsA.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.opportunityOptionsA.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'opportunityA')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunityA')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.miniSpacer]} />
                                                         <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
                                                       </View>
                                                     </View>
@@ -3762,19 +3769,21 @@ class EditLog extends Component {
                                 {(this.state.comparisonType === 'Competencies') && (
                                   <View>
                                     <Text style={[styles.row10]}>Tag a Competency</Text>
-                                    <View className="calc-column-offset-70">
-                                      <TextInput
-                                        style={styles.textInput}
-                                        onChangeText={(text) => this.formChangeHandler("searchSkillsA", text)}
-                                        value={this.state.searchStringCompetenciesA}
-                                        placeholder="Search competencies..."
-                                        placeholderTextColor="grey"
-                                      />
-                                    </View>
-                                    <View className="fixed-column-70 left-padding">
-                                      <TouchableOpacity className={(!this.state.searchStringCompetenciesA || this.state.searchStringCompetenciesA === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringCompetenciesA || this.state.searchStringCompetenciesA === '') ? true : false} onPress={() => this.addItem('skillA')}><Text>Add</Text></TouchableOpacity>
-                                    </View>
 
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.calcColumn130]}>
+                                        <TextInput
+                                          style={styles.textInput}
+                                          onChangeText={(text) => this.formChangeHandler("searchSkillsA", text)}
+                                          value={this.state.searchStringCompetenciesA}
+                                          placeholder="Search competencies..."
+                                          placeholderTextColor="grey"
+                                        />
+                                      </View>
+                                      <View style={[styles.width70,styles.leftPadding]}>
+                                        <TouchableOpacity style={(!this.state.searchStringCompetenciesA || this.state.searchStringCompetenciesA === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringCompetenciesA || this.state.searchStringCompetenciesA === '') ? true : false} onPress={() => this.addItem('skillA')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                      </View>
+                                    </View>
 
                                     {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
                                     {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
@@ -3801,14 +3810,14 @@ class EditLog extends Component {
                                           {(this.state.competencyOptionsA && this.state.competencyOptionsA.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.competencyOptionsA.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'competencyA')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'competencyA')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.halfSpacer]} />
                                                         <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{value.name}</Text>
                                                         <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>{value.type}</Text>
                                                       </View>
@@ -3852,21 +3861,22 @@ class EditLog extends Component {
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Annualized Market Value / Pay</Text>
 
-                                  <View className="float-left standard-border light-background width-22 center-text height-40">
-                                    <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                    <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.standardBorder,styles.lightBackground,styles.width22,styles.centerText,styles.height40]}>
+                                      <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                    </View>
+                                    <View style={[styles.width85]}>
+                                      <TextInput
+                                        style={styles.textInput}
+                                        onChangeText={(text) => this.formChangeHandler("aValue", text)}
+                                        value={this.state.aValue}
+                                        placeholder="0"
+                                        placeholderTextColor="grey"
+                                        keyboardType='numeric'
+                                      />
+                                    </View>
                                   </View>
-                                  <View className="width-85 float-left">
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("aValue", text)}
-                                      value={this.state.aValue}
-                                      placeholder="0"
-                                      placeholderTextColor="grey"
-                                      keyboardType='numeric'
-                                    />
-                                  </View>
-
 
                                 </View>
 
@@ -3884,11 +3894,11 @@ class EditLog extends Component {
                                 </View>
 
                                 <View style={[styles.row10]}>
-                                  <View>
-                                    <View className="float-left">
+                                  <View style={[styles.rowDirection]}>
+                                    <View>
                                       <Text style={[styles.row10]}>Relevant Links to Decide</Text>
                                     </View>
-                                    <View className="float-left left-padding top-padding">
+                                    <View style={[styles.leftPadding,styles.topPadding]}>
                                       <TouchableOpacity onPress={() => this.addItem('aLink')}>
                                         <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
                                       </TouchableOpacity>
@@ -3899,13 +3909,13 @@ class EditLog extends Component {
                                   {(this.state.aLinks) && (
                                     <View>
                                       {this.state.aLinks.map((value, optionIndex) =>
-                                        <View key={'aLink|' + optionIndex} style={[styles.bottomPadding5]}>
-                                          <View className="fixed-column-35 top-padding" >
+                                        <View key={'aLink|' + optionIndex} style={[styles.bottomPadding5,styles.rowDirection]}>
+                                          <View style={[styles.width35,styles.topPadding]}>
                                             <TouchableOpacity onPress={() => this.addRemoveItems('Remove', optionIndex,'aLink')}>
                                               <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                                             </TouchableOpacity>
                                           </View>
-                                          <View className="calc-column-offset-35">
+                                          <View style={[styles.calcColumn95]}>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("aLink|" + optionIndex + "|name", text)}
@@ -3930,7 +3940,7 @@ class EditLog extends Component {
 
                               </View>
 
-                              <View className="container-right standard-border padding-20">
+                              <View style={[styles.standardBorder,styles.padding20]}>
                                 <Text style={[styles.headingText6]}>Option B</Text>
 
                                 <View style={[styles.row10]}>
@@ -3948,17 +3958,20 @@ class EditLog extends Component {
                                   <View>
                                     <View style={[styles.row10]}>
                                       <Text style={[styles.row10]}>Tag a Career Path</Text>
-                                      <View className="calc-column-offset-70">
-                                        <TextInput
-                                          style={styles.textInput}
-                                          onChangeText={(text) => this.formChangeHandler("searchCareersB", text)}
-                                          value={this.state.searchStringB}
-                                          placeholder="Search 1,000+ career paths..."
-                                          placeholderTextColor="grey"
-                                        />
-                                      </View>
-                                      <View className="fixed-column-70 left-padding">
-                                        <TouchableOpacity className={(!this.state.searchStringB || this.state.searchStringB === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringB || this.state.searchStringB === '') ? true : false} onPress={() => this.addItem('careerB')}><Text>Add</Text></TouchableOpacity>
+
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn130]}>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("searchCareersB", text)}
+                                            value={this.state.searchStringB}
+                                            placeholder="Search 1,000+ career paths..."
+                                            placeholderTextColor="grey"
+                                          />
+                                        </View>
+                                        <View style={[styles.width70,styles.leftPadding]}>
+                                          <TouchableOpacity style={(!this.state.searchStringB || this.state.searchStringB === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringB || this.state.searchStringB === '') ? true : false} onPress={() => this.addItem('careerB')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                        </View>
                                       </View>
 
                                     </View>
@@ -3988,14 +4001,14 @@ class EditLog extends Component {
                                           {(this.state.careerOptionsB && this.state.careerOptionsB.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.careerOptionsB.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'careerB')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'careerB')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.miniSpacer]} />
                                                         <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{value.name}</Text>
                                                       </View>
                                                     </View>
@@ -4023,17 +4036,20 @@ class EditLog extends Component {
                                   <View>
                                     <View style={[styles.row10]}>
                                       <Text style={[styles.row10]}>Tag a Job</Text>
-                                      <View className="calc-column-offset-70">
-                                        <TextInput
-                                          style={styles.textInput}
-                                          onChangeText={(text) => this.formChangeHandler("searchOpportunitiesB", text)}
-                                          value={this.state.searchStringOpportunitiesB}
-                                          placeholder="Search work opportunities..."
-                                          placeholderTextColor="grey"
-                                        />
-                                      </View>
-                                      <View className="fixed-column-70 left-padding">
-                                        <TouchableOpacity className={(!this.state.searchStringOpportunitiesB || this.state.searchStringOpportunitiesB === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringOpportunitiesB || this.state.searchStringOpportunitiesB === '') ? true : false} onPress={() => this.addItem('opportunityB')}><Text>Add</Text></TouchableOpacity>
+
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn130]}>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("searchOpportunitiesB", text)}
+                                            value={this.state.searchStringOpportunitiesB}
+                                            placeholder="Search work opportunities..."
+                                            placeholderTextColor="grey"
+                                          />
+                                        </View>
+                                        <View style={[styles.width70,styles.leftPadding]}>
+                                          <TouchableOpacity style={(!this.state.searchStringOpportunitiesB || this.state.searchStringOpportunitiesB === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringOpportunitiesB || this.state.searchStringOpportunitiesB === '') ? true : false} onPress={() => this.addItem('opportunityB')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                        </View>
                                       </View>
 
                                     </View>
@@ -4065,14 +4081,14 @@ class EditLog extends Component {
                                           {(this.state.opportunityOptionsB && this.state.opportunityOptionsB.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.opportunityOptionsB.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'opportunityB')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunityB')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.miniSpacer]} />
                                                         <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
                                                       </View>
                                                     </View>
@@ -4099,19 +4115,21 @@ class EditLog extends Component {
                                 {(this.state.comparisonType === 'Competencies') && (
                                   <View>
                                     <Text style={[styles.row10]}>Tag a Competency</Text>
-                                    <View className="calc-column-offset-70">
-                                      <TextInput
-                                        style={styles.textInput}
-                                        onChangeText={(text) => this.formChangeHandler("searchSkillsB", text)}
-                                        value={this.state.searchStringCompetenciesB}
-                                        placeholder="Search competencies..."
-                                        placeholderTextColor="grey"
-                                      />
-                                    </View>
-                                    <View className="fixed-column-70 left-padding">
-                                      <TouchableOpacity className={(!this.state.searchStringCompetenciesB || this.state.searchStringCompetenciesB === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringCompetenciesB || this.state.searchStringCompetenciesB === '') ? true : false} onPress={() => this.addItem('skillB')}><Text>Add</Text></TouchableOpacity>
-                                    </View>
 
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.calcColumn130]}>
+                                        <TextInput
+                                          style={styles.textInput}
+                                          onChangeText={(text) => this.formChangeHandler("searchSkillsB", text)}
+                                          value={this.state.searchStringCompetenciesB}
+                                          placeholder="Search competencies..."
+                                          placeholderTextColor="grey"
+                                        />
+                                      </View>
+                                      <View style={[styles.width70,styles.leftPadding]}>
+                                        <TouchableOpacity style={(!this.state.searchStringCompetenciesB || this.state.searchStringCompetenciesB === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringCompetenciesB || this.state.searchStringCompetenciesB === '') ? true : false} onPress={() => this.addItem('skillB')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                      </View>
+                                    </View>
 
                                     {(this.state.errorMessageB && this.state.errorMessageB !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessageB}</Text>}
                                     {(this.state.successMessageB && this.state.successMessageB !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessageB}</Text>}
@@ -4138,14 +4156,14 @@ class EditLog extends Component {
                                           {(this.state.competencyOptionsB && this.state.competencyOptionsB.length > 0) && (
                                             <View style={[styles.card,styles.topMargin]}>
                                               {this.state.competencyOptionsB.map((value, optionIndex) =>
-                                                <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                                  <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'competencyB')}>
-                                                    <View className="full-width">
-                                                      <View className="fixed-column-40">
+                                                <View key={value._id} style={[styles.bottomMargin5]}>
+                                                  <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'competencyB')}>
+                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                      <View style={[styles.width40]}>
                                                         <View style={[styles.halfSpacer]} />
                                                         <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
                                                       </View>
-                                                      <View className="calc-column-offset-40">
+                                                      <View style={[styles.calcColumn100]}>
                                                         <Text style={[styles.ctaColor]}>{value.name}</Text>
                                                         <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>{value.type}</Text>
                                                       </View>
@@ -4189,21 +4207,22 @@ class EditLog extends Component {
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Annualized Market Value / Pay</Text>
 
-                                  <View className="float-left standard-border light-background width-22 center-text height-40">
-                                    <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                    <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.standardBorder,styles.lightBackground,styles.width22,styles.centerText,styles.height40]}>
+                                      <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                    </View>
+                                    <View style={[styles.width85]}>
+                                      <TextInput
+                                        style={styles.textInput}
+                                        onChangeText={(text) => this.formChangeHandler("bValue", text)}
+                                        value={this.state.bValue}
+                                        placeholder="0"
+                                        placeholderTextColor="grey"
+                                        keyboardType='numeric'
+                                      />
+                                    </View>
                                   </View>
-                                  <View className="width-85 float-left">
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("bValue", text)}
-                                      value={this.state.bValue}
-                                      placeholder="0"
-                                      placeholderTextColor="grey"
-                                      keyboardType='numeric'
-                                    />
-                                  </View>
-
 
                                 </View>
 
@@ -4221,11 +4240,11 @@ class EditLog extends Component {
                                 </View>
 
                                 <View style={[styles.row10]}>
-                                  <View>
-                                    <View className="float-left">
+                                  <View style={[styles.rowDirection]}>
+                                    <View>
                                       <Text style={[styles.row10]}>Relevant Links to Decide</Text>
                                     </View>
-                                    <View className="float-left left-padding top-padding">
+                                    <View style={[styles.leftPadding,styles.topPadding]}>
                                       <TouchableOpacity onPress={() => this.addItem('bLink')}>
                                         <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
                                       </TouchableOpacity>
@@ -4236,13 +4255,13 @@ class EditLog extends Component {
                                   {(this.state.bLinks) && (
                                     <View>
                                       {this.state.bLinks.map((value, optionIndex) =>
-                                        <View key={'bLink|' + optionIndex} style={[styles.bottomPadding5]}>
-                                          <View className="fixed-column-35 top-padding" >
+                                        <View key={'bLink|' + optionIndex} style={[styles.bottomPadding5,styles.rowDirection]}>
+                                          <View style={[styles.width35,styles.topPadding]}>
                                             <TouchableOpacity onPress={() => this.addRemoveItems('Remove', optionIndex,'aLink')}>
                                               <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                                             </TouchableOpacity>
                                           </View>
-                                          <View className="calc-column-offset-35">
+                                          <View style={[styles.calcColumn95]}>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("bLink|" + optionIndex + "|name", text)}
@@ -4277,7 +4296,7 @@ class EditLog extends Component {
                       {(this.state.goalType.name === 'Degree') && (
                         <View>
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>Degree Type</Text>
                               <Picker
                                 selectedValue={this.state.degreeType}
@@ -4291,20 +4310,23 @@ class EditLog extends Component {
                           </View>
 
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>School / University Name(s)</Text>
-                                <View className="calc-column-offset-70">
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("schoolName", text)}
-                                    value={this.state.schoolName}
-                                    placeholder="Add a school..."
-                                    placeholderTextColor="grey"
-                                  />
-                                </View>
-                                <View className="fixed-column-70 left-padding">
-                                  <TouchableOpacity className={(!this.state.schoolName || this.state.schoolName === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.schoolName || this.state.schoolName === '') ? true : false} onPress={() => this.addItem('school')}><Text>Add</Text></TouchableOpacity>
+
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("schoolName", text)}
+                                      value={this.state.schoolName}
+                                      placeholder="Add a school..."
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                  <View style={[styles.width70,styles.leftPadding]}>
+                                    <TouchableOpacity style={(!this.state.schoolName || this.state.schoolName === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.schoolName || this.state.schoolName === '') ? true : false} onPress={() => this.addItem('school')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                  </View>
                                 </View>
 
                               </View>
@@ -4316,20 +4338,23 @@ class EditLog extends Component {
 
                             </View>
 
-                            <View className="container-right">
+                            <View>
                               <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Major(s)</Text>
-                                <View className="calc-column-offset-70">
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("major", text)}
-                                    value={this.state.major}
-                                    placeholder="Add a major..."
-                                    placeholderTextColor="grey"
-                                  />
-                                </View>
-                                <View className="fixed-column-70 left-padding">
-                                  <TouchableOpacity className={(!this.state.major || this.state.major === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.major || this.state.major === '') ? true : false} onPress={() => this.addItem('major')}><Text>Add</Text></TouchableOpacity>
+
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("major", text)}
+                                      value={this.state.major}
+                                      placeholder="Add a major..."
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                  <View style={[styles.width70,styles.leftPadding]}>
+                                    <TouchableOpacity style={(!this.state.major || this.state.major === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.major || this.state.major === '') ? true : false} onPress={() => this.addItem('major')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                  </View>
                                 </View>
 
                               </View>
@@ -4348,7 +4373,7 @@ class EditLog extends Component {
                       {(this.state.goalType.name === 'Social Problem') && (
                         <View>
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>Problem Type</Text>
                               <Picker
                                 selectedValue={this.state.societalProblem}
@@ -4358,199 +4383,206 @@ class EditLog extends Component {
                                 {this.state.societalProblemOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                               </Picker>
                             </View>
-
                           </View>
                         </View>
                       )}
 
                       {(this.state.goalType.name === 'Career' || this.state.goalType.name === 'Switch' || this.state.goalType.name === 'Freelance' || this.state.goalType.name === 'Explore' || this.state.goalType.name === 'Leadership' || this.state.goalType.name === 'Expert' || this.state.goalType.name === 'Promotion'  || this.state.goalType.name === 'Award') && (
                         <View>
-                          <View className="container-left">
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.row10]}>Tag Career Path(s)</Text>
-                              <View className="calc-column-offset-70">
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("searchCareers", text)}
-                                  value={this.state.searchString}
-                                  placeholder="Search 1,000+ career paths..."
-                                  placeholderTextColor="grey"
-                                />
+                          <View style={[styles.row10,styles.flex1]}>
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Tag Career Path(s)</Text>
+
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("searchCareers", text)}
+                                      value={this.state.searchString}
+                                      placeholder="Search 1,000+ career paths..."
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                  <View style={[styles.width70,styles.leftPadding]}>
+                                    <TouchableOpacity style={(!this.state.searchString || this.state.searchString === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchString || this.state.searchString === '') ? true : false} onPress={() => this.addItem('career')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                  </View>
+                                </View>
                               </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.searchString || this.state.searchString === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchString || this.state.searchString === '') ? true : false} onPress={() => this.addItem('career')}><Text>Add</Text></TouchableOpacity>
-                              </View>
+
+                              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                              {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+
+                              {(this.state.searchIsAnimatingCareers) ? (
+                                <View style={[styles.flexCenter,syles.flex1]}>
+                                  <View>
+                                    <View style={[styles.superSpacer]} />
+
+                                    <ActivityIndicator
+                                       animating = {this.state.animating}
+                                       color = '#87CEFA'
+                                       size = "large"
+                                       style={[styles.square80, styles.centerHorizontally]}/>
+
+                                    <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                    <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                                  </View>
+                                </View>
+                              ) : (
+                                <View>
+                                  <View>
+                                    {(this.state.careerOptions && this.state.careerOptions.length > 0) && (
+                                      <View style={[styles.card,styles.topMargin]}>
+                                        {this.state.careerOptions.map((value, optionIndex) =>
+                                          <View key={value._id} style={[styles.bottomMargin5]}>
+                                            <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'career')}>
+                                              <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                <View style={[styles.width40]}>
+                                                  <View style={[styles.miniSpacer]} />
+                                                  <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
+                                                </View>
+                                                <View style={[styles.calcColumn100]}>
+                                                  <Text style={[styles.ctaColor]}>{value.name}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          </View>
+                                        )}
+                                      </View>
+                                    )}
+                                  </View>
+
+                                  <View>
+
+                                    {this.renderTags('career')}
+
+
+                                  </View>
+
+                                </View>
+                              )}
 
                             </View>
 
-                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
-                            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.row10]}>Tag Specific Opportunities</Text>
 
-                            {(this.state.searchIsAnimatingCareers) ? (
-                              <View style={[styles.flexCenter,syles.flex1]}>
-                                <View>
-                                  <View style={[styles.superSpacer]} />
-
-                                  <ActivityIndicator
-                                     animating = {this.state.animating}
-                                     color = '#87CEFA'
-                                     size = "large"
-                                     style={[styles.square80, styles.centerHorizontally]}/>
-
-                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                                  <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
-
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("searchOpportunities", text)}
+                                      value={this.state.searchStringOpportunities}
+                                      placeholder="Search work opportunities..."
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                  <View style={[styles.width70,styles.leftPadding]}>
+                                    <TouchableOpacity style={(!this.state.searchStringOpportunities || this.state.searchStringOpportunities === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringOpportunities || this.state.searchStringOpportunities === '') ? true : false} onPress={() => this.addItem('opportunity')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                  </View>
                                 </View>
+
                               </View>
-                            ) : (
-                              <View>
+
+                              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                              {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+
+                              {(this.state.searchIsAnimatingOpportunities) ? (
+                                <View style={[styles.flexCenter,syles.flex1]}>
+                                  <View>
+                                    <View style={[styles.superSpacer]} />
+
+                                    <ActivityIndicator
+                                       animating = {this.state.animating}
+                                       color = '#87CEFA'
+                                       size = "large"
+                                       style={[styles.square80, styles.centerHorizontally]}/>
+
+                                    <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                    <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                                  </View>
+                                </View>
+                              ) : (
                                 <View>
-                                  {(this.state.careerOptions && this.state.careerOptions.length > 0) && (
-                                    <View style={[styles.card,styles.topMargin]}>
-                                      {this.state.careerOptions.map((value, optionIndex) =>
-                                        <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                          <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'career')}>
-                                            <View className="full-width">
-                                              <View className="fixed-column-40">
-                                                <View style={[styles.miniSpacer]} />
-                                                <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
+                                  <View>
+                                    {(this.state.opportunityOptions && this.state.opportunityOptions.length > 0) && (
+                                      <View style={[styles.card,styles.topMargin]}>
+                                        {this.state.opportunityOptions.map((value, optionIndex) =>
+                                          <View key={value._id} style={[styles.bottomMargin5]}>
+                                            <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunity')}>
+                                              <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                <View style={[styles.width40]}>
+                                                  <View style={[styles.miniSpacer]} />
+                                                  <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
+                                                </View>
+                                                <View style={[styles.calcColumn100]}>
+                                                  <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
+                                                </View>
                                               </View>
-                                              <View className="calc-column-offset-40">
-                                                <Text style={[styles.ctaColor]}>{value.name}</Text>
-                                              </View>
-                                            </View>
-                                          </TouchableOpacity>
-                                        </View>
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
+                                            </TouchableOpacity>
+                                          </View>
+                                        )}
+                                      </View>
+                                    )}
+                                  </View>
 
-                                <View>
+                                  <View>
 
-                                  {this.renderTags('career')}
+                                    {this.renderTags('opportunity')}
 
+
+                                  </View>
 
                                 </View>
-
-                              </View>
-                            )}
-
-                          </View>
-
-                          <View className="container-right">
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.row10]}>Tag Specific Opportunities</Text>
-                              <View className="calc-column-offset-70">
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("searchOpportunities", text)}
-                                  value={this.state.searchStringOpportunities}
-                                  placeholder="Search work opportunities..."
-                                  placeholderTextColor="grey"
-                                />
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.searchStringOpportunities || this.state.searchStringOpportunities === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringOpportunities || this.state.searchStringOpportunities === '') ? true : false} onPress={() => this.addItem('opportunity')}><Text>Add</Text></TouchableOpacity>
-                              </View>
+                              )}
 
                             </View>
-
-
-
-                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
-                            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
-
-                            {(this.state.searchIsAnimatingOpportunities) ? (
-                              <View style={[styles.flexCenter,syles.flex1]}>
-                                <View>
-                                  <View style={[styles.superSpacer]} />
-
-                                  <ActivityIndicator
-                                     animating = {this.state.animating}
-                                     color = '#87CEFA'
-                                     size = "large"
-                                     style={[styles.square80, styles.centerHorizontally]}/>
-
-                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                                  <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
-
-                                </View>
-                              </View>
-                            ) : (
-                              <View>
-                                <View>
-                                  {(this.state.opportunityOptions && this.state.opportunityOptions.length > 0) && (
-                                    <View style={[styles.card,styles.topMargin]}>
-                                      {this.state.opportunityOptions.map((value, optionIndex) =>
-                                        <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                          <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'opportunity')}>
-                                            <View className="full-width">
-                                              <View className="fixed-column-40">
-                                                <View style={[styles.miniSpacer]} />
-                                                <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
-                                              </View>
-                                              <View className="calc-column-offset-40">
-                                                <Text style={[styles.ctaColor]}>{(value.title) ? value.title : value.name}{value.employerName && " | " + value.employerName}</Text>
-                                              </View>
-                                            </View>
-                                          </TouchableOpacity>
-                                        </View>
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
-
-                                <View>
-
-                                  {this.renderTags('opportunity')}
-
-
-                                </View>
-
-                              </View>
-                            )}
-
                           </View>
 
-
-                          <View style={[styles.row10]}>
-                            <View className="container-left">
+                          <View style={[styles.row10,styles.flex1]}>
+                            <View>
                               <Text style={[styles.row10]}>Tag Functions of Interest</Text>
-                              <View className="calc-column-offset-70">
-                                <Picker
-                                  selectedValue={this.state.selectedFunction}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("selectedFunction",itemValue)
-                                  }>
-                                  {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.selectedFunction || this.state.selectedFunction === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.selectedFunction || this.state.selectedFunction === '') ? true : false} onPress={() => this.addItem('function')}><Text>Add</Text></TouchableOpacity>
-                              </View>
 
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <Picker
+                                    selectedValue={this.state.selectedFunction}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("selectedFunction",itemValue)
+                                    }>
+                                    {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(!this.state.selectedFunction || this.state.selectedFunction === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedFunction || this.state.selectedFunction === '') ? true : false} onPress={() => this.addItem('function')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
+                              </View>
 
                               <View>
                                 {this.renderTags('function')}
 
                               </View>
                             </View>
-                            <View className="container-right">
+                            <View>
                               <Text style={[styles.row10]}>Tag Industries of Interests</Text>
-                              <View className="calc-column-offset-70">
-                                <Picker
-                                  selectedValue={this.state.selectedIndustry}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("selectedIndustry",itemValue)
-                                  }>
-                                  {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? true : false} onPress={() => this.addItem('industry')}><Text>Add</Text></TouchableOpacity>
-                              </View>
 
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <Picker
+                                    selectedValue={this.state.selectedIndustry}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("selectedIndustry",itemValue)
+                                    }>
+                                    {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? true : false} onPress={() => this.addItem('industry')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
+                              </View>
 
                               <View>
                                 {this.renderTags('industry')}
@@ -4561,19 +4593,22 @@ class EditLog extends Component {
                           </View>
 
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>Hours / Week</Text>
-                              <View className="calc-column-offset-70">
-                                <Picker
-                                  selectedValue={this.state.selectedHoursPerWeek}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("selectedHoursPerWeek",itemValue)
-                                  }>
-                                  {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? true : false} onPress={() => this.addItem('hoursPerWeek')}><Text>Add</Text></TouchableOpacity>
+
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <Picker
+                                    selectedValue={this.state.selectedHoursPerWeek}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("selectedHoursPerWeek",itemValue)
+                                    }>
+                                    {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? true : false} onPress={() => this.addItem('hoursPerWeek')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
                               </View>
 
                               <View>
@@ -4581,24 +4616,26 @@ class EditLog extends Component {
 
                               </View>
                             </View>
-                            <View className="container-right">
+                            <View>
                               <Text style={[styles.row10]}>Annualized Pay Range</Text>
-                              <View className="calc-column-offset-70">
-                                <Picker
-                                  selectedValue={this.state.selectedPayRange}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("selectedPayRange",itemValue)
-                                  }>
-                                  {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? true : false} onPress={() => this.addItem('payRange')}><Text>Add</Text></TouchableOpacity>
+
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <Picker
+                                    selectedValue={this.state.selectedPayRange}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("selectedPayRange",itemValue)
+                                    }>
+                                    {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? true : false} onPress={() => this.addItem('payRange')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
                               </View>
 
                               <View>
                                 {this.renderTags('payRange')}
-
                               </View>
                             </View>
 
@@ -4606,17 +4643,20 @@ class EditLog extends Component {
 
                           <View style={[styles.row10]}>
                             <Text style={[styles.row10]}>What do you want to optimize for?</Text>
-                            <View className="calc-column-offset-70">
-                              <Picker
-                                selectedValue={this.state.selectedOptimize}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("selectedOptimize",itemValue)
-                                }>
-                                {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-                            </View>
-                            <View className="fixed-column-70 left-padding">
-                              <TouchableOpacity className={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? true : false} onPress={() => this.addItem('optimize')}><Text>Add</Text></TouchableOpacity>
+
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.calcColumn130]}>
+                                <Picker
+                                  selectedValue={this.state.selectedOptimize}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("selectedOptimize",itemValue)
+                                  }>
+                                  {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              </View>
+                              <View style={[styles.width70,styles.leftPadding]}>
+                                <TouchableOpacity style={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? true : false} onPress={() => this.addItem('optimize')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                              </View>
                             </View>
 
                             <View>
@@ -4630,7 +4670,7 @@ class EditLog extends Component {
                       {(this.state.goalType.name === 'Entrepreneurship' || this.state.goalType.name === 'Entrepreneurship - Start') && (
                         <View>
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>What stage is your business in?<Text style={[styles.errorColor]}>*</Text></Text>
                               <Picker
                                 selectedValue={this.state.entrepreneurshipStage}
@@ -4642,7 +4682,7 @@ class EditLog extends Component {
 
                             </View>
 
-                            <View className="container-right">
+                            <View>
                               <Text style={[styles.row10]}>Is this organization for profit or nonprofit?</Text>
                               <Picker
                                 selectedValue={this.state.entrepreneurshipType}
@@ -4656,8 +4696,8 @@ class EditLog extends Component {
 
                           </View>
 
-                          <View style={[styles.row10]}>
-                            <View className="container-left">
+                          <View style={[styles.row10,]}>
+                            <View>
                               <Text style={[styles.row10]}>Add your business as a project (Optional)</Text>
                               <Picker
                                 selectedValue={this.state.entrepreneurshipProject}
@@ -4669,7 +4709,7 @@ class EditLog extends Component {
                               <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text>here</Text></TouchableOpacity></Text>
 
                             </View>
-                            <View className="container-right">
+                            <View>
                               <Text style={[styles.row10]}>What area do you need help with?</Text>
                               <Picker
                                 selectedValue={this.state.entrepreneurshipGoal}
@@ -4688,24 +4728,27 @@ class EditLog extends Component {
                       {(this.state.goalType && this.state.goalType.name !== 'Alternatives') && (
                         <View>
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>Tag Relevant Skils & Knowledge</Text>
-                              <View className="calc-column-offset-70">
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("searchSkills", text)}
-                                  value={this.state.searchStringCompetencies}
-                                  placeholder="Search competencies..."
-                                  placeholderTextColor="grey"
-                                />
-                              </View>
-                              <View className="fixed-column-70 left-padding">
-                                <TouchableOpacity className={(!this.state.searchStringCompetencies || this.state.searchStringCompetencies === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringCompetencies || this.state.searchStringCompetencies === '') ? true : false} onPress={() => this.addItem('skill')}><Text>Add</Text></TouchableOpacity>
+
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("searchSkills", text)}
+                                    value={this.state.searchStringCompetencies}
+                                    placeholder="Search competencies..."
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.width70,styles.leftPadding]}>
+                                  <TouchableOpacity style={(!this.state.searchStringCompetencies || this.state.searchStringCompetencies === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringCompetencies || this.state.searchStringCompetencies === '') ? true : false} onPress={() => this.addItem('skill')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                </View>
                               </View>
 
                             </View>
                             {(this.state.goalType.name === 'Learn New Skills') && (
-                              <View className="container-right">
+                              <View>
                                 <Text style={[styles.row10]}>Competencies to Prioritize</Text>
                                 <Picker
                                   selectedValue={this.state.skillPreference}
@@ -4716,8 +4759,6 @@ class EditLog extends Component {
                                 </Picker>
                               </View>
                             )}
-
-
 
                             {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
                             {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
@@ -4744,14 +4785,14 @@ class EditLog extends Component {
                                   {(this.state.competencyOptions) && (
                                     <View style={[styles.card,styles.topMargin]}>
                                       {this.state.competencyOptions.map((value, optionIndex) =>
-                                        <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                          <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'competency')}>
-                                            <View className="full-width">
-                                              <View className="fixed-column-40">
+                                        <View key={value._id} style={[styles.bottomMargin5]}>
+                                          <TouchableOpacity style={[styles.calcColumn60,styles.row5]} onPress={() => this.searchItemClicked(value, 'competency')}>
+                                            <View style={[styles.rowDirection]}>
+                                              <View style={[styles.width40]}>
                                                 <View style={[styles.halfSpacer]} />
                                                 <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
                                               </View>
-                                              <View className="calc-column-offset-40">
+                                              <View style={[styles.calcColumn100]}>
                                                 <Text style={[styles.ctaColor]}>{value.name}</Text>
                                                 <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>{value.type}</Text>
                                               </View>
@@ -4762,13 +4803,6 @@ class EditLog extends Component {
                                     </View>
                                   )}
                                 </View>
-                                {/*
-                                <View>
-
-                                  {this.renderTags('skill')}
-
-
-                                </View>*/}
 
                               </View>
                             )}
@@ -4786,7 +4820,7 @@ class EditLog extends Component {
                       {(this.state.goalType.name && this.state.goalType !== '') ? (
                         <View>
                           <View style={[styles.row10]}>
-                            <View className="container-left">
+                            <View>
                               <Text style={[styles.row10]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
                               <View>
                                 <DateTimePicker
@@ -4796,14 +4830,11 @@ class EditLog extends Component {
                                   is24Hour={true}
                                   display="default"
                                   onChange={(e, d) => this.formChangeHandler("goalStartDate",d)}
-                                  minimumDate={(this.state.minTargetDate) ? convertStringtoDate(this.state.minTargetDate) : new Date()}
-                                  maximumDate={(this.state.maxTargetDate) ? convertStringtoDate(this.state.maxTargetDate) : new Date()}
                                 />
                               </View>
 
-
                             </View>
-                            <View className="container-right">
+                            <View>
                               <Text style={[styles.row10]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>
                               <View>
                                 <DateTimePicker
@@ -4813,8 +4844,7 @@ class EditLog extends Component {
                                   is24Hour={true}
                                   display="default"
                                   onChange={(e, d) => this.formChangeHandler("goalDeadline",d)}
-                                  minimumDate={(this.state.minTargetDate) ? convertStringtoDate(this.state.minTargetDate) : new Date()}
-                                  maximumDate={(this.state.maxTargetDate) ? convertStringtoDate(this.state.maxTargetDate) : new Date()}
+                                  minimumDate={new Date()}
                                 />
                               </View>
 
@@ -4825,7 +4855,7 @@ class EditLog extends Component {
 
                           {(this.state.goalType.name !== 'Alternatives') && (
                             <View style={[styles.row10]}>
-                              <View className="container-left">
+                              <View>
                                 <Text style={[styles.row10]}>Intensity</Text>
 
                                 <Picker
@@ -4840,14 +4870,10 @@ class EditLog extends Component {
 
                             </View>
                           )}
-
-
                         </View>
                       ) : (
                         <View />
                       )}
-
-
 
                     </View>
 
@@ -4891,9 +4917,9 @@ class EditLog extends Component {
                           <View>
                             <View>
                               <View style={[styles.row10]}>
-                                <Text className="profile-label clear-padding">Decision</Text>
+                                <Text>Decision</Text>
                                 {(this.state.pollConnections) && (
-                                  <Text className="profile-descriptor error-color">Participants of the poll will automatically be notified of your decision at the deadline</Text>
+                                  <Text style={[styles.descriptionText2,styles.errorColor,styles.bottomPadding5]}>Participants of the poll will automatically be notified of your decision at the deadline</Text>
                                 )}
                               </View>
                               <Picker
@@ -4908,7 +4934,7 @@ class EditLog extends Component {
                             </View>
                           </View>
                         ) : (
-                          <View className="container-left">
+                          <View>
                             <Text style={[styles.row10]}>Status</Text>
                             <Picker
                               selectedValue={this.state.goalStatus}
@@ -4922,8 +4948,6 @@ class EditLog extends Component {
                             </Picker>
                           </View>
                         )}
-
-
                       </View>
                     )}
                   </View>
@@ -4935,12 +4959,12 @@ class EditLog extends Component {
                       <View style={[styles.topMargin20]}>
                         {this.state.suggestions.map((item, optionIndex) =>
                           <View key={item}>
-                            <View className="relative-column-50 bottom-margin-50 standard-border padding-30">
-                              <View>
-                                <View className="fixed-column-60">
+                            <View style={[styles.calcColumn60,styles.bottomMargin50,styles.standardBorder,styles.padding30]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.width60]}>
                                   <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: profileIconDark}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
                                 </View>
-                                <View className="calc-column-offset-60">
+                                <View style={[styles.calcColumn180]}>
                                   <Text style={[styles.headingText4]}>{item.senderFirstName} {item.senderLastName}</Text>
                                   <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.topPadding5]}>{convertDateToString(item.createdAt,"daysAgo")}</Text>
                                 </View>
@@ -5067,7 +5091,7 @@ class EditLog extends Component {
                   <View style={[styles.spacer]} />
 
                   <View style={[styles.row10]}>
-                    <View className="container-left">
+                    <View>
                       <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
                       <DateTimePicker
                         testID="startTime"
@@ -5078,7 +5102,7 @@ class EditLog extends Component {
                         onChange={(e, d) => this.formChangeHandler("startTime",d)}
                       />
                     </View>
-                    <View className="container-right">
+                    <View>
                       <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
                       <DateTimePicker
                         testID="endTime"
@@ -5093,7 +5117,7 @@ class EditLog extends Component {
                   </View>
 
                   <View style={[styles.row10]}>
-                    <View className="container-left">
+                    <View>
                       <Text style={[styles.row10]}>Meeting Method<Text style={[styles.errorColor]}>*</Text></Text>
                       <Picker
                         selectedValue={this.state.method}
@@ -5105,7 +5129,7 @@ class EditLog extends Component {
                         <Picker.Item label={"Remote"} value={"Remote"} />
                       </Picker>
                     </View>
-                    <View className="container-right">
+                    <View>
                       <Text style={[styles.row10]}>{(this.state.method === "In Person") ? "Location" : "Meeting Link"}<Text style={[styles.errorColor]}>*</Text></Text>
                       <TextInput
                         style={styles.textInput}
@@ -5125,7 +5149,7 @@ class EditLog extends Component {
                   </View>
 
                   <View style={[styles.row10]}>
-                    <View className="container-left">
+                    <View>
                       <Text style={[styles.row10]}>Repeats</Text>
                       <Picker
                         selectedValue={this.state.repeats}
@@ -5136,14 +5160,13 @@ class EditLog extends Component {
                       </Picker>
                     </View>
 
-
                   </View>
 
                   {(this.state.editExisting) && (
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Tag Attendees</Text>
-                      <View>
-                        <View className="calc-column-offset-70">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn130]}>
                           <TextInput
                             style={styles.textInput}
                             onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
@@ -5152,8 +5175,8 @@ class EditLog extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-                        <View className="fixed-column-70 left-padding">
-                          <TouchableOpacity className={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? true : false} onPress={() => this.addItem('member')}><Text>Add</Text></TouchableOpacity>
+                        <View style={[styles.width70,styles.leftPadding]}>
+                          <TouchableOpacity style={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? true : false} onPress={() => this.addItem('member')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
                         </View>
 
                       </View>
@@ -5180,14 +5203,14 @@ class EditLog extends Component {
                             {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
                               <View style={[styles.card,styles.topMargin]}>
                                 {this.state.memberOptions.map((value, optionIndex) =>
-                                  <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                    <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'member')}>
-                                      <View className="full-width">
-                                        <View className="fixed-column-40">
+                                  <View key={value._id} style={[styles.bottomMargin5]}>
+                                    <TouchableOpacity style={[styles.row5]}nPress={() => this.searchItemClicked(value, 'member')}>
+                                      <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                        <View style={[styles.width40]}>
                                           <View style={[styles.miniSpacer]} />
                                           <Image source={{ uri: profileIconDark}} style={[styles.square22,styles.contain]} />
                                         </View>
-                                        <View className="calc-column-offset-40">
+                                        <View style={[styles.calcColumn100]}>
                                           <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
                                         </View>
                                       </View>
@@ -5225,29 +5248,30 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                     <View>
-                      <View className="float-left">
-                        <Text style={[styles.row10]}>Links / Resources</Text>
+                      <View style={[styles.rowDirection]}>
+                        <View>
+                          <Text style={[styles.row10]}>Links / Resources</Text>
+                        </View>
+                        <View style={[styles.leftPadding,styles.topPadding]}>
+                          <TouchableOpacity onPress={() => this.addItem('link')}>
+                            <View style={[styles.padding5,styles.ctaBorder,{ borderRadius: 10 }]}>
+                              <Image source={{ uri: addIcon}} style={[styles.square10,styles.contain]} />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </View>
-                      <View className="float-left left-padding top-padding">
-                        <TouchableOpacity onPress={() => this.addItem('link')}>
-                          <View style={[styles.padding5,styles.ctaBorder,{ borderRadius: 10 }]}>
-                            <Image source={{ uri: addIcon}} style={[styles.square10,styles.contain]} />
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-
 
                       {(this.state.links && this.state.links.length > 0) && (
                         <View>
                           {this.state.links.map((item, index) =>
                             <View style={[styles.topMargin]}>
-                              <View>
-                                <View className="fixed-column-35 top-padding" >
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.width35,styles.topPadding]}>
                                   <TouchableOpacity onPress={() => this.addRemoveItems('Remove', index,'link')}>
                                     <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                                   </TouchableOpacity>
                                 </View>
-                                <View className="calc-column-offset-35">
+                                <View style={[styles.calcColumn95]}>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("link|" + index, text)}
@@ -5289,27 +5313,28 @@ class EditLog extends Component {
 
                       <View style={[styles.row10]}>
                         <View>
-                          <View className="float-left">
-                            <Text style={[styles.row10]}>Action Items</Text>
+                          <View style={[styles.rowDirection]}>
+                            <View>
+                              <Text style={[styles.row10]}>Action Items</Text>
+                            </View>
+                            <View style={[styles.leftPadding,styles.topPadding]}>
+                              <TouchableOpacity onPress={() => this.addItem('actionItem')}>
+                                <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
+                              </TouchableOpacity>
+                            </View>
                           </View>
-                          <View className="float-left left-padding top-padding">
-                            <TouchableOpacity onPress={() => this.addItem('actionItem')}>
-                              <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
-                            </TouchableOpacity>
-                          </View>
-
 
                           {(this.state.actionItems && this.state.actionItems.length > 0) && (
                             <View>
                               {this.state.actionItems.map((item, index) =>
                                 <View style={[styles.topMargin]}>
-                                  <View>
-                                    <View className="fixed-column-35 top-padding" >
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.width35,styles.topPadding]}>
                                       <TouchableOpacity onPress={() => this.addRemoveItems('Remove', index,'actionItem')}>
                                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                                       </TouchableOpacity>
                                     </View>
-                                    <View className="calc-column-offset-35">
+                                    <View style={[styles.calcColumn95]}>
                                       <TextInput
                                         style={styles.textInput}
                                         onChangeText={(text) => this.formChangeHandler("actionItem|" + index, text)}
@@ -5342,8 +5367,8 @@ class EditLog extends Component {
                   {(this.state.remoteAuth) ? (
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Add a Career Advisor<Text style={[styles.errorColor]}>*</Text></Text>
-                      <View>
-                        <View className="calc-column-offset-70">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn130]}>
                           <TextInput
                             style={styles.textInput}
                             onChangeText={(text) => this.formChangeHandler("searchAdvisors", text)}
@@ -5352,8 +5377,8 @@ class EditLog extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-                        <View className="fixed-column-70 left-padding">
-                          <TouchableOpacity className={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? true : false} onPress={() => this.addItem('advisor')}><Text>Add</Text></TouchableOpacity>
+                        <View style={[styles.width70,styles.leftPadding]}>
+                          <TouchableOpacity style={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? true : false} onPress={() => this.addItem('advisor')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
                         </View>
 
                       </View>
@@ -5380,14 +5405,14 @@ class EditLog extends Component {
                             {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
                               <View style={[styles.card,styles.topMargin]}>
                                 {this.state.memberOptions.map((value, optionIndex) =>
-                                  <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                    <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'member')}>
-                                      <View className="full-width">
-                                        <View className="fixed-column-40">
+                                  <View key={value._id} style={[styles.bottomMargin5]}>
+                                    <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'member')}>
+                                      <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                        <View style={[styles.width40]}>
                                           <View style={[styles.miniSpacer]} />
                                           <Image source={{ uri: profileIconDark}} style={[styles.square22,styles.contain]} />
                                         </View>
-                                        <View className="calc-column-offset-40">
+                                        <View style={[styles.calcColumn100]}>
                                           <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
                                         </View>
                                       </View>
@@ -5411,7 +5436,7 @@ class EditLog extends Component {
                   ) : (
                     <View>
                       <View style={[styles.row10]}>
-                        <View className="container-left">
+                        <View>
                           <Text style={[styles.row10]}>Advisor First Name<Text style={[styles.errorColor]}>*</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -5421,7 +5446,7 @@ class EditLog extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-                        <View className="container-right">
+                        <View>
                           <Text style={[styles.row10]}>Advisor Last Name<Text style={[styles.errorColor]}>*</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -5435,7 +5460,7 @@ class EditLog extends Component {
                       </View>
 
                       <View style={[styles.row10]}>
-                        <View className="container-left">
+                        <View>
                           <Text style={[styles.row10]}>Advisor Email<Text style={[styles.errorColor]}>*</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -5464,7 +5489,7 @@ class EditLog extends Component {
                   )}
 
                   <View style={[styles.row10]}>
-                    <View className="container-left">
+                    <View>
                       <Text style={[styles.row10]}>Check In / Session Date<Text style={[styles.errorColor]}>*</Text></Text>
                       <DateTimePicker
                         testID="sessionDate"
@@ -5476,7 +5501,7 @@ class EditLog extends Component {
                       />
                     </View>
 
-                    <View className="container-right">
+                    <View>
                       <Text style={[styles.row10]}>Meeting Method<Text style={[styles.errorColor]}>*</Text></Text>
 
                       <Picker
@@ -5726,8 +5751,8 @@ class EditLog extends Component {
                     )}
 
                     <View style={[styles.row10]}>
-                      <View style={[styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex50]}>
+                      <View>
+                        <View>
                           <Text style={[styles.row10]}>Practiced Interviewing?</Text>
                           <Switch
                             onChange={(change) => this.setState({ mcPracticedInterviewing: change, formHasChanged: true })}
@@ -5735,7 +5760,7 @@ class EditLog extends Component {
                             id="normal-switch"
                           />
                         </View>
-                        <View style={[styles.flex50]}>
+                        <View>
                           <Text style={[styles.row10]}>Felt Prepared?</Text>
                           <Switch
                             onChange={(change) => this.setState({ wasPrepared: change, formHasChanged: true })}
@@ -5747,11 +5772,11 @@ class EditLog extends Component {
                     </View>
 
                     <View style={[styles.row10]}>
-                      <View>
-                        <View className="float-left right-padding-15">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.rightPadding15]}>
                           <Text style={[styles.row10]}>Questions Asked of You</Text>
                         </View>
-                        <View className="float-left top-padding-13">
+                        <View style={[styles.topPadding13]}>
                           <TouchableOpacity onPress={() => this.addRemoveItems('Add','','Answered')}>
                             <Image source={{ uri: addCircleOutlineIcon}} style={[styles.square20,styles.contain]}/>
                           </TouchableOpacity>
@@ -5762,11 +5787,11 @@ class EditLog extends Component {
                     </View>
 
                     <View style={[styles.row10]}>
-                      <View>
-                        <View className="float-left right-padding-15">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.rightPadding15]}>
                           <Text style={[styles.row10]}>Questions You Asked</Text>
                         </View>
-                        <View className="float-left top-padding-13">
+                        <View style={[styles.topPadding13]}>
                           <TouchableOpacity onPress={() => this.addRemoveItems('Add','','Asked')}>
                             <Image source={{ uri: addCircleOutlineIcon}} style={[styles.square20,styles.contain]}/>
                           </TouchableOpacity>
@@ -6057,17 +6082,20 @@ class EditLog extends Component {
                 {(this.state.confirmDelete) ? (
                   <View>
                     <Text style={[styles.row10]}>Are you sure you want to delete this {(this.state.logType && this.state.logType !== '') ? this.state.logType.toLowerCase() : 'Log'}?</Text>
-                    <TouchableOpacity className="btn btn-squarish error-background-color left-margin clear-border" onPress={() => this.deleteLog()}><Text>Delete {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
-                    <TouchableOpacity className="btn btn-squarish white-background cta-color left-margin" onPress={() => this.setState({ confirmDelete: false })}><Text>Cancel</Text></TouchableOpacity>
+                    <View style={[styles.rowDirection]}>
+                      <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.leftMargin,styles.flexCenter]} onPress={() => this.deleteLog()}><Text style={[styles.whiteColor,styles.descriptionText1]}>Delete {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
+                      <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.leftMargin,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: false })}><Text style={[styles.whiteColor,styles.descriptionText1]}>Cancel</Text></TouchableOpacity>
+                    </View>
                   </View>
                 ) : (
-                  <View>
-                    <TouchableOpacity className="btn btn-primary" onPress={() => this.saveLog()}><Text>Save {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
+                  <View style={[styles.rowDirection]}>
+                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.saveLog()}><Text style={[styles.whiteColor]}>Save {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
                     {(this.state.editExisting) && (
-                      <TouchableOpacity className="btn btn-quaternary left-margin" onPress={() => this.setState({ confirmDelete: true })}><Text>Delete {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
+                      <TouchableOpacity style={[styles.btnPrimary,styles.errorBackgroundColor,styles.leftMargin,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.whiteColor]}>Delete {(this.state.logType && this.state.logType !== '') ? this.state.logType : 'Log'}</Text></TouchableOpacity>
                     )}
                   </View>
                 )}
+                <View style={[styles.superSpacer]} />
               </View>
             )}
           </View>
@@ -6095,11 +6123,11 @@ class EditLog extends Component {
           {(!this.props.modalView) && (
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
               <ScrollView key="info" style={[styles.card,styles.fullScreenWidth]}>
-                <View>
-                  <View className="calc-column-offset-40">
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.calcColumn100]}>
                     <Text style={[styles.headingText2]}>S.M.A.R.T. Goals Defined</Text>
                   </View>
-                  <View className="fixed-column-40">
+                  <View style={[styles.width40]}>
                     <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
                       <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
                     </TouchableOpacity>

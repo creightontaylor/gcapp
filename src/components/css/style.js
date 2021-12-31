@@ -272,8 +272,11 @@ module.exports = StyleSheet.create({
   rightMargin: {
     marginRight: 10
   },
-  leftMargin: {
+  leftMargin3: {
     marginLeft: 3
+  },
+  leftMargin5: {
+    marginLeft: 5
   },
   leftMargin: {
     marginLeft: 10
@@ -303,6 +306,9 @@ module.exports = StyleSheet.create({
   },
   topPadding5: {
     paddingTop: 5
+  },
+  topPadding13: {
+    paddingTop: 13
   },
   topPadding15: {
     paddingTop: 15
@@ -480,6 +486,9 @@ module.exports = StyleSheet.create({
   width20: {
     width: 20
   },
+  width22: {
+    width: 22
+  },
   width25: {
     width: 25
   },
@@ -509,6 +518,9 @@ module.exports = StyleSheet.create({
   },
   width80: {
     width: 80
+  },
+  width85: {
+    width: 85
   },
   width90: {
     width: 90
@@ -570,6 +582,9 @@ module.exports = StyleSheet.create({
   height150: {
     height: 150
   },
+  calcColumn30: {
+    width: Dimensions.get('window').width - 30
+  },
   calcColumn40: {
     width: Dimensions.get('window').width - 40
   },
@@ -587,6 +602,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn90: {
     width: Dimensions.get('window').width - 90
+  },
+  calcColumn95: {
+    width: Dimensions.get('window').width - 95
   },
   calcColumn100: {
     width: Dimensions.get('window').width - 100
@@ -870,8 +888,12 @@ module.exports = StyleSheet.create({
   primaryBackground: {
     backgroundColor: primaryColor
   },
-  primaryBackgrounLight: {
+  primaryBackgroundLight: {
     backgroundColor: 'rgba(82,166,229,0.5)'
+  },
+  primaryBorder: {
+    borderWidth: 1,
+    borderColor: primaryColor
   },
   secondaryBackground: {
     backgroundColor: '#70DBDB'
@@ -908,6 +930,10 @@ module.exports = StyleSheet.create({
   },
   quinaryBackgroundLight: {
     backgroundColor: 'rgba(1,121,111,0.5)'
+  },
+  quinaryBorder: {
+    borderWidth: 1,
+    borderColor: '#0d98ba',
   },
   senaryBackground: {
     backgroundColor: '#FFC8C8'
