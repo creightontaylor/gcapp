@@ -586,6 +586,9 @@ module.exports = StyleSheet.create({
   height76: {
     height: 76
   },
+  height80: {
+    height: 80
+  },
   height150: {
     height: 150
   },
@@ -1218,6 +1221,10 @@ module.exports = StyleSheet.create({
   filler: {
     transition: 'width .2s ease-in',
     borderRadius: 50,
+  },
+  darkUnderline: {
+    borderBottomWidth: 2,
+    borderColor: standardColor
   }
 
 });

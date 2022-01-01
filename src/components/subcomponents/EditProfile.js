@@ -636,7 +636,7 @@ class EditProfile extends Component {
                         </TouchableOpacity>
 
                       </View>
-                      {/*
+
                       <View style={[styles.row15]}>
                         <View style={[styles.row15]}>
                           <Text style={[styles.headingText4]}>Tools</Text>
@@ -689,7 +689,7 @@ class EditProfile extends Component {
 
                           </View>
                         </TouchableOpacity>
-                      </View>*/}
+                      </View>
                     </View>
                 </View>
             </ScrollView>
