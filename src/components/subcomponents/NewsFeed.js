@@ -1,9 +1,24 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, Image} from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 
 import SubRenderPosts from '../common/RenderPosts';
+
+const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+const assigneeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignee-icon-dark.png';
+const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
+const eventIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/event-icon-dark.png';
+const assignmentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignments-icon-dark.png';
+const problemIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/problem-icon-dark.png';
+const challengeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/challenge-icon-dark.png';
+const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png';
+const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png';
+const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
+const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
+const targetIconOrange = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon-orange.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdownArrow.png';
+const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png';
 
 class NewsFeed extends Component {
   constructor(props) {
@@ -25,9 +40,6 @@ class NewsFeed extends Component {
   retrieveData = async() => {
     try {
 
-      console.log('are is this causing the error?')
-      //testing badges
-
       console.log('this is causing the error')
       const emailId = await AsyncStorage.getItem('email')
       const username = await AsyncStorage.getItem('username');
@@ -47,14 +59,14 @@ class NewsFeed extends Component {
 
       if (emailId !== null) {
         // We have data!!
-        console.log('what is the email of this user', emailId);
+        console.log('email ', emailId);
 
         const resLimit = 4
         const self = this
         const baseURL = 'https://www.guidedcompass.com'
 
         function pullAdditionalInfo(friendIds, activeFriendIds) {
-           console.log('pullAdditionalInfo called', friendIds, activeFriendIds)
+           console.log('pullAdditionalInfo called')
 
            Axios.get(baseURL + '/api/users/profile/details/' + emailId, { params: { emailId } })
             .then((response) => {
@@ -62,7 +74,7 @@ class NewsFeed extends Component {
 
               if (response.data.success) {
 
-                console.log('profile data received', response.data)
+                console.log('profile data received')
 
                 const pictureURL = response.data.user.pictureURL
                 const headline = response.data.user.headline
@@ -93,7 +105,7 @@ class NewsFeed extends Component {
 
                 Axios.get(baseURL + '/api/group-posts', { params: postQueryParams })
                 .then((response) => {
-                   console.log('Group posts query attempted in newsfeed', response.data);
+                   console.log('Group posts query attempted in newsfeed');
 
                    if (response.data.success) {
                      console.log('successfully retrieved group posts in newsfeed')
@@ -101,20 +113,25 @@ class NewsFeed extends Component {
                      let posts = []
                      if (response.data.groupPosts) {
                        posts = response.data.groupPosts
+
                        const pinnedIndex = posts.findIndex(x => x.pinned === true);
-                       const pinnedPost = posts[pinnedIndex]
-                       posts.splice(pinnedIndex,1)
-                       posts.unshift(pinnedPost)
-                       // console.log('show pinnedPost: ', pinnedPost)
+                       if (pinnedIndex > -1) {
+                         const pinnedPost = posts[pinnedIndex]
+                         posts.splice(pinnedIndex,1)
+                         posts.unshift(pinnedPost)
+                       }
+                       console.log('show posts: !!!!!!!!!!!!!!!!!!!!', posts )
+
+
                      }
-                     console.log('got the posts? ')
+
                      self.setState({ posts, postsAreLoading: false })
 
                      if (self.props.passedPostId) {
 
                        Axios.get(baseURL + '/api/group-posts/byid', { params: { _id: passedPostId } })
                        .then((response) => {
-                          console.log('Group post query attempted', response.data);
+                          console.log('Group post query attempted');
 
                           if (response.data.success) {
                             console.log('successfully retrieved group post')
@@ -129,7 +146,7 @@ class NewsFeed extends Component {
 
                        Axios.get(baseURL + '/api/comments', { params: { parentPostId: passedPostId } })
                        .then((response) => {
-                         console.log('Comments query attempted', response.data);
+                         console.log('Comments query attempted');
 
                           if (response.data.success) {
                             console.log('successfully retrieved comments')
@@ -183,7 +200,7 @@ class NewsFeed extends Component {
 
          Axios.get(baseURL + '/api/friends', { params: { orgCode: activeOrg, emailId } })
          .then((response) => {
-           console.log('Friends query attempted', response.data);
+           console.log('Friends query attempted');
 
              if (response.data.success) {
                console.log('friends query worked')
@@ -226,7 +243,7 @@ class NewsFeed extends Component {
 
          Axios.get(baseURL + '/api/org', { params: { orgCode: activeOrg } })
          .then((response) => {
-           console.log('Org info query attempted for orgFocus on login', response.data);
+           console.log('Org info query attempted for orgFocus on login');
 
            if (response.data.success) {
              console.log('org info query worked for orgFocus')
@@ -258,65 +275,65 @@ class NewsFeed extends Component {
         {(this.state.posts && this.state.posts.length > 0) && (
           <View>
             {/*
-            {(!window.location.pathname.includes('/my-social-posts')) && (
-              <div>
-                <div className="top-padding-20">
-                  <div className="calc-column-offset-165 top-padding-5">
-                    <hr />
-                  </div>
-                  <div className="fixed-column-150-static description-text-4 curtail-text">
-                    <button className="background-button full-width clear-margin clear-padding top-margin-negative-10" onClick={(this.state.showPostFilterMenu) ? () => this.setState({ showPostFilterMenu: false }) : () => this.setState({ showPostFilerMenu: true })}>
-                      <p className="full-width right-text">Filter: Posts from <label className="bold-text">{(this.state.postFilterValue === 'Admin') ? this.state.orgName : this.state.postFilterValue}</label></p>
-                    </button>
-                  </div>
-                  <div className="fixed-column-15 top-margin-negative-5">
-                    <button className="background-button full-width" onClick={(this.state.showPostFilterMenu) ? () => this.setState({ showPostFilterMenu: false }) : () => this.setState({ showPostFilterMenu: true })}>
-                      <img src={dropdownArrow} alt="GC" className="image-auto-8 pin-right" />
-                    </button>
-                  </div>
-                  <div className="clear" />
-                </div>
+            {(!this.props.mySocialPosts) && (
+              <View>
+                <View style={[styles.topPadding20]}>
+                  <View className="calc-column-offset-165 top-padding-5">
+                    <View style={[styles.horizontalLine]} />
+                  </View>
+                  <View className="fixed-column-150-static description-text-4 curtail-text">
+                    <TouchableOpacity className="background-button full-width clear-margin clear-padding top-margin-negative-10" onPress={(this.state.showPostFilterMenu) ? () => this.setState({ showPostFilterMenu: false }) : () => this.setState({ showPostFilerMenu: true })}>
+                      <Text className="full-width right-text">Filter: Posts from <Text className="bold-text">{(this.state.postFilterValue === 'Admin') ? this.state.orgName : this.state.postFilterValue}</Text></Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View className="fixed-column-15 top-margin-negative-5">
+                    <TouchableOpacity className="background-button full-width" onPress={(this.state.showPostFilterMenu) ? () => this.setState({ showPostFilterMenu: false }) : () => this.setState({ showPostFilterMenu: true })}>
+                      <Image source={{ uri: dropdownArrow}} style={[styles.square8,styles.contain,styles.pinRight]} />
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
 
                 {(this.state.showPostFilterMenu) && (
-                  <div className="menu-bottom-2 description-text-3">
-                    <div>
-                      <button className="background-button full-width left-text" onClick={() => this.filterPosts('Everyone', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
-                        <div className="row-5">
-                          <div className="fixed-column-25">
-                            <img src={socialIconDark} alt="GC" className="image-auto-15" />
-                          </div>
-                          <div className="calc-column-offset-25">
-                            <p>Everyone</p>
-                          </div>
-                          <div className="clear" />
-                        </div>
-                      </button>
-                      <button className="background-button full-width left-text" onClick={() => this.filterPosts('Connections', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
-                        <div className="row-5">
-                          <div className="fixed-column-25">
-                            <img src={assigneeIconDark} alt="GC" className="image-auto-15" />
-                          </div>
-                          <div className="calc-column-offset-25">
-                            <p>Connections</p>
-                          </div>
-                          <div className="clear" />
-                        </div>
-                      </button>
-                      <button className="background-button full-width left-text" onClick={() => this.filterPosts('Admin', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
-                        <div className="row-5">
-                          <div className="fixed-column-25">
-                            <img src={(this.state.orgLogo) ? this.state.orgLogo : industryIconDark} alt="GC" className="image-15-fit" />
-                          </div>
-                          <div className="calc-column-offset-25">
-                            <p>{this.state.orgName}</p>
-                          </div>
-                          <div className="clear" />
-                        </div>
-                      </button>
-                    </div>
-                  </div>
+                  <View style={[styles.descriptionText3,styles.absolutePosition,styles.slightlyRoundedCorners,styles.mediumShadow,styles.padding20]}>
+                    <View>
+                      <TouchableOpacity className="background-button full-width left-text" onPress={() => this.filterPosts('Everyone', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
+                        <View style={[styles.row5]}>
+                          <View className="fixed-column-25">
+                            <Image source={{ uri: socialIconDark}} style={[styles.square15,styles.contain]} />
+                          </View>
+                          <View className="calc-column-offset-25">
+                            <Text>Everyone</Text>
+                          </View>
+
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity className="background-button full-width left-text" onPress={() => this.filterPosts('Connections', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
+                        <View style={[styles.row5]}>
+                          <View className="fixed-column-25">
+                            <Image source={{ uri: assigneeIconDark}} style={[styles.square15,styles.contain]} />
+                          </View>
+                          <View className="calc-column-offset-25">
+                            <Text>Connections</Text>
+                          </View>
+
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity className="background-button full-width left-text" onPress={() => this.filterPosts('Admin', null, this.state.activeOrg, this.state.excludePostIds, this.state.activeFriendIds, this.state.emailId)}>
+                        <View style={[styles.row5]}>
+                          <View className="fixed-column-25">
+                            <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={[styles.square15,styles.contain]} />
+                          </View>
+                          <View className="calc-column-offset-25">
+                            <Text>{this.state.orgName}</Text>
+                          </View>
+
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 )}
-              </div>
+              </View>
             )}*/}
 
             {(this.state.postsAreLoading) ? (
