@@ -334,7 +334,7 @@ class EditProfile extends Component {
                       </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Favorites', { userType: 'MySocialPosts'})}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('MySocialPosts')}>
                       <View style={[styles.row15,styles.rowDirection]}>
                         <View style={styles.width50}>
                           <View style={[styles.miniSpacer]} />
@@ -349,6 +349,7 @@ class EditProfile extends Component {
 
                       </View>
                     </TouchableOpacity>
+
                     {(this.state.roleName !== 'Mentor') && (
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Exchange', { category: 'My Posts'})}>
                         <View style={[styles.row15,styles.rowDirection]}>
@@ -600,7 +601,7 @@ class EditProfile extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('My Social Posts')}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MySocialPosts')}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width50}>
                               <View style={[styles.miniSpacer]} />

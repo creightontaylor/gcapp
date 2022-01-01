@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform } from 'react-native';
-import { Card, CardSection } from './common';
-const styles = require('./css/style');
 import Axios from 'axios';
 // const styles = require('./css/style');
 import NewsFeed from './subcomponents/NewsFeed';

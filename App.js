@@ -30,6 +30,7 @@ import Logs from './src/components/Logs';
 import EditLog from './src/components/EditLog';
 import Favorites from './src/components/Favorites';
 import Completions from './src/components/Completions';
+import MySocialPosts from './src/components/MySocialPosts';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -305,6 +306,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="EditLog" component={EditLog} />
           <Stack.Screen name="Favorites" component={Favorites} />
           <Stack.Screen name="Completions" component={Completions} />
+          <Stack.Screen name="MySocialPosts" component={MySocialPosts} />
         </Stack.Navigator>
       </NavigationContainer>
     );
