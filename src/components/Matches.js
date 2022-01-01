@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ScrollView, View, Text, TextInput, Image, FlatList, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
 const styles = require('./css/style');
+import * as Progress from 'react-native-progress';
 
 const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-grey.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
@@ -896,20 +897,11 @@ class Matches extends Component {
               <View style={[styles.spacer]} />
 
               <View style={[styles.rowDirection]}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate(pathname, passedState)} style={[styles.rowDirection,styles.calcColumn115]}>
-                  <View style={[styles.width70]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate(pathname, passedState)} style={[styles.rowDirection,styles.calcColumn105]}>
+                  <View style={[styles.width60]}>
                     {(value.matchScore || value.matchScore === 0) ? (
                       <View style={[styles.rightPadding]}>
-                        {/*
-                        <CircularProgressBar
-                          percentage={value.matchScore}
-                          text={`${value.matchScore}%`}
-                          styles={{
-                            path: { stroke: `rgba(110, 190, 250, ${value.matchScore / 100})` },
-                            text: { fill: '#6EBEFA', fontSize: '26px' },
-                            trail: { stroke: 'transparent' }
-                          }}
-                        />*/}
+                        <Progress.Circle progress={value.matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                       </View>
                     ) : (
                       <Image source={{ uri: itemIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
@@ -957,7 +949,7 @@ class Matches extends Component {
 
         rows.push(
           <View key="calculateMatches" style={[styles.centerText,styles.row10]}>
-            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.calculateMatches(type) }><Text style={[styles.descriptionText1,styles.whiteColor]}>{errorMessage.action}</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(type) }><Text style={[styles.descriptionText1,styles.whiteColor]}>{errorMessage.action}</Text></TouchableOpacity>
           </View>
         )
 

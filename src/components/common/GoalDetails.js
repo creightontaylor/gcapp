@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Pla
 const styles = require('../css/style');
 import Axios from 'axios';
 
-class EditProject extends Component {
+class GoalDetails extends Component {
     constructor(props) {
         super(props)
 
@@ -22,7 +22,7 @@ class EditProject extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in commonEditGroup', this.props.activeOrg, prevProps)
+      console.log('componentDidUpdate called in commonGoalDetails', this.props.activeOrg, prevProps)
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
         console.log('t0 will update')
@@ -33,7 +33,7 @@ class EditProject extends Component {
     }
 
     retrieveData() {
-      console.log('retrieveData called in commonEditGroup', this.props.selectedGroup)
+      console.log('retrieveData called in commonGoalDetails')
 
 
     }
@@ -42,11 +42,11 @@ class EditProject extends Component {
 
       return (
           <ScrollView>
-            <View>In Edit Project</View>
+            <View>In Send Message</View>
           </ScrollView>
 
       )
     }
 }
 
-export default EditProject
+export default GoalDetails

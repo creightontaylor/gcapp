@@ -32,6 +32,7 @@ import Favorites from './src/components/Favorites';
 import Completions from './src/components/Completions';
 import MySocialPosts from './src/components/MySocialPosts';
 import Matches from './src/components/Matches';
+import Profile from './src/components/Profile';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -309,6 +310,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Completions" component={Completions} />
           <Stack.Screen name="MySocialPosts" component={MySocialPosts} />
           <Stack.Screen name="Matches" component={Matches} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       </NavigationContainer>
     );

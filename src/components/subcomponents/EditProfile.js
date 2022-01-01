@@ -417,38 +417,6 @@ class EditProfile extends Component {
                             </TouchableOpacity>
                           </View>
 
-                          {(this.state.publicProfile) ? (
-                            <View>
-                              <View style={[styles.topMargin20]}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username})}>
-                                  <View style={[styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.mediumShadow,styles.horizontalPadding30,styles.rightMargin,styles.row7,styles.flexCenter]}>
-                                    <Text style={[styles.whiteColor,styles.descriptionText2]}>Preview Profile in Portal</Text>
-                                  </View>
-                                </TouchableOpacity>
-
-                                {(this.state.publicProfileExtent === 'Public') && (
-                                  <View>
-
-                                    <View style={styles.spacer} />
-                                    <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/' + this.state.username + '/profile')}>
-                                      <View style={[styles.slightlyRoundedCorners,styles.ctaBorder,styles.mediumShadow,styles.row10,styles.horizontalPadding30]}>
-                                        <Text style={[styles.ctaColor,styles.descriptionText2]}>Preview Public Profile</Text>
-                                      </View>
-                                    </TouchableOpacity>
-                                  </View>
-                                )}
-                              </View>
-                            </View>
-                          ) : (
-                            <View>
-                              {(!this.state.remoteAuth) && (
-                                <View style={[styles.topPadding20,styles.descriptionText2]}>
-                                  <Text>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>click here</Text></TouchableOpacity></Text>
-                                </View>
-                              )}
-                            </View>
-                          )}
-
                           { (this.state.serverSuccessProfilePic) ? (
                             <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                           ) : (
@@ -456,6 +424,40 @@ class EditProfile extends Component {
                           )}
                         </View>
                       </View>
+
+                      {(this.state.publicProfile) ? (
+                        <View>
+                          <View style={[styles.bottomPadding]}>
+                            <View style={[styles.rowDirection,styles.flex1]}>
+                              <View style={[styles.flex50,styles.leftPadding]}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username})}>
+                                  <View style={[styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.mediumShadow,styles.horizontalPadding20,styles.row10,styles.flexCenter]}>
+                                    <Text style={[styles.whiteColor,styles.descriptionText3]}>Preview Profile</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+
+                              {(this.state.publicProfileExtent === 'Public') && (
+                                <View style={[styles.flex50,styles.leftPadding]}>
+                                  <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/' + this.state.username + '/profile')}>
+                                    <View style={[styles.slightlyRoundedCorners,styles.ctaBorder,styles.whiteBackground,styles.mediumShadow,styles.row10,styles.horizontalPadding20,styles.flexCenter]}>
+                                      <Text style={[styles.ctaColor,styles.descriptionText3]}>Share Profile</Text>
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      ) : (
+                        <View>
+                          {(!this.state.remoteAuth) && (
+                            <View style={[styles.topPadding20,styles.descriptionText2]}>
+                              <Text>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>click here</Text></TouchableOpacity></Text>
+                            </View>
+                          )}
+                        </View>
+                      )}
 
                       <View style={styles.horizontalLine} />
 
@@ -634,7 +636,7 @@ class EditProfile extends Component {
                         </TouchableOpacity>
 
                       </View>
-
+                      {/*
                       <View style={[styles.row15]}>
                         <View style={[styles.row15]}>
                           <Text style={[styles.headingText4]}>Tools</Text>
@@ -687,7 +689,7 @@ class EditProfile extends Component {
 
                           </View>
                         </TouchableOpacity>
-                      </View>
+                      </View>*/}
                     </View>
                 </View>
             </ScrollView>
