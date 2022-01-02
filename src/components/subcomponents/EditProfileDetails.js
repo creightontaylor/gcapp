@@ -6608,7 +6608,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'post', this.state.selectedPost)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'post', this.state.selectedPost)}><Text>Add</Text></TouchableOpacity>
                                           </View>
                                         </View>
                                       )}
@@ -6661,7 +6661,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'project', this.state.selectedProject)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'project', this.state.selectedProject)}><Text>Add</Text></TouchableOpacity>
                                           </View>
 
                                         </View>
@@ -6709,7 +6709,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'goal', this.state.selectedGoal)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'goal', this.state.selectedGoal)}><Text>Add</Text></TouchableOpacity>
                                           </View>
 
                                         </View>
@@ -6758,7 +6758,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'passion', this.state.selectedPassion)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'passion', this.state.selectedPassion)}><Text>Add</Text></TouchableOpacity>
                                           </View>
 
                                         </View>
@@ -6806,7 +6806,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'assessment', this.state.selectedAssessment)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'assessment', this.state.selectedAssessment)}><Text>Add</Text></TouchableOpacity>
                                           </View>
 
                                         </View>
@@ -6854,7 +6854,7 @@ class EditProfileDetails extends Component {
                                             </Picker>
                                           </View>
                                           <View>
-                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'endorsement', this.state.selectedEndorsement)}><Text>Add</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'endorsement', this.state.selectedEndorsement)}><Text>Add</Text></TouchableOpacity>
                                           </View>
 
                                         </View>
@@ -6904,7 +6904,7 @@ class EditProfileDetails extends Component {
                                               </Picker>
                                             </View>
                                             <View>
-                                              <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text>Add</Text></TouchableOpacity>
+                                              <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text>Add</Text></TouchableOpacity>
                                             </View>
 
                                           </View>
@@ -6937,7 +6937,7 @@ class EditProfileDetails extends Component {
 
                               {(!this.props.fromWalkthrough) && (
                                 <View style={[styles.row10]}>
-                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false)}><Text>Save Profile Visibility Preferences></Text></TouchableOpacity>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false)}><Text style={[styles.ctaColor]}>Save Profile Visibility Preferences</Text></TouchableOpacity>
                                 </View>
                               )}
 

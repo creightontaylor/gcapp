@@ -6,7 +6,7 @@ import Modal from 'react-native-modal';
 import * as Progress from 'react-native-progress';
 
 const defaultProfileImage = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-big.png';
-const resumeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/resume-icon-big.png';
+const resumeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/resume-icon-dark.png';
 const linkedinIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/linkedin-icon-dark.png';
 const websiteIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/website-icon-dark.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
@@ -89,13 +89,6 @@ class ExternalProfile extends Component {
     this.followPerson = this.followPerson.bind(this)
     this.testActiveFriendship = this.testActiveFriendship.bind(this)
 
-    this.renderPost = this.renderPost.bind(this)
-    this.calculateWidth = this.calculateWidth.bind(this)
-    this.renderOriginalPost = this.renderOriginalPost.bind(this)
-    this.selectAnswer = this.selectAnswer.bind(this)
-    this.retrieveComments = this.retrieveComments.bind(this)
-    this.retrieveLikes = this.retrieveLikes.bind(this)
-    this.togglePostMenu = this.togglePostMenu.bind(this)
     this.renderShareButtons = this.renderShareButtons.bind(this)
     this.renderTags = this.renderTags.bind(this)
     this.itemClicked = this.itemClicked.bind(this)
@@ -874,881 +867,6 @@ class ExternalProfile extends Component {
     return friendshipIsActive
   }
 
-  calculateWidth(item, answer) {
-    console.log('calculateWidth called', item, answer)
-
-    let width = '0%'
-
-    let aValue = 0
-    if (item.aVotes) {
-      aValue = item.aVotes.length
-    }
-
-    let bValue = 0
-    if (item.bVotes) {
-      bValue = item.bVotes.length
-    }
-
-    let totalValue = aValue + bValue
-    if (totalValue > 0) {
-      if (answer === 'a') {
-        width = ((aValue / (aValue + bValue)) * 100).toString() + '%'
-      } else {
-        width = ((bValue / (bValue + aValue)) * 100).toString() + '%'
-      }
-    }
-
-    return width
-  }
-
-  renderPost(value, index, inModal) {
-    console.log('renderPost called', value)
-
-    if (value) {
-      let defaultProfileItemIcon = projectsIconDark
-      if (value.profileItem) {
-        if (value.profileItem === 'Experience') {
-          defaultProfileItemIcon = experienceIcon
-        } else if (value.profileItem === 'Education') {
-          defaultProfileItemIcon = educationIcon
-        } else if (value.profileItem === 'Career Goal') {
-          defaultProfileItemIcon = targetIconOrange
-        } else if (value.profileItem === 'Passion') {
-          defaultProfileItemIcon = favoritesIconDark
-        }
-      }
-
-      return (
-        <View key={value}>
-
-          <View style={(!inModal) && [styles.cardClearPadding,styles.padding20,styles.topMargin20]}>
-            <View>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.username })} className="background-button standard-color profile-container-right calc-column-offset-30">
-                <View className="fixed-column-55">
-                  {(value.roleName === 'Admin') ? (
-                    <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain]} />
-                  ) : (
-                    <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
-                  )}
-                </View>
-                <View className="calc-column-offset-55">
-                  <View className="calc-column-offset-25">
-                    <Text style={[styles.descriptionText1,styles.boldText]}>{value.firstName} {value.lastName}</Text>
-                  </View>
-                  {(value.pinned) && (
-                    <View className="fixed-column-25 top-padding-5 left-padding">
-                      <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} />
-                    </View>
-                  )}
-
-                  <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-
-                  {(value.headline && value.headline !== '') ? (
-                    <View>
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.headline}</Text>
-                    </View>
-                  ) : (
-                    <View>
-                      {(value.education && value.education[0] && value.education[0].name && value.education[0].isContinual) ? (
-                        <View>
-                          {console.log('show edu: ', value.education)}
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Student @ {value.education[0].name}</Text>
-                        </View>
-                      ) : (
-                        <View>
-                          <View>
-                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{this.state.orgName} Member</Text>
-                          </View>
-                        </View>
-                      )}
-                    </View>
-                  )}
-                  <Text style={[styles.descriptionText4,styles.descriptionTextColor]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
-                </View>
-              </TouchableOpacity>
-
-              <View className="fixed-column-30">
-                <TouchableOpacity onPress={(value.showPostMenu) ? () => this.togglePostMenu(index) : () => this.togglePostMenu(index)} className="background-button">
-                  <View style={[styles.row5,styles.horizontalPadding10]}>
-                    <Image source={{ uri: menuIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
-                  </View>
-                </TouchableOpacity>
-                {(value.showPostMenu) && (
-                  <View className="menu-bottom description-text-3">
-                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, selectedIndex: index })}>
-                      <View style={[styles.row5]}>
-                        <View className="fixed-column-25">
-                          <Image source={{ uri: shareIconDark}} style={[styles.square15,styles.contain]} />
-                        </View>
-                        <View className="calc-column-offset-25">
-                          <Text>Share outside of Guided Compass</Text>
-                        </View>
-
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, adjustFeedPreferences: true, selectedIndex: index })}>
-                      <View style={[styles.row5]}>
-                        <View className="fixed-column-25">
-                          <Image source={{ uri: hideIconDark}} style={[styles.square15,styles.contain]} />
-                        </View>
-                        <View className="calc-column-offset-25">
-                          <Text>I don't want to see this</Text>
-                        </View>
-
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, reportPostView: true, selectedIndex: index })}>
-                      <View style={[styles.row5]}>
-                        <View className="fixed-column-25">
-                          <Image source={{ uri: reportIconDark}} style={[styles.square15,styles.contain]} />
-                        </View>
-                        <View className="calc-column-offset-25">
-                          <Text>Report this post</Text>
-                        </View>
-
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-
-            </View>
-
-            <View style={[styles.row10]}>
-              <Text className={(value.postType === 'alternatives') ? "" : "description-text-2"}>{value.message}</Text>
-              {(value.url) && (
-                <TouchableOpacity style={[styles.descriptionText3,styles.topPadding,styles.boldText]} onPress={() => Linking.openURL(value.url)}><Text>{value.url}</Text></TouchableOpacity>
-              )}
-
-              {(value.postType === 'alternatives') && (
-                <View style={[styles.topPadding]}>
-
-                  <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.showPollDetails(value, index)}>
-                      <View>
-                        <View className="float-left">
-                          <Text style={[styles.descriptionText3,styles.ctaColor]}>{(value.showPollDetails) ? "Collapse Details" : "Expand Details"}</Text>
-                        </View>
-                        <View className="float-left left-padding top-padding-5">
-                          <Image source={{ uri: dropdownArrow}} style={[styles.square8,styles.contain,styles.pinRight]} />
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-
-                    {(value.showPollDetails) && (
-                      <View>
-                        <View style={[styles.row10]}>
-
-                          {(value.aItem) && (
-                            <View>
-                              <View>
-                                {(value.comparisonType === 'Projects') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'project', 'a')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Careers') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'career','a')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Competencies') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'competency','a')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Jobs') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'work','a')}
-                                  </View>
-                                )}
-                              </View>
-                            </View>
-                          )}
-                          <Text style={[styles.descriptionText3]}>{value.aCase}</Text>
-                        </View>
-
-                        <View style={[styles.row10]}>
-                          {(value.bItem) && (
-                            <View>
-                              <View>
-                                {(value.comparisonType === 'Projects') && (
-                                  <View>
-                                    {this.renderTaggedItem(value,'project','b')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Careers') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'career','b')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Competencies') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'competency','b')}
-                                  </View>
-                                )}
-                                {(value.comparisonType === 'Jobs') && (
-                                  <View>
-                                    {this.renderTaggedItem(value, 'work','b')}
-                                  </View>
-                                )}
-                              </View>
-                            </View>
-                          )}
-                          <Text style={[styles.descriptionText3]}>{value.bCase}</Text>
-                        </View>
-                      </View>
-                    )}
-                  </View>
-
-                  {((value.aVotes && value.aVotes.includes(this.state.emailId)) || (value.bVotes && value.bVotes.includes(this.state.emailId))) ? (
-                    <View>
-                      <TouchableOpacity onPress={() => this.selectAnswer(value, index,'a')}>
-                        <View>
-                          <View className="progress-bar-fat" >
-                            <View className="filler-error" style={{ width: this.calculateWidth(value, 'a'), zIndex: -1, height: '36px' }} />
-                            <View style={[styles.row10,styles.horizontalPadding30]} style={{ marginTop: '-36px'}}>
-                              <View className="calc-column-offset-40 left-text">
-                                <Text style={[styles.descriptionText2,styles.curtailText]}>{value.aName}</Text>
-                              </View>
-                              <View className="fixed-column-40 right-text">
-                                <Text style={[styles.descriptionText2,styles.curtailText]}>{this.calculateWidth(value, 'a')}</Text>
-                              </View>
-
-                            </View>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => this.selectAnswer(value, index,'b')}>
-                        <View>
-                          <View className="progress-bar-fat" >
-                            <View className="filler-error" style={{ width: this.calculateWidth(value, 'b'), zIndex: -1, height: '36px' }} />
-                            <View style={[styles.row10,styles.horizontalPadding30]} style={{ marginTop: '-36px'}}>
-                              <View className="calc-column-offset-40 left-text">
-                                <Text style={[styles.descriptionText2,styles.curtailText]}>{value.bName}</Text>
-                              </View>
-                              <View className="fixed-column-40 right-text">
-                                <Text style={[styles.descriptionText2,styles.curtailText]}>{this.calculateWidth(value, 'b')}</Text>
-                              </View>
-
-                            </View>
-                          </View>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    <View>
-                      <TouchableOpacity onPress={() => this.selectAnswer(value, index,'a')}>
-                        <View style={[styles.row10,styles.horizontalPadding30,styles.ctaBorder]}>
-                          <Text style={[styles.descriptionText2]}>{value.aName}</Text>
-                        </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => this.selectAnswer(value, index,'b')}>
-                        <View style={[styles.row10,styles.horizontalPadding30,styles.ctaBorder]}>
-                          <Text style={[styles.descriptionText2]}>{value.bName}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              )}
-
-            </View>
-
-            {(value.imageURL) && (
-              <View style={[styles.row10]}>
-                <Image source={{ uri: value.imageURL}} style={[styles.calcColumn60,styles.height80]} />
-              </View>
-            )}
-
-            {(value.videoURL) && (
-              <View style={[styles.row10]}>
-                <View style={[styles.spacer]}/>
-
-                <View>
-                  <View className="video-container">
-                    {/*
-                    <iframe
-                      title="videoLink"
-                      className="video-iframe"
-                      src={`${value.videoURL}`}
-                      frameBorder="0"
-                    />*/}
-                  </View>
-
-                </View>
-
-
-                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-              </View>
-            )}
-
-            {(value.profileItem) && (
-              <View style={[styles.bottomPadding]}>
-                <View style={[styles.ctaBorder]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.profileItem.username })} className="background-button standard-color padding-20 full-width">
-                    <View style={[styles.padding20]}>
-                      <View className="fixed-column-60">
-                        <Image source={(value.profileItem.imageURL) ? { uri: value.profileItem.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
-                      </View>
-                      <View className="calc-column-offset-60">
-                        <Text>{value.profileItem.name}</Text>
-                        {(value.profileItem.category === 'Project') && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.profileItem.category} | {value.profileItem.hours} Hours</Text>
-                        )}
-                        {(value.profileItem.category === 'Experience') && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.profileItem.startDate} - {value.profileItem.endDate}</Text>
-                        )}
-                        {(value.profileItem.category === 'Education') && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.profileItem.startDate} - {value.profileItem.endDate}</Text>
-                        )}
-                        {(value.profileItem.category === 'Career Goal') && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Deadline: {value.profileItem.deadline}</Text>
-                        )}
-                        {(value.profileItem.category === 'Passion') && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Last Updated {value.profileItem.updatedAt}</Text>
-                        )}
-
-                      </View>
-
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            {(value.opportunityTags && value.opportunityTags.length > 0) && (
-              <View style={[styles.bottomPadding]}>
-                <View style={[styles.ctaBorder]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: value.opportunityTags[0] })} className="background-button standard-color padding-20 full-width">
-                    <View style={[styles.padding20]}>
-                      <View className="fixed-column-60">
-                        <Image source={(value.opportunityTags[0].imageURL) ? { uri: value.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} style={[styles.square50,styles.contain]} />
-                      </View>
-                      <View className="calc-column-offset-60">
-                        {(value.opportunityTags[0].title) ? (
-                          <Text>{value.opportunityTags[0].title}</Text>
-                        ) : (
-                          <Text>{value.opportunityTags[0].name}</Text>
-                        )}
-
-                        {(value.opportunityTags[0].employerName) && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.opportunityTags[0].employerName}</Text>
-                        )}
-
-                      </View>
-
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            {(value.careerTags && value.careerTags.length > 0) && (
-              <View style={[styles.bottomPadding]}>
-                <View style={[styles.ctaBorder]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: value.careerTags[0] })} className="background-button standard-color padding-20 full-width">
-                    <View style={[styles.padding20]}>
-                      <View className="fixed-column-60">
-                        <Image source={(value.careerTags[0].imageURL) ? { uri: value.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} style={[styles.square50,styles.contain]} />
-                      </View>
-                      <View className="calc-column-offset-60">
-                        <Text>{value.careerTags[0].name}</Text>
-                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.careerTags[0].jobFamily}</Text>
-
-                        {(value.careerTags[0].marketData) && (
-                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}> | ${Number(value.careerTags[0].marketData.pay).toLocaleString()} avg pay</Text>
-                        )}
-
-                      </View>
-
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            {(value.trendTags && value.trendTags.length > 0) && (
-              <View style={[styles.bottomPadding]}>
-                <View style={[styles.ctaBorder]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })} className="background-button standard-color padding-20 full-width">
-                    <View style={[styles.padding20]}>
-                      <View className="fixed-column-60">
-                        <Image source={(value.trendTags[0].imageURL) ? { uri: value.trendTags[0].imageURL} : { uri: trendsIconDark}} style={[styles.square50,styles.contain]} />
-                      </View>
-                      <View className="calc-column-offset-120">
-                        <Text>{value.trendTags[0].name}</Text>
-                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.trendTags[0].category}</Text>
-                      </View>
-
-                      {(value.trendTags[0].percentChange) && (
-                        <View className="fixed-column-60">
-                          <Text className="heading-text-3 cta-color full-width right-text">{Number(value.trendTags[0].percentChange).toFixed()}%</Text>
-                          <Text className="description-text-5 full-width right-text">increase in U.S. jobs</Text>
-                        </View>
-                      )}
-
-
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            {(value.tags && value.tags.length > 0) && (
-              <View style={[styles.bottomPadding]}>
-                {value.tags.map((item2, index2) =>
-                  <View key={index2} className="float-left right-padding top-padding">
-                    <View className="tag-container-thin">
-                      <Text style={[styles.descriptionText4]}>{item2}</Text>
-                    </View>
-                  </View>
-                )}
-
-              </View>
-            )}
-
-            {(value.entityTags && value.entityTags.length > 0) && (
-              <View style={[styles.topPadding]}>
-                {value.entityTags.map((value2, optionIndex2) =>
-                  <View key={value2} className="float-left right-padding">
-                    <TouchableOpacity className="background-button standard-color" onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })}>
-                      <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} className="image-auto-20" />
-                    </TouchableOpacity>
-                  </View>
-                )}
-
-              </View>
-            )}
-
-            {(value.originalPost && value.originalPost.message) && (
-              <View className="cta-border padding-20">
-                {this.renderOriginalPost(value)}
-              </View>
-            )}
-
-            {(value.upvotes || (value.comments && value.comments.length > 0)) && (
-              <View className="bottom-padding-5">
-                <View className="fixed-column-130">
-                  <TouchableOpacity onPress={() => this.retrieveLikes(index)} className="background-button">
-                    <Text style={[styles.descriptionText4]}>{(value.upvotes) ? value.upvotes.length : 0} Upvotes</Text>
-                  </TouchableOpacity>
-                  <Text className="description-text-4 horizontal-padding-7">&#8226;</Text>
-                  <TouchableOpacity onPress={() => this.retrieveComments(index)} className="background-button">
-                    <Text style={[styles.descriptionText4]}>{(value.commentCount) ? value.commentCount : 0} Comments</Text>
-                  </TouchableOpacity>
-                </View>
-
-
-
-              </View>
-            )}
-
-            <View style={[styles.spacer]} />
-            <View style={[styles.horizontalLine]} />
-
-            {(!inModal) && (
-              <View style={[styles.topPadding]}>
-                <View className="float-left">
-                  <TouchableOpacity onPress={(e) => this.voteOnItem(e, value, 'up', index) } className="background-button">
-                    <View className="float-left right-padding-8">
-                      <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} className="image-auto-18 center-horizontally" />
-                    </View>
-                    <View className="float-left right-padding-20">
-                      <Text className={(value.upvotes.includes(this.state.emailId)) ? "description-text-2 cta-color bold-text" : "description-text-2"}>{(value.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
-                    </View>
-
-                  </TouchableOpacity>
-                </View>
-
-                <View className="float-left">
-                  <TouchableOpacity onPress={() => this.retrieveComments(index)} className="background-button" disabled={this.state.isLoading}>
-                    <View className="float-left right-padding-8">
-                      <View className="mini-spacer"/><View className="mini-spacer"/><View className="mini-spacer"/>
-                      <Image source={{ uri: commentIconDark}} className="image-auto-18 center-horizontally" />
-                    </View>
-                    <View className="float-left right-padding-20">
-                      <Text style={[styles.descriptionText2]}>Comment</Text>
-                    </View>
-
-                  </TouchableOpacity>
-                </View>
-
-                <View className="float-left">
-                  <TouchableOpacity onPress={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })} className="background-button">
-                    <View className="float-left right-padding-8">
-                      <Image source={{ uri: shareIconDark}} className="image-auto-18 center-horizontally" />
-                    </View>
-                    <View className="float-left right-padding-20">
-                      <Text style={[styles.descriptionText2]}>Share</Text>
-                    </View>
-
-                  </TouchableOpacity>
-                </View>
-                <View className="float-left">
-                  <TouchableOpacity className="background-button standard-color" onPress={() => this.props.navigation.navigate('Messages', { generalPost: value })}>
-                    <View className="float-left right-padding-8">
-                      <Image source={{ uri: sendIconDark}} className="image-auto-18 center-horizontally" />
-                    </View>
-                    <View className="float-left right-padding-20">
-                      <Text style={[styles.descriptionText2]}>Send</Text>
-                    </View>
-
-                  </TouchableOpacity>
-                </View>
-
-
-              </View>
-            )}
-          </View>
-        </View>
-      )
-    }
-  }
-
-  renderOriginalPost(value) {
-    console.log('renderOriginalPost called', value)
-
-    let defaultProfileItemIcon = projectsIconDark
-    if (value.profileItem) {
-      if (value.profileItem === 'Experience') {
-        defaultProfileItemIcon = experienceIcon
-      } else if (value.profileItem === 'Education') {
-        defaultProfileItemIcon = educationIcon
-      } else if (value.profileItem === 'Career Goal') {
-        defaultProfileItemIcon = targetIconOrange
-      } else if (value.profileItem === 'Passion') {
-        defaultProfileItemIcon = favoritesIconDark
-      }
-    }
-
-    return (
-      <View key="originalPost">
-        <View>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.username })} className="background-button standard-color profile-container-right calc-column-offset-30">
-            <View className="fixed-column-55">
-              {(value.originalPost.roleName === 'Admin') ? (
-                <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain]} />
-              ) : (
-                <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
-              )}
-            </View>
-            <View className="calc-column-offset-55">
-              <View className="calc-column-offset-25">
-                <Text style={[styles.descriptionText1,styles.boldText]}>{value.originalPost.firstName} {value.originalPost.lastName}</Text>
-              </View>
-
-
-              <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-
-              {(value.originalPost.headline && value.originalPost.headline !== '') ? (
-                <View>
-                  <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.headline}</Text>
-                </View>
-              ) : (
-                <View>
-                  {(value.originalPost.education && value.originalPost.education[0] && value.originalPost.education[0].name && value.originalPost.education[0].isContinual) ? (
-                    <View>
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Student @ {value.originalPost.education[0].name}</Text>
-                    </View>
-                  ) : (
-                    <View>
-                      <View>
-                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{this.state.orgName} Member</Text>
-                      </View>
-                    </View>
-                  )}
-                </View>
-              )}
-              <Text style={[styles.descriptionText4,styles.descriptionTextColor]}>{convertDateToString(value.originalPost.createdAt,"daysAgo")}</Text>
-            </View>
-          </TouchableOpacity>
-
-          <View className="fixed-column-30">
-
-          </View>
-
-        </View>
-
-        <View style={[styles.row10]}>
-          <Text style={[styles.descriptionText2]}>{value.originalPost.message}</Text>
-
-          {(value.originalPost.url) && (
-            <TouchableOpacity style={[styles.descriptionText3,styles.topPadding,styles.boldText]} onPress={() => Linking.openURL(value.url)}><Text>{value.originalPost.url}</Text></TouchableOpacity>
-          )}
-        </View>
-        {(value.originalPost.imageURL) && (
-          <View style={[styles.row10]}>
-            <Image source={{ uri: value.originalPost.imageURL}} style={[styles.calcColumn60,styles.height80]} />
-          </View>
-        )}
-
-        {(value.originalPost.videoURL) && (
-          <View style={[styles.row10]}>
-            <View style={[styles.spacer]}/>
-
-            <View>
-              <View className="video-container">
-                {/*
-                <iframe
-                  title="videoLink"
-                  className="video-iframe"
-                  src={`${value.originalPost.videoURL}`}
-                  frameBorder="0"
-                />*/}
-              </View>
-
-            </View>
-
-
-            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-          </View>
-        )}
-
-        {(value.originalPost.profileItem) && (
-          <View style={[styles.bottomPadding]}>
-            <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { selectedProfile: value.originalPost.profileItem })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-60">
-                    <Image source={(value.originalPost.profileItem.imageURL) ? { uri: value.originalPost.profileItem.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
-                  </View>
-                  <View className="calc-column-offset-60">
-                    <Text>{value.originalPost.profileItem.name}</Text>
-                    {(value.originalPost.profileItem.category === 'Project') && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.category} | {value.originalPost.profileItem.hours} Hours</Text>
-                    )}
-                    {(value.originalPost.profileItem.category === 'Experience') && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
-                    )}
-                    {(value.originalPost.profileItem.category === 'Education') && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
-                    )}
-                    {(value.originalPost.profileItem.category === 'Career Goal') && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Deadline: {value.originalPost.profileItem.deadline}</Text>
-                    )}
-                    {(value.originalPost.profileItem.category === 'Passion') && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>Last Updated {value.originalPost.profileItem.updatedAt}</Text>
-                    )}
-
-                  </View>
-
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {(value.originalPost.opportunityTags && value.originalPost.opportunityTags.length > 0) && (
-          <View style={[styles.bottomPadding]}>
-            <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: value.originalPost.opportunityTags[0] })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-60">
-                    <Image source={(value.originalPost.opportunityTags[0].imageURL) ? { uri: value.originalPost.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} style={[styles.square50,styles.contain]} />
-                  </View>
-                  <View className="calc-column-offset-60">
-                    {(value.originalPost.opportunityTags[0].title) ? (
-                      <Text>{value.originalPost.opportunityTags[0].title}</Text>
-                    ) : (
-                      <Text>{value.originalPost.opportunityTags[0].name}</Text>
-                    )}
-
-                    {(value.originalPost.opportunityTags[0].employerName) && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.opportunityTags[0].employerName}</Text>
-                    )}
-
-                  </View>
-
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {(value.originalPost.careerTags && value.originalPost.careerTags.length > 0) && (
-          <View style={[styles.bottomPadding]}>
-            <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: value.originalPost.careerTags[0] })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-60">
-                    <Image source={(value.originalPost.careerTags[0].imageURL) ? { uri: value.originalPost.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} style={[styles.square50,styles.contain]} />
-                  </View>
-                  <View className="calc-column-offset-60">
-                    <Text>{value.originalPost.careerTags[0].name}</Text>
-                    <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.careerTags[0].jobFamily}</Text>
-
-                    {(value.originalPost.careerTags[0].marketData) && (
-                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}> | ${Number(value.originalPost.careerTags[0].marketData.pay).toLocaleString()} avg pay</Text>
-                    )}
-
-                  </View>
-
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {(value.originalPost.trendTags && value.originalPost.trendTags.length > 0) && (
-          <View style={[styles.bottomPadding]}>
-            <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-60">
-                    <Image source={(value.originalPost.trendTags[0].imageURL) ? { uri: value.originalPost.trendTags[0].imageURL} : { uri: trendsIconDark}} style={[styles.square50,styles.contain]} />
-                  </View>
-                  <View className="calc-column-offset-120">
-                    <Text>{value.originalPost.trendTags[0].name}</Text>
-                    <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.originalPost.trendTags[0].category}</Text>
-                  </View>
-
-                  {(value.originalPost.trendTags[0].percentChange) && (
-                    <View className="fixed-column-60">
-                      <Text className="heading-text-3 cta-color full-width right-text">{Number(value.originalPost.trendTags[0].percentChange).toFixed()}%</Text>
-                      <Text className="description-text-5 full-width right-text">increase in U.S. jobs</Text>
-                    </View>
-                  )}
-
-
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-
-        {(value.originalPost.tags && value.originalPost.tags.length > 0) && (
-          <View style={[styles.bottomPadding]}>
-            {value.originalPost.tags.map((item2, index2) =>
-              <View key={index2} className="float-left right-padding top-padding">
-                <View className="tag-container-thin">
-                  <Text style={[styles.descriptionText4]}>{item2}</Text>
-                </View>
-              </View>
-            )}
-
-          </View>
-        )}
-
-        {(value.originalPost.entityTags && value.originalPost.entityTags.length > 0) && (
-          <View style={[styles.topPadding]}>
-            {value.originalPost.entityTags.map((value2, optionIndex2) =>
-              <View key={value2} className="float-left right-padding">
-                <TouchableOpacity className="background-button standard-color" onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })}>
-                  <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} className="image-auto-20" />
-                </TouchableOpacity>
-              </View>
-            )}
-
-          </View>
-        )}
-
-      </View>
-    )
-  }
-
-  selectAnswer(value, index,answer) {
-    console.log('selectAnswer', answer)
-
-    let posts = this.state.posts
-    const emailId = this.state.emailId
-
-    // do all this on the backend
-    Axios.put('https://www.guidedcompass.com/api/group-post/poll-vote', {  _id: posts[index]._id, answer, emailId })
-    .then((response) => {
-      console.log('Poll vote attempted', response.data);
-
-        if (response.data.success) {
-          console.log('successfully recorded poll vote')
-
-          posts[index] = response.data.groupPost
-          this.setState({ posts })
-
-        } else {
-          console.log('there was an error saving the poll data', response.data.message)
-
-        }
-
-    }).catch((error) => {
-        console.log('there was an error saving the poll data', error);
-
-    });
-
-  }
-
-  retrieveComments(index) {
-    console.log('retrieveComments called', index)
-
-    let parentPostId = this.state.posts[index]._id
-    // if (index || index === 0) {
-    //   parentPostId = this.state.posts[index]._id
-    // } else {
-    //   parentPostId = this.state.passedGroupPost
-    // }
-    // pull comments
-    Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId } })
-    .then((response) => {
-      console.log('Comments query attempted', response.data);
-
-       if (response.data.success) {
-         console.log('successfully retrieved comments')
-
-         const comments = response.data.comments
-         this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments })
-
-       } else {
-         console.log('no comments data found', response.data.message)
-         this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [] })
-       }
-    }).catch((error) => {
-       console.log('Comments query did not work', error);
-       this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [] })
-    });
-  }
-
-  retrieveLikes(index) {
-    console.log('retrieveLikes called', index)
-
-    const userIds = this.state.posts[index].upvotes
-    if (userIds) {
-      // pull comments
-      Axios.get('https://www.guidedcompass.com/api/users', { params: { userIds } })
-      .then((response) => {
-        console.log('Users query attempted', response.data);
-
-         if (response.data.success) {
-           console.log('successfully retrieved users')
-
-           const upvotes = response.data.users
-           this.setState({ modalIsOpen: true, showUpvotes: true, selectedIndex: index, upvotes })
-
-         } else {
-           console.log('no upvotes data found', response.data.message)
-           this.setState({ modalIsOpen: true, showUpvotes: true, selectedIndex: index, upvotes: [] })
-         }
-      }).catch((error) => {
-         console.log('Upvotes query did not work', error);
-         this.setState({ modalIsOpen: true, showUpvotes: true, selectedIndex: index, upvotes: [] })
-      });
-    } else {
-      this.setState({ modalIsOpen: true, showUpvotes: true, selectedIndex: index, upvotes: [] })
-    }
-  }
-
-  togglePostMenu(index) {
-    console.log('togglePostMenu called', index)
-
-    let posts = this.state.posts
-    if (posts[index].showPostMenu) {
-      posts[index]['showPostMenu'] = false
-    } else {
-      posts[index]['showPostMenu'] = true
-    }
-
-    this.setState({ posts })
-
-  }
-
   renderShareButtons() {
     console.log('renderShareButtons called')
 
@@ -1762,40 +880,40 @@ class ExternalProfile extends Component {
     // console.log('renderTags  called', passedArray, type, editMode)
 
     if (passedArray && passedArray.length > 0) {
-      let backgroundColorClass = ''
+      let backgroundColorClass = styles.primaryBackgroundLight
       if (type === 'careers' || type === 'functions' || type === 'industries') {
-        backgroundColorClass = 'primary-background-light'
+        backgroundColorClass = styles.primaryBackgroundLight
       } else if (type === 'opportunities') {
-        backgroundColorClass = 'secondary-background-light'
+        backgroundColorClass = styles.secondaryBackgroundLight
       } else if (type === 'competencies') {
-        backgroundColorClass = 'tertiary-background-light'
+        backgroundColorClass = styles.tertiaryBackgroundLight
       } else if (type === 'hours') {
-        backgroundColorClass = 'quaternary-background-light'
+        backgroundColorClass = styles.quaternaryBackgroundLight
       } else if (type === 'payRanges') {
-        backgroundColorClass = 'quinary-background-light'
+        backgroundColorClass = styles.quinaryBackgroundLight
       } else if (type === 'schools') {
-        backgroundColorClass = 'senary-background-light'
+        backgroundColorClass = styles.senaryBackgroundLight
       } else if (type === 'majors') {
-        backgroundColorClass = 'septary-background-light'
+        backgroundColorClass = styles.septaryBackgroundLight
       }
 
       return (
-        <View key={type + "|0"} className={(inModal) && "display-inline center-text"}>
-          <View className={(inModal) ? "display-inline center-text" : "top-margin"}>
+        <View key={type + "|0"} style={(inModal) && [styles.centerText]}>
+          <View style={(inModal) ? [styles.centerText,styles.rowDirection,styles.flexWrap] : [styles.topMargin]}>
             {passedArray.map((value, optionIndex) =>
-              <View key={type + "|" + optionIndex} className={(inModal) ? "display-inline center-text" : "float-left"}>
+              <View key={type + "|" + optionIndex} style={(inModal) ? [styles.centerText,styles.rowDirection] : [styles.rowDirection]}>
                 {(optionIndex < 3) && (
                   <View>
                     {(editMode) && (
-                      <View className="close-button-container-1" >
-                        <TouchableOpacity className="background-button" onPress={() => this.removeItem(type, optionIndex)}>
-                          <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                      <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                        <TouchableOpacity onPress={() => this.removeItem(type, optionIndex)}>
+                          <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                         </TouchableOpacity>
                       </View>
                     )}
-                    <View className={(inModal) ? "display-inline right-padding-5 center-text" : "float-left right-padding-5"}>
+                    <View style={(inModal) ? [styles.rightPadding5,styles.centerText] : [styles.rightPadding5]}>
                       <View style={[styles.halfSpacer]} />
-                      <View className={"rounded-corners row-7 horizontal-padding-5 " + backgroundColorClass}>
+                      <View style={[styles.roundedCorners,styles.row7,styles.horizontalPadding20,backgroundColorClass]}>
                         {(typeof value === 'object') ? (
                           <View>
                             {(value.title) && (
@@ -2009,46 +1127,44 @@ class ExternalProfile extends Component {
 
       return (
         <View key="taggedProjectItem">
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject._id })} className="background-button standard-color full-width">
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject._id })}>
             {(answer === 'a') ? (
-              <View>
-                <View className="calc-column-offset-80 heading-text-5 right-text">
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.calcColumn140,styles.headingText5,styles.rightText]}>
                   <Text>A: {item.aName}</Text>
                 </View>
-                <View className="fixed-column-80 heading-text-5">
+                <View style={[styles.width80,styles.headingText5]}>
                   {(item.aValue) && (
-                    <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                    <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                   )}
                 </View>
               </View>
             ) : (
               <View>
-                <View className="fixed-column-80 heading-text-5">
+                <View style={[styles.width80,styles.headingText5]}>
                   {(item.bValue) ? (
                     <Text style={[styles.boldText,styles.ctaColor]}>${item.bValue}</Text>
                   ) : (
-                    <View className="width-40 height-30" />
+                    <View style={[styles.width40,styles.height30]} />
                   )}
                 </View>
-                <View className="calc-column-offset-80 heading-text-5">
+                <View style={[styles.calcColumn140,styles.headingText5]}>
                   <Text style={[styles.flex1,styles.rightText]}>B: {item.bName}</Text>
                 </View>
               </View>
             )}
-
-
           </TouchableOpacity>
 
           <View style={[styles.row5]}>
             <View style={[styles.bottomPadding]}>
               <View style={[styles.ctaBorder]}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject._id })} className={(answer === 'a') ? "background-button standard-color padding-20 full-width" : "background-button standard-color padding-20 full-width right-text"}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject._id })} style={(answer === 'a') ? [styles.padding20] : [styles.padding20,styles.rightText]}>
                   {(answer === 'a') ? (
                     <View style={[styles.padding20]}>
-                      <View className="fixed-column-60">
+                      <View style={[styles.width60]}>
                         <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                       </View>
-                      <View className="calc-column-offset-60">
+                      <View style={[styles.calcColumn120]}>
                         <Text>{itemObject.name}</Text>
                         <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.category} | {itemObject.hours} Hours</Text>
                       </View>
@@ -2056,11 +1172,11 @@ class ExternalProfile extends Component {
                     </View>
                   ) : (
                     <View style={[styles.padding20]}>
-                      <View className="calc-column-offset-60 right-padding">
+                      <View style={[styles.calcColumn120,styles.rightPadding]}>
                         <Text>{itemObject.name}</Text>
                         <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.category} | {itemObject.hours} Hours</Text>
                       </View>
-                      <View className="fixed-column-60">
+                      <View style={[styles.width60]}>
                         <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                       </View>
 
@@ -2075,32 +1191,31 @@ class ExternalProfile extends Component {
     } else if (type === 'work') {
       return (
         <View key="taggedWorkItem">
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject._id })} className="background-button standard-color padding-20 full-width">
-            <View className="calc-column-offset-80">
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject._id })} style={[styles.padding20,styles.rowDirection]}>
+            <View style={[styles.calcColumn160]}>
               {(answer === 'a') ? (
                 <Text>A: {item.aName}</Text>
               ) : (
                 <Text>B: {item.bName}</Text>
               )}
             </View>
-            <View className="fixed-column-80">
+            <View style={[styles.width80]}>
               {(answer === 'a') ? (
-                <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
               ) : (
-                <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
               )}
             </View>
-
           </TouchableOpacity>
 
           <View style={[styles.row5]}>
             <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject._id })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-50">
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject._id })} style={[styles.padding20]}>
+                <View style={[styles.padding20,styles.rowDirection]}>
+                  <View style={[styles.width50]}>
                     <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square40,styles.contain]} />
                   </View>
-                  <View className="calc-column-offset-50">
+                  <View style={[styles.calcColumn150]}>
                     {(itemObject.title) ? (
                       <Text>{itemObject.title}</Text>
                     ) : (
@@ -2110,9 +1225,7 @@ class ExternalProfile extends Component {
                     {(itemObject.employerName) && (
                       <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.employerName}</Text>
                     )}
-
                   </View>
-
                 </View>
               </TouchableOpacity>
             </View>
@@ -2122,19 +1235,19 @@ class ExternalProfile extends Component {
     } else if (type === 'career') {
       return (
         <View key="taggedCareerItem">
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: itemObject })} className="background-button standard-color padding-20 full-width">
-            <View className="calc-column-offset-80">
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: itemObject })} style={[styles.padding20,styles.rowDirection]}>
+            <View style={[styles.calcColumn180]}>
               {(answer === 'a') ? (
                 <Text>A: {item.aName}</Text>
               ) : (
                 <Text>B: {item.bName}</Text>
               )}
             </View>
-            <View className="fixed-column-80">
+            <View style={[styles.width80]}>
               {(answer === 'a') ? (
-                <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
               ) : (
-                <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
               )}
             </View>
 
@@ -2142,12 +1255,12 @@ class ExternalProfile extends Component {
 
           <View style={[styles.bottomPadding]}>
             <View style={[styles.ctaBorder]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: itemObject })} className="background-button standard-color padding-20 full-width">
-                <View style={[styles.padding20]}>
-                  <View className="fixed-column-60">
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: itemObject })}>
+                <View style={[styles.padding20,styles.rowDirection]}>
+                  <View style={[styles.width60]}>
                     <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                   </View>
-                  <View className="calc-column-offset-60">
+                  <View style={[styles.calcColumn160]}>
                     <Text>{itemObject.name}</Text>
                     <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.jobFamily}</Text>
 
@@ -2165,32 +1278,31 @@ class ExternalProfile extends Component {
     } else if (type === 'competency') {
       return (
         <View key="taggedCompetencyItem">
-          <View style={[styles.bottomPadding]}>
-            <View className="calc-column-offset-80">
+          <View style={[styles.bottomPadding,styles.rowDirection]}>
+            <View style={[styles.calcColumn140]}>
               {(answer === 'a') ? (
                 <Text>A: {item.aName}</Text>
               ) : (
                 <Text>B: {item.bName}</Text>
               )}
             </View>
-            <View className="fixed-column-80">
+            <View style={[styles.width80]}>
               {(answer === 'a') ? (
-                <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
               ) : (
-                <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
               )}
             </View>
-
           </View>
 
           <View style={[styles.bottomPadding]}>
             <View style={[styles.ctaBorder]}>
-              <View className="standard-color padding-20 full-width">
+              <View style={[styles.padding20]}>
                 <View>
-                  <View className="fixed-column-60">
+                  <View style={[styles.width60]}>
                     <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                   </View>
-                  <View className="calc-column-offset-60">
+                  <View style={[styles.calcColumn160]}>
                     <Text>{itemObject.name}</Text>
                     <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.category}</Text>
 
@@ -2220,53 +1332,26 @@ class ExternalProfile extends Component {
           {(this.state.profileData) && (
             <View>
 
-              <View className="standard-container-3">
-                <View className="fixed-column-100 top-padding-5">
-                  <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} className="profile-thumbnail-6"/>
-                </View>
-
-                <View className="calc-column-offset-160">
-                  <Text style={[styles.headingText2]}>{this.state.profileData.firstName} {this.state.profileData.lastName}</Text>
-
-                  <View className="description-text-1 top-margin-5">
-                    {(this.state.profileData.roleName === 'Student' || this.state.profileData.roleName === 'Career-Seeker') ? (
-                      <View>
-                        {(this.state.profileData.jobTitle && this.state.profileData.jobTitle !== '' && this.state.profileData.jobTitle !== 'Student' && this.state.profileData.employerName) && (
-                          <Text>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName} | </Text>
-                        )}
-                        <Text>{this.state.profileData.school} {(this.state.profileData.gradYear) ? "'" + this.state.profileData.gradYear.substring(2,4) : 'Student'}</Text>
-                      </View>
-                    ) : (
-                      <Text>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName}</Text>
-                    )}
-                  </View>
-
-                  {(this.state.profileData.headline) && (
-                    <View style={[styles.row5]}>
-                      <Text className="description-text-1">{this.state.profileData.headline}</Text>
-                    </View>
-                  )}
-                </View>
-
-                <View className="fixed-column-60">
-                  {(this.state.matchScore > 0) && (
-                    <Progress.Circle progress={this.state.matchScore / 100} size={styles.width60.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
-                  )}
-
-                </View>
-
-
-
-                {((this.state.publicProfile || this.state.viewableProfile) || this.state.friends.some(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email)) ? (
-                  <View className="top-padding float-left">
+              <View style={[styles.card]}>
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.width100,styles.topPadding5]}>
+                    <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square80,styles.contain, { borderRadius: 40 }]}/>
 
                     {(this.state.publicProfile || this.state.viewableProfile) && (
                       <View>
-
-                        <View className="float-left row-5">
-                          <View className="profile-links">
-                            <View style={[styles.rowDirection]}>
-                              { (this.state.resumePublicPreference === 'Yes' && this.state.publicResume) && <View><TouchableOpacity  onPress={() => Linking.openURL(this.state.publicResume)}><Image source={{ uri: resumeIconDark}} style={[styles.square30,styles.contain]}/>{(this.state.includeIconLabels) && <Text style={[styles.descriptionText5]}>RES</Text>}</TouchableOpacity></View> }
+                        <View style={[styles.topPadding20]}>
+                          <View>
+                            <View style={[styles.rowDirection,styles.flexWrap]}>
+                              {(this.state.resumePublicPreference === 'Yes' && this.state.publicResume) && (
+                                <View>
+                                  <TouchableOpacity onPress={() => Linking.openURL(this.state.publicResume)}>
+                                    <Image source={{ uri: resumeIconDark}} style={[styles.square30,styles.contain]}/>
+                                    {(this.state.includeIconLabels) && (
+                                      <Text style={[styles.descriptionText5]}>RES</Text>
+                                    )}
+                                  </TouchableOpacity>
+                                </View>
+                              )}
                               { this.state.profileData.customWebsiteURL && <View><TouchableOpacity onPress={() => Linking.openURL(this.state.profileData.customWebsiteURL)}><Image source={{ uri: websiteIconDark}} style={[styles.square30,styles.contain]}/>{(this.state.includeIconLabels) && <Text style={[styles.descriptionText5]}>PORT</Text>}</TouchableOpacity></View> }
                               { this.state.profileData.linkedInURL && <View><TouchableOpacity onPress={() => Linking.openURL(this.state.profileData.linkedInURL)}><Image source={{ uri: linkedinIconDark}} style={[styles.square30,styles.contain]}/>{(this.state.includeIconLabels) && <Text style={[styles.descriptionText5]}>LNK</Text>}</TouchableOpacity></View> }
                             </View>
@@ -2275,32 +1360,66 @@ class ExternalProfile extends Component {
 
                       </View>
                     )}
+                  </View>
+
+                  <View style={[styles.calcColumn220]}>
+                    <Text style={[styles.headingText2]}>{this.state.profileData.firstName} {this.state.profileData.lastName}</Text>
+
+                    <View style={[styles.topMargin5]}>
+                      {(this.state.profileData.roleName === 'Student' || this.state.profileData.roleName === 'Career-Seeker') ? (
+                        <View>
+                          {(this.state.profileData.jobTitle && this.state.profileData.jobTitle !== '' && this.state.profileData.jobTitle !== 'Student' && this.state.profileData.employerName) && (
+                            <Text style={[styles.descriptionText1]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName} | </Text>
+                          )}
+                          <Text style={[styles.descriptionText1]}>{this.state.profileData.school} {(this.state.profileData.gradYear) ? "'" + this.state.profileData.gradYear.substring(2,4) : 'Student'}</Text>
+                        </View>
+                      ) : (
+                        <Text style={[styles.descriptionText1]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName}</Text>
+                      )}
+                    </View>
+
+                    {(this.state.profileData.headline) && (
+                      <View style={[styles.row5]}>
+                        <Text style={[styles.descriptionText1]}>{this.state.profileData.headline}</Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={[styles.width60]}>
+                    {(this.state.matchScore > 0) && (
+                      <Progress.Circle progress={this.state.matchScore / 100} size={styles.width60.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                    )}
+
+                  </View>
+                </View>
+
+                {((this.state.publicProfile || this.state.viewableProfile) || this.state.friends.some(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email)) ? (
+                  <View style={[styles.topPadding]}>
 
                     {(this.testActiveFriendship(this.state.friends)) ? (
-                      <View>
-                        <View className="float-left right-padding">
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: this.state.profileData })} className="btn btn-squarish">
-                            <View>
-                              <View className="float-left right-padding top-padding-5">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.rightPadding]}>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: this.state.profileData })} style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.rightPadding,styles.topPadding5]}>
                                 <Image source={{ uri: messageIconWhite}} style={[styles.square15,styles.contain]} />
                               </View>
-                              <View className="float-left">
-                                <Text>Message Me</Text>
+                              <View>
+                                <Text style={[styles.whiteColor,styles.descriptionText1]}>Message Me</Text>
                               </View>
 
                             </View>
                           </TouchableOpacity>
                         </View>
-                        <View className="float-left">
-                          <TouchableOpacity className="btn btn-squarish-white"onPress={(e) => this.favoriteItem(e, this.state.profileData) }>
-                            <View>
-                              <View className="float-left right-padding top-padding-5">
+                        <View>
+                          <TouchableOpacity style={[styles.btnSquarish,styles.whiteBackground,styles.ctaBorder,styles.flexCenter]} onPress={(e) => this.favoriteItem(e, this.state.profileData) }>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.rightPadding,styles.topPadding5]}>
                                 <Image source={(this.state.favorites.includes(this.state.profileData._id)) ? { uri: checkmarkIcon} : { uri: favoritesIconBlue}} style={[styles.square15,styles.contain]} />
                               </View>
-                              <View className="float-left">
-                                <Text>{(this.state.favorites.includes(this.state.profileData._id)) ? "Following" : "Follow"}</Text>
+                              <View>
+                                <Text style={[styles.ctaColor]}>{(this.state.favorites.includes(this.state.profileData._id)) ? "Following" : "Follow"}</Text>
                               </View>
-
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -2308,21 +1427,15 @@ class ExternalProfile extends Component {
 
                       </View>
                     ) : (
-                      <TouchableOpacity className="btn btn-profile description-text-3 right-margin-5 medium-background clear-border no-pointers" disabled={true}><Text>Pending</Text></TouchableOpacity>
+                      <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText3,styles.rightMargin5,styles.mediumBackground]} disabled={true}><Text style={[styles.descriptionText1,styles.whiteColor]}>Pending</Text></TouchableOpacity>
                     )}
 
                   </View>
                 ) : (
                   <View style={[styles.topPadding]}>
-
-                    <TouchableOpacity className="btn btn-profile description-text-3 right-margin-5" disabled={(this.state.isSaving) ? true : false} onPress={() => this.followPerson(this.state.profileData)}><Text>Connect</Text></TouchableOpacity>
-
-
+                    <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText3,styles.rightMargin5]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.followPerson(this.state.profileData)}><Text style={[styles.whiteColor,styles.descriptionText1]}>Connect</Text></TouchableOpacity>
                   </View>
                 )}
-
-
-
               </View>
 
               {(!this.state.viewableProfile) ? (
@@ -2331,31 +1444,31 @@ class ExternalProfile extends Component {
                   <Text style={[styles.headingText3,styles.calcColumn60,styles.centerText,styles.errorColor]}>This profile is private</Text>
                 </View>
               ) : (
-                <View style={[styles.calcColumn60]}>
+                <View style={[styles.fullScreenWidth]}>
 
                   {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.centerHorizontally]}>{this.state.errorMessage}</Text>}
                   {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.centerHorizontally]}>{this.state.successMessage}</Text>}
 
-                  <ScrollView style={[styles.carousel,styles.darkUnderline,styles.mediumShadow]} horizontal={true}>
+                  <ScrollView style={[styles.carousel,styles.darkUnderline,styles.card,styles.topMargin20]} horizontal={true}>
                     {this.state.profileOptions.map((value, index) =>
-                      <View style={[styles.row10,styles.rightPadding20]}>
+                      <View style={[styles.row10, styles.rightPadding30]}>
                         {(index === this.state.viewIndex) ? (
                           <View key={value} style={[styles.selectedCarouselItem]}>
-                            <TouchableOpacity key={value} disabled={true} onPress={() => this.setState({ viewIndex: index })}>
+                            <TouchableOpacity key={value} disabled={true} onPress={() => this.setState({ viewIndex: index })} style={[styles.flexCenter]}>
                               <View>
-                                <Text style={[styles.descriptionText4]}>{value}</Text>
+                                <Text style={[styles.descriptionText4,styles.centerText]}>{value}</Text>
 
-                                <Text style={[styles.headingText5]}>{this.returnCount(value)}</Text>
+                                <Text style={[styles.headingText5,styles.centerText]}>{this.returnCount(value)}</Text>
                               </View>
                             </TouchableOpacity>
 
                           </View>
                         ) : (
-                          <TouchableOpacity key={value} style={[styles.menuButton]} onPress={() => this.setState({ viewIndex: index })}>
+                          <TouchableOpacity key={value} style={[styles.menuButton,styles.flexCenter]} onPress={() => this.setState({ viewIndex: index })}>
                             <View>
-                              <Text style={[styles.descriptionText4]}>{value}</Text>
+                              <Text style={[styles.descriptionText4,styles.centerText]}>{value}</Text>
 
-                              <Text style={[styles.headingText5]}>{this.returnCount(value)}</Text>
+                              <Text style={[styles.headingText5,styles.centerText]}>{this.returnCount(value)}</Text>
                             </View>
                           </TouchableOpacity>
                         )}
@@ -2363,11 +1476,11 @@ class ExternalProfile extends Component {
                     )}
                   </ScrollView>
 
-                  <View>
-                    {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Posts') && (
+                  {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Posts') && (
+                    <View style={[styles.topMargin20]}>
                       <View style={[styles.bottomMargin20,styles.centerHorizontally]} >
 
-                        <View style={[styles.bottomMargin20]}>
+                        <View style={[styles.bottomMargin]}>
                           <Text style={[styles.headingText2]}>Posts</Text>
                         </View>
 
@@ -2378,21 +1491,15 @@ class ExternalProfile extends Component {
                         ) : (
                           <View>
                             <SubRenderPosts posts={this.state.posts} limit={(this.state.profileOptions[this.state.viewIndex] === 'All') && 3} pageSource="externalProfile" />
-                            {/*
-                            {this.state.posts.map((value, index) =>
-                              <View key={index}>
-                                {this.renderPost(value, index)}
-                              </View>
-                            )}*/}
                           </View>
                         )}
 
                       </View>
-                    )}
-                  </View>
+                    </View>
+                  )}
 
                   {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Projects') && (
-                    <View style={[styles.bottomMargin20,styles.centerHorizontally]} >
+                    <View style={[styles.row20,styles.centerHorizontally]} >
 
                       <View style={[styles.bottomMargin20]}>
                         <Text style={[styles.headingText2]}>Projects</Text>
@@ -2404,21 +1511,20 @@ class ExternalProfile extends Component {
                         </View>
                       ) : (
                         <View>
-
                           {(this.state.projects && this.state.projects.length > 0) ? (
                             <View>
                               {this.state.projects.map((item, index) =>
                                 <View key={index}>
-                                  <View style={[styles.bottomMargin20]}>
-                                    <TouchableOpacity className="background-button full-space" onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showAssessmentDetail: false, showEndorsementDetail: false, selectedIndex: index, showMessageWidget: false }) }>
-                                      <View className="elevated-box white-background" >
-                                        <View className="full-width relative-position tint">
-                                          <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: defaultProfileBackgroundImage}} className="image-full-width-150 center-horizontally"  />
-                                          <View className="absolute-position absolute-top-5 absolute-left-5">
+                                  <View style={[styles.bottomMargin20,styles.cardClearPadding]}>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, showAssessmentDetail: false, showEndorsementDetail: false, selectedIndex: index, showMessageWidget: false }) }>
+                                      <View style={[styles.lightBorder,styles.mediumShadow,styles.verticalMargin10,styles.bottomPadding30,styles.centerHorizontally]} >
+                                        <View style={[styles.fullScreenWidth,styles.relativePosition]}>
+                                          <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: defaultProfileBackgroundImage}} style={[styles.fullScreenWidth,styles.height150,styles.centerHorizontally]}  />
+                                          <View style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteLeft5]}>
                                             {(item.matchScore) && (
                                               <Progress.Circle progress={item.matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                                             )}
-                                            <Text className="description-text-5 rounded-corners horizontal-padding-4 row-5 white-border white-text bold-text">{item.category}</Text>
+                                            <Text style={[styles.descriptionText5,styles.roundedCorners,styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteColor,styles.boldText]}>{item.category}</Text>
                                           </View>
                                         </View>
 
@@ -2427,14 +1533,14 @@ class ExternalProfile extends Component {
                                         <View style={[styles.horizontalPadding30]}>
                                           <Text style={[styles.headingText5]}>{item.name}</Text>
 
-                                          <View style={[styles.topPadding]}>
-                                            <View className="fixed-column-35">
+                                          <View style={[styles.topPadding,styles.rowDirection]}>
+                                            <View style={[styles.width35]}>
                                               <Image style={[styles.square25,styles.contain, { borderRadius: 12.5 }]} source={(item.userPic) ? { uri: item.userPic} : { uri: profileIconDark}} />
                                             </View>
-                                            <View className="calc-column-offset-35 description-text-2">
-                                              <Text>{item.userFirstName} {item.userLastName}</Text>
-                                              <Text style={[styles.descriptionText3]}>{item.hours} Hours</Text>
-                                              <Text style={[styles.descriptionText3]}>{(item.startDate) && item.startDate + " - "}{(item.isContinual) ? "Present" : item.endDate}</Text>
+                                            <View style={[styles.calcColumn100]}>
+                                              <Text style={[styles.descriptionText2]}>{item.userFirstName} {item.userLastName}</Text>
+                                              <Text style={[styles.descriptionText5]}>{item.hours} Hours</Text>
+                                              <Text style={[styles.descriptionText5]}>{(item.startDate) && item.startDate + " - "}{(item.isContinual) ? "Present" : item.endDate}</Text>
                                             </View>
 
                                           </View>
@@ -2448,11 +1554,11 @@ class ExternalProfile extends Component {
 
                                           {(item.skillTags) && (
                                             <View>
-                                              <View style={[styles.topPadding]}>
+                                              <View style={[styles.topPadding,styles.rowDirection,styles.flexWrap]}>
                                                 {item.skillTags.split(',').map((value, optionIndex) =>
                                                   <View key={value}>
                                                     {(optionIndex < 3) && (
-                                                      <View key={value} className="float-left row-5 right-padding">
+                                                      <View key={value} style={[styles.row5,styles.rightPadding]}>
                                                         <View style={[styles.row5,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparentBorder,styles.lightBackground]}>
                                                           <Text style={[styles.descriptionText3]}>{value}</Text>
                                                         </View>
@@ -2469,7 +1575,7 @@ class ExternalProfile extends Component {
 
                                           <View style={[styles.topPadding20]}>
                                             <View>
-                                              <TouchableOpacity className={this.state.favorites.includes(item._id) ? "btn btn-profile medium-background clear-border full-width" : "btn btn-profile full-width"} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(item,'project')}><Text>{this.state.favorites.includes(item._id) ? "Following" : "Follow"}</Text></TouchableOpacity>
+                                              <TouchableOpacity style={this.state.favorites.includes(item._id) ?  [styles.btnSquarish,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(item,'project')}><Text style={[styles.descriptionText1,styles.whiteColor]}>{this.state.favorites.includes(item._id) ? "Following" : "Follow"}</Text></TouchableOpacity>
                                             </View>
                                           </View>
 
@@ -2494,7 +1600,7 @@ class ExternalProfile extends Component {
 
                   <View>
                     {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Goals') && (
-                      <View style={[styles.bottomMargin20,styles.centerHorizontally]}>
+                      <View style={[styles.row20,styles.centerHorizontally]}>
 
                         <View style={[styles.bottomMargin20]}>
                           <Text style={[styles.headingText2]}>Goals</Text>
@@ -2511,19 +1617,21 @@ class ExternalProfile extends Component {
                               <View>
                                 {this.state.goals.map((value, index) =>
                                   <View key={index}>
-                                    <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow]}>
-                                      <TouchableOpacity className="background-button left-text padding-20 full-space" disabled={true} onPress={() => this.setState({ modalIsOpen: true, showGoalDetails: true, selectedGoal: value }) }>
-                                        <View className="fixed-column-50 height-50">
-                                          <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                          <Image source={{ uri: targetIconOrange}} style={[styles.square40,styles.contain]} />
-                                        </View>
-                                        <View className="calc-column-offset-50">
-                                          <Text style={[styles.headingText4,styles.curtailText]}>{value.title}</Text>
-                                          {(value.startDate) ? (
-                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.startDate} - {value.deadline}</Text>
-                                          ) : (
-                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Deadline: {value.deadline}</Text>
-                                          )}
+                                    <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow,styles.fullScreenWidth]}>
+                                      <TouchableOpacity style={[styles.padding20]} disabled={true} onPress={() => this.setState({ modalIsOpen: true, showGoalDetails: true, selectedGoal: value }) }>
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width50]}>
+                                            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                            <Image source={{ uri: targetIconOrange}} style={[styles.square40,styles.contain]} />
+                                          </View>
+                                          <View style={[styles.calcColumn110]}>
+                                            <Text style={[styles.headingText4,styles.curtailText]}>{value.title}</Text>
+                                            {(value.startDate) ? (
+                                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.startDate} - {value.deadline}</Text>
+                                            ) : (
+                                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Deadline: {value.deadline}</Text>
+                                            )}
+                                          </View>
                                         </View>
 
                                         {this.renderTags(value.selectedCareers, 'careers')}
@@ -2549,14 +1657,14 @@ class ExternalProfile extends Component {
                                             {(value.pollQuestion) && (
                                               <Text style={[styles.headingText5,styles.topMargin20]}>{value.pollQuestion}</Text>
                                             )}
-                                            <View style={[styles.topMargin20]}>
-                                              <View className="calc-column-offset-30-of-50">
-                                                <Text className="">{value.aName}</Text>
+                                            <View style={[styles.topMargin20,styles.rowDirection,styles.flex1]}>
+                                              <View style={[styles.flex45]}>
+                                                <Text>{value.aName}</Text>
                                               </View>
-                                              <View className="fixed-column-60">
+                                              <View style={[styles.flex10]}>
                                                 <Text style={[styles.flex1,styles.centerText,styles.headingText4]}>VS</Text>
                                               </View>
-                                              <View className="calc-column-offset-30-of-50">
+                                              <View style={[styles.flex45]}>
                                                 <Text style={[styles.flex1,styles.rightText]}>{value.bName}</Text>
                                               </View>
 
@@ -2566,7 +1674,7 @@ class ExternalProfile extends Component {
 
                                         <View style={[styles.topPadding20]}>
                                           <View>
-                                            <TouchableOpacity className="btn btn-profile full-width" disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.itemClicked(e,'helpOut', value)}><Text>Help Out</Text></TouchableOpacity>
+                                            <TouchableOpacity style={[styles.btnSquarish]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.itemClicked(e,'helpOut', value)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Help Out</Text></TouchableOpacity>
                                           </View>
                                         </View>
                                       </TouchableOpacity>
@@ -2588,7 +1696,7 @@ class ExternalProfile extends Component {
                     )}
 
                     {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Passions') && (
-                      <View style={[styles.bottomMargin20,styles.centerHorizontally]}>
+                      <View style={[styles.row20,styles.centerHorizontally]}>
                         <View style={[styles.bottomMargin20]}>
                           <Text style={[styles.headingText2]}>Passions</Text>
                         </View>
@@ -2604,14 +1712,17 @@ class ExternalProfile extends Component {
                                 {this.state.passions.map((value, index) =>
                                   <View key={index}>
                                     <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow]}>
-                                      <TouchableOpacity className="background-button full-space left-text padding-20" onPress={() => this.setState({ modalIsOpen: true, showPassionDetail: true, selectedPassion: value }) }>
-                                        <View className="fixed-column-50 height-50">
-                                          <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                          <Image source={{ uri: passionIconDark}} style={[styles.square40,styles.contain]} />
-                                        </View>
-                                        <View className="calc-column-offset-50">
-                                          <Text style={[styles.headingText4,styles.curtailText]}>{value.passionTitle}</Text>
-                                          <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Created: {value.createdAt}</Text>
+                                      <TouchableOpacity style={[styles.padding20]} onPress={() => this.setState({ modalIsOpen: true, showPassionDetail: true, selectedPassion: value }) }>
+
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width50]}>
+                                            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                            <Image source={{ uri: passionIconDark}} style={[styles.square40,styles.contain]} />
+                                          </View>
+                                          <View style={[styles.calcColumn90]}>
+                                            <Text style={[styles.headingText4,styles.curtailText]}>{value.passionTitle}</Text>
+                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Created: {value.createdAt}</Text>
+                                          </View>
                                         </View>
 
                                         {(value.passionReason) && (
@@ -2636,7 +1747,7 @@ class ExternalProfile extends Component {
                     )}
 
                     {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Assessments') && (
-                      <View style={[styles.bottomMargin20,styles.centerHorizontally]}>
+                      <View style={[styles.row20,styles.centerHorizontally]}>
                         <View style={[styles.bottomMargin20]}>
                           <Text style={[styles.headingText2]}>Assessments</Text>
                         </View>
@@ -2653,27 +1764,31 @@ class ExternalProfile extends Component {
                                   <View key={index}>
                                     <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow]}>
                                       <TouchableOpacity style={[styles.padding20]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: false, showAssessmentDetail: true, showEndorsementDetail: false, selectedIndex: index, showMessageWidget: false }) }>
-                                        <View className="fixed-column-50 height-50">
-                                          <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                            {(value.category === 'Work Preferences') && (
-                                              <Image source={{ uri: softwareDeveloperIcon}} style={[styles.square40,styles.contain]} />
-                                            )}
-                                            {(value.category === 'Interests') && (
-                                              <Image source={{ uri: interestsIconDark}} style={[styles.square40,styles.contain]} />
-                                            )}
-                                            {(value.category === 'Skills') && (
-                                              <Image source={{ uri: skillsIconDark}} style={[styles.square40,styles.contain]} />
-                                            )}
-                                            {(value.category === 'Personality') && (
-                                              <Image source={{ uri: abilitiesIconDark}} style={[styles.square40,styles.contain]} />
-                                            )}
-                                            {(value.category === 'Values') && (
-                                              <Image source={{ uri: socialIconDark}} style={[styles.square40,styles.contain]} />
-                                            )}
-                                        </View>
-                                        <View className="calc-column-offset-50">
-                                          <Text style={[styles.headingText4,styles.curtailText]}>{value.category}</Text>
-                                          <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Updated: {value.updatedAt}</Text>
+
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width50]}>
+                                            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                              {(value.category === 'Work Preferences') && (
+                                                <Image source={{ uri: softwareDeveloperIcon}} style={[styles.square40,styles.contain]} />
+                                              )}
+                                              {(value.category === 'Interests') && (
+                                                <Image source={{ uri: interestsIconDark}} style={[styles.square40,styles.contain]} />
+                                              )}
+                                              {(value.category === 'Skills') && (
+                                                <Image source={{ uri: skillsIconDark}} style={[styles.square40,styles.contain]} />
+                                              )}
+                                              {(value.category === 'Personality') && (
+                                                <Image source={{ uri: abilitiesIconDark}} style={[styles.square40,styles.contain]} />
+                                              )}
+                                              {(value.category === 'Values') && (
+                                                <Image source={{ uri: socialIconDark}} style={[styles.square40,styles.contain]} />
+                                              )}
+                                          </View>
+                                          <View style={[styles.calcColumn150]}>
+                                            <Text style={[styles.headingText4,styles.curtailText]}>{value.category}</Text>
+                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Updated: {value.updatedAt}</Text>
+                                          </View>
+
                                         </View>
 
                                         {(value.description) && (
@@ -2697,7 +1812,7 @@ class ExternalProfile extends Component {
                     )}
 
                     {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Endorsements') && (
-                      <View style={[styles.bottomMargin20,styles.centerHorizontally]}>
+                      <View style={[styles.row20,styles.centerHorizontally]}>
 
                         <View style={[styles.bottomMargin20]}>
                           <Text style={[styles.headingText2]}>Endorsements</Text>
@@ -2715,17 +1830,17 @@ class ExternalProfile extends Component {
                                   <View key={index}>
 
                                     <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow]}>
-                                      <TouchableOpacity style={[styles.padding10,styles.calcColumn60]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: false, showAssessmentDetail: false, showEndorsementDetail: true, selectedIndex: index, showMessageWidget: false }) }>
-                                        <View className="fixed-column-50 height-50">
-                                          <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                            <Image source={{ uri: endorsementIconDark}} style={[styles.square40,styles.contain]} />
+                                      <TouchableOpacity style={[styles.padding20,styles.fullScreenWidth]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: false, showAssessmentDetail: false, showEndorsementDetail: true, selectedIndex: index, showMessageWidget: false }) }>
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width50]}>
+                                            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                              <Image source={{ uri: endorsementIconDark}} style={[styles.square40,styles.contain]} />
+                                          </View>
+                                          <View style={[styles.calcColumn90]}>
+                                            <Text style={[styles.headingText4,styles.curtailText]}>{value.senderFirstName} {value.senderLastName}</Text>
+                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Create: {value.createdAt}</Text>
+                                          </View>
                                         </View>
-                                        <View className="calc-column-offset-50">
-                                          <Text style={[styles.headingText4,styles.curtailText]}>{value.senderFirstName} {value.senderLastName}</Text>
-                                          <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Create: {value.createdAt}</Text>
-
-                                        </View>
-
 
                                         {(value.category) && (
                                           <Text style={[styles.descriptionText1,styles.topMargin]}>{value.category}</Text>
@@ -2793,26 +1908,9 @@ class ExternalProfile extends Component {
 
                   {(this.state.showMessageWidget) && (
                     <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-                     <View key="showServiceDefinitions" className="full-width padding-20">
+                     <View key="showServiceDefinitions" style={[styles.padding20,styles.calcColumn40]}>
                         <SubSendMessage profileData={this.state.profileData} history={this.props.history} closeModal={this.closeModal} />
                       </View>
-
-                   </Modal>
-                  )}
-
-                  {(this.state.showComments) && (
-                    <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-                     <View key="showPost" style={[styles.calcColumn60]}>
-
-                      {this.renderPost(this.state.posts[this.state.selectedIndex], this.state.selectedIndex, true)}
-
-                      <View style={[styles.spacer]} />
-
-                      {(this.state.posts && this.state.activeOrg) && (
-                        <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} history={this.props.history} pageSource={"newsFeed"} />
-                      )}
-
-                     </View>
 
                    </Modal>
                   )}

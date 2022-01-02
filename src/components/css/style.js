@@ -347,6 +347,9 @@ module.exports = StyleSheet.create({
   rightPadding20: {
     paddingRight: 20
   },
+  rightPadding30: {
+    paddingRight: 30
+  },
   leftPadding: {
     paddingLeft: 10
   },
@@ -610,6 +613,9 @@ module.exports = StyleSheet.create({
   calcColumn80: {
     width: Dimensions.get('window').width - 80
   },
+  calcColumn85: {
+    width: Dimensions.get('window').width - 85
+  },
   calcColumn90: {
     width: Dimensions.get('window').width - 90
   },
@@ -648,6 +654,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn142: {
     width: Dimensions.get('window').width - 142
+  },
+  calcColumn145: {
+    width: Dimensions.get('window').width - 145
   },
   calcColumn150: {
     width: Dimensions.get('window').width - 150
@@ -735,6 +744,12 @@ module.exports = StyleSheet.create({
   },
   flex33: {
     flex: 33
+  },
+  flex40: {
+    flex: 40
+  },
+  flex45: {
+    flex: 45
   },
   flex50: {
     flex: 50
