@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { Text, TextInput, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import { Text, TextInput, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, ActivityIndicator, Image } from 'react-native';
 import Axios from 'axios';
+const styles = require('../css/style');
 
 const profileIconBig = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-big.png'
 const thumbsUpIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-up-icon-grey.png'
@@ -51,11 +52,11 @@ class Comments extends Component {
     retrieveData() {
       console.log('retrieveData called within subcomments', this.props)
 
-      const emailId = localStorage.getItem('email');
-      const cuFirstName = localStorage.getItem('firstName');
-      const cuLastName = localStorage.getItem('lastName');
-      const orgFocus = localStorage.getItem('orgFocus');
-      const roleName = localStorage.getItem('roleName');
+      const emailId = AsyncStorage.getItem('email');
+      const cuFirstName = AsyncStorage.getItem('firstName');
+      const cuLastName = AsyncStorage.getItem('lastName');
+      const orgFocus = AsyncStorage.getItem('orgFocus');
+      const roleName = AsyncStorage.getItem('roleName');
 
       const selectedOpportunity = this.props.selectedOpportunity
       const activeOrg = this.props.activeOrg
@@ -743,13 +744,12 @@ class Comments extends Component {
                   <View style={styles.rightPadding8}>
                     <View style={styles.spacer} />
                     <View>
-                      <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} alt="img" style={styles.profileThumbnail50} />
+                      <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={styles.profileThumbnail50} />
                     </View>
                   </View>
-                  <View style={[styles.calColumn118,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
-
+                  <View style={[styles.calcColumn170,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
                     <TextInput
-                      style={styles.commentTextField}
+                      style={[styles.commentTextField,styles.flex1]}
                       onChangeText={(text) => this.formChangeHandler('comment')}
                       value={this.state.myComment}
                       placeholder="Add a comment..."
@@ -758,8 +758,8 @@ class Comments extends Component {
                   </View>
 
                   {(this.state.myComment !== '') && (
-                    <View style={styles.leftMargin67} style={[styles.leftMargin67]}>
-                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} disabled={this.state.disableSubmit} onClick={() => this.postComment(null,'posting')}>Post</TouchableOpacity>
+                    <View style={[styles.topMargin15]}>
+                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onClick={() => this.postComment(null,'posting')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
                     </View>
                   )}
                   <View style={styles.spacer} /><View style={styles.spacer} />

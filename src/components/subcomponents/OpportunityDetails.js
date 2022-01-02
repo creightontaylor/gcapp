@@ -1715,20 +1715,20 @@ class OpportunityDetails extends Component {
     });
   }
 
-  formChangeHandler(event) {
+  formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called')
 
-    if (event.target.name === 'selectProject') {
+    if (eventName === 'selectProject') {
       let selectedProject = {}
       let projectOptions = this.state.projectOptions
       for (let i = 1; i <= projectOptions.length; i++) {
-        if (projectOptions[i - 1].name === event.target.value) {
+        if (projectOptions[i - 1].name === eventValue) {
           selectedProject = projectOptions[i - 1]
         }
       }
       this.setState({ selectedProject })
     } else {
-      this.setState({ [event.target.name]: event.target.value })
+      this.setState({ [eventName]: eventValue })
     }
   }
 
@@ -2227,29 +2227,25 @@ class OpportunityDetails extends Component {
           if (rawSkillWeight > 100) {
             rawSkillWeight = 100
           }
-          const skillWeight = rawSkillWeight.toString() + '%'
+          const skillWeight = rawSkillWeight
 
-          let borderClass = "primary-border"
-          let backgroundClass = "primary-background"
+          let borderClass = styles.primaryBorder
+          let backgroundClass = styles.primaryBackground
           if (this.state.benchmark.skills[i - 1].skillType === 'Soft Skill') {
-            borderClass = "secondary-border"
-            backgroundClass = "secondary-background"
+            borderClass = styles.secondaryBorder
+            backgroundClass = styles.secondaryBackground
           }
 
           rows.push(
             <View key={rowKey}>
-              <View className="relative-column-30" >
-                <Text style={[styles.descriptionText2]}>{this.state.benchmark.skills[i - 1].title} ({this.state.benchmark.skills[i - 1].skillType})</Text>
-              </View>
-              <View className="relative-column-70" >
-                <View style={[styles.halfSpacer]}/>
+              <Text style={[styles.descriptionText2]}>{this.state.benchmark.skills[i - 1].title} ({this.state.benchmark.skills[i - 1].skillType})</Text>
+              <View style={[styles.halfSpacer]}/>
 
-                <View className={"progress-bar " + borderClass}>
-                  <View className={"filler " + backgroundClass} style={{ width: skillWeight }} />
-                </View>
+              <View style={[styles.progressBar,borderClass]}>
+                <View style={[styles.filler,backgroundClass, { flex: skillWeight }]} />
               </View>
 
-              <View style={[styles.spacer]}/>
+              <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
             </View>
           )
         }
@@ -2270,18 +2266,14 @@ class OpportunityDetails extends Component {
           console.log('interests ', i)
 
           const rowKey = "interests" + i.toString()
-          const interestScore = (this.state.benchmark.interests[i - 1].score * 20).toString() + '%'
+          const interestScore = (this.state.benchmark.interests[i - 1].score * 20)
 
           rows.push(
             <View key={rowKey}>
-              <View className="relative-column-30" >
-                <Text style={[styles.descriptionText2]}>{this.state.benchmark.interests[i - 1].title}</Text>
-              </View>
-              <View className="relative-column-70" >
-                <View style={[styles.halfSpacer]}/>
-                <View className={"progress-bar tertiary-border"}>
-                  <View className={"filler tertiary-background"} style={{ width: interestScore }} />
-                </View>
+              <Text style={[styles.descriptionText2]}>{this.state.benchmark.interests[i - 1].title}</Text>
+              <View style={[styles.halfSpacer]}/>
+              <View style={[styles.progressBar,styles.tertiaryBorder]}>
+                <View style={[styles.filler,styles.tertiaryBackground, { flex: interestScore }]} />
               </View>
 
               <View style={[styles.spacer]}/>
@@ -2305,18 +2297,14 @@ class OpportunityDetails extends Component {
           console.log('traits ', i)
 
           const rowKey = "traits" + i.toString()
-          const traitScore = (this.state.benchmark.traits[i - 1].score * 20).toString() + '%'
+          const traitScore = (this.state.benchmark.traits[i - 1].score * 20)
 
           rows.push(
             <View key={rowKey}>
-              <View className="relative-column-30" >
-                <Text style={[styles.descriptionText2]}>{this.state.benchmark.traits[i - 1].title}</Text>
-              </View>
-              <View className="relative-column-70" >
-                <View style={[styles.halfSpacer]}/>
-                <View className={"progress-bar quaternary-border"}>
-                  <View className={"filler quaternary-background"} style={{ width: traitScore }} />
-                </View>
+              <Text style={[styles.descriptionText2]}>{this.state.benchmark.traits[i - 1].title}</Text>
+              <View style={[styles.halfSpacer]}/>
+              <View style={[styles.progressBar,styles.quaternaryBorder]}>
+                <View style={[styles.filler,styles.quaternaryBackground, { flex: traitScore }]} />
               </View>
 
               <View style={[styles.spacer]}/>
@@ -2343,7 +2331,7 @@ class OpportunityDetails extends Component {
         rows.push(
           <View key={rowKey}>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('TrackPostings', { programTitle: this.state.selectedOpportunity.title, trackName:this.state.selectedOpportunity.tracks[i - 1].name, orgName: this.state.selectedOpportunity.orgName, postings: this.state.selectedOpportunity.tracks[i - 1].jobs })}>
-              <View className="relative-column-80">
+              <View>
                <Text style={[styles.headingText5]}>{this.state.selectedOpportunity.tracks[i - 1].name}</Text>
                 <Text>{this.state.selectedOpportunity.tracks[i - 1].jobs.length} Internship Postings</Text>
               </View>
@@ -2381,23 +2369,25 @@ class OpportunityDetails extends Component {
           <View key={"collaborator" + i.toString()}>
             <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
-            <View className="fixed-column-50">
-              <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square20,styles.contain, { borderRadius: 10 }]}/>
-            </View>
-            <View className="calc-column-offset-100 left-padding">
-              <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
-              <View style={[styles.halfSpacer]} />
-              {(collaborators[i - 1].joined) ? (
-                <Text style={[styles.descriptionText2]}>{collaborators[i - 1].roleName}</Text>
-              ) : (
-                <Text style={[styles.descriptionText2]}>(This user has not joined Guided Compass)</Text>
-              )}
-            </View>
-            <View className="fixed-column-50">
-              <View style={[styles.spacer]} />
-              <TouchableOpacity onPress={() => this.removeItem(index)}>
-                <Image source={{ uri: xIcon}} style={[styles.square20,styles.contain]}/>
-              </TouchableOpacity>
+            <View style={[styles.rowDirection]}>
+              <View style={[styles.width50]}>
+                <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square20,styles.contain, { borderRadius: 10 }]}/>
+              </View>
+              <View style={[styles.calcColumn160,styles.leftPadding]}>
+                <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
+                <View style={[styles.halfSpacer]} />
+                {(collaborators[i - 1].joined) ? (
+                  <Text style={[styles.descriptionText2]}>{collaborators[i - 1].roleName}</Text>
+                ) : (
+                  <Text style={[styles.descriptionText2]}>(This user has not joined Guided Compass)</Text>
+                )}
+              </View>
+              <View style={[styles.width50]}>
+                <View style={[styles.spacer]} />
+                <TouchableOpacity onPress={() => this.removeItem(index)}>
+                  <Image source={{ uri: xIcon}} style={[styles.square20,styles.contain]}/>
+                </TouchableOpacity>
+              </View>
             </View>
 
           </View>
@@ -2517,22 +2507,18 @@ class OpportunityDetails extends Component {
                   <View>
 
                     <View>
-                      <View style={[styles.flex1]}>
-                        <View style={[styles.flex10]}>
-                          {(this.state.selectedOpportunity.imageURL) && (
-                            <View style={[styles.topPadding15]}>
-                              <Image source={{ uri: this.state.selectedOpportunity.imageURL}} style={[styles.square100,styles.contain]}/>
-                            </View>
-                          )}
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.width60, styles.topPadding]}>
+                          <Image source={(this.state.selectedOpportunity.imageURL) ? { uri: this.state.selectedOpportunity.imageURL} : { uri: industryIconDark}} style={[styles.square50,styles.contain]}/>
                         </View>
-                        <View style={[styles.flex80]}>
+                        <View style={[styles.calcColumn150]}>
                           {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
                             <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.title}</Text>
                           ) : (
                             <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.title} @ {this.state.selectedOpportunity.employerName}</Text>
                           )}
                         </View>
-                        <View style={[styles.flex10,styles.rightText]}>
+                        <View style={[styles.width30,styles.rightText,styles.topPadding]}>
                           <TouchableOpacity onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
                             <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
                           </TouchableOpacity>
@@ -2573,192 +2559,164 @@ class OpportunityDetails extends Component {
                       <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                       <View>
-                        <View className="name-container">
+                        <View>
                           <View style={[styles.horizontalPadding5]}>
                             <Text style={[styles.headingText3]}>Basic Info</Text>
                             <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
                           </View>
 
-                          <View style={[styles.row10]}>
-                            <View className="float-left right-margin">
-                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: industryIconDark}} style={[styles.square23,styles.contain]} />
-                            </View>
-                            <View className="float-left">
-                              <Text>{this.state.selectedOpportunity.employerName}</Text>
-                              <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text>{this.state.selectedOpportunity.employerURL}</Text></TouchableOpacity>
-                            </View>
-
-                          </View>
-
-                          <View style={[styles.row10]}>
-                            <View className="float-left right-margin">
-                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: locationIcon}} style={[styles.square23,styles.contain,styles.rightMargin5]} />
-                            </View>
-                            <View className="float-left">
-                              <Text>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</Text>
-                            </View>
-
-                          </View>
-
-                          {(this.state.selectedOpportunity.createdAt && this.state.selectedOpportunity.createdAt !== '') && (
-                            <View style={[styles.row10]}>
+                          <View>
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View style={[styles.rightMargin]}>
+                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                <Image source={{ uri: industryIconDark}} style={[styles.square23,styles.contain]} />
+                              </View>
                               <View>
-                                <View className="float-left right-margin">
+                                <Text>{this.state.selectedOpportunity.employerName}</Text>
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text>{this.state.selectedOpportunity.employerURL}</Text></TouchableOpacity>
+                              </View>
+                            </View>
+
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View style={[styles.rightMargin]}>
+                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                <Image source={{ uri: locationIcon}} style={[styles.square23,styles.contain,styles.rightMargin5]} />
+                              </View>
+                              <View>
+                                <Text>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</Text>
+                              </View>
+                            </View>
+
+                            {(this.state.selectedOpportunity.createdAt && this.state.selectedOpportunity.createdAt !== '') && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: calendarIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
 
-                                <View className="float-left">
+                                <View>
                                   <Text>Posted on {convertDateToString(this.state.selectedOpportunity.createdAt,'date')}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.startDate && this.state.selectedOpportunity.startDate !== '') && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="float-left right-margin">
+                            {(this.state.selectedOpportunity.startDate && this.state.selectedOpportunity.startDate !== '') && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: timeRangeIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
 
-                                <View className="float-left">
+                                <View>
                                   <Text>{convertDateToString(this.state.selectedOpportunity.startDate,"date")} - {this.state.selectedOpportunity.isPerpetual ? "Continual" : convertDateToString(this.state.selectedOpportunity.endDate,"date")}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
+                            {(this.state.activeOrg !== 'exp') && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
+                                  <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                  <Image source={{ uri: timeIconDark}} style={[styles.square23,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn93]}>
+                                  <Text>{this.state.selectedOpportunity.hoursPerWeek} Per Week</Text>
+                                </View>
 
-                          {(this.state.activeOrg !== 'exp') && (
-                            <View style={[styles.row10]}>
-                              <View className="fixed-column-33 right-padding">
-                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                <Image source={{ uri: timeIconDark}} style={[styles.square23,styles.contain]} />
                               </View>
-                              <View className="calc-column-offset-43">
-                                <Text>{this.state.selectedOpportunity.hoursPerWeek} Per Week</Text>
-                              </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.workFunction) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.workFunction) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: skillsIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.workFunction}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.industry) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.industry) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: industryIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.industry}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.isSubsidized || this.state.selectedOpportunity.prioritizeSubsidized) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.selectedOpportunity.isSubsidized || this.state.selectedOpportunity.prioritizeSubsidized) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: subsidyIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>This role is subsidized</Text>
                                   <Text style={[styles.descriptionText2]}>***Only people 16 - 24 within Los Angeles county limits are eligible to receive subsidized internships***</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.workType) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.selectedOpportunity.workType) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: skillsIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.selectedOpportunity.workType}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.payRange && this.state.selectedOpportunity.payRange !== '') && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.selectedOpportunity.payRange && this.state.selectedOpportunity.payRange !== '') && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: moneyIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.selectedOpportunity.payRange}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.supplementalPayArray && this.state.selectedOpportunity.supplementalPayArray.length > 0) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.selectedOpportunity.supplementalPayArray && this.state.selectedOpportunity.supplementalPayArray.length > 0) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: tagIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.selectedOpportunity.supplementalPayArray.toString()}</Text>
                                 </View>
                               </View>
+                            )}
 
-                            </View>
-                          )}
-
-                          {(this.state.selectedOpportunity.benefits && this.state.selectedOpportunity.benefits.length > 0) && (
-                            <View style={[styles.row10]}>
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
+                            {(this.state.selectedOpportunity.benefits && this.state.selectedOpportunity.benefits.length > 0) && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: tagIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-33">
+                                <View style={[styles.calcColumn93]}>
                                   <Text>{this.state.selectedOpportunity.benefits.toString()}</Text>
                                 </View>
                               </View>
-
-                            </View>
-                          )}
+                            )}
+                          </View>
 
                         </View>
 
                         {(this.state.selectedOpportunity.postType !== 'Track' && this.state.selectedOpportunity.subPostType !== 'Track') && (
                           <View>
-
-                            <View className="name-container">
+                            <View>
                               {(!this.state.selectedOpportunity.direct) && (
                                 <View>
                                   <View style={[styles.horizontalPadding5]}>
@@ -2771,12 +2729,12 @@ class OpportunityDetails extends Component {
                                     {(this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also apply via email") && (
                                       <View>
 
-                                        <View>
-                                          <View className="fixed-column-33 right-padding">
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width33,styles.rightPadding]}>
                                             <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                             <Image source={{ uri: sendIcon}} style={[styles.square23,styles.contain]} />
                                           </View>
-                                          <View className="calc-column-offset-33">
+                                          <View style={[styles.calcColumn93]}>
                                             <Text style={[styles.headingText4]}>Apply via Email</Text>
                                             <Text><Text style={[styles.boldText]}>Address to:</Text> {this.state.selectedOpportunity.employerContactFirstName} {this.state.selectedOpportunity.employerContactLastName}</Text>
                                             <Text><Text style={[styles.boldText]}>Email:</Text> {this.state.selectedOpportunity.employerContactEmail}</Text>
@@ -2808,12 +2766,12 @@ class OpportunityDetails extends Component {
                                       <View>
                                         <View>
                                           <View style={[styles.spacer]}/>
-                                          <View>
-                                            <View className="fixed-column-33 right-padding">
+                                          <View style={[styles.rowDirection]}>
+                                            <View style={[styles.width33,styles.rightPadding]}>
                                               <View style={[styles.halfSpacer]} />
                                               <Image source={{ uri: linkIcon}} style={[styles.square23,styles.contain]} />
                                             </View>
-                                            <View className="calc-column-offset-33">
+                                            <View style={[styles.calcColumn93]}>
                                               <Text style={[styles.headingText4]}>Apply via Website</Text>
                                               <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.jobLink)}><Text>{this.state.selectedOpportunity.jobLink}</Text></TouchableOpacity>
                                             </View>
@@ -2822,12 +2780,13 @@ class OpportunityDetails extends Component {
                                           {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.submissionDeadline) && (
                                             <View>
                                               <View style={[styles.spacer]}/>
-                                              <View>
-                                                <View className="fixed-column-33 right-padding">
+
+                                              <View style={[styles.rowDirection]}>
+                                                <View style={[styles.width33,styles.rightPadding]}>
                                                   <View style={[styles.halfSpacer]} />
 
                                                 </View>
-                                                <View className="calc-column-offset-33">
+                                                <View style={[styles.calcColumn93]}>
                                                   <View style={[styles.spacer]} />
                                                   {(this.state.selectedOpportunity.appRequirements !== '') && (
                                                     <View>
@@ -2860,12 +2819,12 @@ class OpportunityDetails extends Component {
 
                                     <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                                    <View>
-                                      <View className="float-left right-padding">
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.width33,styles.rightPadding]}>
                                         <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} /><View style={[styles.halfSpacer]} />
                                         <Image source={{ uri: profileIconBig}} style={[styles.square23,styles.contain]} />
                                       </View>
-                                      <View className="calc-column-offset-33">
+                                      <View style={[styles.calcColumn93]}>
                                         <View style={[styles.spacer]} />
 
                                         {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
@@ -2878,7 +2837,7 @@ class OpportunityDetails extends Component {
                                             {(this.props.fromAdvisor) ? (
                                               <Text>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</Text>
                                             ) : (
-                                              <Text>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text>here.</Text></TouchableOpacity></Text>
+                                              <Text>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text style={[styles.ctaColor]}>here.</Text></TouchableOpacity></Text>
                                             )}
                                           </View>
                                         )}
@@ -2897,7 +2856,7 @@ class OpportunityDetails extends Component {
 
                       <View style={[styles.spacer]}/>
 
-                      <View className="full-width left-padding-5 right-padding-5">
+                      <View style={[styles.calcColumn60,styles.horizontalPadding10]}>
                         <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
                         <Text style={[styles.descriptionText2]}>Description</Text>
@@ -3056,6 +3015,7 @@ class OpportunityDetails extends Component {
                                                 </View>
                                               ) : (
                                                 <View>
+
                                                   {(this.state.selectedOpportunity.direct) ? (
                                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Apply</Text></TouchableOpacity>
                                                   ) : (
@@ -3091,44 +3051,44 @@ class OpportunityDetails extends Component {
                   <View>
                     <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                    <View>
-                      <View className="relative-column-80">
+                    <View style={[styles.rowDirection,styles.flex1]}>
+                      <View style={[styles.flex80]}>
                         <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.name}</Text>
-
 
                         <View style={[styles.spacer]} />
 
-                        <View className="float-left">
-                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</Text>
-                        </View>
-
-                        {(this.state.selectedOpportunity.employerName) && (
-                          <View className="float-left left-padding-5">
-                            {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
-                              <Text style={[styles.descriptionText1]}>@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}>{this.state.selectedOpportunity.employerName}</TouchableOpacity></Text>
-                            ) : (
-                              <Text style={[styles.descriptionText1]}>@ {this.state.selectedOpportunity.employerName}</Text>
-                            )}
+                        <View style={[styles.rowDirection,styles.flexWrap]}>
+                          <View>
+                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</Text>
                           </View>
-                        )}
 
+                          {(this.state.selectedOpportunity.employerName) && (
+                            <View style={[styles.leftPadding5]}>
+                              {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
+                                <Text style={[styles.descriptionText1]}>@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}>{this.state.selectedOpportunity.employerName}</TouchableOpacity></Text>
+                              ) : (
+                                <Text style={[styles.descriptionText1]}>@ {this.state.selectedOpportunity.employerName}</Text>
+                              )}
+                            </View>
+                          )}
+                        </View>
 
                       </View>
 
-                      <View className="relative-column-20 right-text">
+                      <View style={[styles.flex20,styles.rightText]}>
                         {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
                           <View>
                             <Text style={[styles.headingText2,styles.ctaColor]}>${this.state.selectedOpportunity.prizes[0]}</Text>
                           </View>
                         ) : (
-                          <View className="float-right full-width">
-                            <TouchableOpacity className="background-button clear-padding display-block pin-right" onPress={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
-                              <View style={[styles.standardBorder,styles.roundedCorners]}>
-                                <View className="float-left padding-7">
+                          <View>
+                            <TouchableOpacity style={[styles.pinRight]} onPress={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
+                              <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+                                <View style={[styles.padding7]}>
                                   <Image source={(this.state.selectedOpportunity.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
                                 </View>
-                                <View className="vertical-separator-4" />
-                                <View className="float-left horizontal-padding-10">
+                                <View style={[styles.verticalSeparator30]} />
+                                <View style={[styles.horizontalPadding10]}>
                                   <View style={[styles.halfSpacer]} />
                                   <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.selectedOpportunity.upvotes.length}</Text>
                                 </View>
@@ -3138,13 +3098,13 @@ class OpportunityDetails extends Component {
                           </View>
                         )}
 
-                        <TouchableOpacity className="background-button clear-padding display-block float-right top-margin" onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                        <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
                           {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
-                            <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners]}>
-                              <View className="float-left row-7 left-padding-5 right-padding-5">
+                            <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+                              <View style={[styles.row7,styles.horizontalPadding10]}>
                                 <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
                               </View>
-                              <View className="float-left row-5 right-padding-10 center-text">
+                              <View style={[styles.row10,styles.rightPadding,styles.centerText]}>
                                 <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
                               </View>
 
@@ -3152,7 +3112,7 @@ class OpportunityDetails extends Component {
                           ) : (
                             <View style={[styles.standardBorder,styles.roundedCorners]}>
                               {(this.state.emailId) && (
-                                <View className="float-left row-5 horizontal-padding-10 center-text">
+                                <View style={[styles.row5,styles.horizontalPadding,styles.centerText]}>
                                   <Text style={[styles.descriptionText3,styles.boldText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
                                 </View>
                               )}
@@ -3167,91 +3127,102 @@ class OpportunityDetails extends Component {
 
                     <View style={[styles.superSpacer]}/>
 
-                    <View>
+                    <View style={[styles.rowDirection,styles.flexWrap]}>
                       {(this.state.selectedOpportunity.postType === 'Challenge') && (
-                        <View>
-                          <View className="float-left padding-five-percent-right">
-                            <View className="float-left right-padding">
-                              <Image source={{ uri: prizeIcon}} style={[styles.square25,styles.contain]} />
+                        <View style={[styles.rowDirection,styles.flexWrap]}>
+                          <View style={[styles.rightPadding40]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.rightPadding]}>
+                                <Image source={{ uri: prizeIcon}} style={[styles.square25,styles.contain]} />
+                              </View>
+                              <Text style={[styles.descriptionText1]}>${this.state.selectedOpportunity.prizes[0]}</Text>
                             </View>
-                            <Text style={[styles.descriptionText1]}>${this.state.selectedOpportunity.prizes[0]}</Text>
-
 
                             <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
                           </View>
-                          <View className="float-left padding-five-percent-right">
-                            <View className="float-left right-padding">
-                              <Image source={{ uri: deadlineIcon}} style={[styles.square25,styles.contain]} />
+                          <View style={[styles.rightPadding40]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.rightPadding]}>
+                                <Image source={{ uri: deadlineIcon}} style={[styles.square25,styles.contain]} />
+                              </View>
+                              <Text style={[styles.descriptionText1]}>{this.formatDate(this.state.selectedOpportunity.submissionDeadline)}</Text>
                             </View>
-                            <Text style={[styles.descriptionText1]}>{this.formatDate(this.state.selectedOpportunity.submissionDeadline)}</Text>
 
                             <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                           </View>
                         </View>
                       )}
 
-                      <View className="float-left padding-five-percent-right">
-                        <View className="float-left right-padding">
-                          <Image source={{ uri: difficultyIcon}} style={[styles.square25,styles.contain]} />
+                      <View style={[styles.rightPadding40]}>
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.rightPadding]}>
+                            <Image source={{ uri: difficultyIcon}} style={[styles.square25,styles.contain]} />
+                          </View>
+                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.difficultyLevel}</Text>
                         </View>
-                        <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.difficultyLevel}</Text>
-
 
                         <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                       </View>
-                      {(this.state.selectedOpportunity.upvotes && this.state.selectedOpportunity.downvotes) && (
-                        <View className="float-left padding-five-percent-right">
-                          <View className="float-left right-padding">
-                            <Image source={{ uri: checkmarkIcon}} style={[styles.square25,styles.contain]} />
-                          </View>
-                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.upvotes.length - this.state.selectedOpportunity.downvotes.length} Popularity</Text>
 
+                      {(this.state.selectedOpportunity.upvotes && this.state.selectedOpportunity.downvotes) && (
+                        <View style={[styles.rightPadding40]}>
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.rightPadding]}>
+                              <Image source={{ uri: checkmarkIcon}} style={[styles.square25,styles.contain]} />
+                            </View>
+                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.upvotes.length - this.state.selectedOpportunity.downvotes.length} Popularity</Text>
+                          </View>
 
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
                       )}
 
-                      <View className="float-left padding-five-percent-right">
-                        <View className="float-left right-padding">
-                          <Image source={{ uri: industryIcon}} style={[styles.square25,styles.contain]} />
+                      <View style={[styles.rightPadding40]}>
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.rightPadding]}>
+                            <Image source={{ uri: industryIcon}} style={[styles.square25,styles.contain]} />
+                          </View>
+                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.industry} Industry</Text>
                         </View>
-                        <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.industry} Industry</Text>
-
 
                         <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                       </View>
 
                       {(this.state.selectedOpportunity.knowledgeLevel) && (
-                        <View className="float-left padding-five-percent-right">
-                          <View className="float-left right-padding">
-                            <Image source={{ uri: reachIcon}} style={[styles.square25,styles.contain]} />
+                        <View style={[styles.rightPadding40]}>
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.rightPadding]}>
+                              <Image source={{ uri: reachIcon}} style={[styles.square25,styles.contain]} />
+                            </View>
+                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.knowledgeLevel}</Text>
                           </View>
-                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.knowledgeLevel}</Text>
-
 
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
                       )}
 
                       {(this.state.selectedOpportunity.pointValue) && (
-                        <View className="float-left padding-five-percent-right">
-                          <View className="float-left right-padding">
-                            <Image source={{ uri: pointsIcon}} style={[styles.square25,styles.contain]} />
+                        <View style={[styles.rightPadding40]}>
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.rightPadding]}>
+                              <Image source={{ uri: pointsIcon}} style={[styles.square25,styles.contain]} />
+                            </View>
+                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.pointValue} Points</Text>
                           </View>
-                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.pointValue} Points</Text>
-
 
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
                       )}
 
                       {(this.state.selectedOpportunity.functions) && (
-                        <View className="float-left padding-five-percent-right">
-                          <View className="float-left right-padding">
-                            <Image source={{ uri: skillsIconBlue}} style={[styles.square25,styles.contain]} />
+                        <View style={[styles.rightPadding40]}>
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.rightPadding]}>
+                              <Image source={{ uri: skillsIconBlue}} style={[styles.square25,styles.contain]} />
 
-                            <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                            </View>
                           </View>
 
                           {this.state.selectedOpportunity.functions.map((value, index) =>
@@ -3264,66 +3235,75 @@ class OpportunityDetails extends Component {
                             </span>
                           )}
 
-
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
                       )}
 
                       {(this.state.selectedOpportunity.tags) && (
-                        <View className="float-left">
-                          <View className="float-left right-padding">
-                            <Image source={{ uri: tagIcon}} style={[styles.square25,styles.contain]} />
-                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                        <View>
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.rightPadding]}>
+                              <Image source={{ uri: tagIcon}} style={[styles.square25,styles.contain]} />
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                            </View>
+                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.tags}</Text>
                           </View>
-                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.tags}</Text>
+
                         </View>
                       )}
                     </View>
 
                     <View>
-                      <View>
-                        <View className={(this.state.viewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
-                          <Text style={(this.state.viewIndex === 0) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>Details</TouchableOpacity></Text>
+                      <ScrollView style={[styles.carousel]} horizontal={true}>
+                        <View style={(this.state.viewIndex === 0) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
+                          <TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>
+                            <Text style={(this.state.viewIndex === 0) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Details</Text>
+                          </TouchableOpacity>
                         </View>
 
                         {(this.state.roleName === 'Student') && (
-                          <View className={(this.state.viewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
-                            <Text style={(this.state.viewIndex === 1) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Submit a Project</TouchableOpacity></Text>
+                          <View style={(this.state.viewIndex === 1) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
+                            <TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>
+                              <Text style={(this.state.viewIndex === 1) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Submit a Project</Text>
+                            </TouchableOpacity>
                           </View>
                         )}
 
-                        <View className={(this.state.viewIndex === 2) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
-
+                        <View style={(this.state.viewIndex === 2) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
                           { ( !this.state.selectedOpportunity.submissions || this.state.selectedOpportunity.submissions.length === 0 ) ? (
-                            <Text style={(this.state.viewIndex === 2) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
+                            <TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>
+                              <Text style={(this.state.viewIndex === 2) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Submissions</Text>
+                            </TouchableOpacity>
                           ) : (
                             <View>
-                              <Text className={(this.state.viewIndex === 2) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
+                              <Text style={(this.state.viewIndex === 2) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
                               {(this.state.viewIndex === 2) ? (
-                                <View className="noti-bubble selected-background description-text-4 float-left">{this.state.selectedOpportunity.submissions.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</View>
                               ) : (
-                                <View className="noti-bubble unselected-background description-text-4 float-left">{this.state.selectedOpportunity.submissions.length}</View>
+                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</View>
                               )}
                             </View>
                           )}
                         </View>
 
-                        <View className={(this.state.viewIndex === 3) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
+                        <View style={(this.state.viewIndex === 3) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
                           { ( this.state.comments.length === 0 ) ? (
-                            <Text style={(this.state.viewIndex === 3) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
+                            <TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>
+                              <Text style={(this.state.viewIndex === 3) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Comments</Text>
+                            </TouchableOpacity>
                           ) : (
                             <View>
-                              <Text className={(this.state.viewIndex === 3) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
+                              <Text style={(this.state.viewIndex === 3) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
                               {(this.state.viewIndex === 3) ? (
-                                <View className="noti-bubble selected-background description-text-4 float-left">{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
                               ) : (
-                                <View className="noti-bubble unselected-background description-text-4 float-left">{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
                               )}
                             </View>
                           )}
                         </View>
 
-                      </View>
+                      </ScrollView>
 
                       <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
@@ -3582,33 +3562,35 @@ class OpportunityDetails extends Component {
 
                                       <View style={[styles.row5]}>
                                         <View style={[styles.row10]}>
-                                          <View>
-                                            <View className="calc-column-offset-45">
+                                          <View style={[styles.rowDirection]}>
+                                            <View style={[styles.calcColumn105]}>
                                               <Text style={[styles.row10]}>Which best describes you?<Text style={[styles.errorColor]}>*</Text></Text>
                                             </View>
-                                            <View className="fixed-column-45 left-padding">
+                                            <View style={[styles.width45,styles.leftPadding]}>
                                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                             </View>
 
                                           </View>
 
-                                          {this.state.roleNameOptions.map((value, index) =>
-                                            <View key={value} className="float-left">
-                                              <View className="float-left row-5 right-padding">
-                                                <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
-                                                  {(this.state.roleName === value) ? (
-                                                    <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]}>
-                                                      <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
-                                                    </View>
-                                                  ) : (
-                                                    <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder]}>
-                                                      <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
-                                                    </View>
-                                                  )}
-                                                </TouchableOpacity>
+                                          <View style={[styles.rowDirection,styles.flexWrap]}>
+                                            {this.state.roleNameOptions.map((value, index) =>
+                                              <View key={value}>
+                                                <View style={[styles.row5,styles.rightPadding]}>
+                                                  <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
+                                                    {(this.state.roleName === value) ? (
+                                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]}>
+                                                        <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
+                                                      </View>
+                                                    ) : (
+                                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder]}>
+                                                        <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
+                                                      </View>
+                                                    )}
+                                                  </TouchableOpacity>
+                                                </View>
                                               </View>
-                                            </View>
-                                          )}
+                                            )}
+                                          </View>
 
                                         </View>
 
@@ -3677,7 +3659,7 @@ class OpportunityDetails extends Component {
                                                   </View>
                                                 )}
                                               </View>
-                                              <View className="container-right">
+                                              <View style={[styles.row10]}>
                                                 {(this.state.roleName !== 'Participant') && (
                                                   <View>
                                                     <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor]}>*</Text></Text>
@@ -3728,8 +3710,8 @@ class OpportunityDetails extends Component {
                                               <View>
                                                 <Text style={[styles.row10]}>Add Teammates (Optional)</Text>
                                                 <View>
-                                                  <View style={[styles.row10]}>
-                                                    <View className="calc-column-offset-80">
+                                                  <View style={[styles.row10,styles.rowDirection]}>
+                                                    <View style={[stles.calcColumn140]}>
                                                       <TextInput
                                                         style={styles.textInput}
                                                         onChangeText={(text) => this.formChangeHandler("collaboratorEmail", text)}
@@ -3738,7 +3720,7 @@ class OpportunityDetails extends Component {
                                                         placeholderTextColor="grey"
                                                       />
                                                     </View>
-                                                    <View className="fixed-column-80 left-padding">
+                                                    <View style={[styles.width80,styles.leftPadding]}>
                                                       <TouchableOpacity style={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.unselectedBackground]} onPress={() => this.inviteCollaborators()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                                                     </View>
                                                   </View>
@@ -3796,18 +3778,18 @@ class OpportunityDetails extends Component {
                             </View>
                           ) : (
                             <View>
-                              <View style={[styles.bottomPadding]}>
-                                <View className={(this.state.subviewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
+                              <ScrollView style={[styles.carousel,styles.bottomPadding]} horizontal={true}>
+                                <View style={(this.state.subviewIndex === 0) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
                                   <TouchableOpacity onPress={() => this.setState({ subviewIndex: 0 })}>
-                                    <Text className={(this.state.subviewIndex === 0) ? [styles.headingText6,styles.ctaColor] : [styles.headingText6,styles.unselectedColor]}>Submit New Project</Text>
+                                    <Text style={(this.state.subviewIndex === 0) ? [styles.headingText6,styles.ctaColor] : [styles.headingText6,styles.unselectedColor]}>Submit New Project</Text>
                                   </TouchableOpacity>
                                 </View>
-                                <View className={(this.state.subviewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
+                                <View style={(this.state.subviewIndex === 1) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
                                   <TouchableOpacity onPress={() => this.setState({ subviewIndex: 1 })}>
-                                    <Text className={(this.state.subviewIndex === 1) ? [styles.headingText6,styles.ctaColor] : [styles.headingText6,styles.unselectedColor]}>Submit Project from Profile</Text>
+                                    <Text style={(this.state.subviewIndex === 1) ? [styles.headingText6,styles.ctaColor] : [styles.headingText6,styles.unselectedColor]}>Submit Project from Profile</Text>
                                   </TouchableOpacity>
                                 </View>
-                              </View>
+                              </ScrollView>
 
                               {(this.state.subviewIndex === 0) ? (
                                 <View>
@@ -3903,10 +3885,9 @@ class OpportunityDetails extends Component {
 
                 {(this.state.selectedOpportunity.postType === 'Event') && (
                   <View>
-                    <View style={[styles.flex1]}>
+                    <View style={[styles.flex1,styles.rowDirection]}>
                       <View style={[styles.flex90]}>
-                        <View className="float-left right-padding">
-                          <View style={[styles.spacer]} />
+                        <View style={[styles.rightPadding]}>
                           <Image source={{ uri: gcLogo}} style={[styles.square48,styles.contain]} />
                         </View>
                       </View>
@@ -3916,8 +3897,6 @@ class OpportunityDetails extends Component {
                           <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
-
-
                     </View>
 
                     <View style={[styles.superSpacer]} />
@@ -3926,76 +3905,75 @@ class OpportunityDetails extends Component {
                       <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.title} RSVP Form</Text>
                       <View style={[styles.spacer]} />
 
-                      <View>
-                        <View className={(this.state.viewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
-                          <Text style={(this.state.viewIndex === 0) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>Details</TouchableOpacity></Text>
+                      <ScrollView style={[styles.carousel]} horizontal={true}>
+                        <View style={(this.state.viewIndex === 0) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline,styles.rightMargin40] : [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.rightMargin40]}>
+                          <TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>
+                            <Text style={(this.state.viewIndex === 0) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Details</Text>
+                          </TouchableOpacity>
                         </View>
-                        <View className={(this.state.viewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
+                        <View style={(this.state.viewIndex === 1) ? [styles.topPadding25,styles.bottomPadding,styles.nowrap,styles.ctaUnderline] : [styles.topPadding25,styles.bottomPadding,styles.nowrap]}>
                           { ( this.state.comments.length === 0 ) ? (
-                            <Text style={(this.state.viewIndex === 1) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Comments</TouchableOpacity></Text>
+                            <TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>
+                              <Text style={(this.state.viewIndex === 1) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Comments</Text>
+                            </TouchableOpacity>
                           ) : (
                             <View>
-                              <Text className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Comments</TouchableOpacity></Text>
+                              <TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>
+                                <Text style={(this.state.viewIndex === 1) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}>Comments</Text>
+                              </TouchableOpacity>
                               {(this.state.viewIndex === 1) ? (
-                                <View className="noti-bubble selected-background description-text-4 float-left">{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
                               ) : (
-                                <View className="noti-bubble unselected-background description-text-4 float-left">{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
                               )}
                             </View>
                           )}
                         </View>
-
-                      </View>
+                      </ScrollView>
 
                       <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                       {(this.state.viewIndex === 0) ? (
                         <View>
-                          <View>
-                            <View className="fixed-column-33 right-margin" >
+                          <View style={[styles.rowDirection, styles.row10]}>
+                            <View style={[styles.width40]}>
                               <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: profileIconBig}} style={[styles.square30,styles.contain, { borderRadius: 15 }]} />
                             </View>
-                            <View className="calc-column-offset-43">
+                            <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Text>Hosted by {this.state.selectedOpportunity.orgName}</Text>
                             </View>
                           </View>
 
-                          <View style={[styles.spacer]}/>
-
-                          <View>
-                            <View className="fixed-column-33" >
+                          <View style={[styles.rowDirection, styles.row10]}>
+                            <View style={[styles.width40]}>
                               <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: locationIcon}} style={[styles.square23,styles.contain,styles.rightMargin5]} />
                             </View>
-                            <View className="calc-column-offset-43">
+                            <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Text>Location: {this.state.selectedOpportunity.location}</Text>
                             </View>
                           </View>
 
-                          <View style={[styles.spacer]}/>
-
-                          <View>
-                            <View className="fixed-column-33 right-margin" >
+                          <View style={[styles.rowDirection, styles.row10]}>
+                            <View style={[styles.width40]}>
                               <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: timeIconDark}} style={[styles.square23,styles.contain]} />
                             </View>
-                            <View className="calc-column-offset-43">
+                            <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Text>{this.state.startDateString} - {this.state.endDateString}</Text>
                             </View>
                           </View>
 
-                          <View style={[styles.spacer]}/>
-
-                          <View>
-                            <View className="fixed-column-33" >
+                          <View style={[styles.rowDirection, styles.row10]}>
+                            <View style={[styles.width40]}>
                               <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: infoIcon}} style={[styles.square23,styles.contain]} />
                             </View>
-                            <View className="calc-column-offset-43">
+                            <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Text style={[styles.keepLineBreaks]}>{this.state.selectedOpportunity.summary}</Text>
                             </View>
@@ -4003,13 +3981,13 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.links && this.state.selectedOpportunity.links.length > 0) && (
                             <View>
-                              <View style={[styles.spacer]}/>
-                              <View>
-                                <View className="fixed-column-33 right-margin" >
+
+                              <View style={[styles.rowDirection, styles.row10]}>
+                                <View style={[styles.width40]}>
                                   <View style={[styles.spacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   <Image source={{ uri: linkIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-43">
+                                <View style={[styles.calcColumn100]}>
                                   <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   {this.state.selectedOpportunity.links.map((value, index) =>
                                     <View key={index}>
@@ -4066,7 +4044,7 @@ class OpportunityDetails extends Component {
                   <View>
                     <View style={[styles.flex1]}>
                       <View style={[styles.flex90]}>
-                        <View className="float-left right-padding">
+                        <View style={[styles.rightPadding]}>
                           <View style={[styles.spacer]} />
                           <Image source={{ uri: gcLogo}} style={[styles.square48,styles.contain]} />
                         </View>

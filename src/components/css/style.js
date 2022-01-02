@@ -104,6 +104,10 @@ module.exports = StyleSheet.create({
     height: 15,
     width: 15
   },
+  square16: {
+    height: 16,
+    width: 16
+  },
   square17: {
     height: 17,
     width: 17
@@ -219,6 +223,14 @@ module.exports = StyleSheet.create({
     height: 30,
     backgroundColor: slightFaintColor
   },
+  darkUnderline: {
+    borderBottomWidth: 2,
+    borderColor: standardColor
+  },
+  ctaUnderline: {
+    borderBottomWidth: 2,
+    borderColor: primaryColor
+  },
   mediumShadow: {
     shadowColor: '#000',
     shadowOffset: { width: 10, height: 10 },
@@ -276,6 +288,9 @@ module.exports = StyleSheet.create({
   topMarginNegative4: {
     marginTop: -4
   },
+  topMarginNegative10: {
+    marginTop: -10
+  },
   topMarginNegative40: {
     marginTop: -40
   },
@@ -288,6 +303,9 @@ module.exports = StyleSheet.create({
   rightMargin: {
     marginRight: 10
   },
+  rightMargin40: {
+    marginRight: 40
+  },
   leftMargin3: {
     marginLeft: 3
   },
@@ -297,8 +315,17 @@ module.exports = StyleSheet.create({
   leftMargin: {
     marginLeft: 10
   },
+  leftMargin12: {
+    marginLeft: 12
+  },
   leftMargin18: {
     marginLeft: 18
+  },
+  leftMargin20: {
+    marginLeft: 20
+  },
+  leftMargin30: {
+    marginLeft: 30
   },
   leftMargin58: {
     marginLeft: 58
@@ -332,6 +359,9 @@ module.exports = StyleSheet.create({
   topPadding20: {
     paddingTop: 20
   },
+  topPadding25: {
+    paddingTop: 25
+  },
   bottomPadding5: {
     paddingBottom: 5
   },
@@ -362,11 +392,17 @@ module.exports = StyleSheet.create({
   rightPadding30: {
     paddingRight: 30
   },
+  rightPadding40: {
+    paddingRight: 40
+  },
   leftPadding: {
     paddingLeft: 10
   },
   leftPadding15: {
     paddingLeft: 15
+  },
+  leftPadding20: {
+    paddingLeft: 20
   },
   leftPadding40: {
     paddingLeft: 40
@@ -514,6 +550,9 @@ module.exports = StyleSheet.create({
   width30: {
     width: 30
   },
+  width33: {
+    width: 33
+  },
   width35: {
     width: 35
   },
@@ -522,6 +561,9 @@ module.exports = StyleSheet.create({
   },
   width42: {
     width: 42
+  },
+  width45: {
+    width: 45
   },
   width50: {
     width: 50
@@ -631,11 +673,17 @@ module.exports = StyleSheet.create({
   calcColumn90: {
     width: Dimensions.get('window').width - 90
   },
+  calcColumn93: {
+    width: Dimensions.get('window').width - 93
+  },
   calcColumn95: {
     width: Dimensions.get('window').width - 95
   },
   calcColumn100: {
     width: Dimensions.get('window').width - 100
+  },
+  calcColumn103: {
+    width: Dimensions.get('window').width - 103
   },
   calcColumn105: {
     width: Dimensions.get('window').width - 105
@@ -669,6 +717,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn145: {
     width: Dimensions.get('window').width - 145
+  },
+  calcColumn148: {
+    width: Dimensions.get('window').width - 148
   },
   calcColumn150: {
     width: Dimensions.get('window').width - 150
@@ -892,6 +943,9 @@ module.exports = StyleSheet.create({
   unselectedBackgroundColor: {
     backgroundColor: unselectedColor
   },
+  selectedBackground: {
+    backgroundColor: primaryColor
+  },
   btnPrimary: {
     height: 40,
     paddingTop: 3,
@@ -1069,7 +1123,10 @@ module.exports = StyleSheet.create({
     height: 48,
     width: null,
     marginTop: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: faintColor,
+    paddingLeft: 8
   },
   editComment: {
     height: 38,
@@ -1186,6 +1243,18 @@ module.exports = StyleSheet.create({
     width: 250,
     height: 38
   },
+  notiBubble: {
+    color: 'white',
+    fontWeight: 'bold',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
   notiBubbleSmall: {
     color: 'white',
     fontWeight: 'bold',
@@ -1261,9 +1330,5 @@ module.exports = StyleSheet.create({
     transition: 'width .2s ease-in',
     borderRadius: 50,
   },
-  darkUnderline: {
-    borderBottomWidth: 2,
-    borderColor: standardColor
-  }
 
 });
