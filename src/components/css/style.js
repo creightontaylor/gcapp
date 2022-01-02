@@ -120,6 +120,10 @@ module.exports = StyleSheet.create({
     height: 22,
     width: 22
   },
+  square23: {
+    height: 23,
+    width: 23
+  },
   square25: {
     height: 25,
     width: 25
@@ -135,6 +139,10 @@ module.exports = StyleSheet.create({
   square40: {
     height: 40,
     width: 40
+  },
+  square48: {
+    height: 48,
+    width: 48
   },
   square50: {
     height: 50,
@@ -770,6 +778,9 @@ module.exports = StyleSheet.create({
   flex80: {
     flex: 80
   },
+  flex90: {
+    flex: 90
+  },
   standardBorder: {
     borderWidth: 1,
     borderColor: faintColor,
@@ -874,6 +885,12 @@ module.exports = StyleSheet.create({
   },
   descriptionTextColor: {
     color: unselectedColor
+  },
+  unselectedColor: {
+    color: unselectedColor
+  },
+  unselectedBackgroundColor: {
+    backgroundColor: unselectedColor
   },
   btnPrimary: {
     height: 40,
@@ -1215,6 +1232,9 @@ module.exports = StyleSheet.create({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
+  },
+  keepLineBreaks: {
+    whiteSpace: 'pre-wrap'
   },
   rotate45: {
     transform: [{ rotate: '45deg'}]
