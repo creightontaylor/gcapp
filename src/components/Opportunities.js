@@ -37,7 +37,7 @@ class Opportunities extends Component {
   render() {
     return (
       <View>
-        <SubOpportunities />
+        <SubOpportunities navigation={this.props.navigation} />
       </View>
     )
   }

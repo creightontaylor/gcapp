@@ -1909,7 +1909,7 @@ class ExternalProfile extends Component {
                   {(this.state.showMessageWidget) && (
                     <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
                      <View key="showServiceDefinitions" style={[styles.padding20,styles.calcColumn40]}>
-                        <SubSendMessage profileData={this.state.profileData} history={this.props.history} closeModal={this.closeModal} />
+                        <SubSendMessage profileData={this.state.profileData} navigation={this.props.navigation} closeModal={this.closeModal} />
                       </View>
 
                    </Modal>
@@ -1938,7 +1938,7 @@ class ExternalProfile extends Component {
 
                   {(this.state.showGoalDetails || this.state.showHelpOutWidget) && (
                     <View>
-                      <SubGoalDetails history={this.props.history} selectedGoal={this.state.selectedGoal} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} showGoalDetails={this.state.showGoalDetails} showHelpOutWidget={this.state.showHelpOutWidget} profileData={this.state.profileData}/>
+                      <SubGoalDetails navigation={this.props.navigation} selectedGoal={this.state.selectedGoal} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} showGoalDetails={this.state.showGoalDetails} showHelpOutWidget={this.state.showHelpOutWidget} profileData={this.state.profileData}/>
                    </View>
                   )}
 

@@ -36,6 +36,7 @@ import Profile from './src/components/Profile';
 import ResumeBuilder from './src/components/ResumeBuilder';
 import FinancialPlanner from './src/components/FinancialPlanner';
 import CareerPlanBuilder from './src/components/CareerPlanBuilder';
+import OpportunityDetails from './src/components/OpportunityDetails';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -317,6 +318,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="ResumeBuilder" component={ResumeBuilder} />
           <Stack.Screen name="FinancialPlanner" component={FinancialPlanner} />
           <Stack.Screen name="CareerPlanBuilder" component={CareerPlanBuilder} />
+          <Stack.Screen name="OpportunityDetails" component={OpportunityDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     );
