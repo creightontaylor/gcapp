@@ -642,7 +642,7 @@ class EditProfile extends Component {
                           <Text style={[styles.headingText4]}>Tools</Text>
                         </View>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Resume Builder')}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ResumeBuilder')}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width50}>
                               <View style={[styles.miniSpacer]} />
@@ -658,7 +658,7 @@ class EditProfile extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Financial Planner')}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('FinancialPlanner')}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width50}>
                               <View style={[styles.miniSpacer]} />
@@ -674,7 +674,7 @@ class EditProfile extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Career Plan Builder')}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerPlanBuilder')}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width50}>
                               <View style={[styles.miniSpacer]} />

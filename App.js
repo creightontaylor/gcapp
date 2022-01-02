@@ -33,6 +33,9 @@ import Completions from './src/components/Completions';
 import MySocialPosts from './src/components/MySocialPosts';
 import Matches from './src/components/Matches';
 import Profile from './src/components/Profile';
+import ResumeBuilder from './src/components/ResumeBuilder';
+import FinancialPlanner from './src/components/FinancialPlanner';
+import CareerPlanBuilder from './src/components/CareerPlanBuilder';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -311,6 +314,9 @@ export default class App extends Component<Props> {
           <Stack.Screen name="MySocialPosts" component={MySocialPosts} />
           <Stack.Screen name="Matches" component={Matches} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="ResumeBuilder" component={ResumeBuilder} />
+          <Stack.Screen name="FinancialPlanner" component={FinancialPlanner} />
+          <Stack.Screen name="CareerPlanBuilder" component={CareerPlanBuilder} />
         </Stack.Navigator>
       </NavigationContainer>
     );
