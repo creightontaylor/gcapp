@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+import {Picker} from '@react-native-picker/picker';
 
 const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-grey.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
@@ -2186,15 +2187,15 @@ class OpportunityDetails extends Component {
         <View key={type + i}>
           {type === 'section' && (
             <View>
-              <p className="heading-text-4">{items[index].title}</p>
-              <p className="description-text-1">{items[index].body}</p>
+              <Text className="heading-text-4">{items[index].title}</Text>
+              <Text className="description-text-1">{items[index].body}</Text>
             </View>
           )}
           {type === 'exhibit' && (
             <View className="bottom-padding">
-              <p className="heading-text-4">Exhibit {alphabet[index].toUpperCase()}</p>
+              <Text className="heading-text-4">Exhibit {alphabet[index].toUpperCase()}</Text>
               {(items[index].link && items[index].link !== '') && (
-                <a href={items[index].link} target="_blank">{items[index].link}</a>
+                <TouchableOpacity onPress={() => Linking.openURL(items[index].link)}>{items[index].link}</TouchableOpacity>
               )}
             </View>
           )}
@@ -2238,7 +2239,7 @@ class OpportunityDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View className="relative-column-30" >
-                <p className="description-text-2">{this.state.benchmark.skills[i - 1].title} ({this.state.benchmark.skills[i - 1].skillType})</p>
+                <Text className="description-text-2">{this.state.benchmark.skills[i - 1].title} ({this.state.benchmark.skills[i - 1].skillType})</Text>
               </View>
               <View className="relative-column-70" >
                 <View className="half-spacer"/>
@@ -2274,7 +2275,7 @@ class OpportunityDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View className="relative-column-30" >
-                <p className="description-text-2">{this.state.benchmark.interests[i - 1].title}</p>
+                <Text className="description-text-2">{this.state.benchmark.interests[i - 1].title}</Text>
               </View>
               <View className="relative-column-70" >
                 <View className="half-spacer"/>
@@ -2309,7 +2310,7 @@ class OpportunityDetails extends Component {
           rows.push(
             <View key={rowKey}>
               <View className="relative-column-30" >
-                <p className="description-text-2">{this.state.benchmark.traits[i - 1].title}</p>
+                <Text className="description-text-2">{this.state.benchmark.traits[i - 1].title}</Text>
               </View>
               <View className="relative-column-70" >
                 <View className="half-spacer"/>
@@ -2341,12 +2342,12 @@ class OpportunityDetails extends Component {
 
         rows.push(
           <View key={rowKey}>
-            <Link className="secret-link" onClick={(event) => this.props.fromAdvisor && event.preventDefault()} to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/tracks/' + this.state.selectedOpportunity.tracks[i - 1].name.replace(/ /g,"-").toLowerCase(), state: { programTitle: this.state.selectedOpportunity.title, trackName:this.state.selectedOpportunity.tracks[i - 1].name, orgName: this.state.selectedOpportunity.orgName, postings: this.state.selectedOpportunity.tracks[i - 1].jobs } }}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('TrackPostings', { programTitle: this.state.selectedOpportunity.title, trackName:this.state.selectedOpportunity.tracks[i - 1].name, orgName: this.state.selectedOpportunity.orgName, postings: this.state.selectedOpportunity.tracks[i - 1].jobs })}>
               <View className="relative-column-80">
-               <p className="heading-text-5">{this.state.selectedOpportunity.tracks[i - 1].name}</p>
-                <p>{this.state.selectedOpportunity.tracks[i - 1].jobs.length} Internship Postings</p>
+               <Text className="heading-text-5">{this.state.selectedOpportunity.tracks[i - 1].name}</Text>
+                <Text>{this.state.selectedOpportunity.tracks[i - 1].jobs.length} Internship Postings</Text>
               </View>
-            </Link>
+            </TouchableOpacity>
             <View className="clear" />
             <View className="spacer"/><View className="half-spacer"/>
           </View>
@@ -2384,19 +2385,19 @@ class OpportunityDetails extends Component {
               <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} className="profile-thumbnail-2"/>
             </View>
             <View className="calc-column-offset-100 left-padding">
-              <p>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</p>
+              <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
               <View className="half-spacer" />
               {(collaborators[i - 1].joined) ? (
-                <p className="description-text-2">{collaborators[i - 1].roleName}</p>
+                <Text className="description-text-2">{collaborators[i - 1].roleName}</Text>
               ) : (
-                <p className="description-text-2">(This user has not joined Guided Compass)</p>
+                <Text className="description-text-2">(This user has not joined Guided Compass)</Text>
               )}
             </View>
             <View className="fixed-column-50">
               <View className="spacer" />
-              <a className="background-link" onClick={() => this.removeItem(index)}>
-                <Image source={xIcon} className="image-auto-20"/>
-              </a>
+              <TouchableOpacity onPress={() => this.removeItem(index)}>
+                <Image source={{ uri: xIcon}} className="image-auto-20"/>
+              </TouchableOpacity>
             </View>
             <View className="clear" />
           </View>
@@ -2503,11 +2504,6 @@ class OpportunityDetails extends Component {
       }
     }
 
-    let registerLink = '/organizations/' + this.state.activeOrg + '/student/join'
-    if (!this.state.activeOrg || this.state.activeOrg === '') {
-      registerLink = '/join'
-    }
-
     return (
         <View>
 
@@ -2525,27 +2521,21 @@ class OpportunityDetails extends Component {
                         <View className="flex-10">
                           {(this.state.selectedOpportunity.imageURL) && (
                             <View className="top-padding-15">
-                              <Image source={this.state.selectedOpportunity.imageURL} className="image-100-fit"/>
+                              <Image source={{ uri: this.state.selectedOpportunity.imageURL}} className="image-100-fit"/>
                             </View>
                           )}
                         </View>
                         <View className="flex-80">
                           {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
-                            <h2>{this.state.selectedOpportunity.title}</h2>
+                            <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.title}</Text>
                           ) : (
-                            <h2>{this.state.selectedOpportunity.title} @ {this.state.selectedOpportunity.employerName}</h2>
+                            <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.title} @ {this.state.selectedOpportunity.employerName}</Text>
                           )}
                         </View>
                         <View className="flex-10 right-text">
-                          {(this.state.pageSource === 'landingPage' && !this.state.selectedOpportunity.isPromotional) ? (
-                            <Link className="background-button" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                              <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? favoritesIconBlue : favoritesIconGrey} className="image-auto-20"/>
-                            </Link>
-                          ) : (
-                            <button className="btn background-button" onClick={() => this.favoriteItem(this.state.selectedOpportunity) }>
-                              <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? favoritesIconBlue : favoritesIconGrey} className="image-auto-20"/>
-                            </button>
-                          )}
+                          <TouchableOpacity onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                            <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} className="image-auto-20"/>
+                          </TouchableOpacity>
                         </View>
                         <View className="clear" />
                       </View>
@@ -2553,7 +2543,7 @@ class OpportunityDetails extends Component {
                       {this.state.hasApplied ? (
                         <View className="horizontal-padding-3">
                           <View className="half-spacer"/>
-                          <p className="error-color center-text bold-text">***You have already applied to this posting. If the recipient is interested, they will contact you. Look for updates via email. You can update your application at any time by resubmitting. If you have any technical questions, email creighton@guidedcompass.com.***</p>
+                          <Text className="error-color center-text bold-text">***You have already applied to this posting. If the recipient is interested, they will contact you. Look for updates via email. You can update your application at any time by resubmitting. If you have any technical questions, email creighton@guidedcompass.com.***</Text>
                           <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
                         </View>
                       ) : (
@@ -2562,14 +2552,14 @@ class OpportunityDetails extends Component {
                             <View>
                               {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
                                 <View>
-                                  <p className="center-text cta-color bold-color">***This is a common application. You must apply to this to apply to any roles attached to this program.***</p>
+                                  <Text className="center-text cta-color bold-color">***This is a common application. You must apply to this to apply to any roles attached to this program.***</Text>
                                   <View className="spacer"/><View className="spacer"/>
                                 </View>
                               ) : (
                                 <View>
                                   {(!this.state.isApproved && this.state.pageSource !== 'landingPage' && this.state.selectedOpportunity.isChild) && (
                                     <View>
-                                      <p className="error-color center-text bold-text">***This can only be applied to after you have been approved to this track attached to the {(this.state.parentPost) ? <Link className="secondary-link cta-color clear-border" to={{ pathname: '/app/opportunities/' + this.state.parentPost._id, state: { selectedOpportunity: this.state.parentPost } }}>{this.state.selectedOpportunity.orgName} posting</Link> : this.state.selectedOpportunity.orgName + " posting"}. Apply then await approval from their team administrator.***</p>
+                                      <Text className="error-color center-text bold-text">***This can only be applied to after you have been approved to this track attached to the {(this.state.parentPost) ? <TouchableOpacity className="secondary-link cta-color clear-border" onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.parentPost })}>{this.state.selectedOpportunity.orgName} posting</TouchableOpacity> : this.state.selectedOpportunity.orgName + " posting"}. Apply then await approval from their team administrator.***</Text>
                                       <View className="spacer"/><View className="spacer"/>
                                     </View>
                                   )}
@@ -2585,18 +2575,18 @@ class OpportunityDetails extends Component {
                       <View>
                         <View className="name-container">
                           <View className="left-padding-5 right-padding-5">
-                            <p className="heading-text-3">Basic Info</p>
+                            <Text className="heading-text-3">Basic Info</Text>
                             <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
                           </View>
 
                           <View className="edit-profile-row">
                             <View className="float-left right-margin">
                               <View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={industryIconDark} className="image-auto-23" />
+                              <Image source={{ uri: industryIconDark}} className="image-auto-23" />
                             </View>
                             <View className="float-left">
-                              <p>{this.state.selectedOpportunity.employerName}</p>
-                              <a href={this.state.selectedOpportunity.employerURL} target="_blank" >{this.state.selectedOpportunity.employerURL}</a>
+                              <Text>{this.state.selectedOpportunity.employerName}</Text>
+                              <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text>{this.state.selectedOpportunity.employerURL}</Text></TouchableOpacity>
                             </View>
                             <View className="clear" />
                           </View>
@@ -2604,10 +2594,10 @@ class OpportunityDetails extends Component {
                           <View className="edit-profile-row">
                             <View className="float-left right-margin">
                               <View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={locationIcon} className="image-auto-23 right-margin-5" />
+                              <Image source={{ uri: locationIcon}} className="image-auto-23 right-margin-5" />
                             </View>
                             <View className="float-left">
-                              <p>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</p>
+                              <Text>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</Text>
                             </View>
                             <View className="clear" />
                           </View>
@@ -2617,11 +2607,11 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="float-left right-margin">
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={calendarIconDark} className="image-auto-23" />
+                                  <Image source={{ uri: calendarIconDark}} className="image-auto-23" />
                                 </View>
 
                                 <View className="float-left">
-                                  <p>Posted on {convertDateToString(this.state.selectedOpportunity.createdAt,'date')}</p>
+                                  <Text>Posted on {convertDateToString(this.state.selectedOpportunity.createdAt,'date')}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2633,11 +2623,11 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="float-left right-margin">
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={timeRangeIcon} className="image-auto-23" />
+                                  <Image source={{ uri: timeRangeIcon}} className="image-auto-23" />
                                 </View>
 
                                 <View className="float-left">
-                                  <p>{convertDateToString(this.state.selectedOpportunity.startDate,"date")} - {this.state.selectedOpportunity.isPerpetual ? "Continual" : convertDateToString(this.state.selectedOpportunity.endDate,"date")}</p>
+                                  <Text>{convertDateToString(this.state.selectedOpportunity.startDate,"date")} - {this.state.selectedOpportunity.isPerpetual ? "Continual" : convertDateToString(this.state.selectedOpportunity.endDate,"date")}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2648,10 +2638,10 @@ class OpportunityDetails extends Component {
                             <View className="edit-profile-row">
                               <View className="fixed-column-33 right-padding">
                                 <View className="mini-spacer" /><View className="mini-spacer" />
-                                <Image source={timeIconDark} className="image-auto-23" />
+                                <Image source={{ uri: timeIconDark}} className="image-auto-23" />
                               </View>
                               <View className="calc-column-offset-43">
-                                <p>{this.state.selectedOpportunity.hoursPerWeek} Per Week</p>
+                                <Text>{this.state.selectedOpportunity.hoursPerWeek} Per Week</Text>
                               </View>
                               <View className="clear" />
                             </View>
@@ -2662,10 +2652,10 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={skillsIcon} className="image-auto-23" />
+                                  <Image source={{ uri: skillsIcon}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.workFunction}</p>
+                                  <Text>{this.state.workFunction}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2677,10 +2667,10 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={industryIconDark} className="image-auto-23" />
+                                  <Image source={{ uri: industryIconDark}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.industry}</p>
+                                  <Text>{this.state.industry}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2692,11 +2682,11 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={subsidyIconDark} className="image-auto-23" />
+                                  <Image source={{ uri: subsidyIconDark}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>This role is subsidized</p>
-                                  <p className="description-text-2">***Only people 16 - 24 within Los Angeles county limits are eligible to receive subsidized internships***</p>
+                                  <Text>This role is subsidized</Text>
+                                  <Text className="description-text-2">***Only people 16 - 24 within Los Angeles county limits are eligible to receive subsidized internships***</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2708,10 +2698,10 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={skillsIcon} className="image-auto-23" />
+                                  <Image source={{ uri: skillsIcon}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.selectedOpportunity.workType}</p>
+                                  <Text>{this.state.selectedOpportunity.workType}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2723,10 +2713,10 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={moneyIconDark} className="image-auto-23" />
+                                  <Image source={{ uri: moneyIconDark}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.selectedOpportunity.payRange}</p>
+                                  <Text>{this.state.selectedOpportunity.payRange}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2738,10 +2728,10 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={tagIcon} className="image-auto-23" />
+                                  <Image source={{ uri: tagIcon}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.selectedOpportunity.supplementalPayArray.toString()}</p>
+                                  <Text>{this.state.selectedOpportunity.supplementalPayArray.toString()}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
@@ -2753,39 +2743,15 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-padding" >
                                   <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={tagIcon} className="image-auto-23" />
+                                  <Image source={{ uri: tagIcon}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-33">
-                                  <p>{this.state.selectedOpportunity.benefits.toString()}</p>
+                                  <Text>{this.state.selectedOpportunity.benefits.toString()}</Text>
                                 </View>
                               </View>
                               <View className="clear" />
                             </View>
                           )}
-                          {/*
-                          {(this.state.selectedOpportunity.competencyTags && this.state.selectedOpportunity.competencyTags.length > 0) && (
-                            <View className="edit-profile-row">
-                              <View>
-                                <View className="fixed-column-33 right-padding" >
-                                  <View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={skillsIconBlue} className="image-auto-23" />
-                                </View>
-                                <View className="calc-column-offset-33">
-                                  {this.state.selectedOpportunity.competencyTags.map((value, optionIndex) =>
-                                    <View key={"competencyTags" + optionIndex} className="float-left right-padding">
-                                      {(this.state.selectedOpportunity.competencyTags[optionIndex + 1]) ? (
-                                        <label>{value.name},</label>
-                                      ) : (
-                                        <label>{value.name}</label>
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
-                                <View className="clear" />
-                              </View>
-                              <View className="clear" />
-                            </View>
-                          )}*/}
 
                         </View>
 
@@ -2796,147 +2762,130 @@ class OpportunityDetails extends Component {
                               {(!this.state.selectedOpportunity.direct) && (
                                 <View>
                                   <View className="left-padding-5 right-padding-5">
-                                    <p className="heading-text-3">Application Instructions</p>
+                                    <Text className="heading-text-3">Application Instructions</Text>
                                     <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
                                   </View>
 
-                                  {(this.state.pageSource === 'landingPage' && !this.state.selectedOpportunity.isPromotional) ? (
-                                    <View>
-                                      <View className="row-10">
-                                        <p>Register for Guided Compass then apply to the opportunity from withtin the portal.</p>
-                                      </View>
+                                  <View>
 
-                                      <View className="top-padding-20">
-                                        <Link className="clear-border" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                                          <button className="btn btn-primary right-text">
-                                            Register to Apply
-                                          </button>
-                                        </Link>
-                                      </View>
+                                    {(this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also apply via email") && (
+                                      <View>
 
-                                    </View>
-                                  ) : (
-                                    <View>
-
-                                      {(this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also apply via email") && (
                                         <View>
-
-                                          <View>
-                                            <View className="fixed-column-33 right-padding">
-                                              <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                                              <Image source={sendIcon} className="image-auto-23" />
-                                            </View>
-                                            <View className="calc-column-offset-33">
-                                              <p className="heading-text-4">Apply via Email</p>
-                                              <p><label className="half-bold-text">Address to:</label> {this.state.selectedOpportunity.employerContactFirstName} {this.state.selectedOpportunity.employerContactLastName}</p>
-                                              <p><label className="half-bold-text">Email:</label> {this.state.selectedOpportunity.employerContactEmail}</p>
-                                              <p><label className="half-bold-text">Subject Line:</label> {this.state.selectedOpportunity.subjectLine}</p>
-                                              {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.appRequirements !== '') && (
-                                                <View>
-                                                  <p><label className="half-bold-text">Please include:</label> {this.state.selectedOpportunity.appRequirements}</p>
-                                                </View>
-                                              )}
-                                              {(this.state.selectedOpportunity.submissionDeadline && this.state.selectedOpportunity.submissionDeadline !== '') && (
-                                                <View>
-                                                  <p><label className="half-bold-text">Deadline:</label> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"date")}</p>
-                                                </View>
-                                              )}
-                                            </View>
+                                          <View className="fixed-column-33 right-padding">
+                                            <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
+                                            <Image source={{ uri: sendIcon}} className="image-auto-23" />
                                           </View>
-
-                                          <View className="clear" />
-                                          <View className="spacer"/><View className="spacer"/>
-
-                                          <View>
-                                            <p>AND</p>
-                                          </View>
-
-                                        </View>
-                                      )}
-
-                                      {(this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also submit to our posting" || this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also apply via our website posting") && (
-                                        <View>
-                                          <View>
-                                            <View className="spacer"/>
-                                            <View>
-                                              <View className="fixed-column-33 right-padding">
-                                                <View className="half-spacer" />
-                                                <Image source={linkIcon} className="image-auto-23" />
-                                              </View>
-                                              <View className="calc-column-offset-33">
-                                                <p className="heading-text-4">Apply via Website</p>
-                                                <a href={this.state.selectedOpportunity.jobLink} target="_blank">{this.state.selectedOpportunity.jobLink}</a>
-                                              </View>
-                                            </View>
-                                            <View className="clear" />
-
-                                            {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.submissionDeadline) && (
+                                          <View className="calc-column-offset-33">
+                                            <Text className="heading-text-4">Apply via Email</Text>
+                                            <Text><Text className="half-bold-text">Address to:</Text> {this.state.selectedOpportunity.employerContactFirstName} {this.state.selectedOpportunity.employerContactLastName}</Text>
+                                            <Text><Text className="half-bold-text">Email:</Text> {this.state.selectedOpportunity.employerContactEmail}</Text>
+                                            <Text><Text className="half-bold-text">Subject Line:</Text> {this.state.selectedOpportunity.subjectLine}</Text>
+                                            {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.appRequirements !== '') && (
                                               <View>
-                                                <View className="spacer"/>
-                                                <View>
-                                                  <View className="fixed-column-33 right-padding">
-                                                    <View className="half-spacer" />
-
-                                                  </View>
-                                                  <View className="calc-column-offset-33">
-                                                    <View className="spacer" />
-                                                    {(this.state.selectedOpportunity.appRequirements !== '') && (
-                                                      <View>
-                                                        <p><label className="half-bold-text">Application Requirements:</label> {this.state.selectedOpportunity.appRequirements}</p>
-                                                      </View>
-                                                    )}
-                                                    {(this.state.selectedOpportunity.submissionDeadline !== '') && (
-                                                      <View>
-                                                        <p><label className="half-bold-text">Deadline:</label> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</p>
-
-                                                      </View>
-                                                    )}
-                                                  </View>
-                                                </View>
-                                                <View className="clear" />
+                                                <Text><Text className="half-bold-text">Please include:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
                                               </View>
                                             )}
-
-                                            <View className="spacer"/><View className="spacer"/>
-
+                                            {(this.state.selectedOpportunity.submissionDeadline && this.state.selectedOpportunity.submissionDeadline !== '') && (
+                                              <View>
+                                                <Text><Text className="half-bold-text">Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"date")}</Text>
+                                              </View>
+                                            )}
                                           </View>
-
-                                          <View>
-                                            <p>AND</p>
-                                          </View>
-
                                         </View>
-                                      )}
 
-                                      <View className="clear" />
-                                      <View className="spacer"/><View className="spacer"/>
+                                        <View className="clear" />
+                                        <View className="spacer"/><View className="spacer"/>
 
+                                        <View>
+                                          <Text>AND</Text>
+                                        </View>
+
+                                      </View>
+                                    )}
+
+                                    {(this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also submit to our posting" || this.state.selectedOpportunity.applicationMethod === "Applicants may be referred, but they must also apply via our website posting") && (
                                       <View>
-                                        <View className="float-left right-padding">
-                                          <View className="spacer" /><View className="half-spacer" /><View className="half-spacer" />
-                                          <Image source={profileIconBig} className="image-auto-23" />
-                                        </View>
-                                        <View className="calc-column-offset-33">
-                                          <View className="spacer" />
-
-                                          {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
-                                            <View>
-                                              <p className="error-color">The deadline has passed for this opportunity</p>
+                                        <View>
+                                          <View className="spacer"/>
+                                          <View>
+                                            <View className="fixed-column-33 right-padding">
+                                              <View className="half-spacer" />
+                                              <Image source={{ uri: linkIcon}} className="image-auto-23" />
                                             </View>
-                                          ) : (
+                                            <View className="calc-column-offset-33">
+                                              <Text className="heading-text-4">Apply via Website</Text>
+                                              <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.jobLink)}><Text>{this.state.selectedOpportunity.jobLink}</Text></TouchableOpacity>
+                                            </View>
+                                          </View>
+                                          <View className="clear" />
+
+                                          {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.submissionDeadline) && (
                                             <View>
-                                              <p className="heading-text-4">{this.state.orgName} Referral</p>
-                                              {(this.props.fromAdvisor) ? (
-                                                <p>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</p>
-                                              ) : (
-                                                <p>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <Link className="clear-border" to={(this.state.emailId && this.state.emailId !== '') ? { pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application }} : { pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>here.</Link></p>
-                                              )}
+                                              <View className="spacer"/>
+                                              <View>
+                                                <View className="fixed-column-33 right-padding">
+                                                  <View className="half-spacer" />
+
+                                                </View>
+                                                <View className="calc-column-offset-33">
+                                                  <View className="spacer" />
+                                                  {(this.state.selectedOpportunity.appRequirements !== '') && (
+                                                    <View>
+                                                      <Text><Text className="half-bold-text">Application Requirements:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
+                                                    </View>
+                                                  )}
+                                                  {(this.state.selectedOpportunity.submissionDeadline !== '') && (
+                                                    <View>
+                                                      <Text><Text className="half-bold-text">Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
+
+                                                    </View>
+                                                  )}
+                                                </View>
+                                              </View>
+                                              <View className="clear" />
                                             </View>
                                           )}
+
+                                          <View className="spacer"/><View className="spacer"/>
+
                                         </View>
+
+                                        <View>
+                                          <Text>AND</Text>
+                                        </View>
+
+                                      </View>
+                                    )}
+
+                                    <View className="clear" />
+                                    <View className="spacer"/><View className="spacer"/>
+
+                                    <View>
+                                      <View className="float-left right-padding">
+                                        <View className="spacer" /><View className="half-spacer" /><View className="half-spacer" />
+                                        <Image source={{ uri: profileIconBig}} className="image-auto-23" />
+                                      </View>
+                                      <View className="calc-column-offset-33">
+                                        <View className="spacer" />
+
+                                        {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
+                                          <View>
+                                            <Text className="error-color">The deadline has passed for this opportunity</Text>
+                                          </View>
+                                        ) : (
+                                          <View>
+                                            <Text className="heading-text-4">{this.state.orgName} Referral</Text>
+                                            {(this.props.fromAdvisor) ? (
+                                              <Text>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</Text>
+                                            ) : (
+                                              <Text>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text>here.</Text></TouchableOpacity></Text>
+                                            )}
+                                          </View>
+                                        )}
                                       </View>
                                     </View>
-                                  )}
+                                  </View>
 
                                 </View>
                               )}
@@ -2954,8 +2903,8 @@ class OpportunityDetails extends Component {
                       <View className="full-width left-padding-5 right-padding-5">
                         <View className="spacer" /><View className="spacer" />
 
-                        <p className="description-text-2">Description</p>
-                        <p className="heading-text-6 keep-line-breaks">{this.state.selectedOpportunity.description}</p>
+                        <Text className="description-text-2">Description</Text>
+                        <Text className="heading-text-6 keep-line-breaks">{this.state.selectedOpportunity.description}</Text>
 
                         <View className="spacer" /><View className="spacer" />
                       </View>
@@ -2963,21 +2912,21 @@ class OpportunityDetails extends Component {
                       {(this.state.activeOrg !== 'exp') && (
                         <View>
                           <View className="spacer"/><View className="spacer"/>
-                          <hr />
+                          <View style={[styles.horizontalLine]} />
                           <View className="spacer"/><View className="spacer"/><View className="spacer"/>
 
                           {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
                             <View>
                               <View className="left-padding-5 right-padding-5">
-                                <p className="heading-text-3">Tracks</p>
+                                <Text className="heading-text-3">Tracks</Text>
                                 <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
-                                <p>{this.state.selectedOpportunity.title} has {this.state.selectedOpportunity.tracks.length} tracks. You must be accepted into a given track before you allowed to apply to any of the roles within that track. Tracks will appear as you are approved for them.</p>
+                                <Text>{this.state.selectedOpportunity.title} has {this.state.selectedOpportunity.tracks.length} tracks. You must be accepted into a given track before you allowed to apply to any of the roles within that track. Tracks will appear as you are approved for them.</Text>
                               </View>
 
                               {(!this.state.emailId || this.state.emailId === '') ? (
                                 <View>
                                   <View className="spacer"/><View className="half-spacer"/>
-                                  <p className="error-message">You must be logged in to view the track postings</p>
+                                  <Text className="error-message">You must be logged in to view the track postings</Text>
                                 </View>
                               ) : (
                                 <View className="padding-20">
@@ -2991,24 +2940,24 @@ class OpportunityDetails extends Component {
                               {(!this.state.selectedOpportunity.isPromotional && this.state.benchmark && this.state.selectedOpportunity.workflowType !== 'Common App') && (
                                 <View>
                                   <View className="left-padding-5 right-padding-5">
-                                    <p className="heading-text-3">Ideal Candidate</p>
+                                    <Text className="heading-text-3">Ideal Candidate</Text>
                                     <View className="half-spacer"/>
-                                    <p className="description-text-1">(The below describes what the employer wants in a candidate)</p>
+                                    <Text className="description-text-1">(The below describes what the employer wants in a candidate)</Text>
                                     <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
                                   </View>
 
                                   <View className="left-padding-5 right-padding-5">
-                                    <p className="heading-text-6">Skills</p>
+                                    <Text className="heading-text-6">Skills</Text>
                                     <View className="padding-20">
                                       {this.renderSkills()}
                                     </View>
 
-                                    <p className="heading-text-6">Interests</p>
+                                    <Text className="heading-text-6">Interests</Text>
                                     <View className="padding-20">
                                       {this.renderInterests()}
                                     </View>
 
-                                    <p className="heading-text-6">Traits</p>
+                                    <Text className="heading-text-6">Traits</Text>
                                     <View className="padding-20">
                                       {this.renderTraits()}
                                     </View>
@@ -3024,49 +2973,49 @@ class OpportunityDetails extends Component {
                       {(!this.state.selectedOpportunity.isPromotional && this.state.benchmark && this.state.selectedOpportunity.workflowType !== 'Common App') && (
                         <View>
                           <View className="spacer"/><View className="spacer"/>
-                          <hr />
+                          <View style={[styles.horizontalLine]} />
                           <View className="spacer"/><View className="spacer"/><View className="spacer"/>
                         </View>
                       )}
 
                       <View className="left-padding-5">
                         <View className="spacer"/>
-                        { (this.state.sessionErrorMessage!== '') && <p className="error-message">{this.state.sessionErrorMessage}</p> }
+                        { (this.state.sessionErrorMessage!== '') && <Text className="error-message">{this.state.sessionErrorMessage}</Text> }
                         { (this.state.serverPostSuccess) ? (
-                          <p className="success-message">{this.state.serverSuccessMessage}</p>
+                          <Text className="success-message">{this.state.serverSuccessMessage}</Text>
                         ) : (
-                          <p className="error-message">{this.state.serverErrorMessage}</p>
+                          <Text className="error-message">{this.state.serverErrorMessage}</Text>
                         )}
 
                         {(this.props.fromAdvisor) ? (
                           <View>
                             <View className="left-padding-5 right-padding-5">
-                              <p className="heading-text-3">Endorse a Student for this Posting</p>
+                              <Text className="heading-text-3">Endorse a Student for this Posting</Text>
                               <View className="spacer"/><View className="spacer"/>
                             </View>
 
                             <View>
                               <View className="spacer"/><View className="spacer"/>
-                              <p>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</p>
+                              <Text>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
                               <View className="spacer"/><View className="spacer"/><View className="spacer"/><View className="spacer"/>
                             </View>
 
-                            <Link className="clear-border" to={{ pathname: '/advisor/endorsements/new', state: { benchmark: this.state.benchmark } }}><button className="btn btn-primary">Endorse a Student</button></Link>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
                           </View>
                         ) : (
                           <View>
                             {this.state.hasApplied ? (
                               <View>
-                                <p className="error-color center-text bold-text">***You have already applied to this posting. If the recipient is interested, they will contact you. Look for updates via email. You can update your application at any time by resubmitting. If you have any technical questions, email creighton@guidedcompass.com.***</p>
+                                <Text className="error-color center-text bold-text">***You have already applied to this posting. If the recipient is interested, they will contact you. Look for updates via email. You can update your application at any time by resubmitting. If you have any technical questions, email creighton@guidedcompass.com.***</Text>
                                 <View className="spacer"/><View className="spacer"/>
                                 <View>
                                   {this.state.selectedOpportunity.isChild ? (
                                     <View className="flex-container flex-center">
-                                      <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Update</button></Link>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Update</Text></TouchableOpacity>
                                     </View>
                                   ) : (
                                     <View className="flex-container flex-center">
-                                      <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Update</button></Link>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Update</Text></TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -3075,72 +3024,54 @@ class OpportunityDetails extends Component {
                               <View>
                                 {(this.state.selectedOpportunity.isActive === false) ? (
                                   <View>
-                                    <p className="error-color">This posting has been marked inactive (i.e., it is not taking any new applications).</p>
+                                    <Text className="error-color">This posting has been marked inactive (i.e., it is not taking any new applications).</Text>
                                   </View>
                                 ) : (
                                   <View>
-                                    {(this.state.pageSource === 'landingPage') ? (
-                                      <View>
-                                        {(this.state.selectedOpportunity.isPromotional) ? (
-                                          <Link className="clear-border" to={{ pathname: '/opportunities/organizations/' + this.state.activeOrg + '/' + this.state.selectedOpportunity._id + '/apply', state: { selectedOpportunity: this.state.selectedOpportunity } }}>
-                                            <button className="btn btn-primary">
-                                              Apply Now
-                                            </button>
-                                          </Link>
-                                        ) : (
-                                          <Link className="clear-border" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                                            <button className="btn btn-primary">
-                                              Register to Apply
-                                            </button>
-                                          </Link>
-                                        )}
-                                      </View>
-                                    ) : (
-                                      <View>
-                                        {this.state.selectedOpportunity.isChild ? (
-                                          <View>
-                                            {this.state.isApproved ? (
-                                              <View>
-                                                <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity } }}><button className="btn btn-primary">Submit Application for Referral</button></Link>
-                                              </View>
-                                            ) : (
-                                              <View>
-                                                <p className="error-color center-text bold-text">***You must apply to the {this.state.orgName} general posting and then get approved before applying for this specific posting.***</p>
-                                                {(this.state.parentPost) && (
-                                                  <View className="center-text">
-                                                    <View className="spacer"/><View className="spacer"/>
-                                                    <Link className="secondary-link clear-border" to={{ pathname: '/app/opportunities/' + this.state.parentPost._id, state: { selectedOpportunity: this.state.parentPost } }}><button className="btn btn-primary">View {this.state.selectedOpportunity.orgName} General Posting</button></Link>
-                                                  </View>
-                                                )}
-                                              </View>
-                                            )}
-                                          </View>
-                                        ) : (
-                                          <View>
-                                            {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
-                                              <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Apply</button></Link>
-                                            ) : (
-                                              <View>
-                                                {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
-                                                  <View>
-                                                    <p className="error-color">The deadline has passed for this opportunity</p>
-                                                  </View>
-                                                ) : (
-                                                  <View>
-                                                    {(this.state.selectedOpportunity.direct) ? (
-                                                      <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Apply</button></Link>
-                                                    ) : (
-                                                      <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">{(this.state.activeOrg === 'c2c' || this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'block') ? "Request a " + this.state.selectedOpportunity.orgName + " Referral" : "Apply"}</button></Link>
-                                                    )}
-                                                  </View>
-                                                )}
-                                              </View>
-                                            )}
+                                    <View>
+                                      {this.state.selectedOpportunity.isChild ? (
+                                        <View>
+                                          {this.state.isApproved ? (
+                                            <View>
+                                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Submit Application for Referral</Text></TouchableOpacity>
+                                            </View>
+                                          ) : (
+                                            <View>
+                                              <Text className="error-color center-text bold-text">***You must apply to the {this.state.orgName} general posting and then get approved before applying for this specific posting.***</Text>
+                                              {(this.state.parentPost) && (
+                                                <View className="center-text">
+                                                  <View className="spacer"/><View className="spacer"/>
+                                                  <TouchableOpacity className="secondary-link clear-border" onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.parentPost })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>View {this.state.selectedOpportunity.orgName} General Posting</Text></TouchableOpacity>
+                                                </View>
+                                              )}
+                                            </View>
+                                          )}
+                                        </View>
+                                      ) : (
+                                        <View>
+                                          {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
+                                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Apply</Text></TouchableOpacity>
+                                          ) : (
+                                            <View>
+                                              {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
+                                                <View>
+                                                  <Text className="error-color">The deadline has passed for this opportunity</Text>
+                                                </View>
+                                              ) : (
+                                                <View>
+                                                  {(this.state.selectedOpportunity.direct) ? (
+                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Apply</Text></TouchableOpacity>
+                                                  ) : (
+                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Request a Referral</Text></TouchableOpacity>
+                                                  )}
+                                                </View>
+                                              )}
+                                            </View>
+                                          )}
 
-                                          </View>
-                                        )}
-                                      </View>
-                                    )}
+                                        </View>
+                                      )}
+                                    </View>
                                   </View>
                                 )}
 
@@ -3152,8 +3083,8 @@ class OpportunityDetails extends Component {
                         <View className="spacer"/><View className="spacer"/><View className="spacer"/>
 
                       </View>
-                      {this.state.serverSuccessMessage !== '' && <p className="success-message">{this.state.serverSuccessMessage}</p>}
-                      {this.state.serverErrorMessage !== '' && <p className="error-message">{this.state.serverErrorMessage}</p>}
+                      {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
+                      {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
 
                     </View>
                   </View>
@@ -3165,21 +3096,21 @@ class OpportunityDetails extends Component {
 
                     <View>
                       <View className="relative-column-80">
-                        <label className="heading-text-2">{this.state.selectedOpportunity.name}</label>
+                        <Text className="heading-text-2">{this.state.selectedOpportunity.name}</Text>
 
                         <View className="clear" />
                         <View className="spacer" />
 
                         <View className="float-left">
-                          <label className="description-text-1">{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</label>
+                          <Text className="description-text-1">{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</Text>
                         </View>
 
                         {(this.state.selectedOpportunity.employerName) && (
                           <View className="float-left left-padding-5">
                             {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
-                              <label className="description-text-1">@ <a href={this.state.selectedOpportunity.employerURL} target="_blank">{this.state.selectedOpportunity.employerName}</a></label>
+                              <Text className="description-text-1">@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}>{this.state.selectedOpportunity.employerName}</TouchableOpacity></Text>
                             ) : (
-                              <label className="description-text-1">@ {this.state.selectedOpportunity.employerName}</label>
+                              <Text className="description-text-1">@ {this.state.selectedOpportunity.employerName}</Text>
                             )}
                           </View>
                         )}
@@ -3190,78 +3121,49 @@ class OpportunityDetails extends Component {
                       <View className="relative-column-20 right-text">
                         {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
                           <View>
-                            <label className="heading-text-2 cta-color">${this.state.selectedOpportunity.prizes[0]}</label>
+                            <Text className="heading-text-2 cta-color">${this.state.selectedOpportunity.prizes[0]}</Text>
                           </View>
                         ) : (
                           <View className="float-right full-width">
-                            {(this.state.pageSource === 'landingPage') ? (
-                              <Link className="background-button" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                                <View className="standard-border rounded-corners">
-                                  <View className="float-left padding-7">
-                                    <Image source={(this.state.selectedOpportunity.upvotes.includes(this.state.emailId)) ? upvoteIconBlue : upvoteIconGrey} className="image-auto-15"/>
-                                  </View>
-                                  <View className="vertical-separator-4" />
-                                  <View className="float-left horizontal-padding-10">
-                                    <View className="half-spacer" />
-                                    <p className="description-text-2 half-bold-text">{this.state.selectedOpportunity.upvotes.length}</p>
-                                  </View>
-                                  <View className="clear" />
+                            <TouchableOpacity className="background-button clear-padding display-block pin-right" onPress={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
+                              <View className="standard-border rounded-corners">
+                                <View className="float-left padding-7">
+                                  <Image source={(this.state.selectedOpportunity.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} className="image-auto-15"/>
                                 </View>
-                              </Link>
-                            ) : (
-                              <button className="background-button clear-padding display-block pin-right" onClick={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
-                                <View className="standard-border rounded-corners">
-                                  <View className="float-left padding-7">
-                                    <Image source={(this.state.selectedOpportunity.upvotes.includes(this.state.emailId)) ? upvoteIconBlue : upvoteIconGrey} className="image-auto-15"/>
-                                  </View>
-                                  <View className="vertical-separator-4" />
-                                  <View className="float-left horizontal-padding-10">
-                                    <View className="half-spacer" />
-                                    <p className="description-text-2 half-bold-text">{this.state.selectedOpportunity.upvotes.length}</p>
-                                  </View>
-                                  <View className="clear" />
+                                <View className="vertical-separator-4" />
+                                <View className="float-left horizontal-padding-10">
+                                  <View className="half-spacer" />
+                                  <Text className="description-text-2 half-bold-text">{this.state.selectedOpportunity.upvotes.length}</Text>
                                 </View>
-                              </button>
-                            )}
+                                <View className="clear" />
+                              </View>
+                            </TouchableOpacity>
                           </View>
                         )}
 
-                        {(this.state.pageSource === 'landingPage') ? (
-                          <Link className="background-button" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                            {(this.state.emailId) && (
-                              <View className="standard-border rounded-corners">
+                        <TouchableOpacity className="background-button clear-padding display-block float-right top-margin" onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                          {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
+                            <View className="cta-border cta-background-color rounded-corners">
+                              <View className="float-left row-7 left-padding-5 right-padding-5">
+                                <Image source={{ uri: checkmarkIconWhite}} className="image-auto-12"/>
+                              </View>
+                              <View className="float-left row-5 right-padding-10 center-text">
+                                <Text className="description-text-3 half-bold-text white-text">Followed</Text>
+                              </View>
+                              <View className="clear" />
+                            </View>
+                          ) : (
+                            <View className="standard-border rounded-corners">
+                              {(this.state.emailId) && (
                                 <View className="float-left row-5 horizontal-padding-10 center-text">
-                                  <p className="description-text-3 half-bold-text">Follow</p>
+                                  <Text className="description-text-3 half-bold-text">{(this.state.emailId) ? "Follow" : "Register"}</Text>
                                 </View>
-                                <View className="clear" />
-                              </View>
-                            )}
-                          </Link>
-                        ) : (
-                          <button className="background-button clear-padding display-block float-right top-margin" onClick={() => this.favoriteItem(this.state.selectedOpportunity) }>
-                            {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
-                              <View className="cta-border cta-background-color rounded-corners">
-                                <View className="float-left row-7 left-padding-5 right-padding-5">
-                                  <Image source={checkmarkIconWhite} className="image-auto-12"/>
-                                </View>
-                                <View className="float-left row-5 right-padding-10 center-text">
-                                  <p className="description-text-3 half-bold-text white-text">Followed</p>
-                                </View>
-                                <View className="clear" />
-                              </View>
-                            ) : (
-                              <View className="standard-border rounded-corners">
-                                {(this.state.emailId) && (
-                                  <View className="float-left row-5 horizontal-padding-10 center-text">
-                                    <p className="description-text-3 half-bold-text">{(this.state.emailId) ? "Follow" : "Register"}</p>
-                                  </View>
-                                )}
+                              )}
 
-                                <View className="clear" />
-                              </View>
-                            )}
-                          </button>
-                        )}
+                              <View className="clear" />
+                            </View>
+                          )}
+                        </TouchableOpacity>
 
                       </View>
 
@@ -3275,9 +3177,9 @@ class OpportunityDetails extends Component {
                         <View>
                           <View className="float-left padding-five-percent-right">
                             <View className="float-left right-padding">
-                              <Image source={prizeIcon} className="image-auto-25" />
+                              <Image source={{ uri: prizeIcon}} className="image-auto-25" />
                             </View>
-                            <label className="description-text-1">${this.state.selectedOpportunity.prizes[0]}</label>
+                            <Text className="description-text-1">${this.state.selectedOpportunity.prizes[0]}</Text>
 
                             <View className="clear" />
                             <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3285,9 +3187,9 @@ class OpportunityDetails extends Component {
                           </View>
                           <View className="float-left padding-five-percent-right">
                             <View className="float-left right-padding">
-                              <Image source={deadlineIcon} className="image-auto-25" />
+                              <Image source={{ uri: deadlineIcon}} className="image-auto-25" />
                             </View>
-                            <label className="description-text-1">{this.formatDate(this.state.selectedOpportunity.submissionDeadline)}</label>
+                            <Text className="description-text-1">{this.formatDate(this.state.selectedOpportunity.submissionDeadline)}</Text>
 
                             <View className="clear" />
                             <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3297,9 +3199,9 @@ class OpportunityDetails extends Component {
 
                       <View className="float-left padding-five-percent-right">
                         <View className="float-left right-padding">
-                          <Image source={difficultyIcon} className="image-auto-25" />
+                          <Image source={{ uri: difficultyIcon}} className="image-auto-25" />
                         </View>
-                        <label className="description-text-1">{this.state.selectedOpportunity.difficultyLevel}</label>
+                        <Text className="description-text-1">{this.state.selectedOpportunity.difficultyLevel}</Text>
 
                         <View className="clear" />
                         <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3307,9 +3209,9 @@ class OpportunityDetails extends Component {
                       {(this.state.selectedOpportunity.upvotes && this.state.selectedOpportunity.downvotes) && (
                         <View className="float-left padding-five-percent-right">
                           <View className="float-left right-padding">
-                            <Image source={checkmarkIcon} className="image-auto-25" />
+                            <Image source={{ uri: checkmarkIcon}} className="image-auto-25" />
                           </View>
-                          <label className="description-text-1">{this.state.selectedOpportunity.upvotes.length - this.state.selectedOpportunity.downvotes.length} Popularity</label>
+                          <Text className="description-text-1">{this.state.selectedOpportunity.upvotes.length - this.state.selectedOpportunity.downvotes.length} Popularity</Text>
 
                           <View className="clear" />
                           <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3318,9 +3220,9 @@ class OpportunityDetails extends Component {
 
                       <View className="float-left padding-five-percent-right">
                         <View className="float-left right-padding">
-                          <Image source={industryIcon} className="image-auto-25" />
+                          <Image source={{ uri: industryIcon}} className="image-auto-25" />
                         </View>
-                        <label className="description-text-1">{this.state.selectedOpportunity.industry} Industry</label>
+                        <Text className="description-text-1">{this.state.selectedOpportunity.industry} Industry</Text>
 
                         <View className="clear" />
                         <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3329,9 +3231,9 @@ class OpportunityDetails extends Component {
                       {(this.state.selectedOpportunity.knowledgeLevel) && (
                         <View className="float-left padding-five-percent-right">
                           <View className="float-left right-padding">
-                            <Image source={reachIcon} className="image-auto-25" />
+                            <Image source={{ uri: reachIcon}} className="image-auto-25" />
                           </View>
-                          <label className="description-text-1">{this.state.selectedOpportunity.knowledgeLevel}</label>
+                          <Text className="description-text-1">{this.state.selectedOpportunity.knowledgeLevel}</Text>
 
                           <View className="clear" />
                           <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3341,9 +3243,9 @@ class OpportunityDetails extends Component {
                       {(this.state.selectedOpportunity.pointValue) && (
                         <View className="float-left padding-five-percent-right">
                           <View className="float-left right-padding">
-                            <Image source={pointsIcon} className="image-auto-25" />
+                            <Image source={{ uri: pointsIcon}} className="image-auto-25" />
                           </View>
-                          <label className="description-text-1">{this.state.selectedOpportunity.pointValue} Points</label>
+                          <Text className="description-text-1">{this.state.selectedOpportunity.pointValue} Points</Text>
 
                           <View className="clear" />
                           <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
@@ -3353,7 +3255,7 @@ class OpportunityDetails extends Component {
                       {(this.state.selectedOpportunity.functions) && (
                         <View className="float-left padding-five-percent-right">
                           <View className="float-left right-padding">
-                            <Image source={skillsIconBlue} className="image-auto-25" />
+                            <Image source={{ uri: skillsIconBlue}} className="image-auto-25" />
                             <View className="clear" />
                             <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
                           </View>
@@ -3361,9 +3263,9 @@ class OpportunityDetails extends Component {
                           {this.state.selectedOpportunity.functions.map((value, index) =>
                             <span>
                               {(index === this.state.selectedOpportunity.functions.length - 1) ? (
-                                <label className="description-text-1">{value}</label>
+                                <Text className="description-text-1">{value}</Text>
                               ) : (
-                                <label className="description-text-1">{value}, </label>
+                                <Text className="description-text-1">{value}, </Text>
                               )}
                             </span>
                           )}
@@ -3376,10 +3278,10 @@ class OpportunityDetails extends Component {
                       {(this.state.selectedOpportunity.tags) && (
                         <View className="float-left">
                           <View className="float-left right-padding">
-                            <Image source={tagIcon} className="image-auto-25" />
+                            <Image source={{ uri: tagIcon}} className="image-auto-25" />
                             <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
                           </View>
-                          <label className="description-text-1">{this.state.selectedOpportunity.tags}</label>
+                          <Text className="description-text-1">{this.state.selectedOpportunity.tags}</Text>
                         </View>
                       )}
 
@@ -3390,22 +3292,22 @@ class OpportunityDetails extends Component {
                     <View>
                       <View>
                         <View className={(this.state.viewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
-                          <p className={(this.state.viewIndex === 0) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 0 })}>Details</a></p>
+                          <Text className={(this.state.viewIndex === 0) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>Details</TouchableOpacity></Text>
                         </View>
 
                         {(this.state.roleName === 'Student') && (
                           <View className={(this.state.viewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
-                            <p className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 1 })}>Submit a Project</a></p>
+                            <Text className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Submit a Project</TouchableOpacity></Text>
                           </View>
                         )}
 
                         <View className={(this.state.viewIndex === 2) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
 
                           { ( !this.state.selectedOpportunity.submissions || this.state.selectedOpportunity.submissions.length === 0 ) ? (
-                            <p className={(this.state.viewIndex === 2) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 2 })}>Submissions</a></p>
+                            <Text className={(this.state.viewIndex === 2) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
                           ) : (
                             <View>
-                              <p className={(this.state.viewIndex === 2) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><a className="background-button" onClick={() => this.setState({ viewIndex: 2 })}>Submissions</a></p>
+                              <Text className={(this.state.viewIndex === 2) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
                               {(this.state.viewIndex === 2) ? (
                                 <View className="noti-bubble selected-background description-text-4 float-left">{this.state.selectedOpportunity.submissions.length}</View>
                               ) : (
@@ -3417,10 +3319,10 @@ class OpportunityDetails extends Component {
 
                         <View className={(this.state.viewIndex === 3) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
                           { ( this.state.comments.length === 0 ) ? (
-                            <p className={(this.state.viewIndex === 3) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 3 })}>Comments</a></p>
+                            <Text className={(this.state.viewIndex === 3) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
                           ) : (
                             <View>
-                              <p className={(this.state.viewIndex === 3) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><a className="background-button" onClick={() => this.setState({ viewIndex: 3 })}>Comments</a></p>
+                              <Text className={(this.state.viewIndex === 3) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
                               {(this.state.viewIndex === 3) ? (
                                 <View className="noti-bubble selected-background description-text-4 float-left">{this.state.comments.length}</View>
                               ) : (
@@ -3442,12 +3344,13 @@ class OpportunityDetails extends Component {
 
                               <View>
                                 <View className="video-container">
+                                  {/*
                                   <iframe
                                     title="videoLink"
                                     className="video-iframe"
                                     source={`${this.state.selectedOpportunity.videoLink}`}
                                     frameBorder="0"
-                                  />
+                                  />*/}
                                 </View>
 
                               </View>
@@ -3460,9 +3363,9 @@ class OpportunityDetails extends Component {
                           {(this.state.selectedOpportunity.summary) && (
                             <View>
                               <View>
-                                <p className="heading-text-4">Summary</p>
+                                <Text className="heading-text-4">Summary</Text>
                                 <View className="row-5">
-                                  {this.state.summarySplit.map((value, index) => <p className="description-text-2 dark-color half-bold-text">{value}</p>)}
+                                  {this.state.summarySplit.map((value, index) => <Text className="description-text-2 dark-color half-bold-text">{value}</Text>)}
                                 </View>
                               </View>
 
@@ -3473,13 +3376,13 @@ class OpportunityDetails extends Component {
                           {(this.state.selectedOpportunity.submissionDeadline) && (
                             <View>
                               <View>
-                                <p className="heading-text-4">Submission Deadline</p>
+                                <Text className="heading-text-4">Submission Deadline</Text>
 
                                 <View className="row-5">
                                   {(this.state.selectedOpportunity.submissionDeadline && this.state.selectedOpportunity.submissionDeadline !== '') ? (
-                                    <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</p>
+                                    <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
                                   ) : (
-                                    <p className="keep-line-breaks"></p>
+                                    <Text className="keep-line-breaks"></Text>
                                   )}
                                 </View>
 
@@ -3492,10 +3395,10 @@ class OpportunityDetails extends Component {
                           {(this.state.selectedOpportunity.duration) && (
                             <View>
                               <View>
-                                <p className="heading-text-4">Duration</p>
+                                <Text className="heading-text-4">Duration</Text>
 
                                 <View className="row-5">
-                                  <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.duration} Estimated Man Hours</p>
+                                  <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.duration} Estimated Man Hours</Text>
                                 </View>
                               </View>
 
@@ -3505,18 +3408,18 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.isExternal && this.state.selectedOpportunity.source) ? (
                             <View>
-                            <p className="heading-text-4">External Source</p>
-                            <a target="_blank" href={this.state.selectedOpportunity.source}>{this.state.selectedOpportunity.source}</a>
+                            <Text className="heading-text-4">External Source</Text>
+                            <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.source)}>{this.state.selectedOpportunity.source}</TouchableOpacity>
                             <View className="spacer"/><View className="spacer"/>
                             </View>
                           ) : (
                             <View>
                               {(this.state.selectedOpportunity.description) && (
                                 <View>
-                                  <p className="heading-text-4">Description</p>
+                                  <Text className="heading-text-4">Description</Text>
 
                                   <View className="row-5">
-                                    <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.description}</p>
+                                    <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.description}</Text>
                                   </View>
 
                                   <View className="spacer"/><View className="spacer"/>
@@ -3525,7 +3428,7 @@ class OpportunityDetails extends Component {
 
                               {(this.state.selectedOpportunity.richDescription) && (
                                 <View>
-                                  <p className="heading-text-4">Description</p>
+                                  <Text className="heading-text-4">Description</Text>
                                   <View>
                                     <MyEditor showText={true} existingContent={{ blocks: this.state.selectedOpportunity.richDescription, entityMap: {}}} />
                                   </View>
@@ -3537,10 +3440,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.background) && (
                             <View>
-                            <p className="heading-text-4">Background</p>
+                            <Text className="heading-text-4">Background</Text>
 
                             <View className="row-5">
-                              <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.background}</p>
+                              <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.background}</Text>
                             </View>
 
                             <View className="spacer"/><View className="spacer"/>
@@ -3549,10 +3452,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.employerInfo) && (
                             <View>
-                              <p className="heading-text-4">Employer Info</p>
+                              <Text className="heading-text-4">Employer Info</Text>
 
                               <View className="row-5">
-                                <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.employerInfo}</p>
+                                <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.employerInfo}</Text>
                               </View>
 
                             </View>
@@ -3562,10 +3465,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.lessons) && (
                             <View>
-                            <p className="heading-text-4">Lessons</p>
+                            <Text className="heading-text-4">Lessons</Text>
 
                             <View className="row-5">
-                              <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.lessons}</p>
+                              <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.lessons}</Text>
                             </View>
 
                             <View className="spacer"/><View className="spacer"/>
@@ -3574,10 +3477,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.postType === 'Challenge') && (
                             <View>
-                              <p className="heading-text-4">Rules</p>
+                              <Text className="heading-text-4">Rules</Text>
 
                               <View className="row-5">
-                                <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.rules}</p>
+                                <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.rules}</Text>
                               </View>
 
                               <View className="spacer"/><View className="spacer"/>
@@ -3586,10 +3489,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.guidelines) && (
                             <View>
-                              <p className="heading-text-4">Guidelines</p>
+                              <Text className="heading-text-4">Guidelines</Text>
 
                               <View className="row-5">
-                                <p className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.guidelines}</p>
+                                <Text className="keep-line-breaks description-text-2 dark-color half-bold-text">{this.state.selectedOpportunity.guidelines}</Text>
                               </View>
 
                             </View>
@@ -3599,10 +3502,10 @@ class OpportunityDetails extends Component {
 
                           {(this.state.selectedOpportunity.resources && this.state.selectedOpportunity.resources.length > 0) && (
                             <View>
-                            <p className="heading-text-4">Resources</p>
+                            <Text className="heading-text-4">Resources</Text>
 
                             <View className="row-5 description-text-2">
-                              {this.state.selectedOpportunity.resources.map((value, index) => <View><label>{index + 1}. </label><a href={value} target="_blank">{value}</a></View>)}
+                              {this.state.selectedOpportunity.resources.map((value, index) => <View><Text>{index + 1}. </Text><TouchableOpacity onPress={() => Linking.openURL(value)}>{value}</TouchableOpacity></View>)}
                             </View>
 
                             <View className="spacer"/><View className="spacer"/>
@@ -3612,15 +3515,15 @@ class OpportunityDetails extends Component {
                           {(this.state.selectedOpportunity.postType === 'Challenge') && (
                             <View>
                               <View>
-                                <p className="heading-text-4">Prizes</p>
+                                <Text className="heading-text-4">Prizes</Text>
 
                                 <View className="row-5 description-text-2">
-                                  <p><label className="half-bold-text">1st Place Prize:</label> ${this.state.selectedOpportunity.prizes[0]}</p>
+                                  <Text><Text className="half-bold-text">1st Place Prize:</Text> ${this.state.selectedOpportunity.prizes[0]}</Text>
                                   {(this.state.selectedOpportunity.prizes[1]) && (
-                                    <p><label className="half-bold-text">2nd Place Prize:</label> ${this.state.selectedOpportunity.prizes[1]}</p>
+                                    <Text><Text className="half-bold-text">2nd Place Prize:</Text> ${this.state.selectedOpportunity.prizes[1]}</Text>
                                   )}
                                   {(this.state.selectedOpportunity.prizes[2]) && (
-                                    <p><label className="half-bold-text">3rd Place Prize:</label> ${this.state.selectedOpportunity.prizes[2]}</p>
+                                    <Text><Text className="half-bold-text">3rd Place Prize:</Text> ${this.state.selectedOpportunity.prizes[2]}</Text>
                                   )}
                                 </View>
 
@@ -3629,19 +3532,19 @@ class OpportunityDetails extends Component {
                               <View className="spacer"/><View className="spacer"/>
                               {/*
                               <View>
-                                <p className="heading-text-4">Evaluation Method</p>
-                                <p>{this.state.selectedOpportunity.evaluationMethod}</p>
+                                <Text className="heading-text-4">Evaluation Method</Text>
+                                <Text>{this.state.selectedOpportunity.evaluationMethod}</Text>
                               </View>
 
                               <View className="spacer"/><View className="spacer"/>*/}
 
                               <View>
-                                <p className="heading-text-4">Timeline</p>
-                                <ul className="left-padding-25 row-5 description-text-2">
-                                  <li><label className="half-bold-text">Register and follow by:</label> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</li>
-                                  <li><label className="half-bold-text">Submission Deadline:</label> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</li>
-                                  <li><label className="half-bold-text">Winner Announcement Date:</label> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</li>
-                                </ul>
+                                <Text className="heading-text-4">Timeline</Text>
+                                <View style={[styles.row5]}>
+                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</View>
+                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</View>
+                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</View>
+                                </View>
                               </View>
 
                               <View className="spacer"/><View className="spacer"/>
@@ -3659,7 +3562,7 @@ class OpportunityDetails extends Component {
                           <View className="clear" />
 
                           <View className="spacer"/><View className="spacer"/><View className="spacer"/>
-                          <hr className="cta-border-color" />
+                          <View style={[styles.ctaHorizontalLine]} />
 
                           <View className="spacer"/><View className="half-spacer"/>
 
@@ -3669,13 +3572,13 @@ class OpportunityDetails extends Component {
                                 <View>
 
                                   {(this.state.hasRegistered) ? (
-                                    <p className="cta-color">You have already registered for this challenge.</p>
+                                    <Text className="cta-color">You have already registered for this challenge.</Text>
                                   ) : (
-                                    <p className="error-color">Registration has passed for this challenge.</p>
+                                    <Text className="error-color">Registration has passed for this challenge.</Text>
                                   )}
 
                                   <View className="spacer"/><View className="spacer"/>
-                                  <hr className="cta-border-color" />
+                                  <View style={[styles.ctaHorizontalLine]} />
                                   <View className="spacer"/><View className="spacer"/>
                                 </View>
                               ) : (
@@ -3683,14 +3586,14 @@ class OpportunityDetails extends Component {
                                   {(this.state.emailId || (this.state.selectedOpportunity.isPublic && !this.state.emailId)) && (
                                     <View>
                                       <View className="top-padding-20">
-                                        <p className="heading-text-3">Register for Challenge</p>
+                                        <Text className="heading-text-3">Register for Challenge</Text>
                                       </View>
 
                                       <View className="row-5">
                                         <View className="row-10">
                                           <View>
                                             <View className="calc-column-offset-45">
-                                              <label className="profile-label">Which best describes you?<label className="error-color">*</label></label>
+                                              <Text className="profile-label">Which best describes you?<Text className="error-color">*</Text></Text>
                                             </View>
                                             <View className="fixed-column-45 left-padding">
                                               <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
@@ -3701,17 +3604,17 @@ class OpportunityDetails extends Component {
                                           {this.state.roleNameOptions.map((value, index) =>
                                             <View key={value} className="float-left">
                                               <View className="float-left row-5 right-padding">
-                                                <button className="background-button" onClick={() => this.itemClicked(value,'roleName')}>
+                                                <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
                                                   {(this.state.roleName === value) ? (
                                                     <View className="tag-container-4">
-                                                      <p className="description-text-2 white-text half-bold-text">{value}</p>
+                                                      <Text className="description-text-2 white-text half-bold-text">{value}</Text>
                                                     </View>
                                                   ) : (
                                                     <View className="tag-container-inactive-2">
-                                                      <p className="description-text-2 cta-color half-bold-text">{value}</p>
+                                                      <Text className="description-text-2 cta-color half-bold-text">{value}</Text>
                                                     </View>
                                                   )}
-                                                </button>
+                                                </TouchableOpacity>
                                               </View>
                                             </View>
                                           )}
@@ -3720,19 +3623,37 @@ class OpportunityDetails extends Component {
 
                                         {(this.state.roleName === 'Other') && (
                                           <View className="row-10">
-                                            <label className="profile-label">You selected "other". Please write your role:<label className="error-color">*</label></label>
-                                            <input className="text-field" type="text" placeholder="Other Role Name..." name="otherRoleName" value={this.state.otherRoleName} onChange={this.formChangeHandler} />
+                                            <Text className="profile-label">You selected "other". Please write your role:<Text className="error-color">*</Text></Text>
+                                            <TextInput
+                                              style={styles.textInput}
+                                              onChangeText={(text) => this.formChangeHandler("otherRoleName", text)}
+                                              value={this.state.otherRoleName}
+                                              placeholder="Other Role Name..."
+                                              placeholderTextColor="grey"
+                                            />
                                           </View>
                                         )}
 
                                         <View className="row-10">
                                           <View className="container-left">
-                                            <label className="profile-label">First Name<label className="error-color">*</label></label>
-                                            <input className="text-field" type="text" placeholder="First Name" name="firstName" value={this.state.firstName} onChange={this.formChangeHandler} />
+                                            <Text className="profile-label">First Name<Text className="error-color">*</Text></Text>
+                                            <TextInput
+                                              style={styles.textInput}
+                                              onChangeText={(text) => this.formChangeHandler("firstName", text)}
+                                              value={this.state.firstName}
+                                              placeholder="e.g., Joe..."
+                                              placeholderTextColor="grey"
+                                            />
                                           </View>
                                           <View className="container-right">
-                                            <label className="profile-label">Last Name<label className="error-color">*</label></label>
-                                            <input className="text-field" type="text" placeholder="Last Name" name="lastName" value={this.state.lastName} onChange={this.formChangeHandler} />
+                                            <Text className="profile-label">Last Name<Text className="error-color">*</Text></Text>
+                                            <TextInput
+                                              style={styles.textInput}
+                                              onChangeText={(text) => this.formChangeHandler("lastName", text)}
+                                              value={this.state.lastName}
+                                              placeholder="e.g., Smith..."
+                                              placeholderTextColor="grey"
+                                            />
                                           </View>
                                           <View className="clear" />
                                         </View>
@@ -3743,21 +3664,39 @@ class OpportunityDetails extends Component {
                                               <View className="container-left">
                                                 {(this.state.roleName === 'Participant') ? (
                                                   <View>
-                                                    <label className="profile-label">Current / Latest School Name<label className="error-color">*</label></label>
-                                                    <input className="text-field" type="text" placeholder="School Name" name="school" value={this.state.school} onChange={this.formChangeHandler} />
+                                                    <Text className="profile-label">Current / Latest School Name<Text className="error-color">*</Text></Text>
+                                                    <TextInput
+                                                      style={styles.textInput}
+                                                      onChangeText={(text) => this.formChangeHandler("school", text)}
+                                                      value={this.state.school}
+                                                      placeholder="e.g., Guided Compass University..."
+                                                      placeholderTextColor="grey"
+                                                    />
                                                   </View>
                                                 ) : (
                                                   <View>
-                                                    <label className="profile-label">Employer Name<label className="error-color">*</label></label>
-                                                    <input className="text-field" type="text" placeholder="Employer Name" name="employerName" value={this.state.employerName} onChange={this.formChangeHandler} />
+                                                    <Text className="profile-label">Employer Name<Text className="error-color">*</Text></Text>
+                                                    <TextInput
+                                                      style={styles.textInput}
+                                                      onChangeText={(text) => this.formChangeHandler("employerName", text)}
+                                                      value={this.state.employerName}
+                                                      placeholder="e.g., Amazon..."
+                                                      placeholderTextColor="grey"
+                                                    />
                                                   </View>
                                                 )}
                                               </View>
                                               <View className="container-right">
                                                 {(this.state.roleName !== 'Participant') && (
                                                   <View>
-                                                    <label className="profile-label">Job Title<label className="error-color">*</label></label>
-                                                    <input className="text-field" type="text" placeholder="Job Title" name="jobTitle" value={this.state.jobTitle} onChange={this.formChangeHandler} />
+                                                    <Text className="profile-label">Job Title<Text className="error-color">*</Text></Text>
+                                                    <TextInput
+                                                      style={styles.textInput}
+                                                      onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
+                                                      value={this.state.jobTitle}
+                                                      placeholder="e.g., Software Engineer..."
+                                                      placeholderTextColor="grey"
+                                                    />
                                                   </View>
                                                 )}
                                               </View>
@@ -3767,8 +3706,14 @@ class OpportunityDetails extends Component {
                                             {(this.state.roleName === 'Educator') && (
                                               <View className="row-10">
                                                 <View className="container-left">
-                                                  <label className="profile-label">School Name<label className="error-color">*</label></label>
-                                                  <input className="text-field" type="text" placeholder="School Name" name="school" value={this.state.school} onChange={this.formChangeHandler} />
+                                                  <Text className="profile-label">School Name<Text className="error-color">*</Text></Text>
+                                                  <TextInput
+                                                    style={styles.textInput}
+                                                    onChangeText={(text) => this.formChangeHandler("school", text)}
+                                                    value={this.state.school}
+                                                    placeholder="e.g., Guided Compass University..."
+                                                    placeholderTextColor="grey"
+                                                  />
                                                 </View>
                                                 <View className="clear" />
                                               </View>
@@ -3776,35 +3721,41 @@ class OpportunityDetails extends Component {
 
                                             <View className="row-10">
                                               <View className="container-left">
-                                                <label className="profile-label">Email<label className="error-color">*</label></label>
-                                                <input className="text-field" type="text" placeholder="Email" name="emailId" value={this.state.emailId} onChange={this.formChangeHandler} />
+                                                <Text className="profile-label">Email<Text className="error-color">*</Text></Text>
+                                                <TextInput
+                                                  style={styles.textInput}
+                                                  onChangeText={(text) => this.formChangeHandler("emailId", text)}
+                                                  value={this.state.emailId}
+                                                  placeholder="e.g., guidedcompass@gmail.com..."
+                                                  placeholderTextColor="grey"
+                                                />
                                               </View>
-                                              {/*
-                                              <View className="container-right">
-                                                <label className="profile-label">Password<label className="error-color">*</label></label>
-                                                <input className="text-field date-picker" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.formChangeHandler} />
-                                              </View>*/}
                                               <View className="clear" />
                                             </View>
 
                                             {(this.state.roleName === 'Participant') && (
                                               <View>
-                                                <label className="profile-label">Add Teammates (Optional)</label>
+                                                <Text className="profile-label">Add Teammates (Optional)</Text>
                                                 <View>
                                                   <View className="container-left">
                                                     <View className="calc-column-offset-80">
-                                                      <input className="text-field" type="text" placeholder="Add email..." name={"collaboratorEmail"} value={this.state.collaboratorEmail} onChange={this.formChangeHandler} />
+                                                      <TextInput
+                                                        style={styles.textInput}
+                                                        onChangeText={(text) => this.formChangeHandler("collaboratorEmail", text)}
+                                                        value={this.state.collaboratorEmail}
+                                                        placeholder="e.g., collaborator@gmail.com..."
+                                                        placeholderTextColor="grey"
+                                                      />
                                                     </View>
                                                     <View className="fixed-column-80 left-padding">
-                                                      <button type="button" className={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? "btn btn-squarish" : "btn btn-squarish clear-border unselected-background"} onClick={() => this.inviteCollaborators()}>Add</button>
+                                                      <TouchableOpacity type="button" className={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? "btn btn-squarish" : "btn btn-squarish clear-border unselected-background"} onPress={() => this.inviteCollaborators()}>Add</TouchableOpacity>
                                                     </View>
                                                   </View>
-
 
                                                   <View className="clear" />
                                                 </View>
 
-                                                {(this.state.collaboratorErrorMessage) && <p className="error-message">{this.state.collaboratorErrorMessage}</p>}
+                                                {(this.state.collaboratorErrorMessage) && <Text className="error-message">{this.state.collaboratorErrorMessage}</Text>}
 
                                                 <View>
                                                   {this.renderCollaborators()}
@@ -3816,11 +3767,11 @@ class OpportunityDetails extends Component {
                                         )}
 
                                         <View className="top-padding-20 bottom-padding full-width">
-                                          <button className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onClick={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}>Register</button>
+                                          <TouchableOpacity className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}>Register</TouchableOpacity>
 
                                           <View className="clear" />
-                                          {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="error-color top-padding full-width">{this.state.errorMessage}</p>}
-                                          {(this.state.successMessage && this.state.successMessage !== '') && <p className="error-color top-padding full-width">{this.state.successMessage}</p>}
+                                          {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="error-color top-padding full-width">{this.state.errorMessage}</Text>}
+                                          {(this.state.successMessage && this.state.successMessage !== '') && <Text className="error-color top-padding full-width">{this.state.successMessage}</Text>}
 
                                         </View>
                                       </View>
@@ -3828,34 +3779,23 @@ class OpportunityDetails extends Component {
                                   )}
 
                                   <View className="spacer"/><View className="spacer"/>
-                                  <hr className="cta-border-color" />
+                                  <View style={[styles.ctaHorizontalLine]} />
                                   <View className="spacer"/><View className="spacer"/>
                                 </View>
                               )}
                             </View>
                           )}
 
-                          {(this.state.pageSource === 'landingPage') ? (
-                            <View>
-                              <View className="spacer"/><View className="half-spacer"/>
-                              <Link className="clear-border" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                                <button className="btn btn-primary">
-                                  Sign In to GC to Submit
-                                </button>
-                              </Link>
-                            </View>
-                          ) : (
-                            <View>
-                              {(((!this.state.registrationPassed) || (this.state.registrationPassed && !this.state.deadlinePassed && this.state.hasRegistered))) && (
-                                <View>
-                                  <View className="spacer"/><View className="half-spacer"/>
-                                  <button className="btn btn-primary" onClick={() => this.setState({ viewIndex: 1 })}>
-                                    Submit a Project
-                                  </button>
-                                </View>
-                              )}
-                            </View>
-                          )}
+                          <View>
+                            {(((!this.state.registrationPassed) || (this.state.registrationPassed && !this.state.deadlinePassed && this.state.hasRegistered))) && (
+                              <View>
+                                <View className="spacer"/><View className="half-spacer"/>
+                                <TouchableOpacity className="btn btn-primary" onPress={() => this.setState({ viewIndex: 1 })}>
+                                  Submit a Project
+                                </TouchableOpacity>
+                              </View>
+                            )}
+                          </View>
                         </View>
                       )}
 
@@ -3863,17 +3803,17 @@ class OpportunityDetails extends Component {
                         <View>
                           {(this.state.deadlinePassed || (this.state.registrationPassed && !this.state.hasRegistered)) ? (
                             <View>
-                              <p className="error-message">The deadline has passed for {this.state.selectedOpportunity.name}</p>
+                              <Text className="error-message">The deadline has passed for {this.state.selectedOpportunity.name}</Text>
                               <View className="spacer"/><View className="spacer"/><View className="spacer"/>
                             </View>
                           ) : (
                             <View>
                               <View className="bottom-padding">
                                 <View className={(this.state.subviewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
-                                  <p className={(this.state.subviewIndex === 0) ? "heading-text-6 cta-color" : "heading-text-6 unselected-color"}><a className="background-button" onClick={() => this.setState({ subviewIndex: 0 })}>Submit New Project</a></p>
+                                  <Text className={(this.state.subviewIndex === 0) ? "heading-text-6 cta-color" : "heading-text-6 unselected-color"}><TouchableOpacity onPress={() => this.setState({ subviewIndex: 0 })}>Submit New Project</TouchableOpacity></Text>
                                 </View>
                                 <View className={(this.state.subviewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
-                                  <p className={(this.state.subviewIndex === 1) ? "heading-text-6 cta-color" : "heading-text-6 unselected-color"}><a className="background-button" onClick={() => this.setState({ subviewIndex: 1 })}>Submit Project from Profile</a></p>
+                                  <Text className={(this.state.subviewIndex === 1) ? "heading-text-6 cta-color" : "heading-text-6 unselected-color"}><TouchableOpacity onPress={() => this.setState({ subviewIndex: 1 })}>Submit Project from Profile</TouchableOpacity></Text>
                                 </View>
                                 <View className="clear" />
                               </View>
@@ -3902,14 +3842,19 @@ class OpportunityDetails extends Component {
                                     <View>
 
                                       <View className="spacer"/><View className="spacer"/>
-                                      <select name="selectProject" className="dropdown" value={this.state.selectedProject.name} onChange={this.formChangeHandler}>
-                                          {this.state.projectOptions.map(value => <option key={value.name} value={value.name}>{value.name}</option>)}
-                                      </select>
+
+                                      <Picker
+                                        selectedValue={this.state.selectedProject.name}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("selectProject",itemValue)
+                                        }>
+                                        {this.state.projectOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                      </Picker>
                                     </View>
                                   ) : (
                                     <View>
                                       <View className="spacer"/><View className="spacer"/>
-                                      <p className="error-message">You current don't have projects saved to your profile. Toggle to "Submit New Project" to submit.</p>
+                                      <Text className="error-message">You current don't have projects saved to your profile. Toggle to "Submit New Project" to submit.</Text>
                                     </View>
                                   )}
                                 </View>
@@ -3921,17 +3866,17 @@ class OpportunityDetails extends Component {
                                     <View>
                                       {(!this.state.showSubEditProject) && (
                                         <View>
-                                          {this.state.serverSuccessMessage !== '' && <p className="success-message">{this.state.serverSuccessMessage}</p>}
-                                          {this.state.serverErrorMessage !== '' && <p className="error-message">{this.state.serverErrorMessage}</p>}
-                                          <button className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onClick={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</button>
+                                          {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
+                                          {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
+                                          <TouchableOpacity className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</TouchableOpacity>
                                         </View>
                                       )}
                                     </View>
                                   ) : (
                                     <View>
-                                      {this.state.serverSuccessMessage !== '' && <p className="success-message">{this.state.serverSuccessMessage}</p>}
-                                      {this.state.serverErrorMessage !== '' && <p className="error-message">{this.state.serverErrorMessage}</p>}
-                                      <button className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onClick={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</button>
+                                      {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
+                                      {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
+                                      <TouchableOpacity className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -3971,20 +3916,14 @@ class OpportunityDetails extends Component {
                       <View className="flex-90">
                         <View className="float-left right-padding">
                           <View className="spacer" />
-                          <Image source={gcLogo} className="image-auto-48" />
+                          <Image source={{ uri: gcLogo}} className="image-auto-48" />
                         </View>
                       </View>
 
                       <View className="flex-10 right-text">
-                        {(this.state.pageSource === 'landingPage') ? (
-                          <Link className="background-button" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                            <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? favoritesIconBlue : favoritesIconGrey} className="image-auto-20"/>
-                          </Link>
-                        ) : (
-                          <button className="btn background-button" onClick={() => this.favoriteItem(this.state.selectedOpportunity) }>
-                            <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? favoritesIconBlue : favoritesIconGrey} className="image-auto-20"/>
-                          </button>
-                        )}
+                        <TouchableOpacity onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                          <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} className="image-auto-20"/>
+                        </TouchableOpacity>
                       </View>
 
                       <View className="clear" />
@@ -3993,19 +3932,19 @@ class OpportunityDetails extends Component {
                     <View className="super-spacer" />
 
                     <View>
-                      <p className="heading-text-2">{this.state.selectedOpportunity.title} RSVP Form</p>
+                      <Text className="heading-text-2">{this.state.selectedOpportunity.title} RSVP Form</Text>
                       <View className="spacer" />
 
                       <View>
                         <View className={(this.state.viewIndex === 0) ? "app-title-container-1-of-2-1 selected-item-container-1" : "app-title-container-1-of-2-1 unselected-item-container-1"}>
-                          <p className={(this.state.viewIndex === 0) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 0 })}>Details</a></p>
+                          <Text className={(this.state.viewIndex === 0) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 0 })}>Details</TouchableOpacity></Text>
                         </View>
                         <View className={(this.state.viewIndex === 1) ? "app-title-container-1-of-2-1 margin-five-percent-left selected-item-container-1" : "app-title-container-1-of-2-1 margin-five-percent-left unselected-item-container-1"}>
                           { ( this.state.comments.length === 0 ) ? (
-                            <p className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><a className="background-button" onClick={() => this.setState({ viewIndex: 1 })}>Comments</a></p>
+                            <Text className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color" : "heading-text-4 unselected-color"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Comments</TouchableOpacity></Text>
                           ) : (
                             <View>
-                              <p className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><a className="background-button" onClick={() => this.setState({ viewIndex: 1 })}>Comments</a></p>
+                              <Text className={(this.state.viewIndex === 1) ? "heading-text-4 cta-color float-left margin-right-3" : "heading-text-4 unselected-color float-left margin-right-3"}><TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>Comments</TouchableOpacity></Text>
                               {(this.state.viewIndex === 1) ? (
                                 <View className="noti-bubble selected-background description-text-4 float-left">{this.state.comments.length}</View>
                               ) : (
@@ -4024,11 +3963,11 @@ class OpportunityDetails extends Component {
                           <View>
                             <View className="fixed-column-33 right-margin" >
                               <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={profileIconBig} className="profile-thumbnail-3" />
+                              <Image source={{ uri: profileIconBig}} className="profile-thumbnail-3" />
                             </View>
                             <View className="calc-column-offset-43">
                               <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <p>Hosted by {this.state.selectedOpportunity.orgName}</p>
+                              <Text>Hosted by {this.state.selectedOpportunity.orgName}</Text>
                             </View>
                           </View>
                           <View className="clear" />
@@ -4037,11 +3976,11 @@ class OpportunityDetails extends Component {
                           <View>
                             <View className="fixed-column-33" >
                               <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={locationIcon} className="image-auto-23 right-margin-5" />
+                              <Image source={{ uri: locationIcon}} className="image-auto-23 right-margin-5" />
                             </View>
                             <View className="calc-column-offset-43">
                               <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <p>Location: {this.state.selectedOpportunity.location}</p>
+                              <Text>Location: {this.state.selectedOpportunity.location}</Text>
                             </View>
                           </View>
                           <View className="clear" />
@@ -4050,11 +3989,11 @@ class OpportunityDetails extends Component {
                           <View>
                             <View className="fixed-column-33 right-margin" >
                               <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={timeIconDark} className="image-auto-23" />
+                              <Image source={{ uri: timeIconDark}} className="image-auto-23" />
                             </View>
                             <View className="calc-column-offset-43">
                               <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <p>{this.state.startDateString} - {this.state.endDateString}</p>
+                              <Text>{this.state.startDateString} - {this.state.endDateString}</Text>
                             </View>
                           </View>
                           <View className="clear" />
@@ -4063,11 +4002,11 @@ class OpportunityDetails extends Component {
                           <View>
                             <View className="fixed-column-33" >
                               <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <Image source={infoIcon} className="image-auto-23" />
+                              <Image source={{ uri: infoIcon}} className="image-auto-23" />
                             </View>
                             <View className="calc-column-offset-43">
                               <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                              <p className="keep-line-break">{this.state.selectedOpportunity.summary}</p>
+                              <Text className="keep-line-break">{this.state.selectedOpportunity.summary}</Text>
                             </View>
                           </View>
                           <View className="clear" />
@@ -4078,13 +4017,13 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View className="fixed-column-33 right-margin" >
                                   <View className="spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                                  <Image source={linkIcon} className="image-auto-23" />
+                                  <Image source={{ uri: linkIcon}} className="image-auto-23" />
                                 </View>
                                 <View className="calc-column-offset-43">
                                   <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
                                   {this.state.selectedOpportunity.links.map((value, index) =>
                                     <View key={index}>
-                                      <label><a href={value.url} target="_blank" className="background-link">{value.name}</a></label>
+                                      <Text><TouchableOpacity onPress={() => Linking.openURL(value.url)}><Text>{value.name}</Text></TouchableOpacity></Text>
                                       <View className="spacer"/>
                                     </View>
                                   )}
@@ -4095,55 +4034,36 @@ class OpportunityDetails extends Component {
                           )}
 
                           <View className="spacer"/><View className="spacer"/><View className="spacer"/>
-                          <hr className="cta-border-color" />
+                          <View style={[styles.ctaHorizontalLine]} />
 
-                          {(this.state.pageSource === 'landingPage') ? (
-                            <View>
-                              <View className="spacer"/><View className="half-spacer"/>
-                              <Link className="clear-border" to={{ pathname: registerLink, state: { opportunityId: this.state.selectedOpportunity._id, opportunityOrg: this.state.activeOrg } }}>
-                                <button className="btn btn-primary">
-                                  Register to RSVP
-                                </button>
-                              </Link>
-                            </View>
-                          ) : (
-                            <View>
-                              {(this.state.alreadyRSVPd === true) ? (
-                                <View>
-                                  <View className="spacer"/><View className="half-spacer"/>
-                                  <p className="error-message">You have already RSVPd for this event.</p>
-                                </View>
-                              ) : (
-                                <View>
-                                  {(this.state.eventPassed === true) ?   (
-                                    <View>
-                                      <View className="spacer"/><View className="half-spacer"/>
-                                      <p className="error-message">This event has already passed,</p>
-                                    </View>
-                                  ) : (
-                                    <View>
-                                      {this.state.serverSuccessMessage !== '' && <p className="success-message">{this.state.serverSuccessMessage}</p>}
-                                      {this.state.serverErrorMessage !== '' && <p className="error-message">{this.state.serverErrorMessage}</p>}
-                                      <button className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onClick={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>RSVP</button>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-                            </View>
-                          )}
+                          <View>
+                            {(this.state.alreadyRSVPd === true) ? (
+                              <View>
+                                <View className="spacer"/><View className="half-spacer"/>
+                                <Text className="error-message">You have already RSVPd for this event.</Text>
+                              </View>
+                            ) : (
+                              <View>
+                                {(this.state.eventPassed === true) ?   (
+                                  <View>
+                                    <View className="spacer"/><View className="half-spacer"/>
+                                    <Text className="error-message">This event has already passed,</Text>
+                                  </View>
+                                ) : (
+                                  <View>
+                                    {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
+                                    {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
+                                    <TouchableOpacity className={(this.state.disableSubmit) ? "btn btn-primary disabled-background disabled-border" : "btn btn-primary"} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}>RSVP</TouchableOpacity>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+                          </View>
 
                         </View>
                       ) : (
                         <View>
-                          {(this.state.showCommentsModule) ? (
-                            <View>
-                              <SubComments selectedOpportunity={this.state.selectedOpportunity} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.postingOrgCode} postingOrgName={this.state.postingOrgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} pageSource={this.state.pageSource}/>
-                            </View>
-                          ) : (
-                            <View>
-
-                            </View>
-                          )}
+                          <SubComments selectedOpportunity={this.state.selectedOpportunity} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.postingOrgCode} postingOrgName={this.state.postingOrgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} pageSource={this.state.pageSource}/>
                         </View>
                       )}
 
@@ -4158,14 +4078,14 @@ class OpportunityDetails extends Component {
                       <View className="flex-90">
                         <View className="float-left right-padding">
                           <View className="spacer" />
-                          <Image source={gcLogo} className="image-auto-48" />
+                          <Image source={{ uri: gcLogo}} className="image-auto-48" />
                         </View>
                       </View>
 
                       <View className="flex-10 right-text">
-                        <button className="btn background-button" onClick={() => this.favoriteItem(this.state.selectedOpportunity) }>
-                          <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? favoritesIconBlue : favoritesIconGrey} className="image-auto-20"/>
-                        </button>
+                        <TouchableOpacity onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                          <Image source={(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} className="image-auto-20"/>
+                        </TouchableOpacity>
                       </View>
 
                       <View className="clear" />
@@ -4174,42 +4094,42 @@ class OpportunityDetails extends Component {
                     <View className="super-spacer"/>
 
                     <View>
-                      <p className="heading-text-2">{this.state.selectedOpportunity.title}</p>
+                      <Text className="heading-text-2">{this.state.selectedOpportunity.title}</Text>
                       <View className="spacer" />
 
-                      <p className="description-text-1">{this.state.selectedOpportunity.orgName}</p>
+                      <Text className="description-text-1">{this.state.selectedOpportunity.orgName}</Text>
                       <View className="clear" />
                       <View className="spacer"/><View className="spacer"/>
 
                       <View className="edit-profile-row">
-                        <p className="heading-text-4">Description</p>
-                        <p className="keep-line-breaks">{this.state.selectedOpportunity.description}</p>
+                        <Text className="heading-text-4">Description</Text>
+                        <Text className="keep-line-breaks">{this.state.selectedOpportunity.description}</Text>
                         <View className="spacer"/><View className="spacer"/>
                       </View>
                     </View>
 
-                    {(this.props.path && this.props.path.includes('/advisor')) ? (
+                    {(this.props.fromAdvisor) ? (
                       <View>
                         <View>
                           <View className="edit-profile-row">
-                            <p className="heading-text-4">Endorse a Student for this Posting</p>
-                            <p>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</p>
+                            <Text className="heading-text-4">Endorse a Student for this Posting</Text>
+                            <Text>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
                           </View>
 
                           <View className="spacer"/><View className="spacer"/>
 
-                          <Link className="clear-border" to={{ pathname: '/advisor/endorsements/new', state: { benchmark: this.state.benchmark } }}><button className="btn btn-primary">Endorse a Student</button></Link>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })}><Text style={[styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
                         </View>
                       </View>
                     ) : (
                       <View>
-                        {this.state.serverSuccessMessage !== '' && <p className="success-message">{this.state.serverSuccessMessage}</p>}
-                        {this.state.serverErrorMessage !== '' && <p className="error-message">{this.state.serverErrorMessage}</p>}
+                        {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
+                        {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
 
                         {this.state.hasApplied ? (
-                          <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Update</button></Link>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.ctaColor]}>Update</Text></TouchableOpacity>
                         ) : (
-                          <Link className="clear-border" to={{ pathname: '/app/postings/' + this.state.selectedOpportunity._id + '/apply', state: { selectedPosting: this.state.selectedOpportunity, application: this.state.application } }}><button className="btn btn-primary">Apply</button></Link>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.ctaColor]}>Apply</Text></TouchableOpacity>
                         )}
                       </View>
                     )}
@@ -4228,22 +4148,22 @@ class OpportunityDetails extends Component {
 
                   {(this.state.showJobFunction) && (
                     <View key="showJobFunction" className="full-width padding-20">
-                      <p className="heading-text-2">Job Function</p>
+                      <Text className="heading-text-2">Job Function</Text>
                       <View className="spacer"/>
-                      <p>We define <label className="half-bold-text cta-color">job functions</label> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</p>
+                      <Text>We define <Text className="half-bold-text cta-color">job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
                     </View>
                   )}
 
                   {(this.state.showIndustry) && (
                     <View key="showIndustry" className="full-width padding-20">>
-                      <p className="heading-text-2">Industry</p>
+                      <Text className="heading-text-2">Industry</Text>
                       <View className="spacer"/>
-                      <p>We define <label className="half-bold-text cta-color">industry</label> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</p>
+                      <Text>We define <Text className="half-bold-text cta-color">industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
                     </View>
                   )}
 
                   <View className="row-20">
-                   <button className="btn btn-secondary" onClick={() => this.closeModal()}>Close View</button>
+                   <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                   </View>
 
                  </Modal>

@@ -202,6 +202,10 @@ module.exports = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 1
   },
+  ctaHorizontalLine: {
+    borderBottomColor: primaryColor,
+    borderBottomWidth: 1
+  },
   verticalSeparator: {
     width: 1,
     height: 30,
