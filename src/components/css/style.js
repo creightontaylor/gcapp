@@ -1362,6 +1362,15 @@ module.exports = StyleSheet.create({
   filler: {
     transition: 'width .2s ease-in',
     borderRadius: 50,
+  },
+  darkTint: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'black',
+    opacity: 0.3
   }
 
 });

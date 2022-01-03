@@ -681,12 +681,21 @@ class Community extends Component {
     });
   }
 
-  viewGroup(group) {
-    console.log('viewGroup called', group)
+  viewItem(type,item,items) {
+    console.log('viewItem called')
 
-    let groupDetailsPath = '/app/groups/' + group._id
-    this.props.history.push({ pathname: groupDetailsPath, state: { selectedGroup: group }})
+    this.closeModal()
 
+    if (type === 'profile') {
+      this.props.navigation.navigate('Profile', { username: item.username, matchScore: item.matchScore })
+    } else if (type == 'project') {
+      this.props.navigation.navigate('ProjectDetails', { _id: item._id, selectedProject: item })
+    } else if (type === 'group') {
+      this.props.navigation.navigate('GroupDetails', { selectedGroup: item })
+    } else if (type === 'employer') {
+      this.closeModal()
+      this.props.navigation.navigate('EmployerDetails', { _id: item._id, selectedEmployer: item, employers: items })
+    }
   }
 
   decideOnRequest(index, decision, type) {
@@ -820,7 +829,7 @@ class Community extends Component {
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
                   <View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username, matchScore: item.matchScore })} style={styles.calcColumn40}>
+                    <TouchableOpacity onPress={() => this.viewItem('profile',item)} style={styles.calcColumn40}>
                       <View style={[styles.card,styles.standardBorder,styles.calcColumn40,styles.centerHorizontally]}>
                         <View style={[styles.rowDirection]}>
                           <View style={[styles.flex15]}>
@@ -902,10 +911,11 @@ class Community extends Component {
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
                   <View>
-                    <TouchableOpacity style={styles.calcColumn40} onPress={() => this.props.navigation.navigate('ProjectDetails', { _id: item._id })}>
+                    <TouchableOpacity style={styles.calcColumn40} onPress={() => this.viewItem('project',item)}>
                       <View style={[styles.cardClearPadding,styles.standardBorder]} >
                         <View style={[styles.calcColumn40, styles.relativePosition]} >
                           <Image source={(item.imageURL) ? {uri: item.imageURL} : {uri: defaultProfileBackgroundImage}} style={[styles.calcColumn40,styles.height150, styles.centerHorizontally]}  />
+                          <View style={[styles.darkTint]} />
                           <View style={[styles.absolutePosition,styles.absoluteTop5, styles.absoluteLeft5]}>
                             {(item.matchScore) && (
                               <View style={[styles.square40,styles.contain]}>
@@ -921,7 +931,7 @@ class Community extends Component {
                                 />*/}
                               </View>
                             )}
-                            <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteText,styles.boldText]}>{item.category}</Text>
+                            <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteColor,styles.boldText]}>{item.category}</Text>
                           </View>
                         </View>
 
@@ -951,7 +961,7 @@ class Community extends Component {
 
                           {(item.skillTags) ? (
                             <View>
-                              <View style={[styles.topPadding,styles.rowDirection]}>
+                              <View style={[styles.topPadding,styles.rowDirection,styles.flexWrap]}>
                                 {item.skillTags.split(',').map((value, optionIndex) =>
                                   <View key={value}>
                                     {(optionIndex < 3) && (
@@ -1004,7 +1014,7 @@ class Community extends Component {
               {items.map((item, optionIndex) =>
                 <View key={item + optionIndex}>
                   <View style={[styles.topPadding20,styles.bottomPadding30]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { _id: item._id, selectedEmployer: item, employers: items })} style={styles.rowDirection}>
+                    <TouchableOpacity onPress={() => this.viewItem('employer',item,items)} style={styles.rowDirection}>
                       <View style={styles.width70}>
                         <Image source={(item.employerLogoURI) ? {uri: item.employerLogoURI} : {uri: industryIconDark}} style={[styles.square50,styles.contain]}/>
                       </View>
@@ -1046,10 +1056,11 @@ class Community extends Component {
                   {((!item.members) || (item.members.length === 0) || (!item.members.some(member => member.email === this.state.emailId) || (type === 'existing'))) && (
                     <View>
                       <View style={[styles.calcColumn40]}>
-                        <TouchableOpacity onPress={() => this.viewGroup(item)} style={styles.calcColumn40}>
+                        <TouchableOpacity onPress={() => this.viewItem('group',item)} style={styles.calcColumn40}>
                           <View style={[styles.cardClearPadding,styles.standardBorder]}>
                             <View style={[styles.calcColumn40,styles.relativePosition]}>
                               <Image source={(item.pictureURL) ? { uri: item.pictureURL} : {uri: defaultProfileBackgroundImage}} style={[styles.calcColumn40,styles.height150, styles.centerHorizontally]}  />
+                              <View style={[styles.darkTint]} />
 
                               <View style={[styles.absolutePosition,styles.absoluteTop5, styles.absoluteLeft5]}>
                                 {(item.matchScore) && (
@@ -1066,7 +1077,7 @@ class Community extends Component {
                                     />*/}
                                   </View>
                                 )}
-                                <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteText,styles.boldText]}>{item.category}</Text>
+                                <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteColor,styles.boldText]}>{item.category}</Text>
                               </View>
 
                               <TouchableOpacity style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteRight5,styles.whiteBackground,styles.roundedCorners]} onPress={(e) => this.voteOnItem(e, item, 'up', optionIndex) }>
@@ -1477,49 +1488,47 @@ class Community extends Component {
       </View>
 
         <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-            <View className="row-20">
+            <ScrollView style={[styles.row10]}>
               {(this.state.showPeopleYouFollow) && (
                 <View>
-                  <Text className="heading-text-4">Your Connections</Text>
+                  <Text style={[styles.headingText4]}>Your Connections</Text>
                   <View style={styles.spacer} />
                   {this.renderItems('people','existing')}
 
-
                   <View style={styles.spacer} />
-                 <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
               {(this.state.showProjectsYouFollow) && (
                 <View>
-                  <Text className="heading-text-4">Projects You Follow</Text>
+                  <Text style={[styles.headingText4]}>Projects You Follow</Text>
                   <View style={styles.spacer} />
                   {this.renderItems('projects','existing')}
 
 
                   <View style={styles.spacer} />
-                 <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
               {(this.state.showEmployersYouFollow) && (
                 <View>
-                  <Text className="heading-text-4">Employers You Follow</Text>
+                  <Text style={[styles.headingText4]}>Employers You Follow</Text>
                   <View style={styles.spacer} />
                   {this.renderItems('employers','existing')}
 
 
                   <View style={styles.spacer} />
-                 <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
               {(this.state.showGroupsYouJoined) && (
                 <View>
-                  <Text className="heading-text-4">Groups You Follow</Text>
+                  <Text style={[styles.headingText4]}>Groups You Follow</Text>
                   <View style={styles.spacer} />
                   {this.renderItems('groups','existing')}
 
-
                   <View style={styles.spacer} />
-                 <TouchableOpacity className="btn btn-secondary" onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
 
@@ -1530,12 +1539,14 @@ class Community extends Component {
               )}
 
               {(this.state.showEditGroup) && (
-                <View key="showEditGroup" className="full-width padding-20">
-                   <SubEditGroup selectedGroup={this.state.groupToEdit} history={this.props.history} closeModal={this.closeModal} />
+                <View key="showEditGroup" style={[styles.fullScreenWidth,styles.padding20]}>
+                   <SubEditGroup selectedGroup={this.state.groupToEdit} navigation={this.props.navigation} closeModal={this.closeModal} />
                  </View>
               )}
 
-            </View>
+              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+            </ScrollView>
         </Modal>
       </ScrollView>
     );

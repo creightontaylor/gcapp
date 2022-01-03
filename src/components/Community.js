@@ -41,7 +41,7 @@ class Community extends Component {
     // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
-        <SubCommunity />
+        <SubCommunity navigation={this.props.navigation} />
       </ScrollView>
     );
   }

@@ -1331,13 +1331,12 @@ class ExternalProfile extends Component {
         <View>
           {(this.state.profileData) && (
             <View>
-
               <View style={[styles.card]}>
                 <View style={[styles.rowDirection]}>
                   <View style={[styles.width100,styles.topPadding5]}>
                     <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square80,styles.contain, { borderRadius: 40 }]}/>
 
-                    {(this.state.publicProfile || this.state.viewableProfile) && (
+                    {(this.state.publicProfile || this.state.viewableProfile) ? (
                       <View>
                         <View style={[styles.topPadding20]}>
                           <View>
@@ -1359,6 +1358,8 @@ class ExternalProfile extends Component {
                         </View>
 
                       </View>
+                    ) : (
+                      <View />
                     )}
                   </View>
 
@@ -1368,8 +1369,10 @@ class ExternalProfile extends Component {
                     <View style={[styles.topMargin5]}>
                       {(this.state.profileData.roleName === 'Student' || this.state.profileData.roleName === 'Career-Seeker') ? (
                         <View>
-                          {(this.state.profileData.jobTitle && this.state.profileData.jobTitle !== '' && this.state.profileData.jobTitle !== 'Student' && this.state.profileData.employerName) && (
+                          {(this.state.profileData.jobTitle && this.state.profileData.jobTitle !== '' && this.state.profileData.jobTitle !== 'Student' && this.state.profileData.employerName) ? (
                             <Text style={[styles.descriptionText1]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName} | </Text>
+                          ) : (
+                            <View />
                           )}
                           <Text style={[styles.descriptionText1]}>{this.state.profileData.school} {(this.state.profileData.gradYear) ? "'" + this.state.profileData.gradYear.substring(2,4) : 'Student'}</Text>
                         </View>
@@ -1449,9 +1452,9 @@ class ExternalProfile extends Component {
                   {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.centerHorizontally]}>{this.state.errorMessage}</Text>}
                   {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.centerHorizontally]}>{this.state.successMessage}</Text>}
 
-                  <ScrollView style={[styles.carousel,styles.darkUnderline,styles.card,styles.topMargin20]} horizontal={true}>
+                  <ScrollView style={[styles.carousel,styles.darkUnderline,styles.cardClearPadding,styles.topMargin20,styles.horizontalPadding20]} horizontal={true}>
                     {this.state.profileOptions.map((value, index) =>
-                      <View style={[styles.row10, styles.rightPadding30]}>
+                      <View style={[styles.row15, styles.rightPadding30]}>
                         {(index === this.state.viewIndex) ? (
                           <View key={value} style={[styles.selectedCarouselItem]}>
                             <TouchableOpacity key={value} disabled={true} onPress={() => this.setState({ viewIndex: index })} style={[styles.flexCenter]}>
@@ -1478,23 +1481,19 @@ class ExternalProfile extends Component {
 
                   {(this.state.profileOptions[this.state.viewIndex] === 'All' || this.state.profileOptions[this.state.viewIndex] === 'Posts') && (
                     <View style={[styles.topMargin20]}>
-                      <View style={[styles.bottomMargin20,styles.centerHorizontally]} >
-
-                        <View style={[styles.bottomMargin]}>
-                          <Text style={[styles.headingText2]}>Posts</Text>
-                        </View>
-
-                        {(this.state.postPublicPreference === 'None') ? (
-                          <View>
-                            <Text style={[styles.errorColor]}>Posts for this profile have been set to private</Text>
-                          </View>
-                        ) : (
-                          <View>
-                            <SubRenderPosts posts={this.state.posts} limit={(this.state.profileOptions[this.state.viewIndex] === 'All') && 3} pageSource="externalProfile" />
-                          </View>
-                        )}
-
+                      <View style={[styles.bottomMargin20]}>
+                        <Text style={[styles.headingText2]}>Posts</Text>
                       </View>
+
+                      {(this.state.postPublicPreference === 'None') ? (
+                        <View style={[styles.bottomMargin20]} >
+                          <Text style={[styles.errorColor]}>Posts for this profile have been set to private</Text>
+                        </View>
+                      ) : (
+                        <View style={[styles.bottomMargin20,styles.centerHorizontally]} >
+                          <SubRenderPosts posts={this.state.posts} limit={(this.state.profileOptions[this.state.viewIndex] === 'All') && 3} pageSource="externalProfile" />
+                        </View>
+                      )}
                     </View>
                   )}
 
