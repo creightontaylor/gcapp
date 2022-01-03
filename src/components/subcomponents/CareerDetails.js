@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+import { WebView } from 'react-native-webview';
 
 const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
 const favoritesIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-white.png';
@@ -30,6 +31,7 @@ const commentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com
 const sendIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/send-icon-dark.png';
 const defaultProfileBackgroundImage = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/default-profile-background-image.png';
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 
 import SubComments from '../common/Comments';
 
@@ -1546,34 +1548,11 @@ class CareerDetails extends Component {
                         <View>
                           <View style={[styles.topMargin20]}>
                             <View style={[styles.row10]}>
-                              {/*
-                              <View className="video-container-4">
-                                {(this.state.useYouTubeAPI) ? (
-                                  <YouTube
-                                    videoId={value.split("/embed/")[1]}
-                                    id={value._id}
-                                    className="video-iframe-4"
-                                    containerClassName={""}
-                                    opts={(e) => this.videoCallback(e,'opts')}
-                                    onReady={(e) => this.videoCallback(e,'onReady')}
-                                    onPlay={(e) => this.videoCallback(e,'onPlay')}
-                                    onPause={(e) => this.videoCallback(e,'onPause')}
-                                    onEnd={(e) => this.videoCallback(e,'onEnd')}
-                                    onError={(e) => this.videoCallback(e,'onError')}
-                                    onStateChange={(e) => this.videoCallback(e,'onStateChange')}
-                                    onPlaybackRateChange={(e) => this.videoCallback(e,'onPlaybackRateChange')}
-                                    onPlaybackQualityChange={(e) => this.videoCallback(e,'onPlaybackQualityChange')}
-                                  />
-                                ) : (
-                                  <iframe
-                                    title="videoLink"
-                                    className="video-iframe"
-                                    source={value}
-                                    frameBorder="0"
-                                  />
-                                )}
-                              </View>*/}
-
+                              <WebView
+                                style={[styles.calcColumn60,styles.screenHeight20]}
+                                javaScriptEnabled={true}
+                                source={{uri: value}}
+                              />
                             </View>
 
                           </View>
@@ -2158,11 +2137,22 @@ class CareerDetails extends Component {
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
              {(this.state.showShareButtons) && (
                <View key="showDescription" style={[styles.fullScreenWidth,styles.padding20,styles.centerText]}>
-                  <Text style={[styles.headingText2]}>Share the {this.state.careerDetails.name} Career Page with Friends!</Text>
+                  <View style={[styles.rowDirection,styles.flex1]}>
+                    <View style={[styles.flex5]}>
+                      <TouchableOpacity onPress={() => this.closeModal()}>
+                        <Image source={{uri: closeIcon }} style={[styles.square15,styles.contain]} />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.flex90]}>
+                      <Text style={[styles.headingText2]}>Share the {this.state.careerDetails.name} Career Page with Friends!</Text>
+                    </View>
+                    <View style={[styles.flex5]}>
+                    </View>
+                  </View>
 
                   <View style={[styles.topPadding20]}>
                     <Text style={[styles.standardText]}>Share this link:</Text>
-                    <TouchableOpacity onPress={() => Linking.openURL(this.state.shareURL)}>{this.state.shareURL}</TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL(this.state.shareURL)}><Text>{this.state.shareURL}</Text></TouchableOpacity>
                   </View>
 
                   <View style={[styles.spacer]} />
@@ -2187,7 +2177,6 @@ class CareerDetails extends Component {
                         <Text style={[styles.headingText2]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
                       </TouchableOpacity>
                     </View>
-
                   </View>
 
                   <View style={[styles.row10]}>
@@ -2280,6 +2269,10 @@ class CareerDetails extends Component {
 
                </View>
              )}
+
+             <TouchableOpacity onPress={() => this.closeModal()} style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
+               <Text style={[styles.ctaColor]}>Close Modal</Text>
+             </TouchableOpacity>
 
            </Modal>
         </ScrollView>

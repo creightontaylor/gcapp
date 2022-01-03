@@ -176,6 +176,10 @@ module.exports = StyleSheet.create({
     height: 150,
     width: 150
   },
+  square200: {
+    height: 200,
+    width: 200
+  },
   profileThumbnail25: {
     height: 25,
     width: 25,
@@ -661,6 +665,9 @@ module.exports = StyleSheet.create({
   height150: {
     height: 150
   },
+  height200: {
+    height: 200
+  },
   calcColumn30: {
     width: Dimensions.get('window').width - 30
   },
@@ -897,6 +904,9 @@ module.exports = StyleSheet.create({
   },
   fullScreenWidth: {
     width: Dimensions.get('window').width
+  },
+  screenHeight20: {
+    height: (Dimensions.get('window').height) * 0.2
   },
   progressBar: {
     position: 'relative',

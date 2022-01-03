@@ -4,6 +4,7 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
+import { WebView } from 'react-native-webview';
 
 const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-grey.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
@@ -3314,16 +3315,11 @@ class OpportunityDetails extends Component {
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                               <View>
-                                <View className="video-container">
-                                  {/*
-                                  <iframe
-                                    title="videoLink"
-                                    className="video-iframe"
-                                    source={`${this.state.selectedOpportunity.videoLink}`}
-                                    frameBorder="0"
-                                  />*/}
-                                </View>
-
+                                <WebView
+                                  style={[styles.calcColumn60,styles.screenHeight20]}
+                                  javaScriptEnabled={true}
+                                  source={{uri: this.state.selectedOpportunity.videoLink}}
+                                />
                               </View>
 
 
