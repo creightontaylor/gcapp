@@ -184,9 +184,7 @@ class CareerDetails extends Component {
                 if (response.data.success) {
 
                   let careerDetailsPath = '/app/careers/' + response.data.career.name
-                  if (this.props.pageSource === 'landingPage') {
-                    careerDetailsPath = '/careers/' + response.data.career.name
-                  } else if (this.props.fromAdvisor) {
+                  if (this.props.fromAdvisor) {
                     careerDetailsPath = '/advisor/careers/' + response.data.career.name
                   }
 
@@ -249,9 +247,7 @@ class CareerDetails extends Component {
                 if (response.data.success) {
 
                   let careerDetailsPath = '/app/careers/' + response.data.career.name
-                  if (this.props.pageSource === 'landingPage') {
-                    careerDetailsPath = '/careers/' + response.data.career.name
-                  } else if (this.props.fromAdvisor) {
+                  if (this.props.fromAdvisor) {
                     careerDetailsPath = '/advisor/careers/' + response.data.career.name
                   }
 
@@ -515,23 +511,24 @@ class CareerDetails extends Component {
       console.log(i)
       rows.push(
         <View key={i}>
-          <View className="col span-2-of-12 description-text-color">
-              { (i === 1) ? <Text style={[styles.standardText]}>Knowledge</Text> : <Text style={[styles.standardText]}> </Text>}
+          <View style={[styles.row5]}>
+            { (i === 1) ? <Text style={[styles.headingText6]}>Knowledge</Text> : <Text style={[styles.standardText]}> </Text>}
           </View>
-          <View className="col span-3-of-12">
-              <Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].category}</Text>
+          <View style={[styles.bottomPadding20,styles.rowDirection]}>
+            <View style={[styles.width120]}>
+                <Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].category}</Text>
+            </View>
+            <View style={[styles.calcColumn180]}>
+                <View>
+                  { this.state.careerDetails.knowledgeArray[i - 1].subcategories[0] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].subcategories[0]}</Text></View>
+                  )}
+                  { this.state.careerDetails.knowledgeArray[i - 1].subcategories[1] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].subcategories[1]}</Text></View>
+                  )}
+                </View>
+            </View>
           </View>
-          <View className="col span-7-of-12">
-              <View>
-                { this.state.careerDetails.knowledgeArray[i - 1].subcategories[0] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].subcategories[0]}</Text></View>
-                )}
-                { this.state.careerDetails.knowledgeArray[i - 1].subcategories[1] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.knowledgeArray[i - 1].subcategories[1]}</Text></View>
-                )}
-              </View>
-          </View>
-          <View className="clear" />
         </View>
       )
     }
@@ -548,23 +545,25 @@ class CareerDetails extends Component {
       console.log(i)
       rows.push(
         <View key={i}>
-          <View className="col span-2-of-12 description-text-color">
-              { (i === 1) ? <Text style={[styles.standardText]}>Skills</Text> : <Text style={[styles.standardText]}> </Text>}
+          <View style={[styles.row5]}>
+              { (i === 1) ? <Text style={[styles.headingText6]}>Skills</Text> : <Text style={[styles.standardText]}> </Text>}
           </View>
-          <View className="col span-3-of-12">
-              <Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].category}</Text>
+          <View style={[styles.bottomPadding20,styles.rowDirection]}>
+            <View style={[styles.width120]}>
+                <Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].category}</Text>
+            </View>
+            <View style={[styles.calcColumn180,styles.leftPadding]}>
+                <View>
+                  { this.state.careerDetails.skillsArray[i - 1].subcategories[0] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].subcategories[0]}</Text></View>
+                  )}
+                  { this.state.careerDetails.skillsArray[i - 1].subcategories[1] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].subcategories[1]}</Text></View>
+                  )}
+                </View>
+            </View>
           </View>
-          <View className="col span-7-of-12">
-              <View>
-                { this.state.careerDetails.skillsArray[i - 1].subcategories[0] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].subcategories[0]}</Text></View>
-                )}
-                { this.state.careerDetails.skillsArray[i - 1].subcategories[1] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.skillsArray[i - 1].subcategories[1]}</Text></View>
-                )}
-              </View>
-          </View>
-          <View className="clear" />
+
         </View>
       )
     }
@@ -581,23 +580,25 @@ class CareerDetails extends Component {
       console.log(i)
       rows.push(
         <View key={i}>
-          <View className="col span-2-of-12 description-text-color">
-              { (i === 1) ? <Text style={[styles.standardText]}>Abilities</Text> : <Text style={[styles.standardText]}> </Text>}
+          <View style={[styles.row5]}>
+              { (i === 1) ? <Text style={[styles.headingText6]}>Abilities</Text> : <Text style={[styles.standardText]}> </Text>}
           </View>
-          <View className="col span-3-of-12">
-              <Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].category}</Text>
+          <View style={[styles.bottomPadding20,styles.rowDirection]}>
+            <View style={[styles.width120]}>
+                <Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].category}</Text>
+            </View>
+            <View style={[styles.calcColumn180,styles.leftPadding]}>
+                <View>
+                  { this.state.careerDetails.abilitiesArray[i - 1].subcategories[0] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].subcategories[0]}</Text></View>
+                  )}
+                  { this.state.careerDetails.abilitiesArray[i - 1].subcategories[1] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].subcategories[1]}</Text></View>
+                  )}
+                </View>
+            </View>
           </View>
-          <View className="col span-7-of-12">
-              <View>
-                { this.state.careerDetails.abilitiesArray[i - 1].subcategories[0] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].subcategories[0]}</Text></View>
-                )}
-                { this.state.careerDetails.abilitiesArray[i - 1].subcategories[1] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.abilitiesArray[i - 1].subcategories[1]}</Text></View>
-                )}
-              </View>
-          </View>
-          <View className="clear" />
+
         </View>
       )
     }
@@ -614,26 +615,29 @@ class CareerDetails extends Component {
     if (this.state.careerDetails.onetInterests && this.state.careerDetails.onetInterests.enterprising) {
       rows.push(
         <View key={0}>
-          <View className="col span-2-of-12 description-text-color">
+          <View style={[styles.row5]}>
               <Text style={[styles.standardText]}>Interests</Text>
           </View>
-          <View className="col span-3-of-12">
-              <Text style={[styles.standardText]}>Realistic</Text>
-              <Text style={[styles.standardText]}>Artistic</Text>
-              <Text style={[styles.standardText]}>Investigative</Text>
-              <Text style={[styles.standardText]}>Social</Text>
-              <Text style={[styles.standardText]}>Enterprising</Text>
-              <Text style={[styles.standardText]}>Conventional</Text>
+
+          <View style={[styles.bottomPadding20,styles.rowDirection]}>
+            <View style={[styles.width120]}>
+                <Text style={[styles.standardText]}>Realistic</Text>
+                <Text style={[styles.standardText]}>Artistic</Text>
+                <Text style={[styles.standardText]}>Investigative</Text>
+                <Text style={[styles.standardText]}>Social</Text>
+                <Text style={[styles.standardText]}>Enterprising</Text>
+                <Text style={[styles.standardText]}>Conventional</Text>
+            </View>
+            <View style={[styles.calcColumn180,styles.leftPadding]}>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.realistic / 7) * 100).toFixed()}%</Text>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.artistic / 7) * 100).toFixed()}%</Text>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.investigative / 7) * 100).toFixed()}%</Text>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.social / 7) * 100).toFixed()}%</Text>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.enterprising / 7) * 100).toFixed()}%</Text>
+                <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.conventional / 7) * 100).toFixed()}%</Text>
+            </View>
           </View>
-          <View className="col span-7-of-12">
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.realistic / 7) * 100).toFixed()}%</Text>
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.artistic / 7) * 100).toFixed()}%</Text>
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.investigative / 7) * 100).toFixed()}%</Text>
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.social / 7) * 100).toFixed()}%</Text>
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.enterprising / 7) * 100).toFixed()}%</Text>
-              <Text style={[styles.standardText]}>{((this.state.careerDetails.onetInterests.conventional / 7) * 100).toFixed()}%</Text>
-          </View>
-          <View className="clear" />
+
         </View>
       )
     }
@@ -650,23 +654,25 @@ class CareerDetails extends Component {
 
       rows.push(
         <View key={i}>
-          <View className="col span-2-of-12 description-text-color">
-              { (i === 1) ? <Text style={[styles.standardText]}>Technology</Text> : <Text style={[styles.standardText]}> </Text>}
+          <View style={[styles.row5]}>
+              { (i === 1) ? <Text style={[styles.headingText6]}>Technology</Text> : <Text style={[styles.standardText]}> </Text>}
           </View>
-          <View className="col span-3-of-12">
-              <Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].name}</Text>
+          <View style={[styles.bottomPadding20,styles.rowDirection]}>
+            <View style={[styles.width120]}>
+                <Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].name}</Text>
+            </View>
+            <View style={[styles.calcColumn180,styles.leftPadding]}>
+                <View>
+                  { this.state.careerDetails.technologyArray[i - 1].examples[0] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].examples[0]}</Text></View>
+                  )}
+                  { this.state.careerDetails.technologyArray[i - 1].examples[1] && (
+                    <View><Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].examples[1]}</Text></View>
+                  )}
+                </View>
+            </View>
           </View>
-          <View className="col span-7-of-12">
-              <View>
-                { this.state.careerDetails.technologyArray[i - 1].examples[0] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].examples[0]}</Text></View>
-                )}
-                { this.state.careerDetails.technologyArray[i - 1].examples[1] && (
-                  <View><Text style={[styles.standardText]}>{this.state.careerDetails.technologyArray[i - 1].examples[1]}</Text></View>
-                )}
-              </View>
-          </View>
-          <View className="clear" />
+
         </View>
       )
     }
@@ -682,13 +688,13 @@ class CareerDetails extends Component {
     for (let i = 1; i <= this.state.careerDetails.educationData.education_usually_needed.length; i++) {
       rows.push(
         <View key={i}>
-          <View className="col span-2-of-12 description-text-color">
-              { (i === 1) ? <Text style={[styles.standardText]}>Education</Text> : <Text style={[styles.standardText]}> </Text>}
+            <View style={[styles.row5]}>
+              { (i === 1) ? <Text style={[styles.headingText6]}>Education</Text> : <Text style={[styles.standardText]}> </Text>}
           </View>
-          <View className="col span-10-of-12">
+          <View style={[styles.bottomPadding20]}>
               <Text style={[styles.standardText]}>{this.state.careerDetails.educationData.education_usually_needed[i - 1]}</Text>
           </View>
-          <View className="clear" />
+
         </View>
       )
     }
@@ -703,33 +709,29 @@ class CareerDetails extends Component {
     return (
       <View key={0}>
         {(this.state.careerDetails.outlookData && this.state.careerDetails.outlookData.salaryMedian) && (
-          <View className="top-padding-20">
+          <View style={[styles.topPadding20]}>
             <View style={[styles.rowDirection,styles.flex1]}>
-                <View style={[styles.flex40]}>
+                <View style={[styles.flex30]}>
                   {(this.state.careerDetails.outlookData.salary10thPercentile) ? (
-                    <Text className="cta-color heading-text-6">${Number(this.state.careerDetails.outlookData.salary10thPercentile).toLocaleString()}</Text>
+                    <Text style={[styles.ctaColor,styles.headingText6,styles.centerText]}>${Number(this.state.careerDetails.outlookData.salary10thPercentile).toLocaleString()}</Text>
                   ) : (
-                    <Text className="cta-color heading-text-6">$0</Text>
+                    <Text style={[styles.ctaColor,styles.headingText6,styles.centerText]}>$0</Text>
                   )}
-                  <Text className="field-descriptor">bottom 10%</Text>
+                  <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.centerText]}>bottom 10%</Text>
                 </View>
-                <View style={[styles.flex5]}>
-                  <View className="top-margin-negative-30">
-                    <Text style={[styles.standardText]}>&#8212;</Text>
-                  </View>
+                <View style={[styles.flex5]}><Text style={[styles.standardText,styles.centerText]}>&#8212;</Text></View>
+                <View style={[styles.flex30]}>
+                  <Text style={[styles.ctaColor,styles.headingText6,styles.centerText]}>${Number(this.state.careerDetails.outlookData.salaryMedian).toLocaleString()}</Text>
+                  <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.centerText]}>middle 50%</Text>
                 </View>
-                <View style={[styles.flex10]}>
-                  <Text className="cta-color heading-text-6">${Number(this.state.careerDetails.outlookData.salaryMedian).toLocaleString()}</Text>
-                  <Text className="field-descriptor">middle 50%</Text>
-                </View>
-                <View style={[styles.flex5]}><Text style={[styles.standardText]}>&#8212;</Text></View>
-                <View style={[styles.flex40]}>
+                <View style={[styles.flex5]}><Text style={[styles.standardText,styles.centerText]}>&#8212;</Text></View>
+                <View style={[styles.flex30]}>
                   {(this.state.careerDetails.outlookData.salarty90thPercentile) ? (
-                    <Text className="cta-color heading-text-6">${Number(this.state.careerDetails.outlookData.salary90thPercentile).toLocaleString()}</Text>
+                    <Text style={[styles.ctaColor,styles.headingText6,styles.centerText]}>${Number(this.state.careerDetails.outlookData.salary90thPercentile).toLocaleString()}</Text>
                   ) : (
-                    <Text className="cta-color heading-text-6">$210K+</Text>
+                    <Text style={[styles.ctaColor,styles.headingText6,styles.centerText]}>$210K+</Text>
                   )}
-                  <Text className="field-descriptor">top 90%</Text>
+                  <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.centerText]}>top 90%</Text>
                 </View>
             </View>
           </View>
@@ -865,10 +867,10 @@ class CareerDetails extends Component {
 
     return (
       <View key="browseCourses">
-        <View className="row-20">
+        <View style={[styles.row20]}>
 
           {(this.state.animating) ? (
-            <View className="flex-container flex-center full-space">
+            <View style={[styles.flex1,styles.flexCenter]}>
               <View>
                 <ActivityIndicator
                    animating = {this.state.animating}
@@ -876,8 +878,8 @@ class CareerDetails extends Component {
                    size = "large"
                    style={[styles.square80, styles.centerHorizontally]}/>
 
-                <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                <Text className="center-text cta-color bold-text">Pulling results...</Text>
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling results...</Text>
 
               </View>
             </View>
@@ -886,111 +888,106 @@ class CareerDetails extends Component {
                 {this.state.courses && this.state.courses.map((value, index) =>
                   <View>
                     <View key={index}>
-                      <View className="spacer" />
-                      <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)} className={(this.props.pageSource === 'landingPage') ? "background-button calc-column-offset-25" : "background-button calc-column-offset-65"}>
-                        <View className="fixed-column-70">
-                          <Image source={{ uri: value.image_125_H}} className="image-60-auto"/>
-                        </View>
-                        <View className="calc-column-offset-70">
-                          <Text className="heading-text-5">{value.title}</Text>
-                          <Text className="description-text-1 description-text-color">{value.headline}</Text>
+                      <View style={[styles.spacer]} />
 
-                          <View className="half-spacer" />
+                      <View style={[styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)} style={[styles.calcColumn92,styles.rowDirection]}>
+                          <View style={[styles.width70]}>
+                            <Image source={{ uri: value.image_125_H}} style={[styles.square60,styles.contain]}/>
+                          </View>
+                          <View style={[styles.calcColumn162]}>
+                            <Text style={[styles.headingText5]}>{value.title}</Text>
+                            <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{value.headline}</Text>
 
-                          {(value.duration) && (
-                            <View className="description-text-3">
-                              <View className="float-left right-margin">
-                                <Image source={{ uri: timeIconBlue}} className="image-auto-15 center-item"/>
-                              </View>
-                              <View className="float-left right-margin">
-                                <Text style={[styles.standardText]}>{value.duration}</Text>
-                              </View>
+                            <View style={[styles.halfSpacer]} />
+
+                            <View style={[styles.rowDirection]}>
+                              {(value.duration) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: timeIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.duration}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.price) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: moneyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.price}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.difficultyLevel) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: difficultyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.difficultyLevel ? value.difficultyLevel : "Beginner"}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.rating && value.ratingCount) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: ratingsIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.rating} / 5.0 - {value.ratingCount} Ratings</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.studentCount) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.studentCount} Students</Text>
+                                  </View>
+                                </View>
+                              )}
                             </View>
-                          )}
 
-                          {(value.price) && (
-                            <View className="description-text-3">
-                              <View className="float-left right-margin">
-                                <Image source={{ uri: moneyIconBlue}} className="image-auto-15 center-item"/>
-                              </View>
-                              <View className="float-left right-margin">
-                                <Text style={[styles.standardText]}>{value.price}</Text>
-                              </View>
-                            </View>
-                          )}
+                            <View style={[styles.halfSpacer]} />
+                          </View>
+                        </TouchableOpacity>
 
-                          {(value.difficultyLevel) && (
-                            <View className="description-text-3">
-                              <View className="float-left right-margin">
-                                <Image source={{ uri: difficultyIconBlue}} className="image-auto-15 center-item"/>
-                              </View>
-                              <View className="float-left right-margin">
-                                <Text style={[styles.standardText]}>{value.difficultyLevel ? value.difficultyLevel : "Beginner"}</Text>
-                              </View>
-                            </View>
-                          )}
-
-                          {(value.rating && value.ratingCount) && (
-                            <View className="description-text-3">
-                              <View className="float-left right-margin">
-                                <Image source={{ uri: ratingsIconBlue}} className="image-auto-15 center-item"/>
-                              </View>
-                              <View className="float-left right-margin">
-                                <Text style={[styles.standardText]}>{value.rating} / 5.0 - {value.ratingCount} Ratings</Text>
-                              </View>
-                            </View>
-                          )}
-
-                          {(value.studentCount) && (
-                            <View className="description-text-3">
-                              <View className="float-left right-margin">
-                                <Image source={{ uri: profileIconBlue}} className="image-auto-15 center-item"/>
-                              </View>
-                              <View className="float-left right-margin">
-                                <Text style={[styles.standardText]}>{value.studentCount} Students</Text>
-                              </View>
-                            </View>
-                          )}
-
-                          <View className="clear" />
-                          <View className="half-spacer" />
-                        </View>
-                      </TouchableOpacity>
-
-                      {(this.props.pageSource !== 'landingPage') && (
-                        <View>
+                        <View style={[styles.leftPadding]} >
                           <View>
-
-                            <View className="fixed-column-25 left-padding" >
-                              <View>
-                                <View className="spacer"/><View className="half-spacer"/>
-                                <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)}>
-                                  <Image source={{ uri: linkIcon}} className="image-auto-22"/>
-                                </TouchableOpacity>
-                              </View>
-                            </View>
+                            <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)}>
+                              <Image source={{ uri: linkIcon}} style={[styles.square22,styles.contain]}/>
+                            </TouchableOpacity>
                           </View>
                         </View>
-                      )}
-
-                      <View className="clear"/>
+                      </View>
 
                       {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                        <View className="left-padding-70">
-                          <View className="half-spacer" />
-                          <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
+                        <View style={[styles.leftPadding70]}>
+                          <View style={[styles.halfSpacer]} />
+                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
                         </View>
                       )}
                       {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                        <View className="left-padding-70">
-                          <View className="half-spacer" />
-                          <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
+                        <View style={[styles.leftPadding70]}>
+                          <View style={[styles.halfSpacer]} />
+                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
                         </View>
                       )}
-                      <View className="spacer" /><View className="spacer" />
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                       <View style={[styles.horizontalLine]} />
-                      <View className="clear"/>
-                      <View className="spacer" />
+
+                      <View style={[styles.spacer]} />
                     </View>
 
                   </View>
@@ -1021,44 +1018,43 @@ class CareerDetails extends Component {
         rows.push(
           <View key={i}>
             <View>
-              <View className="spacer"/><View className="spacer"/>
+              <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-              <TouchableOpacity onPress={() => Linking.openURL(url)}>
-                <View className="fixed-column-50">
-                  <View className="half-spacer"/>
-                  <Image source={{ uri: opportunitiesIconDark}} className="image-40-auto"/>
+              <TouchableOpacity onPress={() => Linking.openURL(url)} style={[styles.rowDirection]}>
+                <View style={[styles.width50]}>
+                  <View style={[styles.halfSpacer]}/>
+                  <Image source={{ uri: opportunitiesIconDark}} style={[styles.square40,styles.contain]}/>
                 </View>
-                <View className="calc-column-offset-80 left-padding-20">
-                  <Text className="heading-text-6">{this.state.jobs[index].JobTitle} @ {this.state.jobs[index].Company}</Text>
-                  <Text className="description-text-2 top-padding-5">{this.state.jobs[index].Location} | Posted on {this.state.jobs[index].AccquisitionDate}</Text>
+                <View style={[styles.calcColumn140,styles.leftPadding20]}>
+                  <Text style={[styles.headingText6]}>{this.state.jobs[index].JobTitle} @ {this.state.jobs[index].Company}</Text>
+                  <Text style={[styles.descriptionText2,styles.topPadding5]}>{this.state.jobs[index].Location} | Posted on {this.state.jobs[index].AccquisitionDate}</Text>
                 </View>
-                <View className="fixed-column-30 left-padding">
-                  <View className="float-left">
-                    <View className="spacer"/><View className="half-spacer"/>
-                    <Image source={{ uri: linkIcon}} className="image-auto-22"/>
-                  </View>
+                <View style={[styles.width30,styles.leftPadding]}>
+                  <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                  <Image source={{ uri: linkIcon}} style={[styles.square22,styles.contain]}/>
                 </View>
-                <View className="clear" />
-                <View className="half-spacer" />
+
+                <View style={[styles.halfSpacer]} />
 
               </TouchableOpacity>
             </View>
-            <View className="clear" />
 
-            <View className="left-padding-70">
+            <View style={[styles.leftPadding70]}>
               {(this.state.searchString && this.state.searchString !== '') && (
-                <Text className="description-text-2 error-color right-padding-5">Search Term: {this.state.searchString};</Text>
+                <Text style={[styles.descriptionText2,styles.errorColor,styles.rightPadding5]}>Search Term: {this.state.searchString};</Text>
               )}
               {(this.state.location && this.state.location !== '') && (
-                <Text className="description-text-2 error-color right-padding-5">Location: {this.state.location};</Text>
+                <Text style={[styles.descriptionText2,styles.errorColor,styles.rightPadding5]}>Location: {this.state.location};</Text>
               )}
               {(this.state.radius && this.state.radius !== '') && (
-                <Text className="description-text-2 error-color">Radius: {this.state.radius} Miles;</Text>
+                <Text style={[styles.descriptionText2,styles.errorColor,styles]}>Radius: {this.state.radius} Miles;</Text>
               )}
-              <View className="clear" />
+
             </View>
 
             <View style={[styles.horizontalLine]} />
+
+            <View style={[styles.spacer]}/>
           </View>
         )
       }
@@ -1275,63 +1271,62 @@ class CareerDetails extends Component {
     console.log('renderGroupPost called')
 
     return (
-      <View key={index} className={(inModal) ? "" : "card"}>
-        <View className="padding-10">
-          <View>
-            <View className="fixed-column-70 right-padding">
+      <View key={index} style={(inModal) ? [] : [styles.card]}>
+        <View style={[styles.padding10]}>
+          <View style={[styles.rowDirection]}>
+            <View style={[styles.width70,styles.rightPadding]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username })}>
-                <Image source={{ uri: item.pictureURL}} className="profile-thumbnail-2 standard-border" />
+                <Image source={{ uri: item.pictureURL}} style={[styles.square50,styles.contain,styles.standardBorder,{ borderRadius: 25 }]} />
               </TouchableOpacity>
             </View>
-            <View className="calc-column-offset-150">
+            <View style={[styles.calcColumn230]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username })}>
-                <Text className="heading-text-5 bold-text">{item.firstName} {item.lastName}</Text>
+                <Text style={[styles.headingText5,styles.boldText]}>{item.firstName} {item.lastName}</Text>
               </TouchableOpacity>
-              <Text className="description-text-3">{item.headline}</Text>
-              <Text className="description-text-4 description-text-color bold-text">{convertDateToString(item.createdAt,"daysAgo")}</Text>
+              <Text style={[styles.descriptionText3]}>{item.headline}</Text>
+              <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText]}>{convertDateToString(item.createdAt,"daysAgo")}</Text>
             </View>
-            <View className="fixed-column-80 right-padding">
+            <View style={[styles.width80,styles.rightPadding]}>
               <TouchableOpacity onPress={(e) => this.voteOnItem(e, item, 'up', index) }>
-                <View className="standard-border rounded-corners">
-                  <View className="float-left padding-7">
-                    <Image source={(item.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} className="image-auto-15"/>
+                <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+                  <View style={[styles.padding7]}>
+                    <Image source={(item.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
                   </View>
-                  <View className="vertical-separator-4" />
-                  <View className="float-left horizontal-padding-10">
-                    <View className="half-spacer" />
-                    <Text className="description-text-2 half-bold-text">{item.upvotes.length}</Text>
+                  <View style={[styles.verticalSeparator30]} />
+                  <View style={[styles.horizontalPadding10]}>
+                    <View style={[styles.halfSpacer]} />
+                    <Text style={[styles.descriptionText2,styles.boldText]}>{item.upvotes.length}</Text>
                   </View>
-                  <View className="clear" />
+
                 </View>
               </TouchableOpacity>
             </View>
-            <View className="clear" />
+
           </View>
-          <View className="row-10">
-            <Text className="description-text-3">{item.message}</Text>
-            <TouchableOpacity className="top-padding" onPress={() => Linking.openURL(item.url)}><Text style={[styles.descriptionText3,styles.boldText]}>{item.url}</Text></TouchableOpacity>
+          <View style={[styles.row10]}>
+            <Text style={[styles.descriptionText3]}>{item.message}</Text>
+            <TouchableOpacity style={[styles.topPadding]} onPress={() => Linking.openURL(item.url)}><Text style={[styles.descriptionText3,styles.boldText]}>{item.url}</Text></TouchableOpacity>
           </View>
           {(item.tags && item.tags.length > 0) && (
-            <View className="bottom-padding">
+            <View style={[styles.bottomPadding,styles.rowDirection,styles.flexWrap]}>
               {item.tags.map((item2, index2) =>
-                <View key={index2} className="float-left right-padding top-padding">
-                  <View className="tag-container-thin">
-                    <Text className="description-text-4">{item2}</Text>
+                <View key={index2} style={[styles.rightPadding,styles.topPadding]}>
+                  <View style={[styles.row5,styles.horizontalPadding10,styles.slightlyRoundedCorners,styles.transparentBorder,styles.lightBackground]}>
+                    <Text style={[styles.descriptionText4]}>{item2}</Text>
                   </View>
                 </View>
               )}
-              <View className="clear" />
             </View>
           )}
 
           {(item.upvotes || (item.comments && item.comments.length > 0)) && (
-            <View className="bottom-padding-5">
+            <View style={[styles.bottomPadding5]}>
               <TouchableOpacity onPress={() => this.retrieveLikes(index)}>
-                <Text className="description-text-3">{(item.upvotes) ? item.upvotes.length : 0} Upvotes</Text>
+                <Text style={[styles.descriptionText3]}>{(item.upvotes) ? item.upvotes.length : 0} Upvotes</Text>
               </TouchableOpacity>
-              <Text className="description-text-3 horizontal-padding-7">&#8226;</Text>
+              <Text style={[styles.descriptionText3,styles.horizontalPadding5]}>&#8226;</Text>
               <TouchableOpacity onPress={() => this.retrieveComments(index)}>
-                <Text className="description-text-3">{(item.commentCount) ? item.commentCount : 0} Comments</Text>
+                <Text style={[styles.descriptionText3]}>{(item.commentCount) ? item.commentCount : 0} Comments</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -1340,56 +1335,55 @@ class CareerDetails extends Component {
         <View style={[styles.horizontalLine]} />
 
         {(!inModal) && (
-          <View className="row-10 horizontal-padding-5">
-            <View className="float-left">
-              <TouchableOpacity onPress={(e) => this.voteOnItem(e, item, 'up', index) }>
-                <View className="float-left right-padding-8">
-                  <Image source={(item.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} className="image-auto-18 center-horizontally" />
+          <View style={[styles.row10,styles.horizontalPadding20,styles.rowDirection]}>
+            <View>
+              <TouchableOpacity onPress={(e) => this.voteOnItem(e, item, 'up', index) } style={[styles.rowDirection]}>
+                <View style={[styles.rightPadding8]}>
+                  <Image source={(item.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} style={[styles.square18,styles.contain,styles.centerHorizontally]} />
                 </View>
-                <View className="float-left right-padding-15">
-                  <Text className={(item.upvotes.includes(this.state.emailId)) ? "description-text-2 cta-color bold-text" : "description-text-2"}>{(item.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
+                <View style={[styles.rightPadding15]}>
+                  <Text style={(item.upvotes.includes(this.state.emailId)) ? [styles.descriptionText2,styles.ctaColor,styles.boldText] : [styles.descriptionText2]}>{(item.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
                 </View>
-                <View className="clear" />
               </TouchableOpacity>
             </View>
 
-            <View className="float-left">
-              <TouchableOpacity onPress={() => this.retrieveComments(index)} disabled={this.state.isLoading}>
-                <View className="float-left right-padding-8">
-                  <View className="mini-spacer"/><View className="mini-spacer"/><View className="mini-spacer"/>
-                  <Image source={{ uri: commentIconDark}} className="image-auto-18 center-horizontally" />
+            <View>
+              <TouchableOpacity onPress={() => this.retrieveComments(index)} disabled={this.state.isLoading}  style={[styles.rowDirection]}>
+                <View style={[styles.rightPadding8]}>
+                  <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                  <Image source={{ uri: commentIconDark}} style={[styles.square18,styles.contain,styles.centerHorizontally]} />
                 </View>
-                <View className="float-left right-padding-15">
-                  <Text className="description-text-2">Comment</Text>
+                <View style={[styles.rightPadding15]}>
+                  <Text style={[styles.descriptionText2]}>Comment</Text>
                 </View>
-                <View className="clear" />
+
               </TouchableOpacity>
             </View>
 
-            <View className="float-left">
-              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, sharePosting: true, selectedIndex: index })}>
-                <View className="float-left right-padding-8">
-                  <Image source={{ uri: shareIconDark}} className="image-auto-18 center-horizontally" />
+            <View>
+              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, sharePosting: true, selectedIndex: index })}  style={[styles.rowDirection]}>
+                <View style={[styles.rightPadding8]}>
+                  <Image source={{ uri: shareIconDark}} style={[styles.square18,styles.contain,styles.centerHorizontally]} />
                 </View>
-                <View className="float-left right-padding-15">
-                  <Text className="description-text-2">Share</Text>
+                <View style={[styles.rightPadding15]}>
+                  <Text style={[styles.descriptionText2]}>Share</Text>
                 </View>
-                <View className="clear" />
+
               </TouchableOpacity>
             </View>
 
-            <View className="float-left">
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { groupPost: item })}>
-                <View className="float-left right-padding-8">
-                  <Image source={{ uri: sendIconDark}} className="image-auto-18 center-horizontally" />
+            <View>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { groupPost: item })}  style={[styles.rowDirection]}>
+                <View style={[styles.rightPadding8]}>
+                  <Image source={{ uri: sendIconDark}} style={[styles.square18,styles.contain,styles.centerHorizontally]} />
                 </View>
-                <View className="float-left right-padding-15">
-                  <Text className="description-text-2">Send</Text>
+                <View style={[styles.rightPadding15]}>
+                  <Text style={[styles.descriptionText2]}>Send</Text>
                 </View>
-                <View className="clear" />
+
               </TouchableOpacity>
             </View>
-            <View className="clear" />
+
           </View>
         )}
       </View>
@@ -1471,8 +1465,6 @@ class CareerDetails extends Component {
     let pathPrefix = '/app/careers/'
     if (this.props.fromAdvisor) {
       pathPrefix = '/advisor/careers/'
-    } else if (this.props.pageSource === 'landingPage') {
-      pathPrefix = '/careers/'
     }
 
     return (
@@ -1480,40 +1472,37 @@ class CareerDetails extends Component {
             { this.state.careerDetails && (
               <View>
                 <View style={[styles.card,styles.topMargin20]}>
-                  <View className="top-padding-20">
-                    <Text style={[styles.headingText2]}>{this.state.careerDetails.name}</Text>
+                  <View style={[styles.topPadding20]}>
+                    <Text style={[styles.headingText2,styles.centerText]}>{this.state.careerDetails.name}</Text>
                   </View>
 
                   {this.renderOutlook()}
 
-                  <View className="top-padding-20 center-text">
-                    <TouchableOpacity className="btn btn-squarish right-margin-5" onPress={() => this.favoriteItem(this.state.careerDetails)}>
-                      <View className="float-left">
-                        <View className='mini-spacer' /><View className='mini-spacer' /><View className='mini-spacer' />
-                        {(this.state.favorites.includes(this.state.careerDetails._id)) ? <Image source={{ uri: checkmarkIconWhite}} className="image-auto-15" /> : <Image source={{ uri: favoritesIconWhite}} className="image-auto-15" />}
+                  <View style={[styles.topPadding20,styles.centerText,styles.rowDirection,styles.flex1]}>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.rightMargin5,styles.rowDirection,styles.flexCenter,styles.flex50]} onPress={() => this.favoriteItem(this.state.careerDetails)}>
+                      <View>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                        {(this.state.favorites.includes(this.state.careerDetails._id)) ? <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} /> : <Image source={{ uri: favoritesIconWhite}} style={[styles.square15,styles.contain]} />}
                       </View>
-                      <View className="float-left left-padding">
-                        <Text style={[styles.standardText]}>{(this.state.favorites.includes(this.state.careerDetails._id)) ? "Favorited" : "Favorite"}</Text>
+                      <View style={[styles.leftPadding]}>
+                        <Text style={[styles.standardText,styles.whiteColor]}>{(this.state.favorites.includes(this.state.careerDetails._id)) ? "Favorited" : "Favorite"}</Text>
                       </View>
-                      <View className="clear" />
+
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="btn btn-squarish white-background cta-color left-margin-5" onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true })}>
-                      <View className="float-left">
-                        <View className='mini-spacer' /><View className='mini-spacer' /><View className='mini-spacer' />
-                        <Image source={{ uri: shareIconDark}} className="image-auto-15" />
+                    <TouchableOpacity style={[styles.btnSquarish,styles.whiteBackground,styles.ctaBorder,styles.leftMargin5,styles.rowDirection, styles.flexCenter,styles.flex50]} onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true })}>
+                      <View>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                        <Image source={{ uri: shareIconDark}} style={[styles.square15,styles.contain]} />
                       </View>
-                      <View className="float-left left-padding"><Text style={[styles.standardText]}>Share</Text></View>
-                      <View className="clear" />
+                      <View style={[styles.leftPadding]}><Text style={[styles.standardText,styles.ctaColor]}>Share</Text></View>
+
                     </TouchableOpacity>
                   </View>
 
                   {(this.state.careerDetails.overview) ? (
-                    <View className="center-text row-20">
-                      <View className="float-left">
-                        <Text style={[styles.standardText]}>{this.state.careerDetails.overview.summary}</Text>
-                      </View>
-                      <View className="clear" />
+                    <View style={[styles.row20]}>
+                      <Text style={[styles.standardText,styles.centerText]}>{this.state.careerDetails.overview.summary}</Text>
                     </View>
                   ) : (
                     <View />
@@ -1521,42 +1510,42 @@ class CareerDetails extends Component {
 
                 </View>
 
-                <View style={[styles.cardClearPadding]}>
-                  <View className="full-width white-background">
-                    <View className="clear-float">
-                      <View className="carousel-3" onScroll={this.handleScroll}>
+                <View style={[styles.cardClearPadding,styles.topMargin20]}>
+                  <View style={[styles.fullScreenWidth,styles.whiteBackground]}>
+                    <View>
+                      <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.horizontalPadding20]}>
                         {this.state.subNavCategories.map((value, index) =>
-                          <View className="carousel-item-container heading-text-5">
+                          <View style={[styles.row10,styles.rightPadding30]}>
                             {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
-                              <View className="selected-carousel-item">
-                                <Text key={value}>{value}</Text>
+                              <View style={[styles.selectedCarouselItem]}>
+                                <Text key={value} style={[styles.headingText5]}>{value}</Text>
                               </View>
                             ) : (
-                              <TouchableOpacity className="menu-button" onPress={() => this.subNavClicked(value)}>
-                                <Text key={value}>{value}</Text>
+                              <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                                <Text key={value} style={[styles.headingText5]}>{value}</Text>
                               </TouchableOpacity>
                             )}
                           </View>
                         )}
-                      </View>
+                      </ScrollView>
                     </View>
                   </View>
                 </View>
 
                 {((this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Videos') && this.state.careerDetails.videos && this.state.careerDetails.videos.length > 0) && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Videos</Text>
-                      <Text className="description-text-1">Watch a day in the life of this profession, get interview tips, and learn relevant skills.</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Videos</Text>
+                      <Text style={[styles.descriptionText1]}>Watch a day in the life of this profession, get interview tips, and learn relevant skills.</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     {this.state.careerDetails.videos.map((value, index) =>
                       <View key={value}>
                         <View>
-                          <View className="top-margin-20">
-                            <View className={(index % 2 === 0) ? "container-left" : "container-right"}>
+                          <View style={[styles.topMargin20]}>
+                            <View style={[styles.row10]}>
                               {/*
                               <View className="video-container-4">
                                 {(this.state.useYouTubeAPI) ? (
@@ -1584,35 +1573,29 @@ class CareerDetails extends Component {
                                   />
                                 )}
                               </View>*/}
-                              <View className="clear"/>
+
                             </View>
 
-                            {(index % 2 === 1) && (
-                              <View className="clear" />
-                            )}
                           </View>
                         </View>
                       </View>
                     )}
-
-                    <View className="clear" />
-
                   </View>
                 )}
                 {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Details') && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Details</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Details</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     {(this.state.careerDetails.overview && this.state.careerDetails.overview.alsoCalledArray && this.state.careerDetails.overview.alsoCalledArray[0]) && (
-                      <View>
-                        <View className="col span-1-of-6 description-text-color">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>Also called</Text>
                         </View>
-                        <View className="col span-5-of-6">
+                        <View style={[styles.calcColumn180,styles.leftPadding]}>
                           <Text style={[styles.standardText]}>{this.state.careerDetails.overview.alsoCalledArray[0]}</Text>
                           {(this.state.careerDetails.overview.alsoCalledArray[1]) && (
                             <Text style={[styles.standardText]}>, {this.state.careerDetails.overview.alsoCalledArray[1]}</Text>
@@ -1620,25 +1603,23 @@ class CareerDetails extends Component {
                           {(this.state.careerDetails.overview.alsoCalledArray[2]) && (
                             <Text style={[styles.standardText]}>, {this.state.careerDetails.overview.alsoCalledArray[2]}</Text>
                           )}
-                          <View className="clear" />
-
                         </View>
                       </View>
                     )}
                     {(this.state.careerDetails.overview && this.state.careerDetails.overview.tasks && this.state.careerDetails.overview.tasks[0]) && (
-                      <View className="bottom-padding-40">
-                        <View className="col span-1-of-6 description-text-color">
+                      <View style={[styles.bottomPadding40,styles.rowDirection]}>
+                        <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>Common Tasks</Text>
                         </View>
-                        <View className="col span-5-of-6">
+                        <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.standardText]}>Task 1: {this.state.careerDetails.overview.tasks[0]}</Text>
                             {(this.state.careerDetails.overview.tasks[1]) && (
-                              <View className="top-padding">
+                              <View style={[styles.topPadding]}>
                                 <Text style={[styles.standardText]}>Task 2: {this.state.careerDetails.overview.tasks[1]}</Text>
                               </View>
                             )}
                             {(this.state.careerDetails.overview.tasks[2]) && (
-                              <View className="top-padding">
+                              <View style={[styles.topPadding]}>
                                 <Text style={[styles.standardText]}>Task 3: {this.state.careerDetails.overview.tasks[2]}</Text>
                               </View>
                             )}
@@ -1648,20 +1629,19 @@ class CareerDetails extends Component {
 
                     { (this.state.careerDetails.activities && this.state.careerDetails.activities.length > 0) && (
                       <View>
-                        <View className="top-padding-20">
-                          <Text className="heading-text-6 underline-text">Activities</Text>
+                        <View style={[styles.topPadding20]}>
+                          <Text style={[styles.headingText6,styles.underlineText]}>Activities</Text>
                         </View>
 
                         {this.state.careerDetails.activities.map((value, index) =>
                           <View key={value}>
-                            <View>
-                              <View className="col span-2-of-12 description-text-color">
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.width120]}>
                                 <Text style={[styles.standardText]}>{value.name}</Text>
                               </View>
-                              <View className="col span-10-of-12">
+                              <View style={[styles.calcColumn180,styles.leftPadding]}>
                                 <Text style={[styles.standardText]}>{value.description}</Text>
                               </View>
-                              <View className="clear" />
                             </View>
                           </View>
                         )}
@@ -1670,77 +1650,77 @@ class CareerDetails extends Component {
                     )}
 
                     { (this.state.careerDetails.outlookData && this.state.careerDetails.outlookData.outlook) && (
-                      <View>
-                        <View className="col span-2-of-12 description-text-color">
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.width120]}>
                           <Text style={[styles.standardText]}>Future Outlook</Text>
                         </View>
-                        <View className="col span-10-of-12">
+                        <View style={[styles.calcColumn180,styles.leftPadding]}>
                           <Text style={[styles.standardText]}>{this.state.careerDetails.outlookData.outlook}</Text>
                         </View>
-                        <View className="clear" />
+
                       </View>
                     )}
 
                     { (this.state.careerDetails.marketData) && (
                       <View>
-                        <View className="top-padding-20">
-                          <Text className="heading-text-6 underline-text">Market Data</Text>
+                        <View style={[styles.topPadding20]}>
+                          <Text style={[styles.headingText6,styles.underlineText]}>Market Data</Text>
                         </View>
-                        <View>
-                          <View className="col span-2-of-12 description-text-color">
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>Pay</Text>
                           </View>
-                          <View className="col span-10-of-12">
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.standardText]}>${Number(this.state.careerDetails.marketData.pay).toLocaleString()}</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
-                        <View>
-                          <View className="col span-2-of-12 description-text-color">
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>Total Employment</Text>
                           </View>
-                          <View className="col span-10-of-12">
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.standardText]}>{this.state.careerDetails.marketData.totalEmployment}</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
-                        <View>
-                          <View className="col span-2-of-12 description-text-color">
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>Growth</Text>
                           </View>
-                          <View className="col span-10-of-12">
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.standardText]}>{this.state.careerDetails.marketData.growth}</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
-                        <View>
-                          <View className="col span-2-of-12 description-text-color">
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.width120]}>
                             <Text style={[styles.standardText]}>New Jobs</Text>
                           </View>
-                          <View className="col span-10-of-12">
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.standardText]}>{Number(this.state.careerDetails.marketData.newJobs).toLocaleString()}</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       </View>
                     )}
 
                     { (this.state.careerDetails.whereTheyWork && this.state.careerDetails.whereTheyWork.length > 0) && (
                       <View>
-                        <View className="top-padding-20">
-                          <Text className="heading-text-6 underline-text">Where They Work</Text>
+                        <View style={[styles.topPadding20]}>
+                          <Text style={[styles.headingText6,styles.underlineText]}>Where They Work</Text>
                         </View>
 
                         {this.state.careerDetails.whereTheyWork.map((value, index) =>
                           <View key={value}>
-                            <View>
-                              <View className="col span-2-of-12 description-text-color">
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.width120]}>
                                 <Text style={[styles.standardText]}>{value.title}</Text>
                               </View>
-                              <View className="col span-10-of-12">
+                              <View style={[styles.calcColumn180,styles.leftPadding]}>
                                 <Text style={[styles.standardText]}>{value.percentEmployed}% Employed</Text>
                               </View>
-                              <View className="clear" />
+
                             </View>
                           </View>
                         )}
@@ -1749,17 +1729,17 @@ class CareerDetails extends Component {
                     )}
 
 
-                    <View className="clear" />
+
                   </View>
                 )}
 
                 {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile') && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Ideal Candidate Profile</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Ideal Candidate Profile</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     { this.state.careerDetails.knowledgeArray && this.state.careerDetails.knowledgeArray.length > 0 && (
                       <View>
@@ -1792,65 +1772,65 @@ class CareerDetails extends Component {
                       </View>
                     )}
 
-                    <View className="clear" />
+
                   </View>
                 )}
 
                 {((this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Courses') && (this.state.courses && this.state.courses.length > 0)) && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Courses</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Courses</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     {this.renderCourses()}
 
-                    <View className="clear" />
+
                   </View>
                 )}
 
                 {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Questions') && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <View className="calc-column-offset-40">
-                        <Text className="heading-text-3">Questions, Answers, and Discussion</Text>
+                    <View style={[styles.topPadding20,styles.rowDirection]}>
+                      <View style={[styles.calcColumn100]}>
+                        <Text style={[styles.headingText3]}>Questions, Answers, and Discussion</Text>
                       </View>
-                      <View className="fixed-column-40">
-                        <View className="background-button top-padding-5" onPress={() => this.addItem('question')}>
-                          <Image className="image-auto-18" source={{ uri: addIcon}}/>
+                      <View style={[styles.width40]}>
+                        <View style={[styles.topPadding5]} onPress={() => this.addItem('question')}>
+                          <Image style={[styles.square18,styles.contain]} source={{ uri: addIcon}}/>
                         </View>
                       </View>
-                      <View className="clear" />
+
 
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
-                    <View className="full-width white-background top-padding-20">
+                    <View style={[styles.topPadding4,styles.calcColumn60]}>
                       <View>
-                        <View className="carousel-3" onScroll={this.handleScroll}>
+                        <ScrollView style={[styles.carousel]} horizontal={true}>
                           {this.state.questionFilters.map((value, index) =>
-                            <View className="display-inline">
+                            <View style={[styles.row10,styles.rightPadding30]}>
                               {(this.state.questionFilters[index] === this.state.questionFilterSelected) ? (
-                                <View className="selected-carousel-item-2">
-                                  <Text key={value}>{value}</Text>
+                                <View style={[styles.selectedCarouselItem2]}>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </View>
                               ) : (
-                                <TouchableOpacity className="menu-button-2" onPress={() => this.questionFilterClicked(value,'question')}>
-                                  <Text key={value}>{value}</Text>
+                                <TouchableOpacity style={[styles.menuButton2]} onPress={() => this.questionFilterClicked(value,'question')}>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </TouchableOpacity>
                               )}
                             </View>
                           )}
-                        </View>
-                        <View className="clear" />
+                        </ScrollView>
+
                       </View>
                     </View>
                     <View style={[styles.horizontalLine]} />
 
                     {(this.state.groupPostsAreLoading) ? (
-                      <View className="flex-container flex-center full-space">
+                      <View style={[styles.flex1,styles.flexCenter]}>
                         <View>
                           <ActivityIndicator
                              animating = {this.state.animating}
@@ -1858,21 +1838,21 @@ class CareerDetails extends Component {
                              size = "large"
                              style={[styles.square80, styles.centerHorizontally]}/>
 
-                          <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                          <Text className="center-text cta-color bold-text">Pulling results...</Text>
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                          <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling results...</Text>
 
                         </View>
                       </View>
                     ) : (
                       <View>
                         {(this.state.groupPosts) && (
-                          <View className="top-padding-20">
+                          <View style={[styles.topPadding20]}>
                             {this.state.groupPosts.map((item, index) =>
-                              <View key={index} className="bottom-padding">
+                              <View key={index} style={[styles.bottomPadding]}>
                                 {this.renderGroupPost(item, index)}
                               </View>
                             )}
-                            <View className="clear" />
+
                           </View>
                         )}
                       </View>
@@ -1883,38 +1863,38 @@ class CareerDetails extends Component {
 
                 {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Projects') && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <View className="calc-column-offset-40">
-                        <Text className="heading-text-3">Projects by Career-Seekers</Text>
+                    <View style={[styles.topPadding20,styles.rowDirection]}>
+                      <View style={[styles.calcColumn100]} >
+                        <Text style={[styles.headingText3]}>Projects by Career-Seekers</Text>
                       </View>
-                      <View className="fixed-column-40">
-                        <TouchableOpacity className="background-button top-padding-5" onPress={() => this.props.navigation.navigate('EditProfile', { category: 'Details' })}>
-                          <Image className="image-auto-18" source={{ uri: addIcon}}/>
+                      <View style={[styles.width40]}>
+                        <TouchableOpacity style={[styles.topPadding5]} onPress={() => this.props.navigation.navigate('EditProfile', { category: 'Details' })}>
+                          <Image style={[styles.square18,styles.contain]} source={{ uri: addIcon}}/>
                         </TouchableOpacity>
                       </View>
-                      <View className="clear" />
+
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
-                    <View className="full-width white-background top-padding-20">
+                    <View style={[styles.topPadding4,styles.calcColumn60]}>
                       <View>
-                        <View className="carousel-3" onScroll={this.handleScroll}>
+                        <ScrollView style={[styles.carousel]} horizontal={true}>
                           {this.state.questionFilters.map((value, index) =>
-                            <View className="display-inline">
+                            <View style={[styles.row10,styles.rightPadding30]}>
                               {(this.state.questionFilters[index] === this.state.projectFilterSelected) ? (
-                                <View className="selected-carousel-item-2">
-                                  <Text key={value}>{value}</Text>
+                                <View style={[styles.selectedCarouselItem2]}>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </View>
                               ) : (
-                                <TouchableOpacity className="menu-button-2" onPress={() => this.questionFilterClicked(value,'project')}>
-                                  <Text key={value}>{value}</Text>
+                                <TouchableOpacity style={[styles.menuButton2]} onPress={() => this.questionFilterClicked(value,'project')}>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </TouchableOpacity>
                               )}
                             </View>
                           )}
-                        </View>
-                        <View className="clear" />
+                        </ScrollView>
+
                       </View>
                     </View>
                     <View style={[styles.horizontalLine]} />
@@ -1922,7 +1902,7 @@ class CareerDetails extends Component {
                     {(this.state.projects && this.state.projects.length > 0) && (
                       <View>
                         {(this.state.projectsAreLoading) ? (
-                          <View className="flex-container flex-center full-space">
+                          <View style={[styles.flex1,styles.flexCenter]}>
                             <View>
                               <ActivityIndicator
                                  animating = {this.state.animating}
@@ -1930,8 +1910,8 @@ class CareerDetails extends Component {
                                  size = "large"
                                  style={[styles.square80, styles.centerHorizontally]}/>
 
-                              <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                              <Text className="center-text cta-color bold-text">Pulling results...</Text>
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                              <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling results...</Text>
 
                             </View>
                           </View>
@@ -1942,92 +1922,88 @@ class CareerDetails extends Component {
                                 <View>
                                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: item })}>
 
-                                    <View className="elevated-box white-background" >
-                                      <View className="full-width relative-position tint">
-                                        <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: defaultProfileBackgroundImage}} className="image-full-width-150 center-horizontally"  />
-                                        <View className="absolute-position absolute-top-5 absolute-left-5">
-                                          <Text className="description-text-5 rounded-corners horizontal-padding-4 row-5 white-border white-text bold-text">{item.category}</Text>
+                                    <View style={[styles.elevatedBox,styles.whiteBackground]}>
+                                      <View style={[styles.relativePosition]}>
+                                        <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: defaultProfileBackgroundImage}}style={[styles.calcColumn60,styles.height150,styles.centerHorizontally]}  />
+                                        <View style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteLeft5]}>
+                                          <Text style={[styles.descriptionText5,styles.roundedCorners,styles.horizontalPadding4,styles.row5,styles.whiteBorder,styles.whiteColor,styles.boldText]}>{item.category}</Text>
                                         </View>
-                                        <View className="absolute-position absolute-top-5 absolute-right-5">
+                                        <View style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteRight5]}>
                                           <TouchableOpacity onPress={(e) => this.voteOnItem(e, item, 'up', optionIndex,'project') }>
-                                            <View className="standard-border rounded-corners">
-                                              <View className="float-left padding-7">
-                                                <Image source={(item.upvotes && item.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconWhite}} className="image-auto-15"/>
+                                            <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+                                              <View style={[styles.padding7]}>
+                                                <Image source={(item.upvotes && item.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconWhite}} style={[styles.square15,styles.contain]}/>
                                               </View>
-                                              <View className="vertical-separator-4" />
-                                              <View className="float-left horizontal-padding-10">
-                                                <View className="half-spacer" />
-                                                <Text className="description-text-2 half-bold-text white-text">{(item.upvotes) ? item.upvotes.length : 0}</Text>
+                                              <View style={[styles.verticalSeparator30]} />
+                                              <View style={[styles.horizontalPadding10]}>
+                                                <View style={[styles.halfSpacer]} />
+                                                <Text style={[styles.descriptionText2,styles.boldText,styles.whiteColor]}>{(item.upvotes) ? item.upvotes.length : 0}</Text>
                                               </View>
-                                              <View className="clear" />
                                             </View>
                                           </TouchableOpacity>
                                         </View>
                                       </View>
 
-                                      <View className="spacer" />
+                                      <View style={[styles.spacer]} />
 
-                                      <View className="horizontal-padding left-text">
-                                        <Text className="heading-text-5">{item.name}</Text>
+                                      <View style={[styles.horizontalPadding30]}>
+                                        <Text style={[styles.headingText5]}>{item.name}</Text>
 
-                                        <View className="top-padding">
-                                          <View className="fixed-column-35">
-                                            <Image className="profile-thumbnail-25" source={(item.userPic) ? { uri: item.userPic} : { uri: profileIconDark}} />
+                                        <View style={[styles.topPadding]}>
+                                          <View style={[styles.width35]}>
+                                            <Image style={[styles.square25,styles.contain, { borderRadius: 12.5 }]} source={(item.userPic) ? { uri: item.userPic} : { uri: profileIconDark}} />
                                           </View>
-                                          <View className="calc-column-offset-35 description-text-2">
-                                            <Text style={[styles.standardText]}>{item.userFirstName} {item.userLastName}</Text>
-                                            <Text className="description-text-3">{item.hours} Hours</Text>
+                                          <View style={[styles.calcColumn155]}>
+                                            <Text style={[styles.descriptionText2]}>{item.userFirstName} {item.userLastName}</Text>
+                                            <Text style={[styles.descriptionText5]}>{item.hours} Hours</Text>
                                           </View>
-                                          <View className="clear" />
+
                                         </View>
 
                                         {(item.collaborators && item.collaborators.length > 0) && (
-                                          <View className="top-padding">
-                                            <Text className="description-text-5 left-padding-5">|</Text>
-                                            <Text className="description-text-5 left-padding-5">{item.collaborators.length} Collaborators</Text>
+                                          <View style={[styles.topPadding]}>
+                                            <Text style={[styles.descriptionText5,styles.leftPadding5]}>|</Text>
+                                            <Text style={[styles.descriptionText5,styles.leftPadding5]}>{item.collaborators.length} Collaborators</Text>
                                           </View>
                                         )}
 
                                         {(item.skillTags) && (
                                           <View>
-                                            <View className="top-padding">
+                                            <View style={[styles.topPadding, styles.rowDirection,styles.flexWrap]}>
                                               {item.skillTags.split(',').map((value, optionIndex) =>
                                                 <View key={value}>
                                                   {(optionIndex < 3) && (
-                                                    <View key={value} className="float-left row-5 right-padding">
-                                                      <View className="tag-container-7">
-                                                        <Text className="description-text-3">{value}</Text>
+                                                    <View key={value} style={[styles.rightPadding]}>
+                                                      <View style={[styles.row5,styles.horizontalPadding20,styles.transparentBorder,styles.lightBackground]}>
+                                                        <Text style={[styles.descriptionText3]}>{value}</Text>
                                                       </View>
                                                     </View>
                                                   )}
                                                 </View>
                                               )}
-                                              <View className="clear" />
                                             </View>
                                           </View>
                                         )}
 
-                                        <View className="clear" />
-
-                                        <View className="top-padding-20">
-                                          <View className="display-inline full-width">
-                                            <TouchableOpacity className={this.state.favorites.includes(item._id) ? "btn btn-profile medium-background clear-border full-width" : "btn btn-profile full-width"} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(e, item)}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.favorites.includes(item._id) ? "Following" : "Follow"}</Text></TouchableOpacity>
+                                        <View style={[styles.topPadding20]}>
+                                          <View>
+                                            <TouchableOpacity style={this.state.favorites.includes(item._id) ? [styles.btnSquarish,styles.mediumBackground] : [styles.btnSquarish,styles.ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.favoriteItem(e, item)}><Text style={[styles.descriptionText1,styles.whiteColor]}>{this.state.favorites.includes(item._id) ? "Following" : "Follow"}</Text></TouchableOpacity>
                                           </View>
                                         </View>
 
-                                        <View className="spacer" />
+                                        <View style={[styles.spacer]} />
                                       </View>
                                     </View>
                                   </TouchableOpacity>
                                 </View>
 
                                 <View>
-                                  <View className="clear" />
-                                  <View className="spacer" />
+
+                                  <View style={[styles.spacer]} />
                                 </View>
                               </View>
                             )}
-                            <View className="clear" />
+
                           </View>
                         )}
                       </View>
@@ -2037,144 +2013,139 @@ class CareerDetails extends Component {
 
                 {((this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Jobs') && (this.state.jobs && this.state.jobs.length > 0)) && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Jobs</Text>
-                      <Text className="profile-descriptor">(External to Guided Compass)</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Jobs</Text>
+                      <Text style={[styles.descriptionText2,styles.bottomPadding5]}>(External to Guided Compass)</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     {this.renderJobs()}
 
-                    <View className="clear" />
+
                   </View>
                 )}
 
                 {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Similar Careers') && (
                   <View style={[styles.card,styles.topMargin20]}>
-                    <View className="top-padding-20 full-width">
-                      <Text className="heading-text-3">Similar Careers</Text>
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.headingText3]}>Similar Careers</Text>
                     </View>
 
-                    <View className="spacer" />
+                    <View style={[styles.spacer]} />
 
                     {(this.state.similarCareers) && (
                       <View>
                         {this.state.similarCareers.map((value, index) =>
                           <View>
                             <View key={index}>
-                              <View className="spacer" />
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })}>
-                                <View className="fixed-column-70">
-                                  <Image source={{ uri: careerMatchesIconDark}} className="image-auto-50 top-margin-5 center-item"/>
-                                </View>
-                                <View className={(this.props.pageSource === 'landingPage') ? "calc-column-offset-100-static" : "calc-column-offset-140-static"}>
-                                  <Text className="heading-text-5">{value.name}</Text>
-                                  <Text className="description-text-1 description-text-color curtail-text">{value.jobFunction}{(value.jobFunction && value.industry) && ' | ' + value.industry}{(!value.jobFunction && value.industry) && value.industry}{(value.jobFamily) && ' | ' + value.jobFamily}</Text>
+                              <View style={[styles.spacer]} />
 
-                                  {(value.marketData) && (
-                                    <View className="row-5 description-text-2 bold-text">
-                                      <View>
-                                        <View className="float-left right-padding">
-                                          <Image source={{ uri: trendingUpIcon}} className="image-auto-15"/>
+                              <View style={[styles.rowDirection]}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })} style={[styles.rowDirection,styles.calcColumn120]}>
+                                  <View style={[styles.width70]}>
+                                    <Image source={{ uri: careerMatchesIconDark}} style={[styles.square50,styles.contain,styles.topMargin5,styles.flexCenter]}/>
+                                  </View>
+                                  <View style={[styles.calcColumn200]}>
+                                    <Text style={[styles.headingText5]}>{value.name}</Text>
+                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{value.jobFunction}{(value.jobFunction && value.industry) && ' | ' + value.industry}{(!value.jobFunction && value.industry) && value.industry}{(value.jobFamily) && ' | ' + value.jobFamily}</Text>
+
+                                    {(value.marketData) && (
+                                      <View style={[styles.row5,styles.rowDirection,styles.flexWrap]}>
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.rightPadding]}>
+                                            <Image source={{ uri: trendingUpIcon}} style={[styles.square15,styles.contain]}/>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{value.marketData.growth}</Text>
+                                          </View>
                                         </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{value.marketData.growth}</Text>
+
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.rightPadding]}>
+                                            <Image source={{ uri: moneyIconBlue}} style={[styles.square20,styles.contain]}/>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>${Number(value.marketData.pay).toLocaleString()}</Text>
+                                          </View>
+                                        </View>
+
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.rightPadding]}>
+                                            <Image source={{ uri: membersIconBlue}} style={[styles.square22,styles.contain]}/>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{Number(value.marketData.totalEmployment).toLocaleString()}</Text>
+                                          </View>
                                         </View>
                                       </View>
+                                    )}
 
-                                      <View>
-                                        <View className="float-left right-padding">
-                                          <Image source={{ uri: moneyIconBlue}} className="image-auto-20"/>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">${Number(value.marketData.pay).toLocaleString()}</Text>
+                                    {(value.onetInterests) && (
+                                      <View style={[styles.row5]}>
+                                        <View style={[styles.rowDirection,styles.rowDirection,styles.flexWrap]}>
+                                          <View style={[styles.rightPadding]}>
+                                            <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.realistic / 7) * 100).toFixed()}% R  -</Text>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.investigative / 7) * 100).toFixed()}% I  -</Text>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.artistic / 7) * 100).toFixed()}% A  -</Text>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.social / 7) * 100).toFixed()}% S  -</Text>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.enterprising / 7) * 100).toFixed()}% E  -</Text>
+                                          </View>
+                                          <View style={[styles.rightPadding]}>
+                                            <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{((value.onetInterests.conventional / 7) * 100).toFixed()}% C</Text>
+                                          </View>
                                         </View>
                                       </View>
+                                    )}
+                                  </View>
+                                </TouchableOpacity>
 
-                                      <View>
-                                        <View className="float-left right-padding">
-                                          <Image source={{ uri: membersIconBlue}} className="image-auto-22"/>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{Number(value.marketData.totalEmployment).toLocaleString()}</Text>
-                                        </View>
-                                      </View>
-
-                                      <View className="clear" />
-                                    </View>
-                                  )}
-
-                                  {(value.onetInterests) && (
-                                    <View className="row-5 description-text-2 bold-text">
-                                      <View>
-                                        <View className="float-left right-padding">
-                                          <Image source={{ uri: favoritesIconBlue}} className="image-auto-20"/>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.realistic / 7) * 100).toFixed()}% R  -</Text>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.investigative / 7) * 100).toFixed()}% I  -</Text>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.artistic / 7) * 100).toFixed()}% A  -</Text>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.social / 7) * 100).toFixed()}% S  -</Text>
-                                        </View>
-                                        <View className="float-left right-padding">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.enterprising / 7) * 100).toFixed()}% E  -</Text>
-                                        </View>
-                                        <View className="float-left">
-                                          <Text className="description-text-1 description-text-color curtail-text">{((value.onetInterests.conventional / 7) * 100).toFixed()}% C</Text>
-                                        </View>
-                                      </View>
-                                    </View>
-                                  )}
-                                </View>
-                              </TouchableOpacity>
-
-                              {(this.props.pageSource !== 'landingPage') && (
-                                <View className="fixed-column-40 top-margin-15">
-                                  <TouchableOpacity className="btn background-button" onPress={() => this.favoriteItem(value) }>
-                                    <Image source={(this.state.favorites.includes(value._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} className="image-auto-20"/>
+                                <View style={[styles.width30,styles.topMargin15]}>
+                                  <TouchableOpacity onPress={() => this.favoriteItem(value) }>
+                                    <Image source={(this.state.favorites.includes(value._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
                                   </TouchableOpacity>
                                 </View>
-                              )}
 
-                              <View className="fixed-column-25 left-padding">
-                                <View className="float-right">
-                                  <View className="spacer"/><View className="half-spacer"/>
-                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })}>
-                                    <Image source={{ uri: arrowIndicatorIcon}} className="image-auto-22"/>
+                                <View style={[styles.width30,styles.leftPadding]}>
+                                  <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })} style={[styles.pinRight]}>
+                                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain]}/>
                                   </TouchableOpacity>
                                 </View>
                               </View>
-                              <View className="clear"/>
 
                               {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                                <View className="left-padding-70">
-                                  <View className="half-spacer" />
-                                  <Text className="description-text-2 error-color row-5">{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
+                                <View style={[styles.leftPadding70]}>
+                                  <View style={[styles.halfSpacer]} />
+                                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
                                 </View>
                               )}
                               {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                                <View className="left-padding-70">
-                                  <View className="half-spacer" />
-                                  <Text className="description-text-2 error-color row-5">{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
+                                <View style={[styles.leftPadding70]}>
+                                  <View style={[styles.halfSpacer]} />
+                                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
                                 </View>
                               )}
-                              <View className="spacer" /><View className="spacer" />
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                               <View style={[styles.horizontalLine]} />
-                              <View className="clear"/>
-                              <View className="spacer" />
+
+                              <View style={[styles.spacer]} />
                             </View>
 
                           </View>
                         )}
 
-                        <View className="clear" />
                       </View>
                     )}
 
@@ -2186,17 +2157,17 @@ class CareerDetails extends Component {
 
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
              {(this.state.showShareButtons) && (
-               <View key="showDescription" className="full-width padding-20 center-text">
-                  <Text className="heading-text-2">Share the {this.state.careerDetails.name} Career Page with Friends!</Text>
+               <View key="showDescription" style={[styles.fullScreenWidth,styles.padding20,styles.centerText]}>
+                  <Text style={[styles.headingText2]}>Share the {this.state.careerDetails.name} Career Page with Friends!</Text>
 
-                  <View className="top-padding-20">
+                  <View style={[styles.topPadding20]}>
                     <Text style={[styles.standardText]}>Share this link:</Text>
                     <TouchableOpacity onPress={() => Linking.openURL(this.state.shareURL)}>{this.state.shareURL}</TouchableOpacity>
                   </View>
 
-                  <View className="spacer" />
+                  <View style={[styles.spacer]} />
 
-                  <View className="top-padding-20">
+                  <View style={[styles.topPadding20]}>
                     {this.renderShareButtons()}
                   </View>
 
@@ -2204,28 +2175,36 @@ class CareerDetails extends Component {
              )}
 
              {(this.state.addQuestion) && (
-               <View key="addQuestion" className="full-width padding-20">
-                  <View className="row-10">
-                    <View className="fixed-column-70 right-padding">
+               <View key="addQuestion" style={[styles.fullScreenWidth,styles.padding20]}>
+                  <View style={[styles.row10,styles.rowDirection]}>
+                    <View style={[styles.width70,styles.rightPadding]}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
-                        <Image source={{ uri: this.state.pictureURL}} className="profile-thumbnail-2 standard-border" />
+                        <Image source={{ uri: this.state.pictureURL}} style={[styles.square50,styles.contain,styles.standardBorder,{ borderRadius: 25 }]} />
                       </TouchableOpacity>
                     </View>
-                    <View className="calc-column-offset-70">
+                    <View style={[styles.calcColumn110]}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
-                        <Text className="heading-text-2">{this.state.cuFirstName} {this.state.cuLastName}</Text>
+                        <Text style={[styles.headingText2]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
                       </TouchableOpacity>
                     </View>
-                    <View className="clear" />
+
                   </View>
 
-                  <View className="row-10">
-                    <textarea type="text" className="text-field clear-border standard-border" placeholder="Start a conversation in this group..." name="postMessage" value={this.state.postMessage} onChange={this.formChangeHandler} />
+                  <View style={[styles.row10]}>
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={(text) => this.formChangeHandler("postMessage", text)}
+                      value={this.state.postMessage}
+                      placeholder="Start a conversation in this group..."
+                      placeholderTextColor="grey"
+                      multiline={true}
+                      numberOfLines={4}
+                    />
                   </View>
 
-                  <View className="row-10">
-                    <Text className="description-text-5 description-text-color bold-text">SHARE A LINK (Optional)</Text>
-                    <View className="half-spacer" />
+                  <View style={[styles.row10]}>
+                    <Text style={[styles.descriptionText5,styles.descriptionTextColor,styles.boldText]}>SHARE A LINK (Optional)</Text>
+                    <View style={[styles.halfSpacer]} />
                     <TextInput
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler("postLink", text)}
@@ -2234,33 +2213,33 @@ class CareerDetails extends Component {
                       placeholderTextColor="grey"
                     />
                     {(this.state.postLink && !this.state.postLink.startsWith('http')) && (
-                      <View className="row-5">
-                        <Text className="error-color bold-text description-text-2">Please enter a valid link</Text>
+                      <View style={[styles.row5]}>
+                        <Text style={[styles.errorColor,styles.boldText,styles.descriptionText2]}>Please enter a valid link</Text>
                       </View>
                     )}
                   </View>
 
-                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="error-message">{this.state.errorMessage}</Text>}
-                  {(this.state.successMessage && this.state.successMessage !== '') && <Text className="error-message">{this.state.successMessage}</Text>}
+                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor]}>{this.state.errorMessage}</Text>}
+                  {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text>}
 
-                  <View className="row-10">
-                    <TouchableOpacity className="btn btn-primary" disabled={this.state.isSaving} onPress={() => this.postGroupPost()}><Text style={[styles.standardText,styles.whiteColor]}>Post</Text></TouchableOpacity>
+                  <View style={[styles.row10]}>
+                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} disabled={this.state.isSaving} onPress={() => this.postGroupPost()}><Text style={[styles.standardText,styles.whiteColor]}>Post</Text></TouchableOpacity>
                   </View>
 
                 </View>
              )}
 
              {(this.state.addProject) && (
-               <View key="addProject" className="full-width padding-20 center-text">
-                  <Text className="heading-text-2">Add Project</Text>
+               <View key="addProject" style={[styles.fullScreenWidth,styles.padding20,styles.centerText]}>
+                  <Text style={[styles.headingText2]}>Add Project</Text>
                 </View>
              )}
 
              {(this.state.showComments) && (
-               <View key="showComments" className="full-width">
+               <View key="showComments">
                 {this.renderGroupPost(this.state.groupPosts[this.state.selectedIndex], this.state.selectedIndex, true)}
 
-                <View className="spacer" />
+                <View style={[styles.spacer]} />
 
                 {(this.state.selectedGroup) && (
                   <SubComments selectedGroup={this.state.selectedGroup} selectedGroupPost={this.state.groupPosts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={'guidedcompass'} postingOrgName={'Guided Compass'} orgContactEmail={'creighton@guidedcompass.com'} pictureURL={this.state.pictureURL} history={this.props.history} pageSource={"groupDetails"} />
@@ -2270,32 +2249,32 @@ class CareerDetails extends Component {
              )}
 
              {(this.state.showUpvotes) && (
-               <View key="showUpvotes" className="full-width">
-                 <View className="bottom-padding">
-                   <Text className="heading-text-2">{this.state.careerDetails.name} Upvotes</Text>
+               <View key="showUpvotes">
+                 <View style={[styles.bottomPadding]}>
+                   <Text style={[styles.headingText2]}>{this.state.careerDetails.name} Upvotes</Text>
                  </View>
 
-                <View className="spacer" />
+                 <View style={[styles.spacer]} />
 
                 {(this.state.upvotes && this.state.upvotes.length > 0) ? (
-                  <View className="top-padding">
+                  <View style={[styles.topPadding]}>
                     {this.state.upvotes.map((value, optionIndex) =>
                       <View key={"upvote|" + optionIndex}>
-                        <View>
-                          <View className="fixed-column-60">
-                            <Image source={{ uri: value.pictureURL}} className="profile-thumbnail-2" />
+                        <View style={[styles.fullScreenWidth,styles.rowDirection]}>
+                          <View style={[styles.width60]}>
+                            <Image source={{ uri: value.pictureURL}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
                           </View>
-                          <View className="calc-column-offset-60 left-padding top-padding-5">
-                            <Text className="heading-text-4">{value.firstName} {value.lastName}</Text>
+                          <View style={[styles.calcColumn60,styles.leftPadding,styles.topPadding5]}>
+                            <Text style={[styles.headingText4]}>{value.firstName} {value.lastName}</Text>
                           </View>
-                          <View className="clear" />
+
                         </View>
                       </View>
                     )}
                   </View>
                 ) : (
                   <View>
-                    <Text className="error-color">There are no upvotes</Text>
+                    <Text style={[styles.errorColor]}>There are no upvotes</Text>
                   </View>
                 )}
 
