@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+import {Picker} from '@react-native-picker/picker';
+import * as Progress from 'react-native-progress';
 
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
 const searchIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png";
@@ -333,23 +335,23 @@ class Careers extends Component {
      }
   }
 
-  formChangeHandler(name, value) {
+  formChangeHandler(eventName, eventValue) {
     console.log('formChangeHandler called')
 
-    if (name === 'search') {
-      this.setState({ searchString: value, animating: true })
-      this.filterResults(value, null, null, null, true)
-    } else if (name.includes('filter|')) {
+    if (eventName === 'search') {
+      this.setState({ searchString: eventValue, animating: true })
+      this.filterResults(eventValue, null, null, null, true)
+    } else if (eventName.includes('filter|')) {
 
       let itemFilters = this.state.itemFilters
 
-      const nameArray = name.split("|")
+      const nameArray = eventName.split("|")
       const field = nameArray[1]
 
       let index = 0
       for (let i = 1; i <= itemFilters.length; i++) {
         if (itemFilters[i - 1].name === field) {
-          itemFilters[i - 1]['value'] = value
+          itemFilters[i - 1]['value'] = eventValue
           index = i - 1
         }
       }
@@ -369,17 +371,17 @@ class Careers extends Component {
 
       this.setState({ animating: true, searchString, itemFilters, itemSorters })
 
-      this.filterResults(this.state.searchString, value, itemFilters, index, false)
+      this.filterResults(this.state.searchString, eventValue, itemFilters, index, false)
 
-    } else if (name.includes('sort|')) {
+    } else if (eventName.includes('sort|')) {
 
       let itemSorters = this.state.itemSorters
-      const nameArray = name.split("|")
+      const nameArray = eventName.split("|")
       const field = nameArray[1]
 
       for (let i = 1; i <= itemSorters.length; i++) {
         if (itemSorters[i - 1].name === field) {
-          itemSorters[i - 1]['value'] = value
+          itemSorters[i - 1]['value'] = eventValue
         }
       }
 
@@ -399,14 +401,14 @@ class Careers extends Component {
       this.setState({ searchString, itemFilters, itemSorters, animating: true })
 
 
-      this.sortResults(value, field)
+      this.sortResults(eventValue, field)
 
-    } else if (name.includes('useCase')) {
-      const nameArray = name.split("|")
+    } else if (eventName.includes('useCase')) {
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1].trim())
 
       let useCases = this.state.useCases
-      // useCases[index]["value"] = value
+      // useCases[index]["value"] = eventValue
       for (let i = 1; i <= useCases.length; i++) {
         if (i - 1 === index) {
           useCases[index]["selected"] = true
@@ -509,8 +511,8 @@ class Careers extends Component {
       }
 
       this.setState({ useCases, matchingCriteria })
-    } else if (name.includes('custom')) {
-      const nameArray = name.split("|")
+    } else if (eventName.includes('custom')) {
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1].trim())
 
       const ogValue = this.state.matchingCriteria[index].value
@@ -518,7 +520,7 @@ class Careers extends Component {
       const totalPercent = this.state.totalPercent + diff
 
       let matchingCriteria = this.state.matchingCriteria
-      matchingCriteria[index]["value"] = Number(value)
+      matchingCriteria[index]["value"] = Number(eventValue)
       this.setState({ matchingCriteria, totalPercent })
     }
   }
@@ -628,7 +630,7 @@ class Careers extends Component {
         for (let i = 1; i <= filters.length; i++) {
           rows.push(
             <View key={filters[i - 1] + i.toString()}>
-              <View style={styles.rowDirection}>
+              <View>
                 <View style={[styles.row10,styles.rightPadding20]}>
                   <View style={styles.lightBorder}>
                     <View style={[styles.rightPadding5,styles.leftPadding,styles.nowrap,styles.topMarginNegative2]}>
@@ -636,11 +638,13 @@ class Careers extends Component {
                       <Text style={[styles.descriptionTextColor]}>{filters[i - 1].name}</Text>
                     </View>
                     <View>
-                      <select name={"filter|" + filters[i - 1].name} value={filters[i - 1].value} onChange={this.formChangeHandler} className="filter-select">
-                        {filters[i - 1].options.map(value =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
+                      <Picker
+                        selectedValue={filters[i - 1].value}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                        }>
+                        {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                      </Picker>
                     </View>
                     <View style={[styles.dropdownArrowContainer,styles.paddingTop15]}>
                       <Image source={{ uri: dropdownArrow}} style={[styles.square20,styles.contain]} />
@@ -672,11 +676,13 @@ class Careers extends Component {
                       <Text style={[styles.descriptionTextColor]}>{sorters[i - 1].name}</Text>
                     </View>
                     <View>
-                      <select name={"sort|" + sorters[i - 1].name} value={sorters[i - 1].value} onChange={this.formChangeHandler} className="filter-select">
-                        {sorters[i - 1].options.map(value =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
+                      <Picker
+                        selectedValue={sorters[i - 1].value}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                        }>
+                        {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                      </Picker>
                     </View>
                     <View style={[styles.dropdownArrowContainer,styles.topPadding15]}>
                       <Image source={{ uri: dropdownArrow}} />
@@ -1030,7 +1036,7 @@ class Careers extends Component {
               <View>
                 {(this.state.matchingView) ? (
                   <View style={styles.rowDirection}>
-                    <View style={[styles.row7,styles.topMarginNegative2,styles.fullScreenWidth]} style={(this.state.matchingView) ? { ...styles2, position: 'absolute' } : { }}>
+                    <View style={[styles.row7,styles.topMarginNegative2,styles.fullScreenWidth]}>
                       <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
                         <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.rightMargin]} />
                       </TouchableOpacity>
@@ -1085,23 +1091,22 @@ class Careers extends Component {
             </View>
 
             {(this.state.showingSearchBar) && (
-              <View style={[styles.whiteBackground,styles.padding20,styles.standardBorder,styles.marginTop20]}>
+              <View style={[styles.card,styles.topMargin20]}>
                 <View>
+                  <View style={styles.spacer} /><View style={styles.spacer} />
+                  <View style={styles.horizontalLine} />
+                  <View style={styles.spacer} /><View style={styles.spacer} />
 
-                <View style={styles.spacer} /><View style={styles.spacer} />
-                <View style={styles.horizontalLine} />
-                <View style={styles.spacer} /><View style={styles.spacer} />
+                  <Text>Filter</Text>
+                  <View style={styles.halfSpacer} />
+                  {(this.renderManipulators('filter'))}
 
-                <Text>Filter</Text>
-                <View style={styles.halfSpacer} />
-                {(this.renderManipulators('filter'))}
-
-                <View style={styles.spacer} />
-                <View style={styles.horizontalLine} />
-                <View style={styles.spacer} /><View style={styles.spacer} />
-                <Text>Sort</Text>
-                <View style={styles.halfSpacer} />
-                {(this.renderManipulators('sort'))}
+                  <View style={styles.spacer} />
+                  <View style={styles.horizontalLine} />
+                  <View style={styles.spacer} /><View style={styles.spacer} />
+                  <Text>Sort</Text>
+                  <View style={styles.halfSpacer} />
+                  {(this.renderManipulators('sort'))}
 
                 </View>
               </View>
@@ -1146,6 +1151,7 @@ class Careers extends Component {
                                     trail: { stroke: 'transparent' }
                                   }}
                                 />*/}
+                                <Progress.Circle progress={this.state.matchScores[index] / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                               </View>
                             ) : (
                               <Image source={{uri: careerIcon}} style={[styles.square50,styles.contain,styles.topMargin5,styles.centerItem]}/>

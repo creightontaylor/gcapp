@@ -16,7 +16,7 @@ class Paths extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      subNavCategories: ['Careers','Financial Planner','Trends'],
+      subNavCategories: ['Careers','Trends'],
       subNavSelected: 'Careers',
       favorites: [],
     }

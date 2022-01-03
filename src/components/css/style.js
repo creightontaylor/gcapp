@@ -1174,11 +1174,10 @@ module.exports = StyleSheet.create({
     right: '5%'
   },
   nowrap: {
-    
+
   },
   carousel: {
     overflow: 'scroll',
-    whiteSpace: 'nowrap'
   },
   selectedCarouselItem: {
     backgroundColor: 'rgba(135,206,250,0.15)',
