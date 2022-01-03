@@ -1328,6 +1328,6 @@ module.exports = StyleSheet.create({
   filler: {
     transition: 'width .2s ease-in',
     borderRadius: 50,
-  },
+  }
 
 });

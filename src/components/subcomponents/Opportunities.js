@@ -4038,7 +4038,7 @@ class Opportunities extends Component {
         for (let i = 1; i <= filters.length; i++) {
           rows.push(
             <View key={filters[i - 1] + i.toString()}>
-              <View style={styles.rowDirection}>
+              <View>
                 <View style={[styles.row10,styles.rightPadding20]}>
                   <View style={styles.lightBorder,styles.rowDirection}>
                     <View style={[styles.rightPadding5,styles.leftPadding,styles.nowrap, styles.topMarginNegative2]}>

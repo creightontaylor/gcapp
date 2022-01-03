@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 const styles = require('../css/style');
 import Axios from 'axios';
 
-// import CircularProgressBar from 'react-circular-progressbar';
 import Modal from 'react-native-modal';
 
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
@@ -950,7 +949,7 @@ class Community extends Component {
 
                           <Text style={[styles.descriptionText3,styles.calcColumn80,styles.topMargin]}>{(item.startDate) && item.startDate + " - "}{(item.isContinual) ? "Present" : item.endDate}</Text>
 
-                          {(item.skillTags) && (
+                          {(item.skillTags) ? (
                             <View>
                               <View style={[styles.topPadding,styles.rowDirection]}>
                                 {item.skillTags.split(',').map((value, optionIndex) =>
@@ -967,6 +966,8 @@ class Community extends Component {
 
                               </View>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           <View style={[styles.topPadding20]}>
@@ -1155,327 +1156,327 @@ class Community extends Component {
     return (
       <ScrollView>
         <View style={[styles.topMargin20]}>
-              <View style={[styles.fullScreenWidth]}>
-                <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
-                  <View style={[styles.fullScreenWidth,styles.height5,styles.ctaBackgroundColor]} />
-                  <View style={[styles.padding20]}>
-                    <Text style={[styles.headingText5]}>My Community</Text>
-                    <View style={styles.spacer} /><View style={[styles.halfSpacer]} />
+        <View style={[styles.fullScreenWidth]}>
+          <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
+            <View style={[styles.fullScreenWidth,styles.height5,styles.ctaBackgroundColor]} />
+            <View style={[styles.padding20]}>
+              <Text style={[styles.headingText5]}>My Community</Text>
+              <View style={styles.spacer} /><View style={[styles.halfSpacer]} />
 
-                    <View>
-                      <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showPeopleYouFollow: true })}>
-                          <View style={styles.width30}>
-                            <Image source={{uri: profileIconDark}} style={[styles.square20,styles.contain]} />
-                          </View>
-                          <View style={styles.calcColumn100}>
-                            <Text>Your Connections</Text>
-                          </View>
-                          <View style={[styles.width30,styles.rightText]}>
-                            <Text style={[styles.ctaColor]}>{this.state.friends.length}</Text>
-                          </View>
-
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showProjectsYouFollow: true })}>
-                          <View style={styles.width30}>
-                            <Image source={{uri: projectsIconDark}} style={[styles.square20,styles.contain]} />
-                          </View>
-                          <View style={styles.calcColumn100}>
-                            <Text>Projects you follow</Text>
-                          </View>
-                          <View style={[styles.width30,styles.rightText]}>
-                            <Text style={[styles.ctaColor]}>{this.state.projectFollows.length}</Text>
-                          </View>
-
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showEmployersYouFollow: true })}>
-                          <View style={styles.width30}>
-                            <Image source={{uri: industryIconDark}} style={[styles.square20,styles.contain]} />
-                          </View>
-                          <View style={styles.calcColumn100}>
-                            <Text>Employers you follow</Text>
-                          </View>
-                          <View style={[styles.width30,styles.rightText]}>
-                            <Text style={[styles.ctaColor]}>{this.state.employerFollows.length}</Text>
-                          </View>
-
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={[styles.row10,styles.descriptionText1]}>
-                        <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showGroupsYouJoined: true })}>
-                          <View style={styles.width30}>
-                            <Image source={{uri: socialIconDark}} style={[styles.square20,styles.contain]} />
-                          </View>
-                          <View style={styles.calcColumn100}>
-                            <Text>Your groups</Text>
-                          </View>
-                          <View style={[styles.width30,styles.rightText]}>
-                            <Text style={[styles.ctaColor]}>{this.state.groupsJoined.length}</Text>
-                          </View>
-
-                        </TouchableOpacity>
-                      </View>
+              <View>
+                <View style={[styles.row10,styles.descriptionText1]}>
+                  <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showPeopleYouFollow: true })}>
+                    <View style={styles.width30}>
+                      <Image source={{uri: profileIconDark}} style={[styles.square20,styles.contain]} />
                     </View>
-                  </View>
-                </View>
-
-                {(this.state.showAccountabiliyGroupCTA && this.state.noAccountabilityGroups) && (
-                  <View>
-                    <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
-                      <View style={[styles.fullScreenWidth,styles.height5,styles.errorBackgroundColor]} />
-                      <View style={[styles.padding30]}>
-                        <View style={[styles.calcColumn60,styles.rowDirection]}>
-                          <View style={styles.flex10}>
-                            <View style={[styles.width30,styles.height40]} />
-                          </View>
-                          <View style={styles.flex80}>
-                            <Image source={{uri: socialIconGrey}} style={[styles.square100,styles.contain,styles.centerHorizontally]} />
-                          </View>
-                          <View style={styles.flex10}>
-                            <Text style={[styles.errorColor,styles.descriptionText3]}>NEW</Text>
-                          </View>
-                        </View>
-
-                        <Text style={[styles.headingText5,styles.calcColumn60,styles.centerText,styles.topPadding20]}>Create an Accountability Group</Text>
-
-                        <Text style={[styles.calcColumn60,styles.centerText,styles.topPadding20]}>Accountability groups are 4-6 peers that meet regularly to help one another reach their goals.</Text>
-
-                        <View style={[styles.row10,styles.centerText]}>
-                          <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.topMargin20,styles.errorBorder, styles.calcColumn60, styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: true, showEditGroup: true, groupToEdit: null })}>
-                            <Text style={[styles.whiteColor]}>Create new group</Text>
-                          </TouchableOpacity>
-                        </View>
-
-                      </View>
+                    <View style={styles.calcColumn100}>
+                      <Text>Your Connections</Text>
                     </View>
-                  </View>
-                )}
-              </View>
-
-              <View style={[styles.fullScreenWidth]}>
-                {(this.state.showInvitations) && (
-                  <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                    <Text style={[styles.headingText5]}>Requests & Invitations</Text>
-
-                    <View style={styles.spacer} /><View style={styles.spacer} />
-
-                    {(this.state.friendRequests && this.state.friendRequests.length > 0) && (
-                      <View>
-                        {this.state.friendRequests.map((value2, optionIndex) =>
-                          <View key={value2 + optionIndex}>
-                            <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                                <View style={styles.width40}>
-                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
-                                </View>
-                                <View style={[styles.calcColumn190,styles.leftPadding]}>
-                                  <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
-                                  <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to connect with you</Text>
-                                </View>
-
-                              </TouchableOpacity>
-
-                              <View style={styles.width150,styles.rowDirection}>
-                                <View>
-                                  <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'connection')}>
-                                    <Text style={styles.descriptionTextColor}>Ignore</Text>
-                                  </TouchableOpacity>
-                                </View>
-                                <View style={styles.leftPadding}>
-                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.whiteColor,styles.descriptionText1]} onPress={() => this.decideOnRequest(optionIndex, true,'connection')}>Accept</TouchableOpacity>
-                                </View>
-
-                              </View>
-
-                            </View>
-                          </View>
-                        )}
-                      </View>
-                    )}
-
-                    {(this.state.groupRequests && this.state.groupRequests.length > 0) && (
-                      <View>
-                        {this.state.groupRequests.map((value2, optionIndex) =>
-                          <View key={value2 + optionIndex}>
-                            <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                                <View style={styles.width40}>
-                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
-                                </View>
-                                <View style={[styles.calcColumn190,styles.leftPadding]}>
-                                  <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
-                                  <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to join {value2.groupName}</Text>
-                                </View>
-
-                              </TouchableOpacity>
-
-                              <View style={styles.width150}>
-                                <View>
-                                  <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupRequest')}>
-                                    <Text style={styles.descriptionTextColor}>Ignore</Text>
-                                  </TouchableOpacity>
-                                </View>
-                                <View style={styles.leftPadding}>
-                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}>Accept</TouchableOpacity>
-                                </View>
-
-                              </View>
-
-                            </View>
-                          </View>
-                        )}
-
-                      </View>
-                    )}
-
-                    {(this.state.groupInvites && this.state.groupInvites.length > 0) && (
-                      <View>
-                        {this.state.groupInvites.map((value2, optionIndex) =>
-                          <View key={value2 + optionIndex}>
-                            <View style={[styles.row10]}>
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                                <View style={styles.width40}>
-                                  <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
-                                </View>
-                                <View style={[styles.calcColumn190,styles.leftPadding]}>
-                                  <Text style={[styles.headingText5]}>{value2.groupName}</Text>
-                                  <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} {value2.lastName} invited you to join their accountability group: {value2.groupName}</Text>
-                                </View>
-
-                              </TouchableOpacity>
-
-                              <View style={styles.width150}>
-                                <View>
-                                  <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupInvite')}>
-                                    <Text style={styles.descriptionTextColor}>Ignore</Text>
-                                  </TouchableOpacity>
-                                </View>
-                                <View style={styles.leftPadding}>
-                                  <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}>Accept</TouchableOpacity>
-                                </View>
-
-                              </View>
-
-                            </View>
-                          </View>
-                        )}
-
-                      </View>
-                    )}
-
-                    {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor, styles.row5]}>{this.state.errorMessage}</Text>}
-                    {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor, styles.row5]}>{this.state.successMessage}</Text>}
-
-                  </View>
-                )}
-
-                <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                  <View style={styles.rowDirection}>
-                    <View style={[styles.calcColumn80]}>
-                      <Text style={[styles.headingText5]}>Recommended People to Follow</Text>
-                      <View style={styles.spacer} />
+                    <View style={[styles.width30,styles.rightText]}>
+                      <Text style={[styles.ctaColor]}>{this.state.friends.length}</Text>
                     </View>
-                    {(!this.state.remoteAuth) && (
-                      <View style={styles.width40}>
-                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showInviteMembersWidget: true })}>
-                          <Image source={{uri: addPeopleIconDark}} style={[styles.square25,styles.pinRight]}/>
-                        </TouchableOpacity>
-                      </View>
-                    )}
 
-                  </View>
-
-                  <View style={styles.spacer} /><View style={styles.spacer} />
-
-                  {this.renderItems('people','recommended')}
-
-                  <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                      <View style={[styles.rightPadding]}>
-                        <Text>Browse All Profiles</Text>
-                      </View>
-                      <View style={[styles.topMargin5]}>
-                        <View style={styles.miniSpacer} />
-                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
-                      </View>
-
-                    </TouchableOpacity>
-                  </View>
-
+                  </TouchableOpacity>
                 </View>
 
-                <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                  <Text style={[styles.headingText5]}>Recommended Projects to Follow</Text>
+                <View style={[styles.row10,styles.descriptionText1]}>
+                  <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showProjectsYouFollow: true })}>
+                    <View style={styles.width30}>
+                      <Image source={{uri: projectsIconDark}} style={[styles.square20,styles.contain]} />
+                    </View>
+                    <View style={styles.calcColumn100}>
+                      <Text>Projects you follow</Text>
+                    </View>
+                    <View style={[styles.width30,styles.rightText]}>
+                      <Text style={[styles.ctaColor]}>{this.state.projectFollows.length}</Text>
+                    </View>
 
-                  <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
-
-                  {this.renderItems('projects','recommended')}
-
-                  <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                      <View style={[styles.rightPadding]}>
-                        <Text>Browse All Projects</Text>
-                      </View>
-                      <View style={[styles.topMargin5]}>
-                        <View style={styles.miniSpacer} />
-                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
-                      </View>
-
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 </View>
-                <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                  <Text style={[styles.headingText5]}>Recommended Groups to Join</Text>
 
-                  <View style={styles.spacer} /><View style={styles.spacer} />
+                <View style={[styles.row10,styles.descriptionText1]}>
+                  <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showEmployersYouFollow: true })}>
+                    <View style={styles.width30}>
+                      <Image source={{uri: industryIconDark}} style={[styles.square20,styles.contain]} />
+                    </View>
+                    <View style={styles.calcColumn100}>
+                      <Text>Employers you follow</Text>
+                    </View>
+                    <View style={[styles.width30,styles.rightText]}>
+                      <Text style={[styles.ctaColor]}>{this.state.employerFollows.length}</Text>
+                    </View>
 
-                  {this.renderItems('groups','recommended')}
-
-                  <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                      <View style={[styles.rightPadding]}>
-                        <Text>Browse All Groups</Text>
-                      </View>
-                      <View style={[styles.topMargin5]}>
-                        <View style={styles.miniSpacer} />
-                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 </View>
-                <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-                  <Text style={[styles.headingText5]}>Recommended Employers to Follow</Text>
 
-                  <View style={styles.spacer} /><View style={styles.spacer} />
+                <View style={[styles.row10,styles.descriptionText1]}>
+                  <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showGroupsYouJoined: true })}>
+                    <View style={styles.width30}>
+                      <Image source={{uri: socialIconDark}} style={[styles.square20,styles.contain]} />
+                    </View>
+                    <View style={styles.calcColumn100}>
+                      <Text>Your groups</Text>
+                    </View>
+                    <View style={[styles.width30,styles.rightText]}>
+                      <Text style={[styles.ctaColor]}>{this.state.groupsJoined.length}</Text>
+                    </View>
 
-                  {this.renderItems('employers','recommended')}
-
-                  <View style={styles.spacer} />
-
-                  <View style={[styles.row10]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                      <View style={[styles.rightPadding]}>
-                        <Text>Browse All Employers</Text>
-                      </View>
-                      <View style={[styles.topMargin5]}>
-                        <View style={styles.miniSpacer} />
-                        <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
-                      </View>
-
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
+          </View>
 
-          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+          {(this.state.showAccountabiliyGroupCTA && this.state.noAccountabilityGroups) && (
+            <View>
+              <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
+                <View style={[styles.fullScreenWidth,styles.height5,styles.errorBackgroundColor]} />
+                <View style={[styles.padding30]}>
+                  <View style={[styles.calcColumn60,styles.rowDirection]}>
+                    <View style={styles.flex10}>
+                      <View style={[styles.width30,styles.height40]} />
+                    </View>
+                    <View style={styles.flex80}>
+                      <Image source={{uri: socialIconGrey}} style={[styles.square100,styles.contain,styles.centerHorizontally]} />
+                    </View>
+                    <View style={styles.flex10}>
+                      <Text style={[styles.errorColor,styles.descriptionText3]}>NEW</Text>
+                    </View>
+                  </View>
+
+                  <Text style={[styles.headingText5,styles.calcColumn60,styles.centerText,styles.topPadding20]}>Create an Accountability Group</Text>
+
+                  <Text style={[styles.calcColumn60,styles.centerText,styles.topPadding20]}>Accountability groups are 4-6 peers that meet regularly to help one another reach their goals.</Text>
+
+                  <View style={[styles.row10,styles.centerText]}>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.topMargin20,styles.errorBorder, styles.calcColumn60, styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: true, showEditGroup: true, groupToEdit: null })}>
+                      <Text style={[styles.whiteColor]}>Create new group</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </View>
+              </View>
+            </View>
+          )}
+        </View>
+
+        <View style={[styles.fullScreenWidth]}>
+          {(this.state.showInvitations) && (
+            <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+              <Text style={[styles.headingText5]}>Requests & Invitations</Text>
+
+              <View style={styles.spacer} /><View style={styles.spacer} />
+
+              {(this.state.friendRequests && this.state.friendRequests.length > 0) && (
+                <View>
+                  {this.state.friendRequests.map((value2, optionIndex) =>
+                    <View key={value2 + optionIndex}>
+                      <View style={[styles.row10]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                          <View style={styles.width40}>
+                            <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
+                          </View>
+                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                            <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
+                            <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to connect with you</Text>
+                          </View>
+
+                        </TouchableOpacity>
+
+                        <View style={styles.width150,styles.rowDirection}>
+                          <View>
+                            <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'connection')}>
+                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.leftPadding}>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.whiteColor,styles.descriptionText1]} onPress={() => this.decideOnRequest(optionIndex, true,'connection')}>Accept</TouchableOpacity>
+                          </View>
+
+                        </View>
+
+                      </View>
+                    </View>
+                  )}
+                </View>
+              )}
+
+              {(this.state.groupRequests && this.state.groupRequests.length > 0) && (
+                <View>
+                  {this.state.groupRequests.map((value2, optionIndex) =>
+                    <View key={value2 + optionIndex}>
+                      <View style={[styles.row10]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                          <View style={styles.width40}>
+                            <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
+                          </View>
+                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                            <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
+                            <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to join {value2.groupName}</Text>
+                          </View>
+
+                        </TouchableOpacity>
+
+                        <View style={styles.width150}>
+                          <View>
+                            <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupRequest')}>
+                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.leftPadding}>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}>Accept</TouchableOpacity>
+                          </View>
+
+                        </View>
+
+                      </View>
+                    </View>
+                  )}
+
+                </View>
+              )}
+
+              {(this.state.groupInvites && this.state.groupInvites.length > 0) && (
+                <View>
+                  {this.state.groupInvites.map((value2, optionIndex) =>
+                    <View key={value2 + optionIndex}>
+                      <View style={[styles.row10]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
+                          <View style={styles.width40}>
+                            <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
+                          </View>
+                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                            <Text style={[styles.headingText5]}>{value2.groupName}</Text>
+                            <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} {value2.lastName} invited you to join their accountability group: {value2.groupName}</Text>
+                          </View>
+
+                        </TouchableOpacity>
+
+                        <View style={styles.width150}>
+                          <View>
+                            <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupInvite')}>
+                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View style={styles.leftPadding}>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}>Accept</TouchableOpacity>
+                          </View>
+
+                        </View>
+
+                      </View>
+                    </View>
+                  )}
+
+                </View>
+              )}
+
+              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor, styles.row5]}>{this.state.errorMessage}</Text>}
+              {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor, styles.row5]}>{this.state.successMessage}</Text>}
+
+            </View>
+          )}
+
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+            <View style={styles.rowDirection}>
+              <View style={[styles.calcColumn80]}>
+                <Text style={[styles.headingText5]}>Recommended People to Follow</Text>
+                <View style={styles.spacer} />
+              </View>
+              {(!this.state.remoteAuth) && (
+                <View style={styles.width40}>
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showInviteMembersWidget: true })}>
+                    <Image source={{uri: addPeopleIconDark}} style={[styles.square25,styles.pinRight]}/>
+                  </TouchableOpacity>
+                </View>
+              )}
+
+            </View>
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('people','recommended')}
+
+            <View style={[styles.row10]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                <View style={[styles.rightPadding]}>
+                  <Text>Browse All Profiles</Text>
+                </View>
+                <View style={[styles.topMargin5]}>
+                  <View style={styles.miniSpacer} />
+                  <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
+                </View>
+
+              </TouchableOpacity>
+            </View>
+
+          </View>
+
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+            <Text style={[styles.headingText5]}>Recommended Projects to Follow</Text>
+
+            <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('projects','recommended')}
+
+            <View style={[styles.row10]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                <View style={[styles.rightPadding]}>
+                  <Text>Browse All Projects</Text>
+                </View>
+                <View style={[styles.topMargin5]}>
+                  <View style={styles.miniSpacer} />
+                  <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
+                </View>
+
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+            <Text style={[styles.headingText5]}>Recommended Groups to Join</Text>
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('groups','recommended')}
+
+            <View style={[styles.row10]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                <View style={[styles.rightPadding]}>
+                  <Text>Browse All Groups</Text>
+                </View>
+                <View style={[styles.topMargin5]}>
+                  <View style={styles.miniSpacer} />
+                  <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+            <Text style={[styles.headingText5]}>Recommended Employers to Follow</Text>
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('employers','recommended')}
+
+            <View style={styles.spacer} />
+
+            <View style={[styles.row10]}>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+                <View style={[styles.rightPadding]}>
+                  <Text>Browse All Employers</Text>
+                </View>
+                <View style={[styles.topMargin5]}>
+                  <View style={styles.miniSpacer} />
+                  <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
+                </View>
+
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+
+        <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
             <View className="row-20">
               {(this.state.showPeopleYouFollow) && (
                 <View>
