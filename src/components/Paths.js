@@ -80,19 +80,19 @@ class Paths extends Component {
 
         {(this.state.subNavSelected === 'Careers') && (
           <View>
-            <SubCareers calculateMatches={this.state.calculateMatches} selectedGoal={this.state.selectedGoal} />
+            <SubCareers navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} selectedGoal={this.state.selectedGoal} />
           </View>
         )}
         {(this.state.subNavSelected === 'Financial Planner') && (
           <View>
             <View>
-              <SubFinancials />
+              <SubFinancials navigation={this.props.navigation} />
             </View>
           </View>
         )}
         {(this.state.subNavSelected === 'Trends') && (
           <View>
-            <SubTrends />
+            <SubTrends navigation={this.props.navigation} />
           </View>
         )}
       </ScrollView>

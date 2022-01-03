@@ -12,6 +12,7 @@ class Trends extends Component {
 
     this.retrieveData = this.retrieveData.bind(this)
     this.formChangeHandler = this.formChangeHandler.bind(this);
+    this.convertTextToNumber = this.convertTextToNumber.bind(this)
 
   }
 
@@ -137,15 +138,23 @@ class Trends extends Component {
     }
   }
 
+  convertTextToNumber(passedText) {
+    console.log('convertTextToNumber called')
+
+    let numberVersion = Number(passedText.replace(/,/g,""))
+    return numberVersion
+
+  }
+
   render() {
     // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
         {(this.state.historicalData && this.state.historicalData.length > 0) && (
           <View>
-            <View style={[styles.topMargin15,styles.rowDirection, styles.fullScreenWidth]}>
+            <View style={[styles.topMargin30,styles.bottomMargin5,styles.rowDirection, styles.fullScreenWidth]}>
               <View style={[styles.calcColumn80]}>
-                <Text>Fastest Growing Industries</Text>
+                <Text style={[styles.headingText6]}>Fastest Growing Industries</Text>
               </View>
               <View style={[styles.width80]}>
                 <Text onPress={() => Linking.openURL("https://www.bls.gov")} style={[styles.descriptionText3,styles.rightText]}>Source: BLS</Text>
@@ -156,24 +165,22 @@ class Trends extends Component {
             <View style={styles.card}>
 
               <View style={[styles.bottomPadding,styles.rowDirection,styles.flex1]}>
-                <Text style={[styles.flex6,styles.descriptionText2,styles.boldText]}>Rank</Text>
-                <Text style={[styles.flex50,styles.descriptionText2,styles.boldText]}>Name</Text>
-                <Text style={[styles.flex11,styles.descriptionText2,styles.boldText]}>2-Yr Gwth</Text>
+                <Text style={[styles.width40,styles.descriptionText2,styles.boldText]}>Rank</Text>
+                <Text style={[styles.calcColumn180,styles.descriptionText2,styles.boldText]}>Name</Text>
+                <Text style={[styles.width80,styles.descriptionText2,styles.boldText]}>2-Yr Gwth</Text>
+                {/*
                 <Text style={[styles.flex11,styles.descriptionText2,styles.boldText]}>Last Mth</Text>
                 <Text style={[styles.flex11,styles.descriptionText2,styles.boldText]}>Last Yr</Text>
-                <Text style={[styles.flex11,styles.descriptionText2,styles.boldText]}>2 Yrs Ago</Text>
+                <Text style={[styles.flex11,styles.descriptionText2,styles.boldText]}>2 Yrs Ago</Text>*/}
               </View>
 
               <View>
                 {this.state.historicalData.map((value, optionIndex) =>
                   <View key={optionIndex}>
                     <View style={[styles.rowDirection,styles.flex1]}>
-                      <Text style={[styles.flex6,styles.descriptionText2]}>{value.rank}</Text>
-                      <Text style={[styles.flex50,styles.descriptionText2]}>{value.name}</Text>
-                      <Text style={[styles.flex11,styles.descriptionText2]}>{value.twoYearGrowth}%</Text>
-                      <Text style={[styles.flex11,styles.descriptionText2]}>{value.currentDate}</Text>
-                      <Text style={[styles.flex11,styles.descriptionText2]}>{value.lastYear}</Text>
-                      <Text style={[styles.flex11,styles.descriptionText2]}>{value.twoYearsAgo}</Text>
+                      <Text style={[styles.width40,styles.descriptionText2]}>{value.rank}</Text>
+                      <Text style={[styles.calcColumn180,styles.descriptionText2]}>{value.name}</Text>
+                      <Text style={[styles.width80,styles.descriptionText2,styles.rightText]}>{value.twoYearGrowth}%</Text>
                     </View>
                   </View>
                 )}
@@ -192,80 +199,71 @@ class Trends extends Component {
 
                 {(index > 1) && (
                   <View>
-                    <View style={[styles.topMargin15,styles.rowDirection]}>
-                      <View style={styles.calcColumn80}>
-                        <Text>Projected {oValue.category}</Text>
-                      </View>
-                      <View style={[styles.width80]}>
-                        <Text onPress={() => Linking.openURL("https://www.bls.gov")} style={[styles.descriptionText3, styles.rightText]}>Source: BLS</Text>
-                      </View>
-
-                    </View>
-
-                    {(oValue.category === 'Highest Paying Careers') ? (
+                    {(oValue.category !== 'Most Openings') && (
                       <View>
-                        {(oValue.occupations && oValue.occupations.length > 0) && (
-                          <View style={styles.card}>
-                            <View style={[styles.bottomPadding, styles.rowDirection, styles.flex1]}>
-                              <Text style={[styles.flex5,styles.descriptionText2, styles.boldText]}>Rank</Text>
-                              <Text style={[styles.flex50,styles.descriptionText2, styles.boldText]}>Title</Text>
-                              <Text style={[styles.flex15,styles.descriptionText2, styles.boldText]}>Year</Text>
-                              <Text style={[styles.flex15,styles.descriptionText2, styles.boldText]}>Yr Wage</Text>
-                              <Text style={[styles.flex15,styles.descriptionText2, styles.boldText]}>Hr Wage</Text>
-                            </View>
+                        <View style={[styles.topMargin30,styles.bottomMargin5,styles.rowDirection]}>
+                          <View style={styles.calcColumn80}>
+                            <Text style={[styles.headingText6]}>Projected {oValue.category}</Text>
+                          </View>
+                          <View style={[styles.width80]}>
+                            <Text onPress={() => Linking.openURL("https://www.bls.gov")} style={[styles.descriptionText3, styles.rightText]}>Source: BLS</Text>
+                          </View>
 
-                            <View>
-                              {oValue.occupations.map((value, optionIndex) =>
-                                <View key={optionIndex}>
-                                  <View style={[styles.rowDirection,styles.flex2]}>
-                                    <Text style={[styles.flex5,styles.descriptionText2]}>{value.rank}</Text>
-                                    <Text style={[styles.flex50,styles.descriptionText2]}>{value.title}</Text>
-                                    <Text style={[styles.flex15,styles.descriptionText2]}>{value.projYear}</Text>
-                                    <Text style={[styles.flex15,styles.descriptionText2]}>{value.annualizedWage}</Text>
-                                    <Text style={[styles.flex15,styles.descriptionText2]}>{value.hourlyWage}</Text>
-                                  </View>
+                        </View>
+
+                        {(oValue.category === 'Highest Paying Careers') ? (
+                          <View>
+                            {(oValue.occupations && oValue.occupations.length > 0) && (
+                              <View style={styles.card}>
+                                <View style={[styles.bottomPadding, styles.rowDirection, styles.flex1]}>
+                                  <Text style={[styles.width40,styles.descriptionText2, styles.boldText]}>Rank</Text>
+                                  <Text style={[styles.calcColumn180,styles.descriptionText2, styles.boldText]}>Title</Text>
+                                  <Text style={[styles.width80,styles.descriptionText2, styles.boldText,styles.rightText]}>Salary</Text>
                                 </View>
-                              )}
 
-                            </View>
+                                <View>
+                                  {oValue.occupations.map((value, optionIndex) =>
+                                    <View key={optionIndex}>
+                                      <View style={[styles.rowDirection,styles.flex1]}>
+                                        <Text style={[styles.width40,styles.descriptionText2]}>{value.rank}</Text>
+                                        <Text style={[styles.calcColumn185,styles.descriptionText2]}>{value.title}</Text>
+                                        <Text style={[styles.width85,styles.descriptionText2,styles.rightText]}>{value.annualizedWage}</Text>
+                                      </View>
+                                    </View>
+                                  )}
+
+                                </View>
+                              </View>
+                            )}
+                          </View>
+                        ) : (
+                          <View>
+
+                            {(oValue.occupations && oValue.occupations.length > 0) && (
+                              <View style={styles.card}>
+                                <View style={[styles.boldText,styles.bottomPadding,styles.rowDirection,styles.flex1]}>
+                                  <Text style={[styles.width40,styles.descriptionText2]}>Rank</Text>
+                                  <Text style={[styles.calcColumn180,styles.descriptionText2]}>Title</Text>
+                                  <Text style={[styles.width80,styles.descriptionText2,styles.rightText]}>{(oValue.category.includes('Largest')) ? "Employed" : "% Change"}</Text>
+                                </View>
+
+                                <View>
+                                  {oValue.occupations.map((value, optionIndex) =>
+                                    <View key={optionIndex}>
+                                      <View style={[styles.rowDirection,styles.flex1]}>
+                                        <Text style={[styles.width40,styles.descriptionText2]}>{value.rank}</Text>
+                                        <Text style={[styles.calcColumn180,styles.descriptionText2]}>{value.title}</Text>
+                                        <Text style={[styles.width80,styles.descriptionText2,styles.rightText]}>{(oValue.category.includes('Largest')) ? value.estimatedEmployment : value.percentChange}</Text>
+                                      </View>
+                                    </View>
+                                  )}
+
+                                </View>
+                              </View>
+                            )}
+
                           </View>
                         )}
-                      </View>
-                    ) : (
-                      <View>
-                        {(oValue.occupations && oValue.occupations.length > 0) && (
-                          <View style={styles.card}>
-                            <View style={[styles.boldText,styles.bottomPadding,styles.rowDirection,styles.flex1]}>
-                              <Text style={[styles.flex6,styles.descriptionText2]}>Rank</Text>
-                              <Text style={[styles.flex50,styles.descriptionText2]}>Title</Text>
-                              <Text style={[styles.flex11,styles.descriptionText2]}>% Change</Text>
-                              <Text style={[styles.flex11,styles.descriptionText2]}>Year</Text>
-                              <Text style={[styles.flex11,styles.descriptionText2]}>Emp Last Yr</Text>
-                              <Text style={[styles.flex11,styles.descriptionText2]}>Emp In 10 Yrs</Text>
-
-
-                            </View>
-
-                            <View>
-                              {oValue.occupations.map((value, optionIndex) =>
-                                <View key={optionIndex}>
-                                  <View>
-                                    <Text style={[styles.flex6,styles.descriptionText2]}>{value.rank}</Text>
-                                    <Text style={[styles.flex50,styles.descriptionText2]}>{value.title}</Text>
-                                    <Text style={[styles.flex11,styles.descriptionText2]}>{value.percentChange}</Text>
-                                    <Text style={[styles.flex11,styles.descriptionText2]}>{value.projYear}</Text>
-                                    <Text style={[styles.flex11,styles.descriptionText2]}>{value.estimatedEmployment}</Text>
-                                    <Text style={[styles.flex11,styles.descriptionText2]}>{value.projectedEmployment}</Text>
-
-
-                                  </View>
-                                </View>
-                              )}
-
-                            </View>
-                          </View>
-                        )}
-
                       </View>
                     )}
                   </View>
@@ -280,16 +278,16 @@ class Trends extends Component {
           <View>
             {this.state.competencies.map((value, index) =>
               <View key={index}>
-                <View style={[styles.topMargin15,styles.rowDirection]}>
+                <View style={[styles.topMargin30,styles.rowDirection]}>
                   <View style={styles.calcColumn80}>
                     {(value.type && value.type.includes('Skill')) && (
-                      <Text>{(value.category === 'occurrences') ? "Most Common In-Demand Skills" : "Skills That Pay The Most"}</Text>
+                      <Text style={[styles.headingText6]}>{(value.category === 'occurrences') ? "Most Common In-Demand Skills" : "Skills That Pay The Most"}</Text>
                     )}
                     {(value.type === 'Knowledge') && (
-                      <Text>{(value.category === 'occurrences') ? "Most Common In-Demand Knowledge" : "Knowledge That Pays   The Most"}</Text>
+                      <Text style={[styles.headingText6]}>{(value.category === 'occurrences') ? "Most Common In-Demand Knowledge" : "Knowledge That Pays   The Most"}</Text>
                     )}
                     {(value.type === 'Work Style') && (
-                      <Text>{(value.category === 'occurrences') ? "Most Common In-Demand Work Styles" : "Work Styles That Pay The Most"}</Text>
+                      <Text style={[styles.headingText6]}>{(value.category === 'occurrences') ? "Most Common In-Demand Work Styles" : "Work Styles That Pay The Most"}</Text>
                     )}
 
                   </View>
@@ -301,10 +299,9 @@ class Trends extends Component {
 
                 <View style={styles.card}>
                   <View style={[styles.boldText,styles.bottomPadding,styles.rowDirection,styles.flex1]}>
-                    <Text style={[styles.flex40,styles.descriptionText2]}>Name</Text>
-                    <Text style={[styles.flex20,styles.descriptionText2]}>Type</Text>
-                    <Text style={[styles.flex20,styles.descriptionText2]}>Occurrences</Text>
-                    <Text style={[styles.flex20,styles.descriptionText2]}>Avg. Worth</Text>
+                    <Text style={[styles.flex55,styles.descriptionText2]}>Name</Text>
+                    <Text style={[styles.flex20,styles.descriptionText2]}>Count</Text>
+                    <Text style={[styles.flex25,styles.descriptionText2]}>Avg. Worth</Text>
 
                   </View>
 
@@ -314,12 +311,9 @@ class Trends extends Component {
                         <View>
                           <View>
                             <View style={[styles.rowDirection,styles.flex1]}>
-                              <Text style={[styles.flex40,styles.descriptionText2]}>{oValue.name}</Text>
-                              <Text style={[styles.flex20,styles.descriptionText2]}>{oValue.type}</Text>
+                              <Text style={[styles.flex55,styles.descriptionText2]}>{oValue.name}</Text>
                               <Text style={[styles.flex20,styles.descriptionText2]}>{oValue.occurrences}</Text>
-                              <Text style={[styles.flex20,styles.descriptionText2]}>${Number(oValue.worth.toFixed()).toLocaleString()}</Text>
-
-
+                              <Text style={[styles.flex25,styles.descriptionText2]}>${Number(oValue.worth.toFixed()).toLocaleString()}</Text>
                             </View>
                           </View>
 

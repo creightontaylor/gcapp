@@ -508,6 +508,9 @@ module.exports = StyleSheet.create({
   headingText6: {
     fontSize: (1.1 * baseFontSize)
   },
+  standardText: {
+    fontSize: baseFontSize
+  },
   descriptionText1: {
     fontSize: (0.9 * baseFontSize)
   },
@@ -816,6 +819,9 @@ module.exports = StyleSheet.create({
   },
   flex50: {
     flex: 50
+  },
+  flex55: {
+    flex: 55
   },
   flex65: {
     flex: 65
