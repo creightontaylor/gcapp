@@ -3651,8 +3651,8 @@ class EditProfileDetails extends Component {
             </View>
             <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
@@ -3662,7 +3662,7 @@ class EditProfileDetails extends Component {
                   placeholderTextColor="grey"
                 />
               </View>
-              <View style={[styles.flex50,styles.leftPadding]}>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Employer Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
@@ -3682,8 +3682,8 @@ class EditProfileDetails extends Component {
               />
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50],styles.rightPadding}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].startDate}
@@ -3695,7 +3695,7 @@ class EditProfileDetails extends Component {
               </View>
 
               {(this.state.experience[i - 1].isContinual) ? (
-                <View style={[styles.flex50,styles.leftPadding]}>
+                <View style={[styles.row10]}>
                   {(!this.state.isMobile) && (
                     <View>
                       <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
@@ -3704,7 +3704,7 @@ class EditProfileDetails extends Component {
                   <Text style={styles.headingText5}>Still Working On This</Text>
                 </View>
               ) : (
-                <View style={[styles.flex50,styles.leftPadding]}>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.experience[i - 1].endDate}
@@ -3719,8 +3719,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rowDirection,styles.rightPadding]}>
+            <View >
+              <View style={[styles.row10,styles.rowDirection]}>
                 <View>
                   <Text style={[styles.row10]}>Job Function<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
@@ -3741,7 +3741,7 @@ class EditProfileDetails extends Component {
                   {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                 </Picker>
               </View>
-              <View style={[styles.flex50,styles.rowDirection,styles.leftPadding]}>
+              <View style={[styles.row10,styles.rowDirection]}>
                 <View>
                   <Text style={[styles.row10]}>Job Industry<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 </View>
@@ -3767,8 +3767,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Were you paid?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].wasPaid}
@@ -3778,7 +3778,7 @@ class EditProfileDetails extends Component {
                   {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                 </Picker>
               </View>
-              <View style={[styles.flex50,styles.leftPadding]}>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].hoursPerWeek}
@@ -3818,8 +3818,8 @@ class EditProfileDetails extends Component {
 
             {(this.state.activeOrg === 'exp') && (
               <View>
-                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                  <View style={[styles.flex50,styles.rightPadding]}>
+                <View>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Supervisor First Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3829,7 +3829,7 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Supervisor Last Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3842,8 +3842,8 @@ class EditProfileDetails extends Component {
 
                 </View>
 
-                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                  <View style={[styles.flex50,styles.rightPadding]}>
+                <View>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Supervisor Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3853,7 +3853,7 @@ class EditProfileDetails extends Component {
                       placeholderTextColor="grey"
                     />
                   </View>
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Supervisor Email<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <TextInput
                       style={styles.textInput}
@@ -3882,8 +3882,8 @@ class EditProfileDetails extends Component {
               />
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Did you like the work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workInterest}
@@ -3899,7 +3899,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View style={[styles.flex50,styles.leftPadding]}>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Do you think you are skilled in this work?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].workSkill}
@@ -3918,8 +3918,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Did you like the team?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].teamInterest}
@@ -3935,7 +3935,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View style={[styles.flex50,styles.leftPadding]}>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Did you like the employer?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].employerInterest}
@@ -3952,8 +3952,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>Would the pay be acceptable if full-time?</Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].payInterest}
@@ -3969,7 +3969,7 @@ class EditProfileDetails extends Component {
                 </Picker>
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
               </View>
-              <View style={[styles.flex50,styles.leftPadding]}>
+              <View style={[styles.row10]}>
                 <Text style={[styles.row10]}>What do you rate the overall fit?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.experience[i - 1].overallFit}
@@ -4065,8 +4065,8 @@ class EditProfileDetails extends Component {
               </View>
               <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                <View style={[styles.flex50,styles.rightPadding]}>
+              <View>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Activity Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
@@ -4076,7 +4076,7 @@ class EditProfileDetails extends Component {
                     placeholderTextColor="grey"
                   />
                 </View>
-                <View style={[styles.flex50,styles.leftPadding]}>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Your Role<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
@@ -4089,8 +4089,8 @@ class EditProfileDetails extends Component {
 
               </View>
 
-              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                <View style={[styles.flex50,styles.rightPadding]}>
+              <View>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].startDate}
@@ -4102,7 +4102,7 @@ class EditProfileDetails extends Component {
                 </View>
 
                 {(this.state.extracurriculars[i - 1].isContinual) ? (
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     {(!this.state.isMobile) && (
                       <View>
                         <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
@@ -4111,7 +4111,7 @@ class EditProfileDetails extends Component {
                     <Text style={styles.headingText5}>Still Working On This</Text>
                   </View>
                 ) : (
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                     <Picker
                       selectedValue={this.state.extracurriculars[i - 1].endDate}
@@ -4124,8 +4124,8 @@ class EditProfileDetails extends Component {
                 )}
               </View>
 
-              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                <View style={[styles.flex50,styles.rightPadding]}>
+              <View>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Hours per Week<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <Picker
                     selectedValue={this.state.extracurriculars[i - 1].hoursPerWeek}
@@ -4216,8 +4216,8 @@ class EditProfileDetails extends Component {
               </View>
               <View style={styles.spacer} /><View style={styles.halfSpacer} />
 
-              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                <View style={[stules.flex50,styles.rightPadding]}>
+              <View>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Name of Award<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                   <TextInput
                     style={styles.textInput}
@@ -4227,13 +4227,16 @@ class EditProfileDetails extends Component {
                     placeholderTextColor="grey"
                   />
                 </View>
-                <View style={[stules.flex50,styles.leftPadding]}>
+                <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                  {/*<input type="date" className="date-picker white-background" name={"awardDate|" + index} value={this.state.awards[i - 1].awardDate} onChange={this.formChangeHandler}></input>
-                  <DatePicker
-                    date={this.state.awards[i - 1].awardDate}
-                    onDateChange={(date) => this.formChangeHandler("awardDate|" + index,date)}
-                  />*/}
+                  <DateTimePicker
+                    testID="dateOfBirth"
+                    value={(this.state.awards[i - 1].awardDate) ? convertStringToDate(this.state.awards[i - 1].awardDate,'dateOnly') : new Date()}
+                    mode={'date'}
+                    is24Hour={true}
+                    display="default"
+                    onChange={(e, d) => this.formChangeHandler("awardDate|" + index,d)}
+                  />
 
                 </View>
 
@@ -4770,12 +4773,12 @@ class EditProfileDetails extends Component {
                 <Text style={[styles.headingText3]}>Basic Info</Text>
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                <View style={[styles.flex50,styles.rightPadding]}>
+            <View>
+                <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>First Name</Text>
                     <input className="text-field" type="text" placeholder="First Name" name="firstName" value={this.state.firstNameValue} onChange={this.formChangeHandler} />
                 </View>
-                <View style={[styles.flex50,styles.leftPadding]}>
+                <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Last Name</Text>
                     <input className="text-field" type="text" placeholder="Last Name" name="lastName" value={this.state.lastNameValue} onChange={this.formChangeHandler}/>
                 </View>
@@ -4826,12 +4829,12 @@ class EditProfileDetails extends Component {
               <View>
                 <View style={styles.spacer} />
 
-                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                  <View style={[styles.flex50,styles.rightPadding]}>
+                <View>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Current Job Title</Text>
                     <input className="text-field" type="text" placeholder="Job Title" name="jobTitle" value={this.state.jobTitle} onChange={this.formChangeHandler}/>
                   </View>
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Employer Name{(this.state.activeOrg === 'c2c') && " Or Congressional Office"}</Text>
                     <input className="text-field" type="text" placeholder="Employer Name" name="employerName" value={this.state.employerName} onChange={this.formChangeHandler}/>
                   </View>
@@ -4884,12 +4887,12 @@ class EditProfileDetails extends Component {
 
                   </View>
                 )}
-                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                  <View style={[styles.flex50,styles.rightPadding]}>
+                <View>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>What zipcode do you work in? (Optional)</Text>
                     <input className="text-field" type="text" placeholder="Zipcode" name="zipcode" value={this.state.zipcode} onChange={this.formChangeHandler}/>
                   </View>
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>How long have you been this field? (Optional)</Text>
                     <select name="workTenure" className="dropdown" value={this.state.workTenure} onChange={this.formChangeHandler}>
                         {this.state.tenureOptions.map(value => <option key={value.value} value={value.value}>{value.value}</option>)}
@@ -4920,12 +4923,12 @@ class EditProfileDetails extends Component {
               </View>
             ) : (
               <View>
-                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                  <View style={[styles.flex50,styles.rightPadding]}>
+                <View>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Role Name</Text>
                     <Text>{this.state.roleName}</Text>
                   </View>
-                  <View style={[styles.flex50,styles.leftPadding]}>
+                  <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>School Name</Text>
                     <Text>{this.state.schoolName}</Text>
                   </View>
@@ -4933,8 +4936,8 @@ class EditProfileDetails extends Component {
                 </View>
 
                 {(this.state.schoolDistrict) && (
-                  <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                    <View style={[styles.flex50]}>
+                  <View>
+                    <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>School District</Text>
                       <Text>{this.state.schoolDistrict}</Text>
                     </View>
@@ -5184,8 +5187,8 @@ class EditProfileDetails extends Component {
                     </View>
                   )}
 
-                  <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                    <View style={[styles.flex50,styles.rightPadding]}>
+                  <View>
+                    <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>First Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                       <TextInput
                         style={styles.textInput}
@@ -5195,7 +5198,7 @@ class EditProfileDetails extends Component {
                         placeholderTextColor="grey"
                       />
                     </View>
-                    <View style={[styles.flex50,styles.leftPadding]}>
+                    <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Last Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                       <TextInput
                         style={styles.textInput}
@@ -5209,8 +5212,8 @@ class EditProfileDetails extends Component {
                   </View>
 
                   {(!this.props.fromApply) && (
-                    <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                      <View style={[styles.flex50,styles.rightPadding]}>
+                    <View>
+                      <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Headline (Optional) (70 chars max)</Text>
                         <TextInput
                           style={styles.textInput}
@@ -5221,7 +5224,7 @@ class EditProfileDetails extends Component {
                           maxLength={70}
                         />
                       </View>
-                      <View style={[styles.flex50,styles.leftPadding]}>
+                      <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Current Location</Text>
                         <TextInput
                           style={styles.textInput}
@@ -5235,8 +5238,8 @@ class EditProfileDetails extends Component {
                     </View>
                   )}
 
-                  <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                    <View style={[styles.flex50,styles.rightPadding]}>
+                  <View>
+                    <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>LinkedIn URL (Optional)</Text>
                       <TextInput
                         style={styles.textInput}
@@ -5254,7 +5257,7 @@ class EditProfileDetails extends Component {
                       )}
                     </View>
 
-                    <View style={[styles.flex50,styles.leftPadding]}>
+                    <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Portfolio URL / Personal Website (Optional)</Text>
                       <TextInput
                         style={styles.textInput}
@@ -5375,8 +5378,8 @@ class EditProfileDetails extends Component {
 
                       </View>
 
-                      <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex50,styles.rightPadding]}>
+                      <View>
+                        <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Add a link to your video</Text>
                           <TextInput
                             style={styles.textInput}
@@ -5437,8 +5440,8 @@ class EditProfileDetails extends Component {
                                 </View>
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   {(this.state.activeOrg === 'exp') ? (
                                     <Picker
@@ -5509,7 +5512,7 @@ class EditProfileDetails extends Component {
                                     </View>
                                   )}
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   {(!this.state.orgDegree) ? (
                                     <View>
                                       <Text style={[styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
@@ -5528,8 +5531,8 @@ class EditProfileDetails extends Component {
 
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   {(this.state.activeOrg === 'dpscd') ? (
                                     <View>
                                       <Text style={[styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
@@ -5564,7 +5567,7 @@ class EditProfileDetails extends Component {
                                     </View>
                                   )}
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Location</Text>
                                   <TextInput
                                     style={styles.textInput}
@@ -5585,8 +5588,8 @@ class EditProfileDetails extends Component {
                                 />
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   <Picker
                                     selectedValue={item.startDate}
@@ -5596,7 +5599,7 @@ class EditProfileDetails extends Component {
                                     {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                                   </Picker>
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Grad Year / End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                   {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
                                     <Picker
@@ -5658,8 +5661,8 @@ class EditProfileDetails extends Component {
                     </View>
                   ) : (
                     <View>
-                      <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex50,styles.rightPadding]}>
+                      <View>
+                        <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                           {(this.state.activeOrg === 'exp') ? (
                             <Picker
@@ -5730,7 +5733,7 @@ class EditProfileDetails extends Component {
                             </View>
                           )}
                         </View>
-                        <View style={[styles.flex50,styles.leftPadding]}>
+                        <View style={[styles.row10]}>
                           {(!this.state.orgDegree) ? (
                             <View>
                               <Text style={[styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
@@ -5749,8 +5752,8 @@ class EditProfileDetails extends Component {
 
                       </View>
 
-                      <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex50,styles.rightPadding]}>
+                      <View>
+                        <View style={[styles.row10]}>
                           {(this.state.activeOrg === 'dpscd') ? (
                             <View>
                               <Text style={[styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
@@ -5785,7 +5788,7 @@ class EditProfileDetails extends Component {
                             </View>
                           )}
                         </View>
-                        <View style={[styles.flex50,styles.leftPadding]}>
+                        <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Grad Year<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                           {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
                             <Picker
@@ -5824,8 +5827,8 @@ class EditProfileDetails extends Component {
                             <Text style={[styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
                           </View>
 
-                          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Street Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
@@ -5835,7 +5838,7 @@ class EditProfileDetails extends Component {
                                 placeholderTextColor="grey"
                               />
                             </View>
-                            <View style={[styles.flex50,styles.leftPadding]}>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>City{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
@@ -5848,8 +5851,8 @@ class EditProfileDetails extends Component {
 
                           </View>
 
-                          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Zip Code{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
@@ -5859,7 +5862,7 @@ class EditProfileDetails extends Component {
                                 placeholderTextColor="grey"
                               />
                             </View>
-                            <View style={[styles.flex50,styles.leftPadding]}>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
@@ -5872,16 +5875,9 @@ class EditProfileDetails extends Component {
 
                           </View>
 
-                          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              {/*<input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>
-                              <DatePicker
-                                date={this.state.dateOfBirth}
-                                onDateChange={(date) => this.formChangeHandler("dateOfBirth",date)}
-                                minimumDate={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")}
-                                maximumDate={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")}
-                              />*/}
                               <DateTimePicker
                                 testID="DateTimePicker"
                                 value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
@@ -5898,8 +5894,8 @@ class EditProfileDetails extends Component {
 
                           {(this.state.activeOrg === 'exp') ? (
                             <View>
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Last 4 Digits of Social Security Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <TextInput
                                     style={styles.textInput}
@@ -5909,7 +5905,7 @@ class EditProfileDetails extends Component {
                                     placeholderTextColor="grey"
                                   />
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>IEP or 504 Plan{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <TextInput
                                     style={styles.textInput}
@@ -5927,8 +5923,8 @@ class EditProfileDetails extends Component {
                                   <Text style={[styles.headingText4]}>Parent/Guardian Information</Text>
                                 </View>
 
-                                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                  <View style={[styles.flex50,styles.rightPadding]}>
+                                <View>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Parent/Guardian First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -5938,7 +5934,7 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View style={[styles.flex50,styles.leftPadding]}>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Parent/Guardian Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -5951,8 +5947,8 @@ class EditProfileDetails extends Component {
 
                                 </View>
 
-                                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                  <View style={[styles.flex50,styles.rightPadding]}>
+                                <View>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Parent/Guardian Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -5962,7 +5958,7 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View style={[styles.flex50,styles.leftPadding]}>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Parent/Guardian Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -5981,8 +5977,8 @@ class EditProfileDetails extends Component {
                                   <Text style={[styles.headingText4]}>Emergency Contact Information</Text>
                                 </View>
 
-                                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                  <View style={[styles.flex50,styles.rightPadding]}>
+                                <View>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Emergency Contact First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -5992,7 +5988,7 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View style={[styles.flex50,styles.leftPadding]}>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Emergency Contact Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -6005,8 +6001,8 @@ class EditProfileDetails extends Component {
 
                                 </View>
 
-                                <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                  <View style={[styles.flex50,styles.rightPadding]}>
+                                <View>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Emergency Contact Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -6016,7 +6012,7 @@ class EditProfileDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View style={[styles.flex50,styles.leftPadding]}>
+                                  <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Emergency Contact Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                     <TextInput
                                       style={styles.textInput}
@@ -6035,8 +6031,8 @@ class EditProfileDetails extends Component {
                             <View />
                           )}
 
-                          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
                               <Picker
                                 selectedValue={this.state.race}
@@ -6046,7 +6042,7 @@ class EditProfileDetails extends Component {
                                 {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
                               </Picker>
                             </View>
-                            <View style={[styles.flex50,styles.leftPadding]}>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <Picker
                                 selectedValue={this.state.gender}
@@ -6059,8 +6055,8 @@ class EditProfileDetails extends Component {
 
                           </View>
 
-                          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Authorized to work in the U.S.?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               {(this.state.activeOrg === 'exp') && (
                                 <Text style={[styles.descriptionText2,styles.row5]}>Note: You will not be automatically rejected from the program if you are not authorized.</Text>
@@ -6076,7 +6072,7 @@ class EditProfileDetails extends Component {
                               </Picker>
                             </View>
                             {(!this.state.remoteAuth && this.state.activeOrg !== 'unite-la') && (
-                              <View style={[styles.flex50,styles.leftPadding]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Veteran Status{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                 <Picker
                                   selectedValue={this.state.veteranStatus}
@@ -6106,8 +6102,8 @@ class EditProfileDetails extends Component {
 
                           {(this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'guidedcompass') && (
                             <View>
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Number of Members in Household{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.numberOfMembers}
@@ -6117,7 +6113,7 @@ class EditProfileDetails extends Component {
                                     {this.state.basicCountOptions.map(value => <Picker.Item label={value} value={value} />)}
                                   </Picker>
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Estimated Household Income{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.householdIncome}
@@ -6130,8 +6126,8 @@ class EditProfileDetails extends Component {
 
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.fosterYouth}
@@ -6141,7 +6137,7 @@ class EditProfileDetails extends Component {
                                     {this.state.fosterYouthOptions.map(value => <Picker.Item label={value} value={value} />)}
                                   </Picker>
                                 </View>
-                                <View style={[styles.flex50,styles.leftPadding]}>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Are you currently or formerly homeless?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.homeless}
@@ -6154,8 +6150,8 @@ class EditProfileDetails extends Component {
 
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>Were you previously incarcerated?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                   <Picker
                                     selectedValue={this.state.incarcerated}
@@ -6302,11 +6298,11 @@ class EditProfileDetails extends Component {
                         <View style={[styles.calcColumn60,styles.topMargin50]}>
                           <View style={styles.horizontalLine} />
 
-                          <View style={[styles.calcColumn60,styles.topMargin50,styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
                             </View>
-                            <View style={[styles.flex50,styles.leftPadding,styles.rightText]}>
+                            <View style={[styles.row10]}>
                               <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.handleSubmit()}><Text>Next step</Text></TouchableOpacity>
                             </View>
 
@@ -6532,14 +6528,14 @@ class EditProfileDetails extends Component {
                                 <View style={styles.spacer} />
                               </View>
 
-                              <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View>
+                                <View style={[styles.row10]}>
                                   <Text style={styles.headingText5}>Profile Link (Within Portal)</Text>
                                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}><Text>Preview in Portal</Text></TouchableOpacity>
                                   <View style={styles.spacer} />
                                 </View>
                                 {(this.state.publicProfileExtent === 'Public') ? (
-                                  <View style={[styles.flex50,styles.leftPadding]}>
+                                  <View style={[styles.row10]}>
                                     <Text style={styles.headingText5}>Public Profile Link</Text>
                                     <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/profile")}><Text>https://www.guidedcompass.com/ + {this.state.username} + /profile</Text></TouchableOpacity>
                                     <View style={styles.spacer} />
@@ -6950,12 +6946,12 @@ class EditProfileDetails extends Component {
                             <View style={[styles.calcColumn60,styles.topMargin30]}>
                               <View style={styles.horizontalLine} />
 
-                              <View style={[styles.calcColumn60,styles.topMargin30,styles.rowDirectionm,styles.flex1]}>
-                                <View style={[styles.flex50,styles.rightPadding]}>
+                              <View style={[styles.calcColumn60,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
                                   <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
                                 </View>
 
-                                <View style={[styles.flex50,styles.leftPadding,styles.rightText]}>
+                                <View style={[styles.row10]}>
                                   <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text>Submit & Get Started</Text></TouchableOpacity>
                                 </View>
 
@@ -7146,10 +7142,19 @@ class EditProfileDetails extends Component {
                     <View style={styles.spacer} />
                     <Text>Currently, you must be over 18 to set your profile to public.</Text>
 
-                    <View style={[styles.row15,styles.rowDirection,styles.flex1]}>
-                      <View style={[styles.flex50,styles.rightPadding]}>
+                    <View style={[styles.row10]}>
+                      <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Date of Birth</Text>
-                        <input type="date" className="date-picker white-background" min={convertDateToString(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} max={convertDateToString(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()),"rawDateForInput")} name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.formChangeHandler}></input>
+                        <DateTimePicker
+                          testID="dateOfBirth"
+                          value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                          mode={'date'}
+                          is24Hour={true}
+                          display="default"
+                          onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                          minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                          maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                        />
                       </View>
 
                     </View>

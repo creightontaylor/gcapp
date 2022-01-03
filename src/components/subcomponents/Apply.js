@@ -2593,7 +2593,7 @@ class Apply extends Component {
           <View style={[styles.row10]}>
             {(this.state.tasks[i - 1].isCompleted) ? (
               <View>
-                <TouchableOpacity style={[styles.rowDirection]} onClick={() => this.expandSection(index)}>
+                <TouchableOpacity style={[styles.rowDirection]} onPress={() => this.expandSection(index)}>
                   <View style={[styles.width25,styles.topMargin]}>
                     <Image source={{ uri: arrowIndicatorIcon}} style={(this.state.tasks[index].isExpanded) ? [styles.square15,styles.contain,styles.rotate90] : [styles.square15,styles.contain]} />
                   </View>
@@ -2620,7 +2620,7 @@ class Apply extends Component {
               </View>
             ) : (
               <View>
-                <TouchableOpacity onClick={() => this.expandSection(index)} style={[styles.rowDirection]}>
+                <TouchableOpacity onPress={() => this.expandSection(index)} style={[styles.rowDirection]}>
                   <View style={[styles.width25,styles.topMargin]}>
                     <Image source={{ uri: arrowIndicatorIcon}} style={(this.state.tasks[index].isExpanded) ? [styles.square15,styles.contain,styles.rotate90] : [styles.square15,styles.contain]} />
                   </View>
@@ -2820,26 +2820,26 @@ class Apply extends Component {
 
       return (
         <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
-          <SubEditProfileDetails passedType="Basic" passData={this.passData} navigation={this.props.navigation}/>
+          <SubEditProfileDetails passedType="Basic" passData={this.passData} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'profileDetails') {
       return (
         <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
-          <SubEditProfileDetails passedType="Details" passData={this.passData} navigation={this.props.navigation}/>
+          <SubEditProfileDetails passedType="Details" passData={this.passData} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
 
     } else if (task.shorthand === 'careerAssessments') {
       return (
         <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
-          <SubAssessments email={this.state.emailId} passData={this.passData} benchmarkId={this.state.selectedPosting.benchmarkId} tracks={this.state.selectedPosting.tracks} navigation={this.props.navigation}/>
+          <SubAssessments email={this.state.emailId} passData={this.passData} benchmarkId={this.state.selectedPosting.benchmarkId} tracks={this.state.selectedPosting.tracks} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'endorsements') {
       return (
         <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
-          <SubEndorsements email={this.state.emailId} navigation={this.props.navigation} passData={this.passData} selectedOpportunity={this.state.selectedPosting}/>
+          <SubEndorsements email={this.state.emailId} navigation={this.props.navigation} passData={this.passData} selectedOpportunity={this.state.selectedPosting} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'resume') {
@@ -2894,7 +2894,7 @@ class Apply extends Component {
                   </View>
                 ) : (
                   <View style={[styles.width70,styles.rightText,styles.rightPadding]}>
-                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onClick={() => this.actionTapped(index)}><Text style={[styles.descriptionText1, styles.whiteColor]}>{this.state.tasks[index].action}</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.actionTapped(index)}><Text style={[styles.descriptionText1, styles.whiteColor]}>{this.state.tasks[index].action}</Text></TouchableOpacity>
                   </View>
                 )}
               </View>
@@ -2914,7 +2914,7 @@ class Apply extends Component {
                   {/*<input type="file" id={"file-upload-" + index} name={this.state.tasks[index].shorthand} onChange={this.formChangeHandler} accept={(task.shorthand === 'identification') ? ".pdf,image/*" : "application/pdf"} />*/}
                 </View>
               ) : (
-                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onClick={() => this.actionTapped(index)}><Text style={[styles.descriptionText1,styles.whiteColor]}>{this.state.tasks[index].action}</Text></TouchableOpacity>
+                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.actionTapped(index)}><Text style={[styles.descriptionText1,styles.whiteColor]}>{this.state.tasks[index].action}</Text></TouchableOpacity>
               )}
             </View>
 
@@ -2988,8 +2988,8 @@ class Apply extends Component {
             )}
 
             <View>
-              <Text className="capitalize-text half-bold-text">{i}. {question.name}</Text>
-              
+              <Text style={[styles.capitalizeText,styles.boldText]}>{i}. {question.name}</Text>
+
               <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
             </View>
 
@@ -3057,7 +3057,7 @@ class Apply extends Component {
 
             {(question.questionType === 'Ranking') && (
               <View>
-                <Text className="description-text-1 description-text-color">Drag and drop options into the order you like.</Text>
+                <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Drag and drop options into the order you like.</Text>
                 <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                 {this.renderRankingChoices(index)}
               </View>
@@ -3121,32 +3121,24 @@ class Apply extends Component {
       if (answerChoices) {
 
         rows.push(
-          <View key={answerChoices + passedIndex} className="top-padding">
+          <View key={answerChoices + passedIndex} style={[styles.topPadding]}>
             {(answerChoices) && (
-              <View>
+              <View style={[styles.rowDirection,styles.flexWrap]}>
                 {answerChoices.map((value, optionIndex) =>
                   <View key={passedIndex}>
-                    <View className="float-left row-5 right-padding">
+                    <View style={[styles.row5,styles.rightPadding]}>
                       {(screening) ? (
                         <View>
                           {(responses[passedIndex] === answerChoices[optionIndex].name) ? (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border cta-background-color" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text className="description-text-2 white-text">{value.name}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name}}) }>
+                                <Text style={[styles.descriptionText1,styles.whiteColor]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name }}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text style={[styles.descriptionText2]}>{value.name}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name }}) }>
+                                <Text style={[styles.descriptionText2]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           )}
@@ -3155,22 +3147,14 @@ class Apply extends Component {
                         <View>
                           {(responses[passedIndex] === answerChoices[optionIndex]) ? (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border cta-background-color" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text className="description-text-2 white-text">{value}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                                <Text style={[styles.descriptionText1,styles.whiteColor]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text style={[styles.descriptionText2]}>{value}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                                <Text style={[styles.descriptionText2]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           )}
@@ -3192,33 +3176,25 @@ class Apply extends Component {
       if (answerChoices) {
 
         rows.push(
-          <View key={answerChoices + passedIndex} className="top-padding">
+          <View key={answerChoices + passedIndex} style={[styles.topPadding]}>
             {(answerChoices) && (
-              <View>
+              <View style={[styles.rowDirection,styles.flexWrap]}>
                 {answerChoices.map((value, optionIndex) =>
                   <View key={passedIndex}>
-                    <View className="float-left row-5 right-padding">
+                    <View style={[styles.row5,styles.rightPadding]}>
 
                       {(screening) ? (
                         <View>
                           {(Array.isArray(responses[passedIndex]) && responses[passedIndex].includes(answerChoices[optionIndex].name)) ? (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border cta-background-color" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text className="description-text-2 white-text">{value.name}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
+                                <Text style={[styles.descriptionText1,styles.whiteColor]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text style={[styles.descriptionText2]}>{value.name}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
+                                <Text style={[styles.descriptionText2]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           )}
@@ -3227,22 +3203,14 @@ class Apply extends Component {
                         <View>
                           {(Array.isArray(responses[passedIndex]) && responses[passedIndex].includes(answerChoices[optionIndex])) ? (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border cta-background-color" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: this.state.customAssessment.questions[passedIndex].answerChoices[optionIndex]}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text className="description-text-2 white-text">{value}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: this.state.customAssessment.questions[passedIndex].answerChoices[optionIndex]}}) }>
+                                <Text style={[styles.descriptionText1,styles.whiteColor]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity className="background-button row-5 horizontal-padding-5 rounded-corners cta-border" onClick={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex]}}) }>
-                                <View>
-                                  <View className="float-left left-text">
-                                    <Text style={[styles.descriptionText2]}>{value}</Text>
-                                  </View>
-                                </View>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                                <Text style={[styles.descriptionText2]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           )}
@@ -3430,20 +3398,20 @@ class Apply extends Component {
                     {(this.state.selectedPosting.orgCode === this.state.activeOrg || (this.state.placementPartners && this.state.placementPartners.includes(this.state.activeOrg)) || (this.state.postingOrgCode === 'sandbox')) ? (
                       <View>
                         {(this.state.application) && (
-                          <View style={[styles.calcColumn60,styles.padding20]}>
+                          <View style={[styles.calcColumn60]}>
                             <Text cstyle={[styles.descriptionText2,styles.centerText,styles.errorColor,styles.boldText]}>You have already submitted this application, but you can update at any time. To update, you must import and confirm all parts of the application and then re-submit.</Text>
                           </View>
                         )}
 
-                        <View style={[styles.topPadding20,styles.leftPadding20]}>
+                        <View style={[styles.topPadding20]}>
                           <Text style={[styles.descriptionText2]}><Text style={[styles.boldText,styles.errorColor]}>*</Text> Asterisks indicate that this component is required to submit.</Text>
                         </View>
 
-                        <View style={[styles.padding20]}>
+                        <View>
                           {this.renderTasks()}
                         </View>
 
-                        <View style={[styles.calcColumn60,styles.row20,styles.rightPadding20]}>
+                        <View style={[styles.calcColumn60,styles.row20]}>
                           { (this.state.clientErrorMessage!== '') && <Text style={[styles.errorColor,styles.bottomPadding20]}>{this.state.clientErrorMessage}</Text> }
                           { (this.state.serverSuccess) ? (
                             <View>
@@ -3457,10 +3425,10 @@ class Apply extends Component {
 
                           {(this.state.isSaving) ? (
                             <View style={[styles.leftPadding20]}>
-                              <TouchableOpacity disabled={true} style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onClick={() => this.apply()}><Text style={[styles.whiteColor]}>..saving...</Text></TouchableOpacity>
+                              <TouchableOpacity disabled={true} style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>..saving...</Text></TouchableOpacity>
                             </View>
                           ) : (
-                            <View style={[styles.leftPadding20]}>
+                            <View>
                               {(this.state.applicationSubmitted) ? (
                                 <View>
                                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Opportunities')}style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.descriptionText1,styles.whiteColor]}>Browse Other Postings</Text></TouchableOpacity>
@@ -3469,11 +3437,11 @@ class Apply extends Component {
                                 <View>
                                   {(this.state.applicationComplete) ? (
                                     <View>
-                                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onClick={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
+                                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
                                     </View>
                                   ) : (
                                     <View>
-                                      <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onClick={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
+                                      <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -3485,7 +3453,7 @@ class Apply extends Component {
                       </View>
                     ) : (
                       <View style={[styles.row20]}>
-                        <Text style={[styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <TouchableOpacity onClick={() => this.switchWorkspaces()}><Text style={[styles.ctaColor]}>here</Text></TouchableOpacity> to switch workspaces.</Text>
+                        <Text style={[styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <TouchableOpacity onPress={() => this.switchWorkspaces()}><Text style={[styles.ctaColor]}>here</Text></TouchableOpacity> to switch workspaces.</Text>
                       </View>
                     )}
 

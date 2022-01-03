@@ -1174,7 +1174,7 @@ module.exports = StyleSheet.create({
     right: '5%'
   },
   nowrap: {
-    whiteSpace: 'nowrap'
+    
   },
   carousel: {
     overflow: 'scroll',

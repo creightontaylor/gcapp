@@ -579,7 +579,7 @@ class Endorsements extends Component {
             {(this.props.fromApply) ? (
               <View>
                 <View style={[styles.row10]}>
-                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.setState({ modalIsOpen: true, showRequestEndorsements: true, showSubEndorsementDetails: false })}>
+                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: true, showRequestEndorsements: true, showSubEndorsementDetails: false })}>
                     <Text style={[styles.whiteColor,styles.descriptionText2]}>Request an Endorsement</Text>
                   </TouchableOpacity>
                 </View>

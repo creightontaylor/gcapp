@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
-
 import Modal from 'react-native-modal';
+import {Picker} from '@react-native-picker/picker';
+import * as Progress from 'react-native-progress';
 
 const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png';
 const hideIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/hide-icon.png';
@@ -1366,12 +1367,12 @@ class Opportunities extends Component {
 
   }
 
-  formChangeHandler = (event) => {
-    console.log('formChangeHandler called', event.target.name, event.target.value)
+  formChangeHandler = (eventName,eventValue) => {
+    console.log('formChangeHandler called')
 
-    if (event.target.name === 'search') {
+    if (eventName === 'search') {
 
-      const searchString = event.target.value
+      const searchString = eventValue
 
       //reset everything
       let type = ''
@@ -1466,9 +1467,9 @@ class Opportunities extends Component {
 
       }
 
-      this.filterResults(event.target.value, '', null, null, true, type)
+      this.filterResults(eventValue, '', null, null, true, type)
 
-    } else if (event.target.name.includes('filter|')) {
+    } else if (eventName.includes('filter|')) {
 
       let type = ''
       let filters = []
@@ -1508,12 +1509,12 @@ class Opportunities extends Component {
         let eventFilters = this.state.eventFilters
         filters = eventFilters
 
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         for (let i = 1; i <= filters.length; i++) {
           if (filters[i - 1].name === field) {
-            filters[i - 1]['value'] = event.target.value
+            filters[i - 1]['value'] = eventValue
             index = i - 1
           }
         }
@@ -1541,12 +1542,12 @@ class Opportunities extends Component {
         let projectFilters = this.state.projectFilters
         filters = projectFilters
 
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         for (let i = 1; i <= filters.length; i++) {
           if (filters[i - 1].name === field) {
-            filters[i - 1]['value'] = event.target.value
+            filters[i - 1]['value'] = eventValue
             index = i - 1
           }
         }
@@ -1574,12 +1575,12 @@ class Opportunities extends Component {
         let workFilters = this.state.workFilters
         filters = workFilters
 
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         for (let i = 1; i <= filters.length; i++) {
           if (filters[i - 1].name === field) {
-            filters[i - 1]['value'] = event.target.value
+            filters[i - 1]['value'] = eventValue
             index = i - 1
           }
         }
@@ -1606,12 +1607,12 @@ class Opportunities extends Component {
         let allFilters = this.state.allFilters
         filters = allFilters
 
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         for (let i = 1; i <= filters.length; i++) {
           if (filters[i - 1].name === field) {
-            filters[i - 1]['value'] = event.target.value
+            filters[i - 1]['value'] = eventValue
             index = i - 1
           }
         }
@@ -1634,9 +1635,9 @@ class Opportunities extends Component {
         this.setState({ filters, animating: true, searchString, allFilters, allSorters })
       }
 
-      this.filterResults(this.state.searchString, event.target.value, filters, index, false, type)
+      this.filterResults(this.state.searchString, eventValue, filters, index, false, type)
 
-    } else if (event.target.name.includes('sort|')) {
+    } else if (eventName.includes('sort|')) {
 
       let type = ''
 
@@ -1671,13 +1672,13 @@ class Opportunities extends Component {
         type = 'Event'
 
         let eventSorters = this.state.eventSorters
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         // let index = 0
         for (let i = 1; i <= eventSorters.length; i++) {
           if (eventSorters[i - 1].name === field) {
-            eventSorters[i - 1]['value'] = event.target.value
+            eventSorters[i - 1]['value'] = eventValue
             // index = i - 1
           }
         }
@@ -1699,13 +1700,13 @@ class Opportunities extends Component {
       } else if (isProjects) {
         type = 'Project'
         let projectSorters = this.state.projectSorters
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         // let index = 0
         for (let i = 1; i <= projectSorters.length; i++) {
           if (projectSorters[i - 1].name === field) {
-            projectSorters[i - 1]['value'] = event.target.value
+            projectSorters[i - 1]['value'] = eventValue
             // index = i - 1
           }
         }
@@ -1727,13 +1728,13 @@ class Opportunities extends Component {
       } else if (isWork) {
         type = 'Work'
         let workSorters = this.state.workSorters
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         // let index = 0
         for (let i = 1; i <= workSorters.length; i++) {
           if (workSorters[i - 1].name === field) {
-            workSorters[i - 1]['value'] = event.target.value
+            workSorters[i - 1]['value'] = eventValue
             // index = i - 1
           }
         }
@@ -1755,13 +1756,13 @@ class Opportunities extends Component {
       } else if (isAll) {
         type = 'All'
         let allSorters = this.state.allSorters
-        const nameArray = event.target.name.split("|")
+        const nameArray = eventName.split("|")
         const field = nameArray[1]
 
         // let index = 0
         for (let i = 1; i <= allSorters.length; i++) {
           if (allSorters[i - 1].name === field) {
-            allSorters[i - 1]['value'] = event.target.value
+            allSorters[i - 1]['value'] = eventValue
             // index = i - 1
           }
         }
@@ -1782,15 +1783,15 @@ class Opportunities extends Component {
         this.setState({ searchString, allFilters, allSorters, animating: true })
       }
 
-      const nameArray = event.target.name.split("|")
+      const nameArray = eventName.split("|")
       const field = nameArray[1]
-      this.sortResults(event.target.value, field, type)
-    } else if (event.target.name.includes('useCase')) {
-      const nameArray = event.target.name.split("|")
+      this.sortResults(eventValue, field, type)
+    } else if (eventName.includes('useCase')) {
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1].trim())
 
       let useCases = this.state.useCases
-      // useCases[index]["value"] = event.target.value
+      // useCases[index]["value"] = eventValue
       for (let i = 1; i <= useCases.length; i++) {
         if (i - 1 === index) {
           useCases[index]["selected"] = true
@@ -1895,16 +1896,16 @@ class Opportunities extends Component {
       }
 
       this.setState({ useCases, matchingCriteria })
-    } else if (event.target.name.includes('custom')) {
-      const nameArray = event.target.name.split("|")
+    } else if (eventName.includes('custom')) {
+      const nameArray = eventName.split("|")
       const index = Number(nameArray[1].trim())
 
       const ogValue = this.state.matchingCriteria[index].value
-      const diff = event.target.value - ogValue
+      const diff = eventValue - ogValue
       const totalPercent = this.state.totalPercent + diff
 
       let matchingCriteria = this.state.matchingCriteria
-      matchingCriteria[index]["value"] = Number(event.target.value)
+      matchingCriteria[index]["value"] = Number(eventValue)
       this.setState({ matchingCriteria, totalPercent })
     }
   }
@@ -2642,15 +2643,7 @@ class Opportunities extends Component {
                 <View style={[styles.width70]}>
                   {(posting.matchScore) ? (
                     <View style={styles.padding10}>
-                      <CircularProgressBar
-                        percentage={posting.matchScore}
-                        text={`${posting.matchScore}%`}
-                        styles={{
-                          path: { stroke: `rgba(110, 190, 250, ${posting.matchScore / 100})` },
-                          text: { fill: '#6EBEFA', fontSize: '26px' },
-                          trail: { stroke: 'transparent' }
-                        }}
-                      />
+                      <Progress.Circle progress={posting.matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                     </View>
                   ) : (
                     <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem,styles.contain]} />
@@ -2748,15 +2741,7 @@ class Opportunities extends Component {
               <View style={[styles.width70]}>
                 {(this.state.filteredPastEvents[index].matchScore) ? (
                   <View style={styles.padding10}>
-                    <CircularProgressBar
-                      percentage={this.state.filteredPastEvents[index].matchScore}
-                      text={`${this.state.filteredPastEvents[index].matchScore}%`}
-                      styles={{
-                        path: { stroke: `rgba(110, 190, 250, ${this.state.filteredPastEvents[index].matchScore / 100})` },
-                        text: { fill: '#6EBEFA', fontSize: '26px' },
-                        trail: { stroke: 'transparent' }
-                      }}
-                    />
+                    <Progress.Circle progress={this.state.filteredPastEvents[index].matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                   </View>
                 ) : (
                   <Image source={(this.state.filteredPastEvents[index].imageURL) ? { uri: this.state.filteredPastEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]} />
@@ -2852,15 +2837,7 @@ class Opportunities extends Component {
     //                 <View style={styles.width70}>
     //                   {(filteredFeaturedOpportunities[index].matchScore) ? (
     //                     <View style={styles.padding10}>
-    //                       <CircularProgressBar
-    //                         percentage={filteredFeaturedOpportunities[index].matchScore}
-    //                         text={`${filteredFeaturedOpportunities[index].matchScore}%`}
-    //                         styles={{
-    //                           path: { stroke: `rgba(110, 190, 250, ${filteredFeaturedOpportunities[index].matchScore / 100})` },
-    //                           text: { fill: '#6EBEFA', fontSize: '26px' },
-    //                           trail: { stroke: 'transparent' }
-    //                         }}
-    //                       />
+                              // <Progress.Circle progress={filteredFeaturedOpportunities[index].matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
     //                     </View>
     //                   ) : (
     //                     <Image source={{ uri: imgSrc}} style={[styles.square50,styles.topMargin5,styles.centerItem]}/>
@@ -4069,14 +4046,16 @@ class Opportunities extends Component {
                       <Text>{filters[i - 1].name}</Text>
                     </View>
                     <View>
-                      <select name={"filter|" + filters[i - 1].name} value={filters[i - 1].value} onChange={this.formChangeHandler} className="filter-select">
-                        {filters[i - 1].options.map(value =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
+                      <Picker
+                        selectedValue={filters[i - 1].value}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                        }>
+                        {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                      </Picker>
                     </View>
                     <View style={[styles.topPadding15,styles.horizontalPadding3]}>
-                      <Image source={{ uri: dropdownArrow}}/>
+                      <Image source={{ uri: dropdownArrow}} style={[styles.square10,styles.contain]}/>
                     </View>
                   </View>
                 </View>
@@ -4118,11 +4097,13 @@ class Opportunities extends Component {
                       <Text>{sorters[i - 1].name}</Text>
                     </View>
                     <View>
-                      <select name={"sort|" + sorters[i - 1].name} value={sorters[i - 1].value} onChange={this.formChangeHandler}>
-                        {sorters[i - 1].options.map(value =>
-                          <option key={value} value={value}>{value}</option>
-                        )}
-                      </select>
+                      <Picker
+                        selectedValue={sorters[i - 1].value}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                        }>
+                        {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                      </Picker>
                     </View>
                     <View style={[styles.topPadding15,styles.horizontalPadding3]}>
                       <Image source={{ uri: dropdownArrow}} />
@@ -4306,7 +4287,7 @@ class Opportunities extends Component {
     const index = Number(nameArray[1].trim())
 
     let useCases = this.state.useCases
-    // useCases[index]["value"] = event.target.value
+    // useCases[index]["value"] = eventValue
     for (let i = 1; i <= useCases.length; i++) {
       console.log('compare indices: ', i - 1, index)
       if (i - 1 === index) {
@@ -4500,7 +4481,7 @@ class Opportunities extends Component {
                                 {(this.props.passedType) ? (
                                   <TextInput
                                     style={styles.height30}
-                                    onChangeText={(text) => this.formChangeHandler(text, 'search')}
+                                    onChangeText={(text) => this.formChangeHandler('search', text)}
                                     value={this.state.searchString}
                                     placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
                                     placeholderTextColor="grey"
@@ -4508,7 +4489,7 @@ class Opportunities extends Component {
                                 ) : (
                                   <TextInput
                                     style={[styles.height30]}
-                                    onChangeText={(text) => this.formChangeHandler(text, 'search')}
+                                    onChangeText={(text) => this.formChangeHandler('search', text)}
                                     value={this.state.searchString}
                                     placeholder={"Search " + postings.length + ' Opportunities...'}
                                     placeholderTextColor="grey"
@@ -4633,7 +4614,7 @@ class Opportunities extends Component {
                   </View>
 
                   {(this.state.showingSearchBar) && (
-                    <View style={styles.card}>
+                    <View style={[styles.card,styles.topMargin20]}>
                       <View>
                         {(this.state.subNavSelected !== "Featured") && (
                           <View>
@@ -4647,14 +4628,12 @@ class Opportunities extends Component {
                             <View style={styles.halfSpacer} />
                             {(this.renderManipulators('filter'))}
 
-
                             <View style={styles.spacer} />
                             <View style={[styles.horizontalLine]} />
                             <View style={styles.spacer} /><View style={styles.spacer} />
                             <Text>Sort</Text>
                             <View style={styles.halfSpacer} />
                             {(this.renderManipulators('sort'))}
-
                           </View>
                         )}
 
