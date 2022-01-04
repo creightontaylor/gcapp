@@ -55,57 +55,61 @@ class ProjectDetails extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called in ProjectDetails')
+    retrieveData = async() => {
+      try {
 
-      if (!this.props.selectedProject) {
-        console.log('there was an error retrieving the project')
-      } else {
-        let creatorProfileLink = ''
-        let passedState = {}
-
-        if (this.props.fromAdvisor && this.props.selectedProject) {
-
-          let userEmail = ''
-          if (this.props.selectedProject.emailId && this.props.selectedProject.emailId !== '') {
-            userEmail = this.props.selectedProject.emailId
-          } else if (this.props.selectedProject.userEmail && this.props.selectedProject.userEmail !== '') {
-            userEmail = this.props.selectedProject.userEmail
-          }
-
-          creatorProfileLink = '/advisor/advisees/' + userEmail
-          passedState = { member: null }
-
+        if (!this.props.selectedProject) {
+          console.log('there was an error retrieving the project')
         } else {
-          console.log('no link necesssary')
-        }
+          let creatorProfileLink = ''
+          let passedState = {}
 
-        const modalIsOpen = this.props.modalIsOpen
-        const selectedProject = this.props.selectedProject
-        const orgCode = this.props.orgCode
+          if (this.props.fromAdvisor && this.props.selectedProject) {
 
-        console.log('show passedState: ', creatorProfileLink, passedState)
-        this.setState({ modalIsOpen, selectedProject, orgCode, creatorProfileLink, passedState })
-
-        // pull username
-        Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: selectedProject.emailId } })
-        .then((response) => {
-
-            if (response.data.success) {
-              console.log('User profile query worked', response.data);
-
-              const selectedProjectUsername = response.data.user.username
-              this.setState({ selectedProjectUsername })
-
-            } else {
-              console.log('no user details found', response.data.message)
-
+            let userEmail = ''
+            if (this.props.selectedProject.emailId && this.props.selectedProject.emailId !== '') {
+              userEmail = this.props.selectedProject.emailId
+            } else if (this.props.selectedProject.userEmail && this.props.selectedProject.userEmail !== '') {
+              userEmail = this.props.selectedProject.userEmail
             }
 
-        }).catch((error) => {
-            console.log('User profile query did not work', error);
-        });
-      }
+            creatorProfileLink = '/advisor/advisees/' + userEmail
+            passedState = { member: null }
+
+          } else {
+            console.log('no link necesssary')
+          }
+
+          const modalIsOpen = this.props.modalIsOpen
+          const selectedProject = this.props.selectedProject
+          const orgCode = this.props.orgCode
+
+          console.log('show passedState: ', creatorProfileLink, passedState)
+          this.setState({ modalIsOpen, selectedProject, orgCode, creatorProfileLink, passedState })
+
+          // pull username
+          Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: selectedProject.emailId } })
+          .then((response) => {
+
+              if (response.data.success) {
+                console.log('User profile query worked', response.data);
+
+                const selectedProjectUsername = response.data.user.username
+                this.setState({ selectedProjectUsername })
+
+              } else {
+                console.log('no user details found', response.data.message)
+
+              }
+
+          }).catch((error) => {
+              console.log('User profile query did not work', error);
+          });
+        }
+       } catch (error) {
+         // Error retrieving data
+         console.log('there was an error', error)
+       }
     }
 
     closeModal() {

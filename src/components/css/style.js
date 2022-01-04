@@ -353,6 +353,22 @@ module.exports = StyleSheet.create({
   bottomMargin20: {
     marginBottom: 20
   },
+  horizontalMargin5: {
+    marginLeft: 5,
+    marginRight: 5
+  },
+  horizontalMargin: {
+    marginLeft: 10,
+    marginRight: 10
+  },
+  horizontalMargin20: {
+    marginLeft: 20,
+    marginRight: 20
+  },
+  horizontalMargin30: {
+    marginLeft: 30,
+    marginRight: 30
+  },
   verticalMargin10: {
     marginTop: 10,
     marginBottom: 10
@@ -886,6 +902,9 @@ module.exports = StyleSheet.create({
   flex90: {
     flex: 90
   },
+  flex95: {
+    flex: 95
+  },
   standardBorder: {
     borderWidth: 1,
     borderColor: faintColor,
@@ -956,13 +975,13 @@ module.exports = StyleSheet.create({
   filler: {
     background: primaryColor,
     height: Dimensions.get('window').height,
-    borderRadius: 'inherit',
+    borderRadius: 50,
     transition: 'width .2s ease-in'
   },
   fillerError: {
     background: errorColor,
     height: Dimensions.get('window').height,
-    borderRadius: 'inherit',
+    borderRadius: 50,
     transition: 'width .2s ease-in'
   },
   leftText: {
@@ -1206,7 +1225,8 @@ module.exports = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
-    margin: '10px 2%',
+    marginTop: 10,
+    marginBottom: 10,
     paddingBottom: 30,
   },
   relativePosition: {

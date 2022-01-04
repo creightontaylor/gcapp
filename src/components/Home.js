@@ -68,7 +68,7 @@ class Home extends Component {
     // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
-        <NewsFeed />
+        <NewsFeed navigation={this.props.navigation} />
       </ScrollView>
     );
   }

@@ -42,6 +42,7 @@ import CareerDetails from './src/components/CareerDetails';
 import EmployerDetails from './src/components/EmployerDetails';
 import GroupDetails from './src/components/GroupDetails';
 import ProjectDetails from './src/components/ProjectDetails';
+import CreatePost from './src/components/CreatePost';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -329,6 +330,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="EmployerDetails" component={EmployerDetails} />
           <Stack.Screen name="GroupDetails" component={GroupDetails} />
           <Stack.Screen name="ProjectDetails" component={ProjectDetails} />
+          <Stack.Screen name="CreatePost" component={CreatePost} />
         </Stack.Navigator>
       </NavigationContainer>
     );

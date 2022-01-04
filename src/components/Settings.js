@@ -55,245 +55,259 @@ class Settings extends Component {
     this.savePreferences = this.savePreferences.bind(this)
   }
 
-  retrieveData() {
-    console.log('retrieveData called in settings')
+  retrieveData = async() => {
+    try {
+      console.log('retrieveData called in settings')
 
-    const email = AsyncStorage.getItem('email')
-    const accountCode = AsyncStorage.getItem('accountCode')
-    const activeOrg = AsyncStorage.getItem('activeOrg')
-    const orgFocus = AsyncStorage.getItem('orgFocus')
-    const roleName = AsyncStorage.getItem('roleName')
+      const emailId = await AsyncStorage.getItem('email');
+      const email = emailId
+      const username = await AsyncStorage.getItem('username');
+      const cuFirstName = await AsyncStorage.getItem('firstName');
+      const cuLastName = await AsyncStorage.getItem('lastName');
+      let activeOrg = await AsyncStorage.getItem('activeOrg');
+      if (!activeOrg) {
+        activeOrg = 'guidedcompass'
+      }
+      const accountCode = AsyncStorage.getItem('accountCode')
+      const orgFocus = await AsyncStorage.getItem('orgFocus');
+      const roleName = await AsyncStorage.getItem('roleName');
+      let pictureURL = await AsyncStorage.getItem('pictureURL');
 
-    let dataToShare = [
-      'Name', 'Profile Photo','Resume URL','LinkedIn URL','Portfolio URL','School','Major / Pathway','Graduation Year','Race','Gender','Veteran Status','Work Authorization','Projects','Experience','Career Assessments','Endorsements'
-    ]
+      let dataToShare = [
+        'Name', 'Profile Photo','Resume URL','LinkedIn URL','Portfolio URL','School','Major / Pathway','Graduation Year','Race','Gender','Veteran Status','Work Authorization','Projects','Experience','Career Assessments','Endorsements'
+      ]
 
-    let showWalkthrough = true
+      let showWalkthrough = true
 
-    let availableAssessments = []
-    let timeframeOptions = []
+      let availableAssessments = []
+      let timeframeOptions = []
 
-    let problemPlatformOrg = false
-    let problemPlatformEmployer = false
+      let problemPlatformOrg = false
+      let problemPlatformEmployer = false
 
-    this.setState({ emailId: email, accountCode, activeOrg, orgFocus, roleName, dataToShare, showWalkthrough,
-      availableAssessments, timeframeOptions });
+      this.setState({ emailId: email, accountCode, activeOrg, orgFocus, roleName, dataToShare, showWalkthrough,
+        availableAssessments, timeframeOptions });
 
-    if (this.props.fromAdvisor) {
+      if (this.props.fromAdvisor) {
 
-      // Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
-      // .then((response) => {
-      //   console.log('Org info query attempted', response.data);
-      //
-      //     if (response.data.success) {
-      //       console.log('org info query worked')
-      //
-      //       const orgName = response.data.orgInfo.orgName
-      //       const academies = response.data.orgInfo.academies
-      //       let includeGuidedCompass = false
-      //       if (response.data.orgInfo.placementPartners && response.data.orgInfo.placementPartners.includes('guidedcompass')) {
-      //         includeGuidedCompass = true
-      //       }
-      //       const wblPreferences = response.data.orgInfo.wblPreferences
-      //
-      //
-      //       console.log('show academies: ', academies)
-      //       let academyCodes = []
-      //       if (academies && academies.length > 0) {
-      //         for (let i = 1; i <= academies.length; i++) {
-      //           academyCodes.push(academies[i - 1].orgCode)
-      //         }
-      //       }
-      //
-      //       this.setState({ orgName, academies, academyCodes, includeGuidedCompass, wblPreferences });
-      //
-      //       // let courses = []
-      //       // if (response.data.orgInfo.courseIds && response.data.orgInfo.courseIds.length > 0) {
-      //       //   console.log('courses exist')
-      //       //
-      //       // }
-      //
-      //     } else {
-      //       console.log('org info query did not work', response.data.message)
-      //     }
-      //
-      // }).catch((error) => {
-      //     console.log('Org info query did not work for some reason', error);
-      // });
-      //
-      // Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
-      // .then((response) => {
-      //
-      //     if (response.data.success) {
-      //       console.log('User profile query worked', response.data);
-      //
-      //       const user = response.data.user
-      //       const firstNameValue = response.data.user.firstName
-      //       const lastNameValue = response.data.user.lastName
-      //       const linkedInURLValue = response.data.user.linkedInURL
-      //       const resumeURLValue = response.data.user.resumeURL
-      //       const customWebsiteURLValue = response.data.user.customWebsiteURL
-      //       const jobTitle = response.data.user.jobTitle
-      //       const employerName = response.data.user.employerName
-      //       const workZipcode = response.data.user.workZipcode
-      //       const workTenure = response.data.user.workTenure
-      //       const overallFit = response.data.user.overallFit
-      //       const degreeAttained = response.data.user.degreeAttained
-      //       const schoolName = response.data.user.schoolName
-      //       const studyFields = response.data.user.studyFields
-      //       const myOrgs = response.data.user.myOrgs
-      //
-      //       this.setState({
-      //         user, firstNameValue, lastNameValue, linkedInURLValue, resumeURLValue, customWebsiteURLValue,
-      //         jobTitle, employerName, workZipcode, workTenure, overallFit, degreeAttained, schoolName, studyFields,
-      //         myOrgs
-      //       });
-      //
-      //       const courseIds = response.data.user.courseIds
-      //
-      //       if (courseIds && courseIds.length > 0) {
-      //         // pull from courses
-      //
-      //         Axios.get('https://www.guidedcompass.com/api/courses', { params: { courseIds } })
-      //         .then((response) => {
-      //
-      //             if (response.data.success) {
-      //               console.log('Courses query worked', response.data);
-      //
-      //               const courses = response.data.courses
-      //               this.setState({ courses })
-      //
-      //             } else {
-      //               console.log('no course details found', response.data.message)
-      //             }
-      //
-      //         }).catch((error) => {
-      //             console.log('course query did not work', error);
-      //         });
-      //
-      //         Axios.get('https://www.guidedcompass.com/api/grades', { params: { orgCode: activeOrg, courseIds } })
-      //         .then((response) => {
-      //           console.log('Grades query attempted', response.data);
-      //
-      //             if (response.data.success) {
-      //               console.log('grades query worked')
-      //
-      //               const grades = response.data.grades
-      //               const students = response.data.students
-      //               const projectNames = response.data.projectNames
-      //
-      //               this.setState({ grades, students, projectNames })
-      //
-      //             } else {
-      //               console.log('grades query did not work', response.data.message)
-      //             }
-      //
-      //         }).catch((error) => {
-      //             console.log('Grades query did not work for some reason', error);
-      //         });
-      //
-      //       }
-      //
-      //     } else {
-      //       console.log('no user details found', response.data.message)
-      //
-      //     }
-      //
-      // }).catch((error) => {
-      //     console.log('User profile query did not work', error);
-      // });
+        // Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+        // .then((response) => {
+        //   console.log('Org info query attempted', response.data);
+        //
+        //     if (response.data.success) {
+        //       console.log('org info query worked')
+        //
+        //       const orgName = response.data.orgInfo.orgName
+        //       const academies = response.data.orgInfo.academies
+        //       let includeGuidedCompass = false
+        //       if (response.data.orgInfo.placementPartners && response.data.orgInfo.placementPartners.includes('guidedcompass')) {
+        //         includeGuidedCompass = true
+        //       }
+        //       const wblPreferences = response.data.orgInfo.wblPreferences
+        //
+        //
+        //       console.log('show academies: ', academies)
+        //       let academyCodes = []
+        //       if (academies && academies.length > 0) {
+        //         for (let i = 1; i <= academies.length; i++) {
+        //           academyCodes.push(academies[i - 1].orgCode)
+        //         }
+        //       }
+        //
+        //       this.setState({ orgName, academies, academyCodes, includeGuidedCompass, wblPreferences });
+        //
+        //       // let courses = []
+        //       // if (response.data.orgInfo.courseIds && response.data.orgInfo.courseIds.length > 0) {
+        //       //   console.log('courses exist')
+        //       //
+        //       // }
+        //
+        //     } else {
+        //       console.log('org info query did not work', response.data.message)
+        //     }
+        //
+        // }).catch((error) => {
+        //     console.log('Org info query did not work for some reason', error);
+        // });
+        //
+        // Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
+        // .then((response) => {
+        //
+        //     if (response.data.success) {
+        //       console.log('User profile query worked', response.data);
+        //
+        //       const user = response.data.user
+        //       const firstNameValue = response.data.user.firstName
+        //       const lastNameValue = response.data.user.lastName
+        //       const linkedInURLValue = response.data.user.linkedInURL
+        //       const resumeURLValue = response.data.user.resumeURL
+        //       const customWebsiteURLValue = response.data.user.customWebsiteURL
+        //       const jobTitle = response.data.user.jobTitle
+        //       const employerName = response.data.user.employerName
+        //       const workZipcode = response.data.user.workZipcode
+        //       const workTenure = response.data.user.workTenure
+        //       const overallFit = response.data.user.overallFit
+        //       const degreeAttained = response.data.user.degreeAttained
+        //       const schoolName = response.data.user.schoolName
+        //       const studyFields = response.data.user.studyFields
+        //       const myOrgs = response.data.user.myOrgs
+        //
+        //       this.setState({
+        //         user, firstNameValue, lastNameValue, linkedInURLValue, resumeURLValue, customWebsiteURLValue,
+        //         jobTitle, employerName, workZipcode, workTenure, overallFit, degreeAttained, schoolName, studyFields,
+        //         myOrgs
+        //       });
+        //
+        //       const courseIds = response.data.user.courseIds
+        //
+        //       if (courseIds && courseIds.length > 0) {
+        //         // pull from courses
+        //
+        //         Axios.get('https://www.guidedcompass.com/api/courses', { params: { courseIds } })
+        //         .then((response) => {
+        //
+        //             if (response.data.success) {
+        //               console.log('Courses query worked', response.data);
+        //
+        //               const courses = response.data.courses
+        //               this.setState({ courses })
+        //
+        //             } else {
+        //               console.log('no course details found', response.data.message)
+        //             }
+        //
+        //         }).catch((error) => {
+        //             console.log('course query did not work', error);
+        //         });
+        //
+        //         Axios.get('https://www.guidedcompass.com/api/grades', { params: { orgCode: activeOrg, courseIds } })
+        //         .then((response) => {
+        //           console.log('Grades query attempted', response.data);
+        //
+        //             if (response.data.success) {
+        //               console.log('grades query worked')
+        //
+        //               const grades = response.data.grades
+        //               const students = response.data.students
+        //               const projectNames = response.data.projectNames
+        //
+        //               this.setState({ grades, students, projectNames })
+        //
+        //             } else {
+        //               console.log('grades query did not work', response.data.message)
+        //             }
+        //
+        //         }).catch((error) => {
+        //             console.log('Grades query did not work for some reason', error);
+        //         });
+        //
+        //       }
+        //
+        //     } else {
+        //       console.log('no user details found', response.data.message)
+        //
+        //     }
+        //
+        // }).catch((error) => {
+        //     console.log('User profile query did not work', error);
+        // });
 
-    } else {
-      // student
+      } else {
+        // student
 
-      Axios.get('https://www.guidedcompass.com/api/work', { params: { workerEmail: email, onlyCurrent: true } })
-      .then((response) => {
-        console.log('Work query attempted within employer dashboard', response.data);
+        Axios.get('https://www.guidedcompass.com/api/work', { params: { workerEmail: email, onlyCurrent: true } })
+        .then((response) => {
+          console.log('Work query attempted within employer dashboard', response.data);
 
-        if (response.data.success) {
-          console.log('account info query worked in sub settings')
+          if (response.data.success) {
+            console.log('account info query worked in sub settings')
 
-          if (response.data.workArray && response.data.workArray.length > 0) {
-            this.setState({ isWorking: true });
+            if (response.data.workArray && response.data.workArray.length > 0) {
+              this.setState({ isWorking: true });
+            }
           }
-        }
 
-      }).catch((error) => {
-        console.log('Account info query did not work for some reason', error);
-      });
+        }).catch((error) => {
+          console.log('Account info query did not work for some reason', error);
+        });
 
-      Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
-      .then((response) => {
-        console.log('Org query attempted', response.data);
+        Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+        .then((response) => {
+          console.log('Org query attempted', response.data);
 
-         if (response.data.success) {
-           console.log('successfully retrieved org')
+           if (response.data.success) {
+             console.log('successfully retrieved org')
 
-           const orgName = response.data.orgInfo.orgName
-           const academies = response.data.orgInfo.academies
+             const orgName = response.data.orgInfo.orgName
+             const academies = response.data.orgInfo.academies
 
-           console.log('show academies: ', academies)
-           let academyCodes = []
-           if (academies && academies.length > 0) {
-             for (let i = 1; i <= academies.length; i++) {
-               academyCodes.push(academies[i - 1].orgCode)
+             console.log('show academies: ', academies)
+             let academyCodes = []
+             if (academies && academies.length > 0) {
+               for (let i = 1; i <= academies.length; i++) {
+                 academyCodes.push(academies[i - 1].orgCode)
+               }
              }
+
+             const disableWeeklyEmails = response.data.orgInfo.disableWeeklyEmails
+             this.setState({ orgName, academies, academyCodes, disableWeeklyEmails });
+
+           } else {
+             console.log('no org data found', response.data.message)
+             // this.setState({ serverErrorMessage: 'No org found'})
            }
 
-           const disableWeeklyEmails = response.data.orgInfo.disableWeeklyEmails
-           this.setState({ orgName, academies, academyCodes, disableWeeklyEmails });
-
-         } else {
-           console.log('no org data found', response.data.message)
+        }).catch((error) => {
+           console.log('Org query did not work', error);
            // this.setState({ serverErrorMessage: 'No org found'})
-         }
+        });
 
-      }).catch((error) => {
-         console.log('Org query did not work', error);
-         // this.setState({ serverErrorMessage: 'No org found'})
-      });
+        //fetch text data
+        this.props.fetchUserData({
+            email
+        }).then((responseData) => {
+            if (responseData) {
+              if ( responseData.success === true ) {
+                // report to the user if there was a problem during registration
+                console.log('what is this', responseData);
 
-      //fetch text data
-      this.props.fetchUserData({
-          email
-      }).then((responseData) => {
-          if (responseData) {
-            if ( responseData.success === true ) {
-              // report to the user if there was a problem during registration
-              console.log('what is this', responseData);
+                const user = responseData.user
+                const roleName = responseData.user.roleName
+                const remoteAuth = responseData.user.remoteAuth
+                const activeOrg = responseData.user.activeOrg
+                const myOrgs = responseData.user.myOrgs
+                const openToMentoring = responseData.user.openToMentoring
+                const workMode = responseData.user.workMode
+                let subscribed = true
+                if (responseData.user.unsubscribed) {
+                  subscribed = false
+                }
 
-              const user = responseData.user
-              const roleName = responseData.user.roleName
-              const remoteAuth = responseData.user.remoteAuth
-              const activeOrg = responseData.user.activeOrg
-              const myOrgs = responseData.user.myOrgs
-              const openToMentoring = responseData.user.openToMentoring
-              const workMode = responseData.user.workMode
-              let subscribed = true
-              if (responseData.user.unsubscribed) {
-                subscribed = false
+                const firstNameValue = responseData.user.firstName
+                const lastNameValue = responseData.user.lastName
+                const publicProfile = responseData.user.publicProfile
+
+                this.setState({
+                  user, roleName, remoteAuth, activeOrg, myOrgs, openToMentoring, workMode, subscribed,
+                  firstNameValue, lastNameValue, publicProfile
+                });
+                /*
+                this.setState({
+                    error: { message: userDataMessage },
+                    isWaiting: false
+                }) */
+              } else {
+                //api call was unsuccessful. responseData was defined though.
               }
-
-              const firstNameValue = responseData.user.firstName
-              const lastNameValue = responseData.user.lastName
-              const publicProfile = responseData.user.publicProfile
-
-              this.setState({
-                user, roleName, remoteAuth, activeOrg, myOrgs, openToMentoring, workMode, subscribed,
-                firstNameValue, lastNameValue, publicProfile
-              });
-              /*
-              this.setState({
-                  error: { message: userDataMessage },
-                  isWaiting: false
-              }) */
             } else {
-              //api call was unsuccessful. responseData was defined though.
+              //api call was unsuccessful. responseData wasn't even defined.
             }
-          } else {
-            //api call was unsuccessful. responseData wasn't even defined.
-          }
-      })
+        })
+      }
+
+    } catch (error) {
+     // Error retrieving data
+     console.log('there was an error', error)
     }
   }
 

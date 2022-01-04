@@ -35,6 +35,7 @@ class GroupDetails extends Component {
     super(props)
     this.state = {
       showLeftSideBar: false,
+      showRightSideBar: false,
 
       defaultCoverImage: 'https://guidedcompass-bucket.s3-us-west-2.amazonaws.com/headerImages/1210x311.png',
       members: [],
@@ -1225,32 +1226,32 @@ class GroupDetails extends Component {
                 </View>
               )}
 
-              <View className="relative-column-40">
-                <View className="card-clear-padding full-width">
-                  <Image source={(this.state.selectedGroup.pictureURL) ? { uri: this.state.selectedGroup.pictureURL} : { uri: this.state.defaultCoverImage}} className="image-full-width-150 center-horizontally slightly-rounded-corners"  />
+              <View style={[styles.fullScreenWidth]}>
+                <View style={[styles.cardClearPadding,styles.fullScreenWidth]}>
+                  <Image source={(this.state.selectedGroup.pictureURL) ? { uri: this.state.selectedGroup.pictureURL} : { uri: this.state.defaultCoverImage}} style={[styles.fullScreenWidth,styles.height150,styles.centerHorizontally,styles.slightlyRoundedCorners]}  />
                   <View style={[styles.horizontalLine]} />
                   <View style={[styles.padding30]}>
-                    <View style={[styles.row10]}>
-                      <View className="calc-column-offset-120">
+                    <View>
+                      <View style={[styles.row10]}>
                         <Text style={[styles.headingText2]}>{this.state.selectedGroup.name}</Text>
                         <Text>{this.state.selectedGroup.category}</Text>
                       </View>
-                      <View className="fixed-column-120 top-padding">
-                        <View className="float-right">
-                          <View className="right-padding display-inline">
+                      <View style={[styles.row10]}>
+                        <View style={[styles.rowDirection,styles.flexWrap]}>
+                          <View style={[styles.rightPadding]}>
                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDescription: true })}>
                               <Image source={{ uri: infoIconDark}} style={[styles.square20,styles.contain,styles.pinRight]} />
                             </TouchableOpacity>
                           </View>
 
-                          <View className="right-padding display-inline">
+                          <View style={[styles.rightPadding]}>
                             <TouchableOpacity onPress={() => this.joinGroupNotifications()}>
                               <Image source={(this.state.selectedGroup.notifiees && this.state.selectedGroup.notifiees.some(notifiee => notifiee.email === this.state.emailId)) ? { uri: notificationsIconBlue} : { uri: notificationsIconDark}} style={[styles.square20,styles.contain,styles.pinRight]} />
                             </TouchableOpacity>
                           </View>
 
                           {(this.state.selectedGroup.members && this.state.selectedGroup.members.some(member => member.email === this.state.emailId)) && (
-                            <View className="right-padding display-inline">
+                            <View style={[styles.rightPadding]}>
                               <TouchableOpacity onPress={() => this.joinGroup(false)}>
                                 <Image source={{ uri: exitIconDark}} style={[styles.square20,styles.contain,styles.pinRight]} />
                               </TouchableOpacity>
@@ -1258,7 +1259,7 @@ class GroupDetails extends Component {
                           )}
 
                           {(this.props.fromAdvisor || this.state.selectedGroup.creatorEmail === this.state.emailId) && (
-                            <View className="right-padding display-inline">
+                            <View style={[styles.rightPadding]}>
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showEditGroup: true, groupToEdit: this.state.selectedGroup })}>
                                 <Image source={{ uri: editIconDark}} style={[styles.square18,styles.contain,styles.pinRight]} />
                               </TouchableOpacity>
@@ -1355,7 +1356,7 @@ class GroupDetails extends Component {
                 {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.centerText,styles.row5]}>{this.state.successMessage}</Text>}
 
                 <View style={[styles.cardClearPadding,styles.topMargin20]}>
-                  <View style={[styles.lightBorder,styles.row5,styles.horizontalPadding5,styles.topMargin15,styles.rightPadding]} onPress={() => this.setState({ modalIsOpen: true, showPost: true })}>
+                  <TouchableOpacity style={[styles.lightBorder,styles.row5,styles.horizontalPadding5,styles.topMargin15,styles.rightPadding]} onPress={() => this.setState({ modalIsOpen: true, showPost: true })}>
                     <View style={[styles.rowDirection]}>
                       <View style={[styles.topPadding8,styles.leftPadding3]}>
                         <Image source={{ uri: editIconDark}} style={[styles.square16,styles.contain,styles.padding5]} />
@@ -1375,7 +1376,7 @@ class GroupDetails extends Component {
                         </View>
                       </View>
                     )}
-                  </View>
+                  </TouchableOpacity>
 
                 </View>
 
@@ -1653,7 +1654,7 @@ class GroupDetails extends Component {
            )}
 
            {(this.state.showMembers) && (
-             <View key="showMembers" style={[styles.fullScreenWidth,styles.padding20]}>
+             <ScrollView key="showMembers" style={[styles.fullScreenWidth,styles.padding20]}>
                 <Text style={[styles.headingText2,styles.bottomPadding]}>Members of {this.state.selectedGroup.name}</Text>
                 <View style={[styles.spacer]} />
 
@@ -1680,7 +1681,7 @@ class GroupDetails extends Component {
                   </View>
                 )}
 
-              </View>
+              </ScrollView>
            )}
 
            {(this.state.showShareButtons) && (
@@ -1788,19 +1789,19 @@ class GroupDetails extends Component {
            )}
 
            {(this.state.showPost || this.state.sharePosting) && (
-             <View key="showPost" style={[styles.fullScreenWidth,styles.padding20]}>
+             <View key="showPost" style={[styles.flex1,styles.padding20]}>
                 <SubCreatePost sharePosting={this.state.sharePosting} originalPost={this.state.originalPost}  posts={this.state.groupPosts} passPosts={this.passPosts} closeModal={this.closeModal} pictureURL={this.state.pictureURL} groupId={this.state.selectedGroup._id} groupName={this.state.selectedGroup.name} />
               </View>
            )}
 
            {(this.state.showEditGroup) && (
-             <View key="showEditGroup" style={[styles.fullScreenWidth,styles.padding20]}>
+             <View key="showEditGroup" style={[styles.flex1,styles.padding20]}>
                 <SubEditGroup selectedGroup={this.state.groupToEdit} history={this.props.history} closeModal={this.closeModal} />
               </View>
            )}
 
            {(this.state.showAddMeeting) && (
-             <View key="showAddMeeting" style={[styles.fullScreenWidth,styles.padding20]}>
+             <View key="showAddMeeting" style={[styles.flex1,styles.padding20]}>
                <View style={[styles.bottomPadding]}>
                  <Text style={[styles.headingText2]}>Add a Meeting</Text>
                  <SubEditLog modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} history={this.props.history} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType="Meeting" selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId} selectedGroup={this.state.selectedGroup} passMeeting={this.passMeeting}/>
@@ -1809,7 +1810,7 @@ class GroupDetails extends Component {
            )}
 
            {(this.state.showViewMeeting) && (
-             <View key="showViewMeeting" style={[styles.fullScreenWidth,styles.padding20]}>
+             <View key="showViewMeeting" style={[styles.flex1,styles.padding20]}>
                <View style={[styles.bottomPadding]}>
                  <Text style={[styles.headingText2,styles.centerText]}>{convertDateToString(new Date(this.state.selectedMeeting.startTime),"datetime-2")} Meeting</Text>
                  <Text style={[styles.centerText,styles.topPadding]}>{this.state.selectedGroup.name}</Text>

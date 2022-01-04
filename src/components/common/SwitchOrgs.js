@@ -34,10 +34,30 @@ class SwitchOrgs extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called in commonSwitchOrgs', this.props.selectedGroup)
+    retrieveData = async() => {
+      try {
+        console.log('retrieveData called in renderPosts')
 
+        const emailId = await AsyncStorage.getItem('email');
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        let activeOrg = await AsyncStorage.getItem('activeOrg');
+        if (!activeOrg) {
+          activeOrg = 'guidedcompass'
+        }
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const roleName = await AsyncStorage.getItem('roleName');
+        let pictureURL = await AsyncStorage.getItem('pictureURL');
 
+        this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, pictureURL,
+          sharePosting, originalPost, posts, groupId, groupName, jobTitle
+        })
+
+      } catch (error) {
+       // Error retrieving data
+       console.log('there was an error', error)
+      }
     }
 
     render() {

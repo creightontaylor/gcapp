@@ -34,10 +34,38 @@ class EditProject extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called in commonEditGroup', this.props.selectedGroup)
+    retrieveData = async() => {
+      try {
 
+        console.log('this is causing the error')
+        const emailId = await AsyncStorage.getItem('email')
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const orgName = await AsyncStorage.getItem('orgName');
+        const roleName = await AsyncStorage.getItem('roleName');
+        const remoteAuth = await AsyncStorage.getItem('remoteAuth');
 
+        let activeOrg = await AsyncStorage.getItem('activeOrg')
+        if (!activeOrg) {
+          activeOrg = 'guidedcompass'
+        }
+        //const email = 'harry@potter.com'
+        this.setState({ emailId, postsAreLoading: true })
+
+        if (emailId !== null) {
+          // We have data!!
+          console.log('what is the email of this user', emailId);
+
+          this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
+            roleName, activeOrg, orgFocus, orgName, remoteAuth
+          })
+        }
+       } catch (error) {
+         // Error retrieving data
+         console.log('there was an error', error)
+       }
     }
 
     render() {

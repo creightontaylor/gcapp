@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Image, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import {Picker} from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png'
 const imageIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/image-icon.png'
@@ -49,7 +51,6 @@ class EditGroup extends Component {
     }
 
     componentDidMount() {
-      document.body.style.backgroundColor = "#F5F5F5";
 
       this.retrieveData()
     }
@@ -65,135 +66,127 @@ class EditGroup extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called in commonEditGroup', this.props.selectedGroup)
+    retrieveData = async() => {
+      try {
+        console.log('retrieveData called in commonEditGroup', this.props.selectedGroup)
 
-      const accountCode = this.props.accountCode
+        const accountCode = this.props.accountCode
 
-      const emailId = localStorage.getItem('email');
-      const username = localStorage.getItem('username');
-      const cuFirstName = localStorage.getItem('firstName');
-      const cuLastName = localStorage.getItem('lastName');
-      const pictureURL = localStorage.getItem('pictureURL');
-      const activeOrg = localStorage.getItem('activeOrg');
-      const orgFocus = localStorage.getItem('orgFocus');
-      const orgName = localStorage.getItem('orgName');
+        const emailId = await AsyncStorage.getItem('email');
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        const pictureURL = await AsyncStorage.getItem('pictureURL');
+        const activeOrg = await AsyncStorage.getItem('activeOrg');
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const orgName = await AsyncStorage.getItem('orgName');
 
-      const categoryOptions = ['','Location','Age','Interests','Skills & Abilities','Values','Career Goals','Tech Trends','Societal Problems','Employers','Popular Career Areas','Organizations']
-      const accessTypeOptions = ['','Open','Request']
+        const categoryOptions = ['','Location','Age','Interests','Skills & Abilities','Values','Career Goals','Tech Trends','Societal Problems','Employers','Popular Career Areas','Organizations']
+        const accessTypeOptions = ['','Open','Request']
 
-      let _id = null
-      let groupPictureURL = null
-      let groupName = null
-      let groupCategory = null
-      let groupPathway = null
-      let groupDescription = null
-      let featured = null
-      let isActive = true
-      let groupAccessType = null
-      let selectedRoleNames = []
-      let groupMembers = []
-      let groupGoals = []
-      let meetingMethod = null
-      let meetingLocation = null
-      let meetingStartTime = null
-      let meetingEndTime = null
-      let meetingRepeats = 'Every Week'
-      let invites =  []
+        let _id = null
+        let groupPictureURL = null
+        let groupName = null
+        let groupCategory = null
+        let groupPathway = null
+        let groupDescription = null
+        let featured = null
+        let isActive = true
+        let groupAccessType = null
+        let selectedRoleNames = []
+        let groupMembers = []
+        let groupGoals = []
+        let meetingMethod = null
+        let meetingLocation = null
+        let meetingStartTime = null
+        let meetingEndTime = null
+        let meetingRepeats = 'Every Week'
+        let invites =  []
 
-      if (window.location.pathname.includes('/employers/')) {
-        // groupPictureURL = this.props.employerLogoURI
-        groupName = this.props.employerName + " " + this.props.jobFunction + " Community"
-        groupPathway = this.props.pathway
-        groupDescription = "This talent community is for people interested in joining the " + this.props.employerName + " " + this.props.jobFunction + " team."
-      }
+        let selectedGroup = null
 
-      let selectedGroup = null
+        if (this.props.selectedGroup) {
+          _id = this.props.selectedGroup._id
+          groupPictureURL = this.props.selectedGroup.pictureURL
+          groupName = this.props.selectedGroup.name
+          groupCategory = this.props.selectedGroup.category
+          groupPathway = this.props.selectedGroup.pathway
+          groupDescription = this.props.selectedGroup.description
+          featured = this.props.selectedGroup.featured
+          isActive = this.props.selectedGroup.isActive
+          groupAccessType = this.props.selectedGroup.accessType
+          selectedRoleNames = this.props.selectedGroup.roleNamesToAccess
+          groupMembers = this.props.selectedGroup.members
+          groupGoals = this.props.selectedGroup.groupGoals
+          meetingMethod = this.props.selectedGroup.meetingMethod
+          meetingLocation = this.props.selectedGroup.meetingLocation
+          if (this.props.selectedGroup.meetingStartTime) {
+            meetingStartTime = convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput")
+          }
+          if (this.props.selectedGroup.meetingEndTime) {
+            meetingEndTime = convertDateToString(new Date(this.props.selectedGroup.meetingEndTime),"rawDateTimeForInput")
+          }
 
-      if (this.props.selectedGroup) {
-        _id = this.props.selectedGroup._id
-        groupPictureURL = this.props.selectedGroup.pictureURL
-        groupName = this.props.selectedGroup.name
-        groupCategory = this.props.selectedGroup.category
-        groupPathway = this.props.selectedGroup.pathway
-        groupDescription = this.props.selectedGroup.description
-        featured = this.props.selectedGroup.featured
-        isActive = this.props.selectedGroup.isActive
-        groupAccessType = this.props.selectedGroup.accessType
-        selectedRoleNames = this.props.selectedGroup.roleNamesToAccess
-        groupMembers = this.props.selectedGroup.members
-        groupGoals = this.props.selectedGroup.groupGoals
-        meetingMethod = this.props.selectedGroup.meetingMethod
-        meetingLocation = this.props.selectedGroup.meetingLocation
-        if (this.props.selectedGroup.meetingStartTime) {
-          meetingStartTime = convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput")
+          meetingRepeats = this.props.selectedGroup.meetingRepeats
+          invites = this.props.selectedGroup.invites
+          // console.log('meetingStartTime: ', meetingStartTime)
+          // console.log('meetingStartTime 2: ', new Date(this.props.selectedGroup.meetingStartTime))
+          // console.log('meetingStartTime 3: ', convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput"))
+          // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/New_York"}))
+          // console.log('meetingStartTime 3: ', typeof this.props.selectedGroup.meetingStartTime)
+          // console.log('meetingStartTime 4: ', new Date(this.props.selectedGroup.meetingStartTime))
+          // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}))
+          // meetingStartTime = convertDateToString(meetingStartTime,"first16")
+          // console.log('meetingStartTime 2: ', meetingStartTime)
+
+          // 2021-10-30T04:32:00.000Z
+          // 2021-10-12T08:55
+          // 2021-010-30T19:30
+          selectedGroup = this.props.selectedGroup
         }
-        if (this.props.selectedGroup.meetingEndTime) {
-          meetingEndTime = convertDateToString(new Date(this.props.selectedGroup.meetingEndTime),"rawDateTimeForInput")
-        }
 
-        meetingRepeats = this.props.selectedGroup.meetingRepeats
-        invites = this.props.selectedGroup.invites
-        // console.log('meetingStartTime: ', meetingStartTime)
-        // console.log('meetingStartTime 2: ', new Date(this.props.selectedGroup.meetingStartTime))
-        // console.log('meetingStartTime 3: ', convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput"))
-        // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/New_York"}))
-        // console.log('meetingStartTime 3: ', typeof this.props.selectedGroup.meetingStartTime)
-        // console.log('meetingStartTime 4: ', new Date(this.props.selectedGroup.meetingStartTime))
-        // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}))
-        // meetingStartTime = convertDateToString(meetingStartTime,"first16")
-        // console.log('meetingStartTime 2: ', meetingStartTime)
-
-        // 2021-10-30T04:32:00.000Z
-        // 2021-10-12T08:55
-        // 2021-010-30T19:30
-        selectedGroup = this.props.selectedGroup
-      }
-
-      if (window.location.pathname.includes('/app/')) {
-        // only accountability groups are allowed
         groupCategory = 'Accountability'
         groupAccessType = 'Request'
         selectedRoleNames = ['Career-Seeker']
-      } else if (window.location.pathname.includes('/employers/')) {
-        groupCategory = 'Employers'
-        groupAccessType = "Open"
-        selectedRoleNames = ['Career-Seeker','Employer']
+
+        this.setState({
+          pictureURL, emailId, username, cuFirstName, cuLastName, activeOrg, orgFocus, orgName, accountCode,
+          categoryOptions, accessTypeOptions,
+          _id, groupPictureURL, groupName, groupCategory, groupPathway, groupDescription, featured, isActive,
+          groupGoals, meetingMethod, meetingLocation, meetingStartTime, meetingEndTime, meetingRepeats, invites,
+          groupAccessType, selectedRoleNames, groupMembers, selectedGroup
+        })
+
+        Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+        .then((response) => {
+          console.log('Org info query attempted one', response.data);
+
+          if (response.data.success) {
+            console.log('org info query worked')
+
+            const orgContactEmail = response.data.orgInfo.contactEmail
+            const placementPartners = response.data.orgInfo.placementPartners
+
+            this.setState({ orgContactEmail, placementPartners });
+
+          } else {
+            console.log('org info query did not work', response.data.message)
+          }
+
+        }).catch((error) => {
+            console.log('Org info query did not work for some reason', error);
+        });
+
+      } catch (error) {
+       // Error retrieving data
+       console.log('there was an error', error)
       }
-
-      this.setState({
-        pictureURL, emailId, username, cuFirstName, cuLastName, activeOrg, orgFocus, orgName, accountCode,
-        categoryOptions, accessTypeOptions,
-        _id, groupPictureURL, groupName, groupCategory, groupPathway, groupDescription, featured, isActive,
-        groupGoals, meetingMethod, meetingLocation, meetingStartTime, meetingEndTime, meetingRepeats, invites,
-        groupAccessType, selectedRoleNames, groupMembers, selectedGroup
-      })
-
-      Axios.get('/api/org', { params: { orgCode: activeOrg } })
-      .then((response) => {
-        console.log('Org info query attempted one', response.data);
-
-        if (response.data.success) {
-          console.log('org info query worked')
-
-          const orgContactEmail = response.data.orgInfo.contactEmail
-          const placementPartners = response.data.orgInfo.placementPartners
-
-          this.setState({ orgContactEmail, placementPartners });
-
-        } else {
-          console.log('org info query did not work', response.data.message)
-        }
-
-      }).catch((error) => {
-          console.log('Org info query did not work for some reason', error);
-      });
     }
 
-    formChangeHandler = (event) => {
-      console.log('formChangeHandler called', event.target.name, event.target.value)
+    formChangeHandler = (eventName,eventValue) => {
+      console.log('formChangeHandler called')
 
-      if (event.target.name === 'groupCoverImage') {
+      if (eventName === 'groupCoverImage') {
 
           if (event.target.files[0]) {
             let reader = new FileReader();
@@ -204,12 +197,12 @@ class EditGroup extends Component {
             reader.readAsDataURL(event.target.files[0]);
             this.setState({ groupImageFile: event.target.files[0] })
             // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-            // this.saveFile(event.target.name, event.target.files[0])
+            // this.saveFile(eventName, event.target.files[0])
           }
-      } else if (event.target.name === 'searchMembers') {
-        this.searchItems(event.target.value,'member')
+      } else if (eventName === 'searchMembers') {
+        this.searchItems(eventValue,'member')
       } else {
-        this.setState({ [event.target.name]: event.target.value })
+        this.setState({ [eventName]: eventValue })
       }
     }
 
@@ -225,16 +218,16 @@ class EditGroup extends Component {
           const excludeCurrentUser = true
           const emailId = this.state.emailId
           const orgCode = this.state.activeOrg
-          let roleNames = ['Student','Career-Seeker','Mentor','Employer']
-          if (window.location.pathname.includes('/app/groups')) {
-            roleNames = ['Student','Career-Seeker']
+          let roleNames = ['Student','Career-Seeker']
+          if (this.props.fromAdviso) {
+            roleNames = ['Student','Career-Seeker','Mentor','Employer']
           }
 
           const self = this
           function officiallyFilter() {
             console.log('officiallyFilter called')
 
-            Axios.get('/api/members/search', {  params: {searchString, excludeCurrentUser, emailId, roleNames, orgCode }})
+            Axios.get('https://www.guidedcompass.com/api/members/search', {  params: {searchString, excludeCurrentUser, emailId, roleNames, orgCode }})
             .then((response) => {
               console.log('Careers query attempted', response.data);
 
@@ -302,29 +295,31 @@ class EditGroup extends Component {
         if (items && items.length > 0) {
 
           return (
-            <div key={"items"}>
-              <div style={styles.spacer} />
-              {items.map((value, optionIndex) =>
-                <div key={"items|" + optionIndex} className="float-left">
+            <View key={"items"}>
+              <View style={styles.spacer} />
 
-                  <div className="close-button-container-1" >
-                    <button className="background-button" onClick={() => this.removeTag(optionIndex,type)}>
-                      <img src={deniedIcon} alt="Compass target icon" className="image-auto-20" />
-                    </button>
-                  </div>
+              <View style={[styles.rowDirection,styles.flexWrap]}>
+                {items.map((value, optionIndex) =>
+                  <View key={"items|" + optionIndex}>
 
-                  <div className="float-left right-padding-5">
-                    <div className="half-spacer" />
-                    <div className={(value.roleName === 'Mentor' || value.roleName === 'Employer') ? "tag-container-basic error-background-color clear-margin top-margin-5" : "tag-container-basic faint-background clear-margin top-margin-5"}>
-                      <p className="description-text-2">{value.firstName} {value.lastName}</p>
-                      <p className="description-text-5">({value.email})</p>
-                    </div>
-                    <div className="half-spacer" />
-                  </div>
+                    <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                      <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
+                        <Image source={deniedIcon} style={[styles.square20,styles.contain]} />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.rightPadding5]}>
+                      <View style={[styles.halfSpacer]} />
+                      <View style={(value.roleName === 'Mentor' || value.roleName === 'Employer') ? [styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparent,styles.errorBackgroundColor,styles.topMargin5] : [styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.transparent,styles.lightBackground,styles.topMargin5]}>
+                        <Text style={[styles.descriptionText2]}>{value.firstName} {value.lastName}</Text>
+                        <Text style={[styles.descriptionText5]}>({value.email})</Text>
+                      </View>
+                      <View style={[styles.halfSpacer]} />
+                    </View>
+                  </View>
+                )}
+              </View>
 
-                </div>
-              )}
-            </div>
+            </View>
           )
         }
       }
@@ -409,7 +404,7 @@ class EditGroup extends Component {
 
       const _id = this.state.selectedGroup._id
 
-      Axios.delete('/api/groups/' + _id)
+      Axios.delete('https://www.guidedcompass.com/api/groups/' + _id)
       .then((response) => {
         console.log('tried to  delete', response.data)
         if (response.data.success) {
@@ -417,16 +412,12 @@ class EditGroup extends Component {
           console.log('Group delete worked');
 
           this.setState({ successMessage: response.data.message, confirmDelete: false, isSaving: false })
-          if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-            this.props.history.push('/app/community')
-          } else if (window.location.pathname.includes('/advisor')) {
-            this.props.history.push('/advisor/groups')
-          } else if (window.location.pathname.includes('/organizations')) {
-            this.props.history.push('/organizations/' + this.state.activeOrg + '/groups')
-          } else if (window.location.pathname.includes('/app/walkthrough')) {
+          if (this.props.fromAdvisor) {
+            this.props.navigation.navigate('Groups')
+          } else if (this.props.fromWalkthrough) {
             this.props.passGroup(this.state.selectedGroup, false)
-          } else if (window.location.pathname.includes('/employers/')) {
-            this.props.history.push("/employers/" + this.state.accountCode + "/pipelines")
+          } else {
+            this.props.navigation.navigate('Community')
           }
 
         } else {
@@ -525,7 +516,7 @@ class EditGroup extends Component {
           createdAt, updatedAt, saveNewGroup
         }
 
-        Axios.post('/api/groups', posting)
+        Axios.post('https://www.guidedcompass.com/api/groups', posting)
         .then((response) => {
           console.log('attempted to save group')
           if (response.data.success) {
@@ -545,7 +536,7 @@ class EditGroup extends Component {
               // pull id if no id
               if (!groupId) {
 
-                Axios.get('/api/groups/byid', { params: { name } })
+                Axios.get('https://www.guidedcompass.com/api/groups/byid', { params: { name } })
                 .then((response) => {
                   console.log('Group name query attempted one', response.data);
 
@@ -579,17 +570,14 @@ class EditGroup extends Component {
                 })
 
                 this.closeModal()
-                if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-                  this.props.history.push("/app/groups/" + response.data._id)
-                } else if (window.location.pathname.includes('/advisor/groups')) {
-                  this.props.history.push("/advisor/groups/" + response.data._id)
-                } else if (window.location.pathname.includes('/organizations/')) {
-                  this.props.history.push("/organizations/" + this.state.activeOrg + "/groups/" + response.data._id)
-                } else if (window.location.pathname.includes('/app/walkthrough')) {
+                if (this.props.fromAdvisor) {
+                  this.props.navigation.navigate('GroupDetails', { selectedGroup: posting })
+                } else if (this.props.fromWalkthrough) {
                   posting['_id'] = response.data._id
                   this.props.passGroup(posting, true)
-                } else if (window.location.pathname.includes('/employers/')) {
-                  this.props.history.push("/employers/" + this.state.accountCode + "/groups/" + response.data._id)
+                } else {
+                  posting['_id'] = response.data._id
+                  this.props.navigation.navigate('GroupDetails', { selectedGroup: posting })
                 }
               }
             }
@@ -662,7 +650,7 @@ class EditGroup extends Component {
               const deleteKey = deleteArray[1].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")
               console.log('show deleteKey: ', deleteKey)
 
-              Axios.put('/api/file', { deleteKey })
+              Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
               .then((response) => {
                 console.log('tried to delete', response.data)
                 if (response.data.success) {
@@ -676,17 +664,13 @@ class EditGroup extends Component {
                       groupAccessType: '', selectedRoleNames: [], groupMembers: []
                     })
                     self.closeModal()
-                    if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-                      self.props.history.push("/app/groups/" + groupId)
-                    } else if (window.location.pathname.includes('/advisor/groups')) {
-                      self.props.history.push("/advisor/groups/" + groupId)
-                    } else if (window.location.pathname.includes('/organizations/')) {
-                      self.props.history.push("/organizations/" + self.state.activeOrg + "/groups/" + groupId)
-                    } else if (window.location.pathname.includes('/app/walkthrough')) {
+                    if (self.props.fromAdvisor) {
+                      self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+                    } else if (self.props.fromWalkthrough) {
                       group['_id'] = groupId
                       self.props.passGroup(group, true)
-                    } else if (window.location.pathname.includes('/employers/')) {
-                      self.props.history.push("/employers/" + self.state.accountCode + "/groups/" + groupId)
+                    } else {
+                      self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                     }
                   }
 
@@ -697,17 +681,13 @@ class EditGroup extends Component {
                   groupAccessType: '', selectedRoleNames: [], groupMembers: [], errorMessage: response.data.message
                   })
                   self.closeModal()
-                  if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-                    self.props.history.push("/app/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/advisor/groups')) {
-                    self.props.history.push("/advisor/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/organizations/')) {
-                    self.props.history.push("/organizations/" + self.state.activeOrg + "/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/app/walkthrough')) {
+                  if (self.props.fromAdvisor) {
+                    self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+                  } else if (self.props.fromWalkthrough) {
                     group['_id'] = groupId
                     self.props.passGroup(group, true)
-                  } else if (window.location.pathname.includes('/employers/')) {
-                    self.props.history.push("/employers/" + self.state.accountCode + "/groups/" + groupId)
+                  } else {
+                    self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                   }
                 }
               }).catch((error) => {
@@ -719,17 +699,13 @@ class EditGroup extends Component {
                     errorMessage: error
                   })
                   self.closeModal()
-                  if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-                    self.props.history.push("/app/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/advisor/groups')) {
-                    self.props.history.push("/advisor/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/organizations/')) {
-                    self.props.history.push("/organizations/" + this.state.activeOrg + "/groups/" + groupId)
-                  } else if (window.location.pathname.includes('/app/walkthrough')) {
+                  if (self.props.fromAdvisor) {
+                    self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+                  } else if (self.props.fromWalkthrough) {
                     group['_id'] = groupId
                     self.props.passGroup(group, true)
-                  } else if (window.location.pathname.includes('/employers/')) {
-                    self.props.history.push("/employers/" + self.state.accountCode + "/groups/" + groupId)
+                  } else {
+                    self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                   }
               });
             } else {
@@ -737,17 +713,13 @@ class EditGroup extends Component {
               groupAccessType: '', selectedRoleNames: [], groupMembers: [], errorMessage: 'Successfully created a group'
               })
               self.closeModal()
-              if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-                self.props.history.push("/app/groups/" + groupId)
-              } else if (window.location.pathname.includes('/advisor/groups')) {
-                self.props.history.push("/advisor/groups/" + groupId)
-              } else if (window.location.pathname.includes('/organizations/')) {
-                self.props.history.push("/organizations/" + self.state.activeOrg + "/groups/" + groupId)
-              } else if (window.location.pathname.includes('/app/walkthrough')) {
+              if (self.props.fromAdvisor) {
+                self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+              } else if (self.props.fromWalkthrough) {
                 group['_id'] = groupId
                 self.props.passGroup(group, true)
-              } else if (window.location.pathname.includes('/employers/')) {
-                self.props.history.push("/employers/" + self.state.accountCode + "/groups/" + groupId)
+              } else {
+                self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
               }
             }
           })
@@ -761,17 +733,13 @@ class EditGroup extends Component {
               groupName: '', groupCategory: '', groupDescription: '', groupAccessType: '', selectedRoleNames: []
             })
             this.closeModal()
-            if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-              this.props.history.push("/app/groups/" + groupId)
-            } else if (window.location.pathname.includes('/advisor/groups')) {
-              this.props.history.push("/advisor/groups/" + groupId)
-            } else if (window.location.pathname.includes('/organizations/')) {
-              this.props.history.push("/organizations/" + this.state.activeOrg + "/groups/" + groupId)
-            } else if (window.location.pathname.includes('/app/walkthrough')) {
+            if (self.props.fromAdvisor) {
+              self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+            } else if (self.props.fromWalkthrough) {
               group['_id'] = groupId
-              this.props.passGroup(group, true)
-            } else if (window.location.pathname.includes('/employers/')) {
-              this.props.history.push("/employers/" + this.state.accountCode + "/groups/" + groupId)
+              self.props.passGroup(group, true)
+            } else {
+              self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
             }
           }
         }
@@ -784,17 +752,13 @@ class EditGroup extends Component {
             groupName: '', groupCategory: '', groupDescription: '', groupAccessType: '', selectedRoleNames: []
           })
           this.closeModal()
-          if (window.location.pathname.includes('/app/groups') || window.location.pathname.includes('/app/community')) {
-            this.props.history.push("/app/groups/" + groupId)
-          } else if (window.location.pathname.includes('/advisor/groups')) {
-            this.props.history.push("/advisor/groups/" + groupId)
-          } else if (window.location.pathname.includes('/organizations/')) {
-            this.props.history.push("/organizations/" + groupId)
-          } else if (window.location.pathname.includes('/app/walkthrough')) {
+          if (this.props.fromAdvisor) {
+            this.props.navigation.navigate('GroupDetails', { selectedGroup: group })
+          } else if (this.props.fromWalkthrough) {
             group['_id'] = groupId
             this.props.passGroup(group, true)
-          } else if (window.location.pathname.includes('/employers/')) {
-            this.props.history.push("/employers/" + this.state.accountCode + "/groups/" + groupId)
+          } else {
+            this.props.navigation.navigate('GroupDetails', { selectedGroup: group })
           }
         }
       }.bind(this));
@@ -825,463 +789,501 @@ class EditGroup extends Component {
     render() {
 
       return (
-          <div>
-
-            <div key="addOrgGroup" className="full-width padding-20">
-                {(window.location.pathname.includes('/app/')) ? (
-                  <div>
-                    <p className="heading-text-2 bottom-padding">Create an Acccountability Group</p>
-                    <p className="top-padding">An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</p>
-                    <div style={styles.spacer} /><div style={styles.spacer} />
-                  </div>
-                ) : (
-                  <div>
+          <View>
+            <View key="addOrgGroup" style={[styles.calcColumn80]}>
+                {(this.props.fromAdvisor) ? (
+                  <View>
                     {(this.state.selectedGroup) ? (
-                      <p className="heading-text-2 bottom-padding">Edit {this.state.selectedGroup.name}</p>
+                      <Text style={[styles.headingText2,styles.bottomPadding]}>Edit {this.state.selectedGroup.name}</Text>
                     ) : (
-                      <div>
+                      <View>
                         {(this.state.orgName) ? (
-                          <p className="heading-text-2 bottom-padding">Add a Group to {this.state.orgName}</p>
+                          <Text style={[styles.headingText2,styles.bottomPadding]}>Add a Group to {this.state.orgName}</Text>
                         ) : (
-                          <p className="heading-text-2 bottom-padding">Create a Group</p>
+                          <Text style={[styles.headingText2,styles.bottomPadding]}>Create a Group</Text>
                         )}
-                      </div>
+                      </View>
                     )}
 
-                    <div style={styles.spacer} /><div style={styles.spacer} />
-                  </div>
+                    <View style={styles.spacer} /><View style={styles.spacer} />
+                  </View>
+                ) : (
+                  <View>
+                    <Text style={[styles.headingText2,styles.bottomPadding]}>Create an Acccountability Group</Text>
+                    <Text style={[styles.topPadding]}>An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</Text>
+                    <View style={styles.spacer} /><View style={styles.spacer} />
+                  </View>
                 )}
 
-                {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="description-text-2 error-color row-5">{this.state.errorMessage}</p>}
-                {(this.state.successMessage && this.state.successMessage !== '') && <p className="description-text-2 cta-color row-5">{this.state.successMessage}</p>}
+                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                {(this.state.isSaving) ? (
-                 <div className="flex-container flex-center full-space">
-                   <div>
-                     <div className="super-spacer" />
+                 <View style={[styles.flex1,styles.flexCenter]}>
+                   <View>
+                     <View style={[styles.superSpacer]} />
 
                      <ActivityIndicator
                         animating = {this.state.animating}
                         color = '#87CEFA'
                         size = "large"
                         style={styles.square80, styles.centerHorizontally}/>
-                     <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
-                     <p className="center-text cta-color bold-text">Searching...</p>
+                     <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                     <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
-                   </div>
-                 </div>
+                   </View>
+                 </View>
                ) : (
-                 <div>
-                   <div className="row-15">
-                     <div className="upload-image">
-                       <div style={styles.spacer} />
-                       <div>
-                         <p className="heading-text-6">Group Cover Image</p>
-                         <div style={styles.spacer} />
-                       </div>
+                 <View>
+                   <View style={[styles.row15]}>
+                     <View>
+                       <View style={styles.spacer} />
+                       <View>
+                         <Text style={[styles.headingText6]}>Group Cover Image</Text>
+                         <View style={styles.spacer} />
+                       </View>
 
-                       <div className="relative-position">
-                         <label for="groupCoverImage" className="profile-pic-button">
-                           <img src={ this.state.groupCoverImage ? ( this.state.groupCoverImage )
-                             : this.state.groupPictureURL ? ( this.state.groupPictureURL )
-                             : ( imageIcon)}
-                           alt="GC" for="profilePic" className="add-group-cover-image standard-border"/>
+                       <View style={styles.relativePosition}>
+                         <TouchableOpacity onPress={() => this.formChangeHandler("groupCoverImage",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
+                           <Image source={ this.state.groupCoverImage ? ( { uri: this.state.groupCoverImage} )
+                             : this.state.groupPictureURL ? ( { uri: this.state.groupPictureURL} )
+                             : ( { uri: imageIcon})}
+                           style={(this.state.groupCoverImage || this.state.groupPictureURL) ? [styles.square150,styles.contain,styles.centerItem,{ borderRadius: (150/2)}] : [styles.square150,styles.contain,styles.centerItem]}/>
+                           {(this.state.groupCoverImage || this.state.groupPictureURL) && (
+                             <View style={[styles.absolutePosition,styles.justifyEnd, styles.absoluteBottom0, styles.absoluteRight0]}>
+                               <View style={[styles.marginTopNegative40,styles.padding10,styles.square40,styles.whiteBackground,{ borderRadius: (20)}]}>
+                                 <Image source={{ uri: addIcon}} style={[styles.square18,styles.contain,styles.centerItem]}/>
+                               </View>
+                             </View>
+                           )}
+                         </TouchableOpacity>
+                         {/*<input type="file" id="profilePic" name="profilePic" onChange={this.formChangeHandler} accept="image/*" />*/}
+                       </View>
 
-                           <div className="bottom-right-overlay-250">
-                             <div className="bottom-right-subcontainer">
-                               <img src={addIcon} alt="Compass add icon" className="image-auto-18 center-item" />
-                             </div>
-                             <div className="clear" />
-                           </div>
-
-                         </label>
-                         <input type="file" id="groupCoverImage" name="groupCoverImage" onChange={this.formChangeHandler} accept="image/*" />
-                       </div>
-
-                       <div className="clear" />
-                       <div style={styles.spacer} />
-                       <p className="description-text-color">Dimensions: 600 x 360</p>
+                       <View style={styles.spacer} />
+                       <Text style={[styles.descriptionTextColor]}>Dimensions: 600 x 360</Text>
 
                        { (this.state.serverPostSuccess) ? (
-                         <p className="success-message">{this.state.serverSuccessMessage}</p>
+                         <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
                        ) : (
-                         <p className="error-message">{this.state.serverErrorMessage}</p>
+                         <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
                        )}
-                     </div>
-                   </div>
+                     </View>
+                   </View>
 
-                   <div className="row-15">
-                     <div className="container-left">
-                       <p className="heading-text-6">Group Name<label className="error-color bold-text">*</label></p>
-                       <div style={styles.spacer} />
-                       <input type="text" className="text-field" placeholder="Add group name..." name="groupName" value={this.state.groupName} onChange={this.formChangeHandler}></input>
-                     </div>
-                     {(!window.location.pathname.includes('/app/')) && (
-                       <div>
-                          {(window.location.pathname.includes('/employers/')) ? (
-                            <div className="container-right">
-                              <p className="heading-text-6">Group Pathway<label className="error-color bold-text">*</label></p>
-                              <div style={styles.spacer} />
-                              <input type="text" className="text-field" placeholder="Add career pathway or department..." name="groupPathway" value={this.state.groupPathway} onChange={this.formChangeHandler}></input>
-                            </div>
-                          ) : (
-                            <div className="container-right">
-                              <p className="heading-text-6">Group Category<label className="error-color bold-text">*</label></p>
-                              <div style={styles.spacer} />
-                              <select name="groupCategory" value={this.state.groupCategory} onChange={this.formChangeHandler} className="dropdown">
-                                {this.state.categoryOptions.map(value =>
-                                  <option key={value} value={value}>{value}</option>
-                                )}
-                              </select>
-                            </div>
-                          )}
-                       </div>
+                   <View style={[styles.row15]}>
+                     <View style={[styles.row10]}>
+                       <Text style={[styles.headingText6]}>Group Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                       <View style={styles.spacer} />
+                       <TextInput
+                         style={styles.textInput}
+                         onChangeText={(text) => this.formChangeHandler("groupName", text)}
+                         value={this.state.groupName}
+                         placeholder="Add group name..."
+                         placeholderTextColor="grey"
+                         multiline={true}
+                         numberOfLines={4}
+                       />
+                     </View>
+                     {(this.props.fromAdvisor) && (
+                       <View>
+                         <View style={[styles.row10]}>
+                           <Text style={[styles.headingText6]}>Group Category<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                           <View style={styles.spacer} />
+                           <Picker
+                             selectedValue={this.state.groupCategory}
+                             onValueChange={(itemValue, itemIndex) =>
+                               this.formChangeHandler("groupCategory",itemValue)
+                             }>
+                             {this.state.categoryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                           </Picker>
+                         </View>
+                       </View>
                      )}
+                   </View>
 
-                     <div className="clear" />
-                   </div>
-
-                   <div className="row-15">
-                     <p className="heading-text-6">Group Description<label className="error-color bold-text">*</label></p>
-                     <div style={styles.spacer} />
-                     <textarea type="text" className="text-field" placeholder="Add description..." name="groupDescription" value={this.state.groupDescription} onChange={this.formChangeHandler}></textarea>
-                   </div>
+                   <View style={[styles.row15]}>
+                     <Text style={[styles.headingText6]}>Group Description<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                     <View style={styles.spacer} />
+                     <TextInput
+                       style={styles.textInput}
+                       onChangeText={(text) => this.formChangeHandler("groupDescription", text)}
+                       value={this.state.groupDescription}
+                       placeholder="Add description..."
+                       placeholderTextColor="grey"
+                       multiline={true}
+                       numberOfLines={4}
+                     />
+                   </View>
 
                    {(this.state.groupCategory === 'Accountability') && (
-                     <div>
-                       <div className="row-15">
-                         <p className="heading-text-6">Tag the Relevant Goals of this Group</p>
-                         <div style={styles.spacer} />
-                         {this.state.goalTypeOptions.map((value, optionIndex) =>
-                           <div key={"items|" + optionIndex} className="float-left">
-                             <button className="background-button" onClick={() => this.itemClicked(value,'goal')}>
-                               <div className="float-left right-padding-5">
-                                  {(this.state.groupGoals && this.state.groupGoals.includes(value)) ? (
-                                    <div className="tag-container-basic primary-background clear-margin top-margin-5 standard-border">
-                                      <p className="white-text">{value}</p>
-                                    </div>
-                                  ) : (
-                                    <div className="tag-container-basic light-background clear-margin top-margin-5 standard-border">
-                                      <p>{value}</p>
-                                    </div>
-                                  )}
-                               </div>
-                             </button>
-                           </div>
-                         )}
-                         <div className="clear" />
-                       </div>
+                     <View>
+                       <View style={[styles.row15]}>
+                         <Text style={[styles.headingText6]}>Tag the Relevant Goals of this Group</Text>
+                         <View style={styles.spacer} />
 
-                       <div className="row-15">
-                         <p className="heading-text-6">Meetings</p>
-                         <div style={styles.spacer} />
+                         <View style={[styles.rowDirection,styles.flexWrap]}>
+                           {this.state.goalTypeOptions.map((value, optionIndex) =>
+                             <View key={"items|" + optionIndex}>
+                               <TouchableOpacity onPress={() => this.itemClicked(value,'goal')}>
+                                 <View style={[styles.rightPadding5]}>
+                                    {(this.state.groupGoals && this.state.groupGoals.includes(value)) ? (
+                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.standardBorder,styles.topMargin5,styles.ctaBackgroundColor]}>
+                                        <Text style={[styles.standardText,styles.whiteColor]}>{value}</Text>
+                                      </View>
+                                    ) : (
+                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.standardBorder,styles.topMargin5,styles.lightBackground]}>
+                                        <Text style={[styles.standardText]}>{value}</Text>
+                                      </View>
+                                    )}
+                                 </View>
+                               </TouchableOpacity>
+                             </View>
+                           )}
 
-                         <div className="row-5">
-                           <div className="container-left">
-                             <label className="profile-label">Repeats<label className="error-color bold-text">*</label></label>
-                             <select name="meetingRepeats" value={this.state.meetingRepeats} onChange={this.formChangeHandler} className="dropdown">
-                               {this.state.repeatOptions.map(value =>
-                                 <option key={value} value={value}>{value}</option>
-                               )}
-                             </select>
-                           </div>
-                           <div className="clear" />
-                         </div>
+                         </View>
 
-                         <div className="row-5">
-                           <div className="container-left">
-                             <label className="profile-label">{this.state.logType} Method<label className="error-color bold-text">*</label></label>
-                             <select className="dropdown" name="meetingMethod" value={this.state.meetingMethod} onChange={this.formChangeHandler}>
-                                 <option />
-                                 <option value="In Person">In Person</option>
-                                 <option value="Remote">Remote</option>
-                             </select>
-                           </div>
+                       </View>
 
-                           <div className="container-right">
-                             <label className="profile-label">{(this.state.meetingMethod === "In Person") ? "Location" : "Meeting Link"}<label className="error-color bold-text">*</label></label>
-                             <input type="text" className="text-field" placeholder={(this.state.meetingMethod === "In Person") ? "Address..." : "Http..."} name="meetingLocation"  value={this.state.meetingLocation} onChange={this.formChangeHandler}></input>
+                       <View style={[styles.row15]}>
+                         <Text style={[styles.headingText6]}>Meetings</Text>
+                         <View style={styles.spacer} />
+
+                         <View style={[styles.row5]}>
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.row10]}>Repeats<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <Picker
+                               selectedValue={this.state.meetingRepeats}
+                               onValueChange={(itemValue, itemIndex) =>
+                                 this.formChangeHandler("meetingRepeats",itemValue)
+                               }>
+                               {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                             </Picker>
+                           </View>
+
+                         </View>
+
+                         <View style={[styles.row5]}>
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.row10]}>{this.state.logType} Method<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <Picker
+                               selectedValue={this.state.meetingMethod}
+                               onValueChange={(itemValue, itemIndex) =>
+                                 this.formChangeHandler("meetingMethod",itemValue)
+                               }>
+                                <Picker.Item key={""} label={""} value={""} />
+                                <Picker.Item key={"In Person"} label={"In Person"} value={"In Person"} />
+                                <Picker.Item key={"Remote"} label={"Remote"} value={"Remote"} />
+                             </Picker>
+                           </View>
+
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.row10]}>{(this.state.meetingMethod === "In Person") ? "Location" : "Meeting Link"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <TextInput
+                               style={styles.textInput}
+                               onChangeText={(text) => this.formChangeHandler("meetingLocation", text)}
+                               value={this.state.meetingLocation}
+                               placeholder={(this.state.meetingMethod === "In Person") ? "Address..." : "Http..."}
+                               placeholderTextColor="grey"
+                               multiline={true}
+                               numberOfLines={4}
+                             />
                              {(this.state.meetingMethod === "Remote") && this.state.meetingLocation && this.state.meetingLocation !== '' && !this.state.meetingLocation.startsWith('http') && (
-                               <div className="top-padding-5">
-                                 <p className="error-color description-text-2">Please add a valid link that starts with http</p>
-                               </div>
+                               <View style={[styles.topPadding5]}>
+                                 <Text style={[styles.errorColor,styles.descriptionText2]}>Please add a valid link that starts with http</Text>
+                               </View>
                              )}
-                           </div>
+                           </View>
 
-                           <div className="clear" />
-                         </div>
 
-                         <div className="row-5">
-                           <div className="container-left">
-                             <label className="profile-label">Starts<label className="error-color bold-text">*</label></label>
-                             <input type="datetime-local" className="date-picker" placeholder="Start date" name="meetingStartTime" value={this.state.meetingStartTime} onChange={this.formChangeHandler}></input>
-                           </div>
-                           <div className="container-right">
-                             <label className="profile-label">Ends<label className="error-color bold-text">*</label></label>
-                             <input type="datetime-local" className="date-picker" placeholder="End date" name="meetingEndTime" value={this.state.meetingEndTime} onChange={this.formChangeHandler}></input>
-                           </div>
-                           <div className="clear" />
-                         </div>
-                       </div>
-                     </div>
+                         </View>
+
+                         <View style={[styles.row5]}>
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <DateTimePicker
+                               testID={"1"}
+                               value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
+                               mode={'datetime'}
+                               is24Hour={true}
+                               display="default"
+                               onChange={(e, d) => this.formChangeHandler("meetingStartTime",d)}
+                             />
+                           </View>
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <DateTimePicker
+                               testID={"2"}
+                               value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
+                               mode={'datetime'}
+                               is24Hour={true}
+                               display="default"
+                               onChange={(e, d) => this.formChangeHandler("meetingEndTime",d)}
+                             />
+                           </View>
+
+                         </View>
+                       </View>
+                     </View>
                    )}
 
-                   {(!window.location.pathname.includes('/app/')) && (
-                     <div>
-                       <div className="row-15">
-                         <div className="container-left">
-                           <p className="heading-text-6">Visible?</p>
+                   {(this.props.fromAdvisor) && (
+                     <View>
+                       <View style={[styles.row15]}>
+                         <View style={[styles.row10]}>
+                           <Text style={[styles.headingText6]}>Visible?</Text>
 
-                           <div style={styles.spacer} /><div className="half-spacer"/>
+                           <View style={styles.spacer} /><View style={[styles.halfSpacer]}/>
                            <Switch
                              onValueChange={(change) => this.setState({ isActive: change, formHasChanged: true })}
                              value={this.state.isActive}
                            />
-                         </div>
-                         <div className="container-right">
+                         </View>
+                         <View style={[styles.row10]}>
 
-                         </div>
-                         <div className="clear" />
-                       </div>
+                         </View>
 
-                       {!window.location.pathname.includes('/employers/') && (
-                          <div>
-                            <div className="row-15">
-                              <div className="container-left">
-                                <p className="heading-text-6">Access Type<label className="error-color bold-text">*</label></p>
-                                <div style={styles.spacer} />
-                                <select name="groupAccessType" value={this.state.groupAccessType} onChange={this.formChangeHandler} className="dropdown">
-                                  {this.state.accessTypeOptions.map(value =>
-                                    <option key={value} value={value}>{value}</option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="clear" />
-                            </div>
+                       </View>
 
-                            <div className="row-15">
-                              <p className="heading-text-6">Roles Who Can Access<label className="error-color bold-text">*</label></p>
-                              <div style={styles.spacer} />
-                              {this.state.roleNameOptions.map((value, optionIndex) =>
-                                <div key={optionIndex}>
-                                  <div className="float-left bottom-padding-5 right-padding">
-                                    {(this.state.selectedRoleNames.includes(value)) ? (
-                                      <button className="background-button tag-container-4 float-left top-margin-5 left-margin-5" onClick={() => this.optionClicked(value, optionIndex)}>
-                                        <div>
-                                          <div className="float-left left-text">
-                                            <p className="description-text-2 white-text">{value}</p>
-                                          </div>
-                                        </div>
-                                      </button>
-                                    ) : (
-                                      <button className="background-button tag-container-5" onClick={() => this.optionClicked(value, optionIndex)}>
-                                        <div>
-                                          <div className="float-left left-text">
-                                            <p className="description-text-2">{value}</p>
-                                          </div>
-                                        </div>
-                                      </button>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
+                       <View>
+                         <View style={[styles.row15]}>
+                           <View style={[styles.row10]}>
+                             <Text style={[styles.headingText6]}>Access Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             <View style={styles.spacer} />
+                             <Picker
+                               selectedValue={this.state.groupAccessType}
+                               onValueChange={(itemValue, itemIndex) =>
+                                 this.formChangeHandler("groupAccessType",itemValue)
+                               }>
+                               {this.state.accessTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                             </Picker>
+                           </View>
 
-                              <div className="clear" />
-                            </div>
-                          </div>
-                       )}
+                         </View>
 
-                     </div>
-                   )}
+                         <View style={[styles.row15]}>
+                           <Text style={[styles.headingText6]}>Roles Who Can Access<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                           <View style={styles.spacer} />
 
-                   {(window.location.pathname.includes('/app/')) && (
-                     <div className="row-15">
-                       <p className="heading-text-6">Invite People</p>
-                       <p className="description-text-2 bottom-padding top-padding-5">Note: acountablity groups are limited to 6 people</p>
-                      <div className='spacer' />
-                       <div>
-                        <div className="container-left">
-                          <input type="text" className="text-field" placeholder="Search members..." name="searchMembers" value={this.state.searchString} onChange={this.formChangeHandler}></input>
-                        </div>
-                        <div className="container-right">
-                          <button className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready}  onClick={() => this.addItem('invite')}>Add</button>
-                        </div>
-                        <div className="clear" />
-                       </div>
-
-                       {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="description-text-2 error-color row-5">{this.state.errorMessage}</p>}
-                       {(this.state.successMessage && this.state.successMessage !== '') && <p className="description-text-2 cta-color row-5">{this.state.successMessage}</p>}
-
-                       {(this.state.searchIsAnimating) ? (
-                         <div className="flex-container flex-center full-space">
-                           <div>
-                             <div className="super-spacer" />
-
-                             <ActivityIndicator
-                                animating = {this.state.animating}
-                                color = '#87CEFA'
-                                size = "large"
-                                style={styles.square80, styles.centerHorizontally}/>
-                             <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
-                             <p className="center-text cta-color bold-text">Searching...</p>
-
-                           </div>
-                         </div>
-                       ) : (
-                         <div>
-                           <div>
-                             {(this.state.memberOptions) && (
-                               <div className="card top-margin">
-                                 {this.state.memberOptions.map((value, optionIndex) =>
-                                   <div key={value._id} className="left-text bottom-margin-5 full-width">
-                                     <button className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value,'member')}>
-                                       <div className="full-width">
-                                         <div className="fixed-column-40">
-                                          <div className="half-spacer" />
-                                           <img src={(value.pictureURL) ? value.pictureURL : profileIconDark} alt="GC" className="profile-thumbnail-25" />
-                                         </div>
-                                         <div className="calc-column-offset-40">
-                                           <p className="cta-color">{value.firstName} {value.lastName}</p>
-                                           <p className="description-text-3">{value.roleName}</p>
-                                         </div>
-                                       </div>
-                                     </button>
-                                   </div>
-                                 )}
-                               </div>
+                           <View style={[styles.rowDirection,styles.flexWrap]}>
+                             {this.state.roleNameOptions.map((value, optionIndex) =>
+                               <View key={optionIndex}>
+                                 <View style={[styles.bottomPadding5,styles.rightPadding]}>
+                                   {(this.state.selectedRoleNames.includes(value)) ? (
+                                     <TouchableOpacity style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.ctaBorder,styles.leftMargin5]} onPress={() => this.optionClicked(value, optionIndex)}>
+                                       <View>
+                                         <View >
+                                           <Text style={[styles.descriptionText2,styles.whiteColor]}>{value}</Text>
+                                         </View>
+                                       </View>
+                                     </TouchableOpacity>
+                                   ) : (
+                                     <TouchableOpacity style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBackgroundColor,styles.ctaBorder]} onPress={() => this.optionClicked(value, optionIndex)}>
+                                       <View>
+                                         <View>
+                                           <Text style={[styles.descriptionText2]}>{value}</Text>
+                                         </View>
+                                       </View>
+                                     </TouchableOpacity>
+                                   )}
+                                 </View>
+                               </View>
                              )}
-                           </div>
+                           </View>
 
-                           <div>
+                         </View>
+                       </View>
 
-                             {this.renderTags('invite')}
-                             <div className="clear" />
-
-                           </div>
-
-                         </div>
-                       )}
-
-
-                     </div>
+                     </View>
                    )}
 
-                   {(!window.location.pathname.includes('/app/') || (window.location.pathname.includes('/app/') && this.state.selectedGroup)) && (
-                     <div className="row-15">
-                       <p className="heading-text-6">Manage Members</p>
-                       <div style={styles.spacer} />
+                   <View style={[styles.row15]}>
+                     <Text style={[styles.headingText6]}>Invite People</Text>
+                     <Text style={[styles.descriptionText2,styles.bottomPadding,styles.topPadding5]}>Note: acountablity groups are limited to 6 people</Text>
+                    <View style={[styles.spacer]} />
+                     <View>
+                      <View style={[styles.row10]}>
+                        <TextInput
+                          style={styles.textInput}
+                          onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
+                          value={this.state.searchString}
+                          placeholder="Search members..."
+                          placeholderTextColor="grey"
+                          multiline={true}
+                          numberOfLines={4}
+                        />
+                      </View>
+                      <View style={[styles.row10]}>
+                        <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]: [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready}  onPress={() => this.addItem('invite')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                      </View>
 
-                       <div>
-                         {(!window.location.pathname.includes('/app/')) && (
-                           <div>
-                             <div>
-                              <div className="container-left">
-                                <input type="text" className="text-field" placeholder="Search members..." name="searchMembers" value={this.state.searchString} onChange={this.formChangeHandler}></input>
-                              </div>
-                              <div className="container-right">
-                                <button className={(this.state.unready) ? "btn btn-squarish medium-background standard-border" : "btn btn-squarish"} disabled={this.state.unready}  onClick={() => this.addItem('member')}>Add</button>
-                              </div>
-                              <div className="clear" />
-                             </div>
+                     </View>
 
-                             {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="description-text-2 error-color row-5">{this.state.errorMessage}</p>}
-                             {(this.state.successMessage && this.state.successMessage !== '') && <p className="description-text-2 cta-color row-5">{this.state.successMessage}</p>}
+                     {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                     {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+
+                     {(this.state.searchIsAnimating) ? (
+                       <View style={[styles.flex1,styles.flexCenter]}>
+                         <View>
+                           <View style={[styles.superSpacer]} />
+
+                           <ActivityIndicator
+                              animating = {this.state.animating}
+                              color = '#87CEFA'
+                              size = "large"
+                              style={styles.square80, styles.centerHorizontally}/>
+                           <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                           <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                         </View>
+                       </View>
+                     ) : (
+                       <View>
+                         <View>
+                           {(this.state.memberOptions) && (
+                             <View style={[styles.card,styles.topMargin]}>
+                               {this.state.memberOptions.map((value, optionIndex) =>
+                                 <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn140]}>
+                                   <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value,'member')}>
+                                     <View style={[styles.rowDirection]}>
+                                       <View style={[styles.width40]}>
+                                        <View style={[styles.halfSpacer]} />
+                                         <Image source={(value.pictureURL) ? value.pictureURL : profileIconDark} style={[styles.square25,styles.contain, { borderRadius: 12.5 }]} />
+                                       </View>
+                                       <View style={[styles.calcColumn180]}>
+                                         <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
+                                         <Text style={[styles.descriptionText3]}>{value.roleName}</Text>
+                                       </View>
+                                     </View>
+                                   </TouchableOpacity>
+                                 </View>
+                               )}
+                             </View>
+                           )}
+                         </View>
+
+                         <View>
+
+                           {this.renderTags('invite')}
+
+
+                         </View>
+
+                       </View>
+                     )}
+                   </View>
+
+                   {(this.state.selectedGroup) && (
+                     <View style={[styles.row15]}>
+                       <Text style={[styles.headingText6]}>Manage Members</Text>
+                       <View style={styles.spacer} />
+
+                       <View>
+                         {(this.props.fromAdvisor) && (
+                           <View>
+                             <View>
+                              <View style={[styles.row10]}>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
+                                  value={this.state.searchString}
+                                  placeholder="Search members..."
+                                  placeholderTextColor="grey"
+                                  multiline={true}
+                                  numberOfLines={4}
+                                />
+                              </View>
+                              <View style={[styles.row10]}>
+                                <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready}  onPress={() => this.addItem('member')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                              </View>
+
+                             </View>
+
+                             {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                             {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                              {(this.state.searchIsAnimating) ? (
-                               <div className="flex-container flex-center full-space">
-                                 <div>
-                                   <div className="super-spacer" />
+                               <View style={[styles.flex1,styles.flexCenter]}>
+                                 <View>
+                                   <View style={[styles.superSpacer]} />
 
                                    <ActivityIndicator
                                       animating = {this.state.animating}
                                       color = '#87CEFA'
                                       size = "large"
                                       style={styles.square80, styles.centerHorizontally}/>
-                                   <div style={styles.spacer} /><div style={styles.spacer} /><div style={styles.spacer} />
-                                   <p className="center-text cta-color bold-text">Searching...</p>
+                                   <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                   <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
-                                 </div>
-                               </div>
+                                 </View>
+                               </View>
                              ) : (
-                               <div>
-                                 <div>
+                               <View>
+                                 <View>
                                    {(this.state.memberOptions) && (
-                                     <div className="card top-margin">
+                                     <View style={[styles.card,styles.topMargin]}>
                                        {this.state.memberOptions.map((value, optionIndex) =>
-                                         <div key={value._id} className="left-text bottom-margin-5 full-width">
-                                           <button className="background-button full-width row-5 left-text" onClick={() => this.searchItemClicked(value,'member')}>
-                                             <div className="full-width">
-                                               <div className="fixed-column-40">
-                                                <div className="half-spacer" />
-                                                 <img src={(value.pictureURL) ? value.pictureURL : profileIconDark} alt="GC" className="profile-thumbnail-25" />
-                                               </div>
-                                               <div className="calc-column-offset-40">
-                                                 <p className="cta-color">{value.firstName} {value.lastName}</p>
-                                                 <p className="description-text-3">{value.roleName}</p>
-                                               </div>
-                                             </div>
-                                           </button>
-                                         </div>
+                                         <View key={value._id} style={[styles.bottomMargin5]}>
+                                           <TouchableOpacity style={[styles.row5,styles.calcColumn140]} onPress={() => this.searchItemClicked(value,'member')}>
+                                             <View>
+                                               <View style={[styles.width40]}>
+                                                <View style={[styles.halfSpacer]} />
+                                                 <Image source={(value.pictureURL) ? value.pictureURL : profileIconDark} style={[styles.square25,styles.contain, { borderRadius: 12.5 }]} />
+                                               </View>
+                                               <View style={[styles.calcColumn180]}>
+                                                 <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
+                                                 <Text style={[styles.descriptionText3]}>{value.roleName}</Text>
+                                               </View>
+                                             </View>
+                                           </TouchableOpacity>
+                                         </View>
                                        )}
-                                     </div>
+                                     </View>
                                    )}
-                                 </div>
+                                 </View>
 
-                               </div>
+                               </View>
                              )}
-                           </div>
+                           </View>
                          )}
 
-                         <div>
+                         <View>
                            {this.renderTags('member')}
-                           <div className="clear" />
-                         </div>
-                       </div>
-                     </div>
+
+                         </View>
+                       </View>
+                     </View>
                    )}
 
-                   {/*
-                   <div className="row-10">
-                     <div className="container-left">
-                       <label className="profile-label">Please list the admins<label className="error-color bold-text">*</label></label>
-                       <select name="groupAccessType" value={this.state.groupAccessType} onChange={this.formChangeHandler} className="dropdown">
-                         {this.state.accessTypeOptions.map(value =>
-                           <option key={value} value={value}>{value}</option>
-                         )}
-                       </select>
-                     </div>
-                     <div className="clear" />
-                   </div>*/}
+                   {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+                   {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
 
-                   {(this.state.successMessage && this.state.successMessage !== '') && <p className="cta-color row-5">{this.state.successMessage}</p>}
-                   {(this.state.errorMessage && this.state.errorMessage !== '') && <p className="error-color row-5">{this.state.errorMessage}</p>}
-
-                   <div className="row-15">
-                     <div style={styles.spacer} />
+                   <View style={[styles.row15]}>
+                     <View style={styles.spacer} />
 
                      {(this.state.confirmDelete) ? (
-                       <div>
-                        <p className="bottom-margin error-color">Are you sure you want to delete this group?</p>
-                        <button className="btn btn-squarish error-background-color standard-border right-margin" onClick={() => this.deleteGroup()}>Confirm & Delete</button>
-                        <button className="btn btn-squarish white-background cta-color" onClick={() => this.setState({ confirmDelete: false })}>Cancel</button>
-                       </div>
+                       <View>
+                        <Text style={[styles.bottomMargin,styles.errorColor]}>Are you sure you want to delete this group?</Text>
+                        <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.standardBorder,styles.rightMargin,styles.flexCenter]} onPress={() => this.deleteGroup()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Confirm & Delete</Text></TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: false })}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                       </View>
                      ) : (
-                       <div>
-                         <button className="btn btn-primary right-margin" disabled={this.state.isSaving} onClick={() => this.editGroup()}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</button>
-                         <button className="btn btn-secondary right-margin" onClick={() => this.closeModal()}>Close View</button>
+                       <View>
+                         <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
+                         <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                          {(this.state._id) && (
-                           <button className="btn btn-quaternary" onClick={() => this.setState({ confirmDelete: true })}>Delete Group</button>
+                           <TouchableOpacity style={[styles.btnPrimary, styles.errorBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.standardText,styles.whiteColor]}>Delete Group</Text></TouchableOpacity>
                          )}
 
-                       </div>
+                       </View>
                      )}
-                   </div>
-                 </div>
+                   </View>
+                 </View>
                )}
 
-             </div>
+             </View>
 
-          </div>
+          </View>
 
       )
     }

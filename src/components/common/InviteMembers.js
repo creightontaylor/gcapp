@@ -35,47 +35,53 @@ class InviteMembers extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called within switchOrgs', this.props.accountCode)
+    retrieveData = async() => {
+      try {
+        console.log('retrieveData called in renderPosts')
 
-      let emailId = localStorage.getItem('email');
-      let username = localStorage.getItem('username');
-      let cuFirstName = localStorage.getItem('firstName');
-      let cuLastName = localStorage.getItem('lastName');
-      let roleName = localStorage.getItem('roleName');
-      let activeOrg = localStorage.getItem('activeOrg');
-      let orgName = localStorage.getItem('orgName');
-      if (this.props.orgName && !orgName) {
-        orgName = this.props.orgName
-      }
+        const emailId = await AsyncStorage.getItem('email');
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        let activeOrg = await AsyncStorage.getItem('activeOrg');
+        if (!activeOrg) {
+          activeOrg = 'guidedcompass'
+        }
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const roleName = await AsyncStorage.getItem('roleName');
+        let pictureURL = await AsyncStorage.getItem('pictureURL');
 
-      let inviteLink = window.location.protocol + "//" + window.location.host + "/organizations/" + activeOrg + "/student/join"
+        let inviteLink = window.location.protocol + "//" + window.location.host + "/organizations/" + activeOrg + "/student/join"
 
-      this.setState({ emailId, username, cuFirstName, cuLastName, roleName, activeOrg, orgName, inviteLink })
+        this.setState({ emailId, username, cuFirstName, cuLastName, roleName, activeOrg, orgName, inviteLink })
 
-      Axios.get('/api/org/members', { params: { orgCode: activeOrg, limit: 1000 } })
-      .then((response) => {
-        console.log('Org members query attempted', response.data);
+        Axios.get('https://www.guidedcompass.com/api/org/members', { params: { orgCode: activeOrg, limit: 1000 } })
+        .then((response) => {
+          console.log('Org members query attempted', response.data);
 
-          if (response.data.success) {
-            console.log('org members query worked')
+            if (response.data.success) {
+              console.log('org members query worked')
 
-            if (response.data.members && response.data.members.length > 0) {
-              let memberCount = response.data.members.length
-              if (memberCount === 1000) {
-                memberCount = 'Over 1,000'
-                this.setState({ memberCount })
+              if (response.data.members && response.data.members.length > 0) {
+                let memberCount = response.data.members.length
+                if (memberCount === 1000) {
+                  memberCount = 'Over 1,000'
+                  this.setState({ memberCount })
+                }
               }
+
+            } else {
+              console.log('org members query did not work', response.data.message)
             }
 
-          } else {
-            console.log('org members query did not work', response.data.message)
-          }
+        }).catch((error) => {
+            console.log('Org members query did not work for some reason', error);
+        });
 
-      }).catch((error) => {
-          console.log('Org members query did not work for some reason', error);
-      });
-
+      } catch (error) {
+       // Error retrieving data
+       console.log('there was an error', error)
+      }
     }
 
     formChangeHandler(event) {
@@ -115,7 +121,7 @@ class InviteMembers extends Component {
           const memberCount = this.state.memberCount
           const inviteLink = this.state.inviteLink
 
-          Axios.post('/api/members/invite', {
+          Axios.post('https://www.guidedcompass.com/api/members/invite', {
             senderFirstName, senderLastName, senderEmail, recipientEmails, recipientType, joined, active, orgCode, orgName,
             memberCount, inviteLink })
           .then((response) => {

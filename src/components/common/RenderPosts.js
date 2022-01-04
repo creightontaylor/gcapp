@@ -96,35 +96,42 @@ class RenderPosts extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called in renderPosts')
+    retrieveData = async() => {
+      try {
+        console.log('retrieveData called in renderPosts')
 
-      let emailId = AsyncStorage.getItem('email');
-      const username = AsyncStorage.getItem('username');
-      const cuFirstName = AsyncStorage.getItem('firstName');
-      const cuLastName = AsyncStorage.getItem('lastName');
-      let activeOrg = AsyncStorage.getItem('activeOrg');
-      if (!activeOrg) {
-        activeOrg = 'guidedcompass'
+        console.log('retrieveData called in renderPosts')
+
+        let emailId = await AsyncStorage.getItem('email');
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        let activeOrg = await AsyncStorage.getItem('activeOrg');
+        if (!activeOrg) {
+          activeOrg = 'guidedcompass'
+        }
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const roleName = await AsyncStorage.getItem('roleName');
+        let pictureURL = await AsyncStorage.getItem('pictureURL');
+        if (this.props.pictureURL && !pictureURL) {
+          pictureURL = this.props.pictureURL
+        }
+
+        const posts = this.props.posts
+        const passedGroupPost = this.props.passedGroupPost
+        let modalIsOpen = false
+        if (passedGroupPost) {
+          modalIsOpen = true
+        }
+        const accountCode = this.props.accountCode
+
+        this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, posts,
+          passedGroupPost, modalIsOpen, pictureURL, accountCode })
+
+      } catch (error) {
+       // Error retrieving data
+       console.log('there was an error', error)
       }
-      const orgFocus = AsyncStorage.getItem('orgFocus');
-      const roleName = AsyncStorage.getItem('roleName');
-      let pictureURL = AsyncStorage.getItem('pictureURL');
-      if (this.props.pictureURL && !pictureURL) {
-        pictureURL = this.props.pictureURL
-      }
-
-      const posts = this.props.posts
-      const passedGroupPost = this.props.passedGroupPost
-      let modalIsOpen = false
-      if (passedGroupPost) {
-        modalIsOpen = true
-      }
-      const accountCode = this.props.accountCode
-
-      this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, posts,
-        passedGroupPost, modalIsOpen, pictureURL, accountCode })
-
     }
 
     closeModal() {
@@ -480,7 +487,7 @@ class RenderPosts extends Component {
                         <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'a')}>
                           <View>
                             <View style={styles.progressBarFat} >
-                              <View style={[styles.fillerError, { width: this.calculateWidth(value, 'a'), zIndex: -1, height: '36px' }]} />
+                              <View style={[styles.fillerError, { width: this.calculateWidth(value, 'a'), zIndex: -1, height: 36 }]} />
                               <View style={[styles.row10, styles.horizontalPadding30, styles.topMarginNegative36, styles.rowDirection]}>
                                 <View style={[styles.calcColumn100]}>
                                   <Text style={styles.descriptionText2}>{value.aName}</Text>
@@ -495,7 +502,7 @@ class RenderPosts extends Component {
                         <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'b')}>
                           <View>
                             <View style={styles.progressBarFat} >
-                              <View style={[styles.fillerError, { width: this.calculateWidth(value, 'b'), zIndex: -1, height: '36px' }]} />
+                              <View style={[styles.fillerError, { width: this.calculateWidth(value, 'b'), zIndex: -1, height: 36 }]} />
                               <View style={[styles.row10, styles.horizontalPadding30, styles.topMarginNegative36, styles.rowDirection]}>
                                 <View style={[styles.calcColumn100]}>
                                   <Text style={styles.descriptionText2}>{value.bName}</Text>

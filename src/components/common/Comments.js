@@ -49,42 +49,47 @@ class Comments extends Component {
       }
     }
 
-    retrieveData() {
-      console.log('retrieveData called within subcomments', this.props)
+    retrieveData = async() => {
+      try {
+        console.log('retrieveData called within subcomments', this.props)
 
-      const emailId = AsyncStorage.getItem('email');
-      const cuFirstName = AsyncStorage.getItem('firstName');
-      const cuLastName = AsyncStorage.getItem('lastName');
-      const orgFocus = AsyncStorage.getItem('orgFocus');
-      const roleName = AsyncStorage.getItem('roleName');
+        const emailId = await AsyncStorage.getItem('email');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+        const orgFocus = await AsyncStorage.getItem('orgFocus');
+        const roleName = await AsyncStorage.getItem('roleName');
 
-      const selectedOpportunity = this.props.selectedOpportunity
-      const activeOrg = this.props.activeOrg
-      const accountCode = this.props.accountCode
-      const employerName = this.props.employerName
-      const jobTitle = this.props.jobTitle
+        const selectedOpportunity = this.props.selectedOpportunity
+        const activeOrg = this.props.activeOrg
+        const accountCode = this.props.accountCode
+        const employerName = this.props.employerName
+        const jobTitle = this.props.jobTitle
 
-      let comments = []
-      if (this.props.comments) {
-        comments = this.props.comments
+        let comments = []
+        if (this.props.comments) {
+          comments = this.props.comments
+        }
+
+        const postingOrgCode = this.props.postingOrgCode
+        const postingOrgName = this.props.postingOrgName
+        const orgContactEmail = this.props.orgContactEmail
+        const pictureURL = this.props.pictureURL
+        const selectedGroup = this.props.selectedGroup
+        const selectedGroupPost = this.props.selectedGroupPost
+        const selectedCurriculumPost = this.props.selectedCurriculumPost
+        const orgLogo = this.props.orgLogo
+        const employerLogo = this.props.employerLogo
+
+        this.setState({
+          emailId, cuFirstName, cuLastName, orgFocus, roleName, selectedOpportunity, activeOrg, accountCode, comments,
+          postingOrgCode, postingOrgName, orgContactEmail, pictureURL, selectedGroup, selectedGroupPost, selectedCurriculumPost,
+          orgLogo, employerLogo, employerName, jobTitle
+        })
+
+      } catch (error) {
+       // Error retrieving data
+       console.log('there was an error', error)
       }
-
-      const postingOrgCode = this.props.postingOrgCode
-      const postingOrgName = this.props.postingOrgName
-      const orgContactEmail = this.props.orgContactEmail
-      const pictureURL = this.props.pictureURL
-      const selectedGroup = this.props.selectedGroup
-      const selectedGroupPost = this.props.selectedGroupPost
-      const selectedCurriculumPost = this.props.selectedCurriculumPost
-      const orgLogo = this.props.orgLogo
-      const employerLogo = this.props.employerLogo
-
-      this.setState({
-        emailId, cuFirstName, cuLastName, orgFocus, roleName, selectedOpportunity, activeOrg, accountCode, comments,
-        postingOrgCode, postingOrgName, orgContactEmail, pictureURL, selectedGroup, selectedGroupPost, selectedCurriculumPost,
-        orgLogo, employerLogo, employerName, jobTitle
-      })
-
     }
 
     formChangeHandler(event) {

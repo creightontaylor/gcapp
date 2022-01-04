@@ -121,18 +121,24 @@ class EndorsementDetails extends Component {
     }
   }
 
-  retrieveData() {
-    console.log('retrieveData called within shared endorsement data', this.props.selectedEndorsement)
+  retrieveData = async() => {
+    try {
+      console.log('retrieveData called in renderPosts')
 
-    if (this.props.selectedEndorsement) {
+      if (this.props.selectedEndorsement) {
 
-      const selectedEndorsement = this.props.selectedEndorsement
-      const modalIsOpen = this.props.modalIsOpen
+        const selectedEndorsement = this.props.selectedEndorsement
+        const modalIsOpen = this.props.modalIsOpen
 
-      this.setState({ selectedEndorsement, modalIsOpen })
+        this.setState({ selectedEndorsement, modalIsOpen })
 
-    } else {
-      console.log('user navigated directly to this screen')
+      } else {
+        console.log('user navigated directly to this screen')
+      }
+
+    } catch (error) {
+     // Error retrieving data
+     console.log('there was an error', error)
     }
   }
 
