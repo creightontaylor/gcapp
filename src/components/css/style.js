@@ -354,6 +354,10 @@ module.exports = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20
   },
+  verticalMargin30: {
+    marginTop: 30,
+    marginBottom: 30
+  },
   topPadding: {
     paddingTop: 10
   },
@@ -422,6 +426,9 @@ module.exports = StyleSheet.create({
   },
   leftPadding50: {
     paddingLeft: 50
+  },
+  leftPadding60: {
+    paddingLeft: 60
   },
   leftPadding70: {
     paddingLeft: 70

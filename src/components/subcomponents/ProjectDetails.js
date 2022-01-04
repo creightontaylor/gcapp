@@ -140,184 +140,182 @@ class ProjectDetails extends Component {
       console.log('renderProject called')
 
       return (
-        <View key="projectDetails" style={[styles.calcColumn60,styles.padding20]}>
+        <View key="projectDetails" style={[styles.calcColumn60]}>
           <View style={[styles.row10,styles.rowDirection]}>
             <View style={[styles.width60]}>
               <Image style={[styles.square50,styles.contain, { borderRadius: 25 }]} source={(this.props.selectedProject.userPic) ? { uri: this.props.selectedProject.userPic} : { uri: profileIconGrey}} />
             </View>
             <View style={[styles.calcColumn120]}>
               <Text style={[styles.headingText5]}>{this.props.selectedProject.name}</Text>
-              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.props.selectedProjectUsername})}><Text>{this.props.selectedProject.userFirstName} {this.props.selectedProject.userLastName}</Text></TouchableOpacity></Text>
+              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedProjectUsername})}><Text style={[styles.ctaColor,styles.boldText,styles.topPadding5]}>{this.props.selectedProject.userFirstName} {this.props.selectedProject.userLastName}</Text></TouchableOpacity></Text>
             </View>
           </View>
 
           {(this.props.selectedProject.createdAt) && (
-            <View style={[styles.bottomPadding]}>
-              <Text style={[styles.descriptionText2,styles.rightText]}>Created: {this.props.selectedProject.createdAt.substring(0,10)}</Text>
+            <View style={[styles.bottomPadding,styles.leftPadding60]}>
+              <Text style={[styles.descriptionText4]}>Created: {this.props.selectedProject.createdAt.substring(0,10)}</Text>
             </View>
           )}
 
-          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-            <View style={[styles.flex70]}>
+          <View style={[styles.row10]}>
+            {(this.props.selectedProject.imageURL) && (
+              <View>
+                {(!this.props.selectedProject.videoURL || this.state.imageIndex === 0) && (
+                  <Image source={{ uri: this.props.selectedProject.imageURL}} style={[styles.flex70,styles.height150]} />
+                )}
+              </View>
+            )}
 
-              {(this.props.selectedProject.imageURL) && (
-                <View>
-                  {(!this.props.selectedProject.videoURL || this.state.imageIndex === 0) && (
-                    <Image source={{ uri: this.props.selectedProject.imageURL}} style={[styles.flex70,styles.height150]} />
-                  )}
+            {(this.props.selectedProject.videoURL) && (
+              <View>
+                {(!this.props.selectedProject.imageURL || this.state.imageIndex === 1) && (
+                  <View>
+                    <WebView
+                      style={[styles.calcColumn60,styles.screenHeight20]}
+                      javaScriptEnabled={true}
+                      source={{uri: this.props.selectedProject.videoURL}}
+                    />
+                  </View>
+                )}
+              </View>
+            )}
+
+            {(this.props.selectedProject.imageURL && this.props.selectedProject.videoURL) && (
+              <View style={[styles.rowDirection,styles.flexCenter]}>
+                <TouchableOpacity onPress={() => this.setState({ imageIndex: 0 })}><View style={(this.state.imageIndex === 0) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: imageIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.setState({ imageIndex: 1 })}><View style={(this.state.imageIndex === 1) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: videoIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
+              </View>
+            )}
+          </View>
+
+          <View style={[styles.row10]}>
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.width30]}>
+                <Image style={[styles.square17,styles.contain]} source={{ uri: linkIconBlue}} />
+              </View>
+              <View style={[styles.calcColumn90]}>
+                <TouchableOpacity onPress={() => Linking.openURL(this.props.selectedProject.url)}><Text style={[styles.descriptionText2]}>Click Here for Details</Text></TouchableOpacity>
+              </View>
+
+            </View>
+
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.width30]}>
+                <Image style={[styles.square17,styles.contain]} source={{ uri: calendarIconBlue}} />
+              </View>
+              <View style={[styles.calcColumn90]}>
+                <Text style={[styles.descriptionText2]}>{this.props.selectedProject.startDate} - {this.props.selectedProject.endDate}</Text>
+              </View>
+
+            </View>
+
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.width30]}>
+                <Image style={[styles.square17,styles.contain]} source={{ uri: timeIconBlue}} />
+              </View>
+              <View style={[styles.calcColumn90]}>
+                <Text style={[styles.descriptionText2]}>{this.props.selectedProject.hours} Hours Invested</Text>
+              </View>
+
+            </View>
+
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.width30]}>
+                <Image style={[styles.square17,styles.contain]} source={{ uri: industryIcon}} />
+              </View>
+              <View style={[styles.calcColumn90]}>
+                <Text style={[styles.descriptionText2]}>this.props.selectedProject.category}{this.props.selectedProject.jobFunction && " | " + this.props.selectedProject.jobFunction}{this.props.selectedProject.industry && " | " + this.props.selectedProject.industry}</Text>
+              </View>
+
+            </View>
+
+            {(this.props.selectedProject.skillTags) && (
+              <View style={[styles.row10,styles.rowDirection]}>
+                <View style={[styles.width30]}>
+                  <Image style={[styles.square17,styles.contain]} source={{ uri: tagIcon}} />
                 </View>
-              )}
+                <View style={[styles.calcColumn90]}>
+                  <Text style={[styles.descriptionText2]}>{this.props.selectedProject.skillTags}</Text>
+                </View>
 
-              {(this.props.selectedProject.videoURL) && (
-                <View>
-                  {(!this.props.selectedProject.imageURL || this.state.imageIndex === 1) && (
-                    <View>
-                      <WebView
-                        style={[styles.calcColumn60,styles.screenHeight20]}
-                        javaScriptEnabled={true}
-                        source={{uri: this.props.selectedProject.videoURL}}
-                      />
+              </View>
+            )}
+
+            {(this.props.selectedProject.collaborators && this.props.selectedProject.collaborators.length > 0) && (
+              <View style={[styles.row10,styles.rowDirection]}>
+                <View style={[styles.width30]}>
+                  <Image style={[styles.square17,styles.contain]} source={{ uri: collaborationIconBlue}} />
+                </View>
+                <View style={[styles.calcColumn90]}>
+                  {this.props.selectedProject.collaborators.map((value, index) =>
+                    <View key={value}>
+                      <View>
+                        <View>
+                          <View className="fixed-column-25 heading-text-2 cta-color half-bold-text">
+                            <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                            <Image style={[styles.square18,styles.contain]} source={value.pictureURL ? { uri: value.pictureURL} : { uri: profileIconGrey}} />
+                          </View>
+                          <View className="calc-column-offset-25">
+                            <Text style={[styles.descriptionText2]}>{value.firstName} {value.lastName} ({value.roleName})</Text>
+                          </View>
+
+                        </View>
+
+                        <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+                      </View>
                     </View>
                   )}
                 </View>
-              )}
 
-              {(this.props.selectedProject.imageURL && this.props.selectedProject.videoURL) && (
-                <View style={[styles.rowDirection,styles.flexCenter]}>
-                  <TouchableOpacity onPress={() => this.setState({ imageIndex: 0 })}><View style={(this.state.imageIndex === 0) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: imageIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.setState({ imageIndex: 1 })}><View style={(this.state.imageIndex === 1) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: videoIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
-                </View>
-              )}
-
-              <View>
-                <Text>{this.props.selectedProject.description}</Text>
               </View>
+            )}
+          </View>
 
-              {(this.props.private && this.props.selectedProject.grades && this.props.selectedProject.grades.length > 0) && (
+          <View style={[styles.row10]}>
+            <View>
+              <Text>{this.props.selectedProject.description}</Text>
+            </View>
+
+            {(this.props.private && this.props.selectedProject.grades && this.props.selectedProject.grades.length > 0) && (
+              <View>
+
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                <View style={[styles.horizontalLine]} />
+
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.boldText]}>GRADES & FEEDBACK</Text>
+
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
                 <View>
 
-                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                  <View style={[styles.horizontalLine]} />
-
-                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                  <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.boldText]}>GRADES & FEEDBACK</Text>
-
-                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                  <View>
-
-                    {this.props.selectedProject.grades.map((value, index) =>
-                      <View key={value}>
-                        {(value.grade || value.feedback) && (
-                          <View>
-                            <View>
-                              <View style={[styles.width60]}>
-                                <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>{value.grade}</Text>
-                              </View>
-                              <View style={[styles.calcColumn160]}>
-                                <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName} ({value.contributorRoleName}) {(value.contributorTitle) && " - " + value.contributorTitle + " @ " + value.contributorEmployerName}</Text>
-                                <Text style={[styles.headingText6]}>{value.feedback}</Text>
-                              </View>
-
-                            </View>
-
-                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                          </View>
-                        )}
-                      </View>
-                    )}
-
-                    <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                  </View>
-                </View>
-              )}
-            </View>
-            <View style={[styles.flex30]}>
-
-              <View style={[styles.row10,styles.rowDirection]}>
-                <View style={[styles.width30]}>
-                  <Image style={[styles.square17,styles.contain]} source={{ uri: linkIconBlue}} />
-                </View>
-                <View className="calc-column-offset-30">
-                  <TouchableOpacity onPress={() => Linking.openURL(this.props.selectedProject.url)}><Text style={[styles.descriptionText2]}>Click Here for Details</Text></TouchableOpacity>
-                </View>
-
-              </View>
-
-              <View style={[styles.row10]}>
-                <View style={[styles.width30]}>
-                  <Image style={[styles.square17,styles.contain]} source={{ uri: calendarIconBlue}} />
-                </View>
-                <View className="calc-column-offset-30">
-                  <Text style={[styles.descriptionText2]}>{this.props.selectedProject.startDate} - {this.props.selectedProject.endDate}</Text>
-                </View>
-
-              </View>
-
-              <View style={[styles.row10]}>
-                <View style={[styles.width30]}>
-                  <Image style={[styles.square17,styles.contain]} source={{ uri: timeIconBlue}} />
-                </View>
-                <View className="calc-column-offset-30">
-                  <Text style={[styles.descriptionText2]}>{this.props.selectedProject.hours} Hours Invested</Text>
-                </View>
-
-              </View>
-
-              <View style={[styles.row10]}>
-                <View style={[styles.width30]}>
-                  <Image style={[styles.square17,styles.contain]} source={{ uri: industryIcon}} />
-                </View>
-                <View className="calc-column-offset-30">
-                  <Text style={[styles.descriptionText2]}>this.props.selectedProject.category}{this.props.selectedProject.jobFunction && " | " + this.props.selectedProject.jobFunction}{this.props.selectedProject.industry && " | " + this.props.selectedProject.industry}</Text>
-                </View>
-
-              </View>
-
-              {(this.props.selectedProject.skillTags) && (
-                <View style={[styles.row10]}>
-                  <View style={[styles.width30]}>
-                    <Image style={[styles.square17,styles.contain]} source={{ uri: tagIcon}} />
-                  </View>
-                  <View className="calc-column-offset-30">
-                    <Text style={[styles.descriptionText2]}>{this.props.selectedProject.skillTags}</Text>
-                  </View>
-
-                </View>
-              )}
-
-              {(this.props.selectedProject.collaborators && this.props.selectedProject.collaborators.length > 0) && (
-                <View style={[styles.row10]}>
-                  <View style={[styles.width30]}>
-                    <Image style={[styles.square17,styles.contain]} source={{ uri: collaborationIconBlue}} />
-                  </View>
-                  <View className="calc-column-offset-30">
-                    {this.props.selectedProject.collaborators.map((value, index) =>
-                      <View key={value}>
+                  {this.props.selectedProject.grades.map((value, index) =>
+                    <View key={value}>
+                      {(value.grade || value.feedback) && (
                         <View>
                           <View>
-                            <View className="fixed-column-25 heading-text-2 cta-color half-bold-text">
-                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Image style={[styles.square18,styles.contain]} source={value.pictureURL ? { uri: value.pictureURL} : { uri: profileIconGrey}} />
+                            <View style={[styles.width60]}>
+                              <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>{value.grade}</Text>
                             </View>
-                            <View className="calc-column-offset-25">
-                              <Text style={[styles.descriptionText2]}>{value.firstName} {value.lastName} ({value.roleName})</Text>
+                            <View style={[styles.calcColumn160]}>
+                              <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName} ({value.contributorRoleName}) {(value.contributorTitle) && " - " + value.contributorTitle + " @ " + value.contributorEmployerName}</Text>
+                              <Text style={[styles.headingText6]}>{value.feedback}</Text>
                             </View>
 
                           </View>
 
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                         </View>
-                      </View>
-                    )}
-                  </View>
+                      )}
+                    </View>
+                  )}
 
+                  <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                 </View>
-              )}
-            </View>
-
+              </View>
+            )}
           </View>
 
           {(!this.props.excludeModal) && (

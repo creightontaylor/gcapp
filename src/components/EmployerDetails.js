@@ -23,7 +23,7 @@ class EmployerDetails extends Component {
     try {
       const email = await AsyncStorage.getItem('email')
 
-      console.log('show me values in EmployerDetails', email, this.props);
+      console.log('show me values in EmployerDetails');
 
       if (email !== null) {
         // We have data!!
