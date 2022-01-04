@@ -140,6 +140,10 @@ module.exports = StyleSheet.create({
     height: 30,
     width: 30
   },
+  square38: {
+    height: 38,
+    width: 38
+  },
   square40: {
     height: 40,
     width: 40
@@ -316,6 +320,9 @@ module.exports = StyleSheet.create({
   rightMargin40: {
     marginRight: 40
   },
+  leftMarginNegative30: {
+    marginLeft: -30
+  },
   leftMargin3: {
     marginLeft: 3
   },
@@ -358,11 +365,14 @@ module.exports = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30
   },
-  topPadding: {
-    paddingTop: 10
-  },
   topPadding5: {
     paddingTop: 5
+  },
+  topPadding8: {
+    paddingTop: 8
+  },
+  topPadding: {
+    paddingTop: 10
   },
   topPadding13: {
     paddingTop: 13
@@ -411,6 +421,9 @@ module.exports = StyleSheet.create({
   },
   rightPadding40: {
     paddingRight: 40
+  },
+  leftPadding3: {
+    paddingLeft: 3
   },
   leftPadding: {
     paddingLeft: 10
@@ -677,6 +690,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn30: {
     width: Dimensions.get('window').width - 30
+  },
+  calcColumn35: {
+    width: Dimensions.get('window').width - 35
   },
   calcColumn40: {
     width: Dimensions.get('window').width - 40
