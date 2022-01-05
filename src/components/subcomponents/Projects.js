@@ -776,6 +776,7 @@ class Projects extends Component {
               <View style={[styles.elevatedBox,styles.whiteBackground]} >
                 <View style={[styles.calcColumn40,styles.relativePosition]}>
                   <Image source={(this.state.filteredProjects[i - 1].imageURL) ? { uri: this.state.filteredProjects[i - 1].imageURL} : { uri: defaultProfileBackgroundImage}} style={[styles.calcColumn40,styles.height150]}  />
+                  <View style={[styles.darkTint]} />
                   <View style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteLeft5]}>
                     {(this.state.filteredProjects[i - 1].matchScore) && (
                       <View style={[styles.square40]}>
