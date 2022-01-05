@@ -38,6 +38,13 @@ class Community extends Component {
     }
 
     this.retrieveData = this.retrieveData.bind(this)
+    this.favoriteItem = this.favoriteItem.bind(this)
+    this.followPerson = this.followPerson.bind(this)
+    this.joinGroup = this.joinGroup.bind(this)
+    this.viewItem = this.viewItem.bind(this)
+    this.decideOnRequest = this.decideOnRequest.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.renderItems = this.renderItems.bind(this)
 
   }
 

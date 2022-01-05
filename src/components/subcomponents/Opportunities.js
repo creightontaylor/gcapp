@@ -4455,19 +4455,32 @@ class Opportunities extends Component {
                         </View>
 
                         {(this.state.matchingView) && (
-                          <View style={[styles.fullScreenWidth, styles.rowDirection]}>
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
-                              <View style={[styles.rightMargin,styles.slightlyRoundedCorners,styles.horizontalPadding30,styles.ctaBackgroundColor,styles.ctaBorder,styles.whiteColor]}>
-                                <Text>Adjust</Text>
-                              </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
-                              <View style={[styles.rightPadding,styles.standardBorder, styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30]}>
-                                <Text>Close</Text>
-                              </View>
-                            </TouchableOpacity>
+                          <View>
+                            <View>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn50,styles.rowDirection]}>
+                                  <TouchableOpacity style={[styles.rightMargin]} onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
+                                    <View style={[styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30,styles.ctaBackgroundColor,styles.ctaBorder]}>
+                                      <Text style={[styles.standardText,styles.whiteColor]}>Adjust</Text>
+                                    </View>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
+                                    <View style={[styles.rightPadding,styles.standardBorder,styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30]}>
+                                      <Text style={[styles.standardText,styles.ctaColor]}>Close</Text>
+                                    </View>
+                                  </TouchableOpacity>
 
-                            <View style={styles.halfSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
+                                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                </View>
+                                <View style={[styles.topPadding8,styles.leftPadding3,styles.topMarginNegative3,styles.width50]}>
+                                  <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
+                                    <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.contain,styles.rightMargin]} />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+
+                              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorMessage]}>{this.state.errorMessage}</Text>}
+                            </View>
                           </View>
                         )}
 

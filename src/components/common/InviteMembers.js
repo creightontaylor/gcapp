@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator } from 'react-native';
-
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Image, TextInput } from 'react-native';
+const styles = require('../css/style');
 import Axios from 'axios';
 
 const linkIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/link-icon-blue.png'
@@ -50,8 +50,12 @@ class InviteMembers extends Component {
         const orgFocus = await AsyncStorage.getItem('orgFocus');
         const roleName = await AsyncStorage.getItem('roleName');
         let pictureURL = await AsyncStorage.getItem('pictureURL');
+        let orgName = await AsyncStorage.getItem('orgName');
+        if (this.props.orgName && !orgName) {
+          orgName = this.props.orgName
+        }
 
-        let inviteLink = window.location.protocol + "//" + window.location.host + "/organizations/" + activeOrg + "/student/join"
+        let inviteLink = "https://www.guidedcompass.com/organizations/" + activeOrg + "/student/join"
 
         this.setState({ emailId, username, cuFirstName, cuLastName, roleName, activeOrg, orgName, inviteLink })
 
@@ -84,10 +88,10 @@ class InviteMembers extends Component {
       }
     }
 
-    formChangeHandler(event) {
+    formChangeHandler(eventName,eventValue) {
       console.log('formChangeHandler called')
 
-      this.setState({ [event.target.name]: event.target.value })
+      this.setState({ [eventName]: eventValue })
     }
 
     copyLink() {
@@ -147,51 +151,58 @@ class InviteMembers extends Component {
     render() {
 
       return (
-        <div>
-          <div className="bottom-padding">
-            <div className="calc-column-offset-30">
-              <p className="heading-text-2">Invite People to {this.state.orgName}</p>
-            </div>
-            <div className="fixed-column-30 top-padding-5">
-              <button className="background-button" onClick={() => this.props.closeModal()}>
-                <img src={closeIcon} alt="GC" className="image-auto-20" />
-              </button>
-            </div>
+        <ScrollView>
+          <View style={[styles.padding20]}>
+            <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection]}>
+              <View style={[styles.calcColumn115]}>
+                <Text style={[styles.headingText2]}>Invite People to {this.state.orgName}</Text>
+              </View>
+              <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                <TouchableOpacity onPress={() => this.props.closeModal()}>
+                  <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                </TouchableOpacity>
+              </View>
+            </View>
 
-            <div className="clear" />
-          </div>
+            <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-          <div className="spacer" /><div className="spacer" />
+            <Text style={[styles.descriptionText2,styles.boldText,styles.bottomPadding5]}>To:</Text>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={(text) => this.formChangeHandler("recipientEmail", text)}
+              value={this.state.recipientEmail}
+              placeholder="name@gmail.com"
+              placeholderTextColor="grey"
+              multiline={true}
+              numberOfLines={4}
+            />
 
-          <p className="description-text-2 bold-text bottom-padding-5">To:</p>
-          <textarea className="text-field" type="text" placeholder="name@gmail.com" name="recipientEmail" value={this.state.recipientEmail} onChange={this.formChangeHandler} />
+            <View style={[styles.spacer]} />
 
-          <div className="spacer" />
+            {(this.state.successMessage) && <Text style={[styles.row5,styles.ctaColor,styles.descriptionText2]}>{this.state.successMessage}</Text>}
+            {(this.state.errorMessage) && <Text style={[styles.row5,styles.errorColor,styles.descriptionText2]}>{this.state.errorMessage}</Text>}
 
-          {(this.state.successMessage) && <p className="row-5 cta-color description-text-2">{this.state.successMessage}</p>}
-          {(this.state.errorMessage) && <p className="row-5 error-color description-text-2">{this.state.errorMessage}</p>}
+            <View style={[styles.topPadding30]}>
+              <View style={[styles.row10]}>
+                <TouchableOpacity onPress={() => this.copyLink()} style={[styles.rowDirection]}>
+                  <View style={[styles.width30]}>
+                    <Image source={{ uri: linkIconBlue}} style={[styles.square20,styles.contain]} />
+                  </View>
+                  <View style={[styles.calcColumn150]}>
+                    <Text>Copy invite link</Text>
+                  </View>
 
-          <div className="top-padding-30">
-            <div className="container-left-static top-padding">
-              <button className="background-button" onClick={() => this.copyLink()}>
-                <div className="fixed-column-30">
-                  <img src={linkIconBlue} alt="GC" className="image-auto-20" />
-                </div>
-                <div className="calc-column-offset-30">
-                  <p>Copy invite link</p>
-                </div>
-                <div className="clear" />
-              </button>
-            </div>
-            <div className="container-right-static">
-              <button className={(this.state.recipientEmail && this.state.recipientEmail !== '') ? "btn btn-squarish float-right" : "btn btn-squarish float-right medium-background standard-color standard-border no-pointers"} onClick={() => this.sendInvite()}>
-                <p>Send</p>
-              </button>
-              <div className="clear" />
-            </div>
-            <div className="clear" />
-          </div>
-        </div>
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.row10]}>
+                <TouchableOpacity style={(this.state.recipientEmail && this.state.recipientEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.sendInvite()}>
+                  <Text style={[styles.whiteColor,styles.descriptionText1]}>Send</Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+          </View>
+        </ScrollView>
       )
     }
 }

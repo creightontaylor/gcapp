@@ -1034,24 +1034,25 @@ class Careers extends Component {
               <View>
                 {(this.state.matchingView) ? (
                   <View>
-                    <View style={styles.rowDirection}>
-                      <View style={[styles.row7,styles.topMarginNegative2,styles.fullScreenWidth]}>
-                        <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
-                          <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.rightMargin]} />
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.calcColumn50,styles.rowDirection]}>
+                        <TouchableOpacity style={[styles.rightMargin]} onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
+                          <View style={[styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30,styles.ctaBackgroundColor,styles.ctaBorder]}>
+                            <Text style={[styles.standardText,styles.whiteColor]}>Adjust</Text>
+                          </View>
                         </TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
+                          <View style={[styles.rightPadding,styles.standardBorder,styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding30]}>
+                            <Text style={[styles.standardText,styles.ctaColor]}>Close</Text>
+                          </View>
+                        </TouchableOpacity>
+
+                        <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       </View>
-                      <View style={styles.calcColumn100}>
-                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showMatchingCriteria: true })}>
-                          <View style={[styles.rightMargin, styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.ctaBorder]}>
-                            <Text style={styles.whiteColor}>Adjust</Text>
-                          </View>
-                        </TouchableOpacity>
+                      <View style={[styles.topPadding8,styles.leftPadding3,styles.topMarginNegative3,styles.width50]}>
                         <TouchableOpacity onPress={() => this.calculateMatches(false, false, false)}>
-                          <View style={[styles.rightPadding,styles.standardBorder,styles.slightlyRoundedCorners,styles.row5,styles.horizontalPadding10]}>
-                            <Text>Close</Text>
-                          </View>
+                          <Image source={{ uri: matchIconSelected}} style={[styles.square30,styles.contain,styles.rightMargin]} />
                         </TouchableOpacity>
-                        <View style={styles.halfSpacer} /><View style={styles.miniSpacer} /><View style={styles.miniSpacer} />
                       </View>
                     </View>
 
@@ -1267,23 +1268,23 @@ class Careers extends Component {
           <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
           {(this.state.showMatchingCriteria) && (
-            <View key="showMatchingCriteria" style={[styles.fullScreenWidth,styles.padding20]}>
+            <ScrollView key="showMatchingCriteria" style={[styles.calcColumn80,styles.padding20]}>
               <Text style={[styles.headingText2]}>Adjust Matching Criteria</Text>
               <View style={styles.spacer} />
 
               <View style={[styles.row10]}>
-                <View style={[styles.rowDirection]}>
+
+                <View style={[styles.flex1,styles.rowDirection,styles.calcColumn80]}>
                   <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: false })}>
-                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.centerItem,styles.row15,styles.horizontalPadding30,styles.centerText] : [styles.ctaBorder,styles.centerItem,styles.row15,styles.horizontalPadding30,styles.centerText,styles.ctaBackgroundColor,styles.whiteColor]}>
-                      Adjust by Needs
+                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor]}>
+                      <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.centerText] : [styles.descriptionText1,styles.whiteColor,styles.centerText]}>Adjust by Needs</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: true })}>
-                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.centerItem,styles.row15,styles.horizontalPadding30,styles.centerText,styles.ctaBackgroundColor,styles.whiteColor] : [styles.ctaBorder,styles.centerItem,styles.row15,styles.horizontalPadding30,styles.centerText]}>
-                      Custom Adjust
+                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20]}>
+                      <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.whiteColor,styles.centerText] : [styles.descriptionText1,styles.centerText]}>Custom Adjust</Text>
                     </View>
                   </TouchableOpacity>
-
                 </View>
                 <View style={styles.spacer} />
               </View>
@@ -1331,7 +1332,7 @@ class Careers extends Component {
                         <View style={[styles.ctaHorizontalLine]} />
                         <View style={styles.spacer} />
                         <View style={[styles.calcColumn60,styles.rightText]}>
-                          <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>{this.state.totalPercent}%</Text>
+                          <Text style={[styles.headingText2,styles.ctaColor,styles.boldText,styles.calcColumn60,styles.rightText]}>{this.state.totalPercent}%</Text>
                         </View>
 
                         {(this.state.totalPercent !== 100) && (
@@ -1360,11 +1361,11 @@ class Careers extends Component {
 
                               <TouchableOpacity disabled={(value.name === 'Purpose') ? true : false} onPress={() => this.itemClicked('useCase|' + index, true)}>
                                 {(value.selected) ? (
-                                  <View style={[styles.square22,styles.ctaBorder,styles.centerText, { borderRadius: 11 }]}>
-                                    <View style={[styles.square10,styles.ctaBackgroundColor,styles.topMargin,styles.centerHorizontally, { borderRadius: 5 }]}/>
+                                  <View style={[styles.square22,styles.ctaBorder,styles.flexCenter, { borderRadius: 11 }]}>
+                                    <View style={[styles.square10,styles.ctaBackgroundColor, { borderRadius: 5 }]}/>
                                   </View>
                                 ) : (
-                                  <View style={[styles.square22,styles.standardBorder,styles.centerText, { borderRadius: 11 }]} />
+                                  <View style={[styles.square22,styles.standardBorder,styles.flexCenter, { borderRadius: 11 }]} />
                                 )}
                               </TouchableOpacity>
                             </View>
@@ -1382,13 +1383,16 @@ class Careers extends Component {
 
               {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
 
-            </View>
+            </ScrollView>
           )}
 
-          <View style={[styles.row20,styles.centerText]}>
-            <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
-
-            <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
+          <View style={[styles.row20,styles.rowDirection,styles.flexCenter,styles.flex1]}>
+            <View style={[styles.flex50,styles.rightPadding5]}>
+              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
+            </View>
+            <View style={[styles.flex50,styles.leftPadding5]}>
+              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+            </View>
           </View>
          </Modal>
 
