@@ -465,6 +465,9 @@ module.exports = StyleSheet.create({
   leftPadding70: {
     paddingLeft: 70
   },
+  leftPadding110: {
+    paddingLeft: 110
+  },
   padding3: {
     padding: 3
   },
@@ -701,6 +704,9 @@ module.exports = StyleSheet.create({
   height80: {
     height: 80
   },
+  height120: {
+    height: 120
+  },
   height150: {
     height: 150
   },
@@ -748,6 +754,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn103: {
     width: Dimensions.get('window').width - 103
+  },
+  calcColumn104: {
+    width: Dimensions.get('window').width - 104
   },
   calcColumn105: {
     width: Dimensions.get('window').width - 105
@@ -1087,6 +1096,9 @@ module.exports = StyleSheet.create({
   },
   primaryBackgroundLight: {
     backgroundColor: 'rgba(82,166,229,0.5)'
+  },
+  primaryBackgroundSuperLight: {
+    backgroundColor: primaryColorLight
   },
   primaryBorder: {
     borderWidth: 1,

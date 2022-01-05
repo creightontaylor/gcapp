@@ -702,6 +702,8 @@ class Community extends Component {
     } else if (type === 'employer') {
       this.closeModal()
       this.props.navigation.navigate('EmployerDetails', { _id: item._id, selectedEmployer: item, employers: items })
+    } else if (type === 'messages') {
+      this.props.navigation.navigate('Messages', { recipient: item })
     }
   }
 
@@ -879,7 +881,7 @@ class Community extends Component {
                             {(item.active || item.activeRequest) ? (
                               <View>
                                 {(item.active) ? (
-                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item })} style={[styles.calcColumn100,styles.btnSquarish,styles.ctaBackgroundColor, styles.whiteColor,styles.descriptionText3,styles.leftMargin5,styles.flexCenter]}>
+                                  <TouchableOpacity onPress={() => this.viewItem('messages', item)} style={[styles.calcColumn100,styles.btnSquarish,styles.ctaBackgroundColor, styles.whiteColor,styles.descriptionText3,styles.leftMargin5,styles.flexCenter]}>
                                       <Text style={styles.whiteColor}>Message</Text>
                                   </TouchableOpacity>
                                 ) : (

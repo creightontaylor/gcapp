@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
 
+import SubMessages from './subcomponents/Messages';
+
 class Messages extends Component {
   constructor(props) {
     super(props)
@@ -20,49 +22,46 @@ class Messages extends Component {
   retrieveData = async() => {
     try {
       const email = await AsyncStorage.getItem('email')
-      const cuFirstName = await AsyncStorage.getItem('firstName')
-      const cuLastName = await AsyncStorage.getItem('lastName')
 
       if (email !== null) {
         // We have data!!
         console.log('what is the email of this user', email);
 
-        AsyncStorage.setItem('unreadNotificationsCount', '0')
-        //PushNotification.setApplicationIconBadgeNumber(0)
-        this.props.navigation.setParams({ badgeNumber: 0 });
+        let loadPage = true
+        let newMessage = false
 
-        //get data from server here
-        Axios.get('https://www.guidedcompass.com/api/notifications', { params: { emailId: email, recipientType: 'Advisee' } })
-        .then((response) => {
-          console.log('Notifications query worked', response.data);
+        let threadId = null
+        let groupPost = null
+        let generalPost = null
+        let recipient = null
 
-          if (response.data.success) {
+        if (this.props.route) {
 
-            this.setState({ emailId: email, cuFirstName: cuFirstName, cuLastName: cuLastName,
-              originalNotifications: response.data.notifications })
+          threadId = this.props.route.params.threadId
+          groupPost = this.props.route.params.groupPost
+          generalPost = this.props.route.params.generalPost
+          recipient = this.props.route.params.recipient
 
-            this.formatNotifications(response.data.notifications)
-
-            //this.setState({ notifications: response.data.notifications }))
-
-          } else {
-            console.log('no notifications data found', response.data.message)
+          if (groupPost || generalPost) {
+            newMessage = true
           }
 
-        }).catch((error) => {
-            console.log('Notifications query did not work', error);
-        });
+        }
+
+        this.setState({ threadId, groupPost, generalPost, recipient, loadPage, newMessage })
       }
      } catch (error) {
        // Error retrieving data
-       console.log('there was an error')
+       console.log('there was an error', error)
      }
   }
 
   render() {
     return (
       <View>
-        <Text>We're in messages!</Text>
+      {(this.state.loadPage) && (
+        <SubMessages navigation={this.props.navigation} groupPost={this.state.groupPost} generalPost={this.state.generalPost} newMessage={this.state.newMessage} recipient={this.state.recipient} />
+      )}
       </View>
     )
   }
