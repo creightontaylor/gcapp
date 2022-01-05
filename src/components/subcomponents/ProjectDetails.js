@@ -329,7 +329,7 @@ class ProjectDetails extends Component {
               <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorderColor,styles.flexCenter]} onPress={() => this.closeModal()}>
                 <View style={[styles.rowDirection]}>
                   <View style={[styles.topPadding5]}><Image style={[styles.square11,styles.contain]} source={{ uri: closeIcon}} /></View>
-                  <View style={[styles.leftPadding]}>Close View</View>
+                  <Text style={[styles.leftPadding]}>Close View</Text>
 
                 </View>
               </TouchableOpacity>
