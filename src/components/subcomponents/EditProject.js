@@ -1296,20 +1296,21 @@ class EditProject extends Component {
                 {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
               </Picker>
             </View>
-            <View style={[styles.row10,styles.rowDirection]}>
-              <View>
-                <Text style={[styles.row10,styles.standardText]}>Closest Industry</Text>
-              </View>
-              <View>
-                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
-                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: true, showMetricsInfo: false, addMetric: false })}>
-                    <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
-                  </TouchableOpacity>
+            <View style={[styles.row10]}>
+              <View style={[styles.rowDirection]}>
+                <View>
+                  <Text style={[styles.row10,styles.standardText]}>Closest Industry</Text>
                 </View>
+                <View>
+                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                  <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: true, showMetricsInfo: false, addMetric: false })}>
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
 
+                </View>
               </View>
-
 
               <Picker
                 selectedValue={this.state.selectedProject.industry}
