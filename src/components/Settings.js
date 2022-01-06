@@ -367,8 +367,8 @@ class Settings extends Component {
         if (response.data.success) {
           console.log('work mode query worked')
 
-          AsyncStorage.setItem('workMode', workMode)
-          this.setState({ workMode, isSaving: false })
+          // AsyncStorage.setItem('workMode', workMode)
+          // this.setState({ workMode, isSaving: false })
 
         } else {
           console.log('work mode query did not work', response.data.message)
@@ -572,7 +572,7 @@ class Settings extends Component {
         if (response.data.success) {
           console.log('work mode query worked')
 
-          AsyncStorage.setItem('workMode', workMode)
+          AsyncStorage.setItem('workMode', workMode.toString())
           this.setState({ workMode, isSaving: false })
 
         } else {
@@ -1281,8 +1281,6 @@ class Settings extends Component {
                         academies={this.state.academies} academyCodes={this.state.academyCodes}
                         accountCode={this.state.emp}
                       />
-                      <View style={[styles.spacer]} />
-                      <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
 
