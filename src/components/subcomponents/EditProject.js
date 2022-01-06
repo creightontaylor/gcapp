@@ -317,7 +317,7 @@ class EditProject extends Component {
           this.searchItems(eventValue)
         } else {
           console.log('there was an error')
-        }  
+        }
       }
     }
 
@@ -473,27 +473,29 @@ class EditProject extends Component {
 
           rows.push(
             <View key={"collaborator" + i.toString()}>
-              <View className="spacer" /><View className="half-spacer" />
+              <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
-              <View className="fixed-column-50">
-                <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} className="profile-thumbnail-2"/>
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.width50]}>
+                  <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square50,styles.contain, { borderRadius: 25 }]}/>
+                </View>
+                <View style={[styles.calcColumn160,styles.leftPadding]}>
+                  <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
+                  <View style={[styles.halfSpacer]} />
+                  {(collaborators[i - 1].joined) ? (
+                    <Text style={[styles.descriptionText2]}>{collaborators[i - 1].roleName}</Text>
+                  ) : (
+                    <Text style={[styles.descriptionText2]}>(This user has not joined Guided Compass)</Text>
+                  )}
+                </View>
+                <View style={[styles.width50]}>
+                  <View style={[styles.spacer]} />
+                  <TouchableOpacity onPress={() => this.removeItem(index,'collaborator')}>
+                    <Image source={{ uri: xIcon}} style={[styles.square20,styles.contain]}/>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View className="calc-column-offset-100 left-padding">
-                <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
-                <View className="half-spacer" />
-                {(collaborators[i - 1].joined) ? (
-                  <Text className="description-text-2">{collaborators[i - 1].roleName}</Text>
-                ) : (
-                  <Text className="description-text-2">(This user has not joined Guided Compass)</Text>
-                )}
-              </View>
-              <View className="fixed-column-50">
-                <View className="spacer" />
-                <TouchableOpacity className="background-link" onPress={() => this.removeItem(index,'collaborator')}>
-                  <Image source={{ uri: xIcon}} className="image-auto-20"/>
-                </TouchableOpacity>
-              </View>
-              <View className="clear" />
+
             </View>
           )
         }
@@ -899,26 +901,26 @@ class EditProject extends Component {
               <View>
                 <View style={[styles.flex75]}>
                   {(this.state.selectedProject.name && this.state.selectedProject.name !== '') ? (
-                    <Text className="heading-text-5">Edit {this.state.selectedProject.name}</Text>
+                    <Text style={[styles.headingText5]}>Edit {this.state.selectedProject.name}</Text>
                   ) : (
-                    <Text className="heading-text-5">Edit project below</Text>
+                    <Text style={[styles.headingText5]}>Edit project below</Text>
                   )}
                 </View>
                 <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
                   <TouchableOpacity onPress={() => this.saveProject()}>
                     <View>
-                      <Text className="heading-text-5 cta-color">Done</Text>
+                      <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View className="spacer" /><View className="half-spacer" />
+              <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
             </View>
           )}
 
-          <View className="edit-profile-row">
-            <Text className="profile-label">Project Title<Text className="error-color bold-text">*</Text></Text>
+          <View style={[styles.row10]}>
+            <Text style={[styles.row10,styles.standardText]}>Project Title<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.formChangeHandler("projectTitle", text)}
@@ -928,9 +930,9 @@ class EditProject extends Component {
             />
           </View>
 
-          <View className="edit-profile-row">
-            <Text className="profile-label">Project URL<Text className="error-color bold-text">*</Text></Text>
-            <Text className="description-text-3 bottom-padding">Add a link from your own website or a file sharing site like Google Drive that details your project.</Text>
+          <View style={[styles.row10]}>
+            <Text style={[styles.row10,styles.standardText]}>Project URL<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+            <Text style={[styles.descriptionText3,styles.bottomPadding]}>Add a link from your own website or a file sharing site like Google Drive that details your project.</Text>
 
             <TextInput
               style={styles.textInput}
@@ -939,18 +941,20 @@ class EditProject extends Component {
               placeholder="http..."
               placeholderTextColor="grey"
             />
-            <Text className="error-color">Please make sure that the link allows anyone to view the contents!</Text>
-            {(this.state.selectedProject.url && this.state.selectedProject.url !== '' && !this.state.selectedProject.url.startsWith('http')) && (
+            <Text style={[styles.errorColor]}>Please make sure that the link allows anyone to view the contents!</Text>
+            {(this.state.selectedProject.url && this.state.selectedProject.url !== '' && !this.state.selectedProject.url.startsWith('http')) ? (
               <View>
-                <Text className="error-message">Please start your link with http</Text>
+                <Text style={[styles.errorColor]}>Please start your link with http</Text>
               </View>
+            ) : (
+              <View />
             )}
           </View>
 
           <View>
-            <View className="edit-profile-row">
-              <Text className="profile-label">Project Header Image (Optional) (Dimensions: 600px x 250px)</Text>
-              <Text className="description-text-2 bottom-padding">Add a link to a large landscape image that showcases or represents your project. If entered correctly, the image will appear below the entry field.</Text>
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10,styles.standardText]}>Project Header Image (Optional) (Dimensions: 600px x 250px)</Text>
+              <Text style={[styles.descriptionText2,styles.bottomPadding]}>Add a link to a large landscape image that showcases or represents your project. If entered correctly, the image will appear below the entry field.</Text>
 
               <TextInput
                 style={styles.textInput}
@@ -960,15 +964,17 @@ class EditProject extends Component {
                 placeholderTextColor="grey"
               />
 
-              {(this.state.selectedProject.imageURL) && (
-                <View className="row-5">
-                  <Image source={{ uri: this.state.selectedProject.imageURL}} className="image-full-auto" />
+              {(this.state.selectedProject.imageURL && this.state.selectedProject.imageURL !== '') ? (
+                <View style={[styles.row5]}>
+                  <Image source={{ uri: this.state.selectedProject.imageURL}} style={[styles.calcColumn60,styles.height150]} />
                   {/*https://www.guidedcompass.com/public-server/web/full-guided-compass-logo.png*/}
                 </View>
+              ) : (
+                <View />
               )}
 
-              <Text className="profile-label">Video URL (Optional)</Text>
-              <Text className="description-text-2 bottom-padding">Add a link to a video demonstration of your project. Use the "Embed" version of the link. If entered correctly, the video will appear below the entry field.</Text>
+              <Text style={[styles.row10,styles.standardText]}>Video URL (Optional)</Text>
+              <Text style={[styles.descriptionText2,styles.bottomPadding]}>Add a link to a video demonstration of your project. Use the "Embed" version of the link. If entered correctly, the video will appear below the entry field.</Text>
 
               <TextInput
                 style={styles.textInput}
@@ -978,8 +984,8 @@ class EditProject extends Component {
                 placeholderTextColor="grey"
               />
 
-              {(this.state.selectedProject.videoURL) && (
-                <View className="row-5">
+              {(this.state.selectedProject.videoURL && this.state.selectedProject.videoURL !== '') ? (
+                <View style={[styles.row5]}>
                   <View>
                     <WebView
                       style={[styles.calcColumn60,styles.screenHeight20]}
@@ -988,12 +994,14 @@ class EditProject extends Component {
                     />
                   </View>
                 </View>
+              ) : (
+                <View />
               )}
             </View>
           </View>
 
-          <View className="edit-profile-row">
-            <Text className="profile-label">Project Description</Text>
+          <View style={[styles.row10]}>
+            <Text style={[styles.row10,styles.standardText]}>Project Description</Text>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.formChangeHandler("projectDescription", text)}
@@ -1005,8 +1013,8 @@ class EditProject extends Component {
             />
           </View>
 
-          <View className="edit-profile-row">
-            <Text className="profile-label">Are you still working on this project?</Text>
+          <View style={[styles.row10]}>
+            <Text style={[styles.row10,styles.standardText]}>Are you still working on this project?</Text>
             <Switch
               onChange={(change) => this.changeContinual(this.state.selectedIndex, change,'project')}
               checked={this.state.selectedProject.isContinual}
@@ -1014,9 +1022,9 @@ class EditProject extends Component {
             />
           </View>
 
-          <View className="edit-profile-row">
-            <View className="name-container">
-              <Text className="profile-label">Start Date<Text className="error-color bold-text">*</Text></Text>
+          <View style={[styles.row10]}>
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
               <Picker
                 selectedValue={this.state.selectedProject.startDate}
                 onValueChange={(itemValue, itemIndex) =>
@@ -1027,18 +1035,18 @@ class EditProject extends Component {
             </View>
 
             {(this.state.selectedProject.isContinual) ? (
-              <View className="name-container">
+              <View style={[styles.row10]}>
                 {(!this.state.isMobile) && (
                   <View>
-                    <View className="spacer" /><View className="spacer" /><View className="spacer" /><View className="spacer" />
+                    <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
                   </View>
                 )}
 
-                <Text className="heading-text-5">Still Working On This</Text>
+                <Text style={[styles.headingText5]}>Still Working On This</Text>
               </View>
             ) : (
-              <View className="name-container">
-                <Text className="profile-label">End Date<Text className="error-color bold-text">*</Text></Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10,styles.standardText]}>End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.selectedProject.endDate}
                   onValueChange={(itemValue, itemIndex) =>
@@ -1049,16 +1057,16 @@ class EditProject extends Component {
               </View>
             )}
 
-            <View className="clear" />
+
           </View>
 
-          <View className="edit-profile-row">
-            <View className="name-container">
+          <View style={[styles.row10]}>
+            <View style={[styles.row10]}>
               {(this.state.activeOrg !== 'c2c') ? (
                 <View>
-                  <Text className="profile-label">Add Collaborators</Text>
-                  <View>
-                    <View className="calc-column-offset-80">
+                  <Text style={[styles.row10,styles.standardText]}>Add Collaborators</Text>
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.calcColumn140]}>
                       <TextInput
                         style={styles.textInput}
                         onChangeText={(text) => this.formChangeHandler("collaboratorEmail", text)}
@@ -1068,19 +1076,19 @@ class EditProject extends Component {
                       />
                     </View>
                     {(this.state.selectedOpportunity) ? (
-                      <View className="fixed-column-80 left-padding">
+                      <View style={[styles.width80,styles.leftPadding]}>
                         <TouchableOpacity style={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.mediumBackground,styles.flexCenter]} onPress={() => this.inviteCollaborators(this.state.selectedIndex)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                       </View>
                     ) : (
-                      <View className="fixed-column-80 left-padding">
+                      <View style={[styles.width80,styles.leftPadding]}>
                         <TouchableOpacity style={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.mediumBackground,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.inviteCollaborators(this.state.selectedIndex)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                       </View>
                     )}
 
-                    <View className="clear" />
+
                   </View>
 
-                  {(this.state.collaboratorErrorMessage) && <Text className="error-message">{this.state.collaboratorErrorMessage}</Text>}
+                  {(this.state.collaboratorErrorMessage) && <Text style={[styles.errorColor]}>{this.state.collaboratorErrorMessage}</Text>}
 
                   <View>
                     {this.renderCollaborators(this.state.selectedIndex)}
@@ -1088,7 +1096,7 @@ class EditProject extends Component {
                 </View>
               ) : (
                 <View>
-                  <Text className="profile-label"># of Collaborators (Not Including You)</Text>
+                  <Text style={[styles.row10,styles.standardText]}># of Collaborators (Not Including You)</Text>
                   <Picker
                     selectedValue={this.state.selectedProject.collaboratorCount}
                     onValueChange={(itemValue, itemIndex) =>
@@ -1099,8 +1107,8 @@ class EditProject extends Component {
                 </View>
               )}
             </View>
-            <View className="name-container">
-              <Text className="profile-label">Number of Hours I Committed<Text className="error-color bold-text">*</Text></Text>
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10,styles.standardText]}>Number of Hours I Committed<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
               <Picker
                 selectedValue={this.state.selectedProject.hours}
                 onValueChange={(itemValue, itemIndex) =>
@@ -1109,13 +1117,13 @@ class EditProject extends Component {
                 {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
               </Picker>
             </View>
-            <View className="clear" />
+
           </View>
 
           {(this.state.selectedProject.collaborators && this.state.selectedProject.collaborators.length > 0) && (
-            <View className="edit-profile-row">
-              <View className="name-container">
-                <Text className="profile-label">Number of Total Hours Across Team Members<Text className="error-color bold-text">*</Text></Text>
+            <View style={[styles.row10]}>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10,styles.standardText]}>Number of Total Hours Across Team Members<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <Picker
                   selectedValue={this.state.selectedProject.totalHours}
                   onValueChange={(itemValue, itemIndex) =>
@@ -1124,8 +1132,8 @@ class EditProject extends Component {
                   {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                 </Picker>
               </View>
-              <View className="name-container">
-                <Text className="profile-label">Did you focus on something different than team members?<Text className="error-color bold-text">*</Text></Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.row10,styles.standardText]}>Did you focus on something different than team members?<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                 <TextInput
                   style={styles.textInput}
                   onChangeText={(text) => this.formChangeHandler("projectFocus", text)}
@@ -1134,26 +1142,25 @@ class EditProject extends Component {
                   placeholderTextColor="grey"
                 />
               </View>
-              <View className="clear" />
+
             </View>
           )}
 
-          <View className="edit-profile-row">
+          <View style={[styles.row10]}>
 
-            <View>
-              <View className="float-left">
-                <Text className="profile-label">Skill Tags</Text>
+            <View style={[styles.rowDirection]}>
+              <View>
+                <Text style={[styles.row10,styles.standardText]}>Skill Tags</Text>
               </View>
               <View>
-                <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                <View className="float-left left-margin noti-bubble-info-7-9">
-                  <TouchableOpacity className="background-link" onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: false, showMetricsInfo: false, addMetric: false, skillTagsInfo: true })}>
-                    <Image source={{ uri: questionMarkBlue}} className="image-auto-14 center-item" />
+                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: false, showMetricsInfo: false, addMetric: false, skillTagsInfo: true })}>
+                    <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
                   </TouchableOpacity>
                 </View>
-
               </View>
-              <View className="clear" />
+
             </View>
             <TextInput
               style={styles.textInput}
@@ -1164,9 +1171,9 @@ class EditProject extends Component {
             />
           </View>
 
-          <View className="row-10">
-            <View className="container-left">
-              <Text className="profile-label">Project Category<Text className="error-color bold-text">*</Text></Text>
+          <View style={[styles.row10]}>
+            <View style={[styles.row10]}>
+              <Text style={[styles.row10,styles.standardText]}>Project Category<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
               <Picker
                 selectedValue={this.state.selectedProject.categoryOptions}
                 onValueChange={(itemValue, itemIndex) =>
@@ -1176,27 +1183,28 @@ class EditProject extends Component {
               </Picker>
             </View>
 
-            <View className="container-right">
-              <View className="float-left">
-                <Text className="profile-label">Select a Career Path</Text>
-              </View>
-              <View>
-                <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                <View className="float-left left-margin noti-bubble-info-7-9">
-                  <TouchableOpacity className="background-link" onPress={() => this.setState({ modalIsOpen: true, showCareerPath: true })}>
-                    <Image source={{ uri: questionMarkBlue}} className="image-auto-14 center-item" />
-                  </TouchableOpacity>
+            <View style={[styles.row10]}>
+              <View style={[styles.rowDirection]}>
+                <View>
+                  <Text style={[styles.row10,styles.standardText]}>Select a Career Path</Text>
                 </View>
+                <View>
+                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                  <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showCareerPath: true })}>
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
 
-              </View>
-              <View className="clear" />
-
-              <View className="standard-border">
-                <View className="fixed-column-35">
-                  <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                  <Image source={{ uri: searchIcon}} className="image-auto-18 left-margin"/>
                 </View>
-                <View className="calc-column-offset-35">
+              </View>
+
+              <View style={[styles.standardBorder,styles.rowDirection]}>
+                <View style={[styles.width35]}>
+                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                  <Image source={{ uri: searchIcon}} style={[styles.square18,styles.leftMargin]}/>
+                </View>
+                <View style={[styles.calcColumn95]}>
                   <TextInput
                     style={styles.textInput}
                     onChangeText={(text) => this.formChangeHandler("projectCareerPath", text)}
@@ -1205,16 +1213,16 @@ class EditProject extends Component {
                     placeholderTextColor="grey"
                   />
                 </View>
-                <View className="clear" />
+
               </View>
 
-              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-              {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+              {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
               {(this.state.searchIsAnimating) ? (
-                <View className="flex-container flex-center full-space">
+                <View style={[styles.flex1,styles.flexCenter]}>
                   <View>
-                    <View className="super-spacer" />
+                    <View style={[styles.superSpacer]} />
 
                     <ActivityIndicator
                        animating = {this.state.animating}
@@ -1222,8 +1230,8 @@ class EditProject extends Component {
                        size = "large"
                        style={[styles.square80, styles.centerHorizontally]}/>
 
-                    <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                    <Text className="center-text cta-color bold-text">Searching...</Text>
+                    <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                    <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
 
                   </View>
                 </View>
@@ -1231,17 +1239,17 @@ class EditProject extends Component {
                 <View>
                   <View>
                     {(this.state.careerOptions) && (
-                      <View className="card top-margin">
+                      <View style={[styles.card,styles.topMargin]}>
                         {this.state.careerOptions.map((value, optionIndex) =>
-                          <View key={value._id} className="left-text bottom-margin-5 full-width">
-                            <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'career')}>
-                              <View className="full-width">
-                                <View className="fixed-column-40">
-                                  <View className="mini-spacer" />
-                                  <Image source={{ uri: careerPathIconDark}} className="image-auto-22" />
+                          <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn120]}>
+                            <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'career')}>
+                              <View style={[styles.calcColumn120,styles.rowDirection]}>
+                                <View style={[styles.width40]}>
+                                  <View style={[styles.miniSpacer]} />
+                                  <Image source={{ uri: careerPathIconDark}} style={[styles.square22,styles.contain]} />
                                 </View>
-                                <View className="calc-column-offset-40">
-                                  <Text className="cta-color">{value.name}</Text>
+                                <View style={[styles.calcColumn160]}>
+                                  <Text style={[styles.ctaColor]}>{value.name}</Text>
                                 </View>
                               </View>
                             </TouchableOpacity>
@@ -1254,30 +1262,31 @@ class EditProject extends Component {
                   <View>
 
                     {this.renderTags('career')}
-                    <View className="clear" />
+
 
                   </View>*/}
 
                 </View>
               )}
             </View>
-            <View className="clear" />
+
           </View>
 
-          <View className="row-10">
-            <View className="container-left">
-              <View className="float-left">
-                <Text className="profile-label">Closest Job Function</Text>
-              </View>
-              <View>
-                <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                <View className="float-left left-margin noti-bubble-info-7-9">
-                  <TouchableOpacity className="background-link" onPress={() => this.setState({ modalIsOpen: true, showJobFunction: true, showIndustry: false, showMetricsInfo: false, addMetric: false })}>
-                    <Image source={{ uri: questionMarkBlue}} className="image-auto-14 center-item" />
-                  </TouchableOpacity>
+          <View style={[styles.row10]}>
+            <View style={[styles.row10]}>
+              <View style={[styles.rowDirection]}>
+                <View>
+                  <Text style={[styles.row10,styles.standardText]}>Closest Job Function</Text>
+                </View>
+                <View>
+                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                  <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showJobFunction: true, showIndustry: false, showMetricsInfo: false, addMetric: false })}>
+                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-              <View className="clear" />
 
               <Picker
                 selectedValue={this.state.selectedProject.jobFunction}
@@ -1287,20 +1296,20 @@ class EditProject extends Component {
                 {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
               </Picker>
             </View>
-            <View className="container-right">
-              <View className="float-left">
-                <Text className="profile-label">Closest Industry</Text>
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View>
+                <Text style={[styles.row10,styles.standardText]}>Closest Industry</Text>
               </View>
               <View>
-                <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                <View className="float-left left-margin noti-bubble-info-7-9">
-                  <TouchableOpacity className="background-link" onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: true, showMetricsInfo: false, addMetric: false })}>
-                    <Image source={{ uri: questionMarkBlue}} className="image-auto-14 center-item" />
+                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                <View style={[styles.leftMargin,styles.notiBubbleInfo7of9]}>
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showJobFunction: false, showIndustry: true, showMetricsInfo: false, addMetric: false })}>
+                    <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
                   </TouchableOpacity>
                 </View>
 
               </View>
-              <View className="clear" />
+
 
               <Picker
                 selectedValue={this.state.selectedProject.industry}
@@ -1311,75 +1320,75 @@ class EditProject extends Component {
               </Picker>
             </View>
 
-            <View className="clear" />
+
           </View>
 
           {(this.state.selectedOpportunity) ? (
             <View>
-              {this.state.serverSuccessMessage !== '' && <Text className="success-message">{this.state.serverSuccessMessage}</Text>}
-              {this.state.serverErrorMessage !== '' && <Text className="error-message">{this.state.serverErrorMessage}</Text>}
+              {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+              {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
               <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.mediumBackground,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.saveProject()}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</Text></TouchableOpacity>
             </View>
           ) : (
             <View>
-              <View className="spacer" /><View className="half-spacer" />
-              <View className="float-right bottom-padding">
+              <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+              <View style={[styles.bottomPadding,styles.calcColumn60,styles.alignEnd]}>
                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.saveProject()}><Text style={[styles.standardText,styles.ctaColor]}>Save Project</Text></TouchableOpacity>
               </View>
             </View>
           )}
 
-          <View className="clear"/>
-          {this.state.clientErrorMessage !== '' && <Text className="error-message">{this.state.clientErrorMessage}</Text>}
-          <View className="spacer" /><View className="spacer" />
+
+          {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
 
           <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
 
            {(this.state.showCareerPath) && (
-             <View key="showJobFunction" className="full-width padding-20">
-               <Text className="heading-text-2">Career Path</Text>
-               <View className="spacer" />
-               <Text>Tagging a <Text className="half-bold-text cta-color">career path</Text>, if you make your project public, allows your project to be discoverable in each of the career path pages. <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerName: 'Chief Executives'})}>Chief Executives</TouchableOpacity>, for example.</Text>
+             <View key="showJobFunction" style={[styles.calcColumn80,styles.padding20]}>
+               <Text style={[styles.headingText2]}>Career Path</Text>
+               <View style={[styles.spacer]} />
+               <Text>Tagging a <Text style={[styles.boldText,styles.ctaColor]}>career path</Text>, if you make your project public, allows your project to be discoverable in each of the career path pages. <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerName: 'Chief Executives'})}>Chief Executives</TouchableOpacity>, for example.</Text>
              </View>
            )}
 
           {(this.state.showJobFunction) && (
-            <View key="showJobFunction" className="full-width padding-20">>
-              <Text className="heading-text-2">Job Function</Text>
-              <View className="spacer" />
-              <Text>We define <Text className="half-bold-text cta-color">job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
+            <View key="showJobFunction" style={[styles.calcColumn80,styles.padding20]}>>
+              <Text style={[styles.headingText2]}>Job Function</Text>
+              <View style={[styles.spacer]} />
+              <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
             </View>
           )}
 
           {(this.state.showIndustry) && (
-            <View key="showIndustry" className="full-width padding-20">>
-              <Text className="heading-text-2">Industry</Text>
-              <View className="spacer" />
-              <Text>We define <Text className="half-bold-text cta-color">industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+            <View key="showIndustry" style={[styles.calcColumn80,styles.padding20]}>>
+              <Text style={[styles.headingText2]}>Industry</Text>
+              <View style={[styles.spacer]} />
+              <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
             </View>
           )}
 
           {(this.state.showMetricsInfo) && (
-            <View key="showMetricsInfo" className="full-width padding-20">>
-              <Text className="heading-text-2">Metrics Explained</Text>
-              <View className="spacer" /><View className="spacer" /><View className="half-spacer" />
+            <View key="showMetricsInfo" style={[styles.calcColumn80,styles.padding20]}>>
+              <Text style={[styles.headingText2]}>Metrics Explained</Text>
+              <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
               <Text>Companies are simply the combination of many large projects with defined roles. We think of school and personal projects this way.</Text>
-              <View className="spacer" /><View className="spacer" />
-              <Text>This <Text className="half-bold-text cta-color">metrics</Text> section is an opportunity to align your projects with employers'. Just like employees do at companies, report the key metrics that will impress. At some point, your metrics will either be strong enough to either generate funding for a business or be strong enough to impress employers to hire you.</Text>
-              <View className="spacer" />
+              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+              <Text>This <Text style={[styles.boldText,styles.ctaColor]}>metrics</Text> section is an opportunity to align your projects with employers'. Just like employees do at companies, report the key metrics that will impress. At some point, your metrics will either be strong enough to either generate funding for a business or be strong enough to impress employers to hire you.</Text>
+              <View style={[styles.spacer]} />
             </View>
           )}
 
           {(this.state.skillTagsInfo) && (
-            <View key="showIndustry" className="full-width padding-20">>
-              <Text className="heading-text-2">Skill Tags Info</Text>
-              <View className="spacer" />
-              <Text><Text className="half-bold-text cta-color">Skill Tags</Text> allow you to list the skills related to your project separated by commas. For example, for design project, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
+            <View key="showIndustry" style={[styles.calcColumn80,styles.padding20]}>>
+              <Text style={[styles.headingText2]}>Skill Tags Info</Text>
+              <View style={[styles.spacer]} />
+              <Text><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your project separated by commas. For example, for design project, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
             </View>
           )}
 
-          <View className="row-20">
+          <View style={[styles.row20]}>
            <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
           </View>
          </Modal>
