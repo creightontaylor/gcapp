@@ -19,7 +19,6 @@ const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/a
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png';
 
-import SubSendMessage from '../../components/common/SendMessage';
 import SubEditGroup from '../../components/common/EditGroup';
 
 class Groups extends Component {
@@ -1358,15 +1357,6 @@ class Groups extends Component {
                   </View>*/}
                 </ScrollView>
               )}
-
-             {(this.state.showMessageWidget) && (
-               <View key="showServiceDefinitions" style={[styles.calcColumn80,styles.padding20]}>
-                  <SubSendMessage
-                    profileData={{ firstName: this.state.groups[this.state.selectedIndex].firstName, lastName: this.state.groups[this.state.selectedIndex].lastName, email: this.state.groups[this.state.selectedIndex].email}}
-                    navigation={this.props.navigation} closeModal={this.closeModal}
-                    />
-                </View>
-             )}
 
              {(this.state.addOrgGroup) && (
                <View key="addOrgGroup" style={[styles.calcColumn80,styles.padding20]}>

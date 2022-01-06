@@ -3455,8 +3455,6 @@ class EditProfileDetails extends Component {
           }
         }
 
-        const event = { target: { name: "isEditingProjectsArray|" + index, value: ''}}
-
         rows.push(
           <View key={rowKey} style={styles.rowDirection}>
             <View style={[styles.width70,styles.rightPadding]}>
@@ -3508,7 +3506,7 @@ class EditProfileDetails extends Component {
 
             {(this.state.projects[i - 1].emailId === this.state.emailId) ? (
               <View style={[styles.width80]}>
-                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding]} name={"isEditingProjectsArray|" + index}>
+                <TouchableOpacity onPress={() => this.formChangeHandler("isEditingProjectsArray|" + index,'')} style={[styles.rightPadding]}>
                   <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('project', index)}>
@@ -3999,8 +3997,6 @@ class EditProfileDetails extends Component {
 
       } else {
 
-        const event = { target: { name: "isEditingExperienceArray|" + index, value: ''}}
-
         rows.push(
           <View key={rowKey} style={[styles.rowDirection]}>
             <View style={[styles.width70,styles.rightPadding]}>
@@ -4013,7 +4009,8 @@ class EditProfileDetails extends Component {
               <Text style={styles.descriptionText1}>{this.state.experience[i - 1].startDate} - {this.state.experience[i - 1].endDate}</Text>
             </View>
             <View style={[styles.width80]}>
-              <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExperienceArray|" + index}>
+
+              <TouchableOpacity onPress={() => this.formChangeHandler("isEditingExperienceArray|",'')} style={[styles.rightPadding20]} name={"isEditingExperienceArray|" + index}>
                 <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.deleteItem('experience', index)}>
@@ -4161,8 +4158,6 @@ class EditProfileDetails extends Component {
 
         } else {
 
-          const event = { target: { name: "isEditingExtracurricularArray|" + index, value: ''}}
-
           rows.push(
             <View key={rowKey}>
               <View style={[styles.width70,styles.rightPadding]}>
@@ -4174,7 +4169,7 @@ class EditProfileDetails extends Component {
                 <Text style={styles.descriptionText1}>{this.state.extracurriculars[i - 1].startDate} - {this.state.extracurriculars[i - 1].endDate}</Text>
               </View>
               <View style={[styles.width80]}>
-                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingExtracurricularArray|" + index}>
+                <TouchableOpacity onPress={() => this.formChangeHandler("isEditingExtracurricularArray|" + index,'')} style={[styles.rightPadding20]} name={"isEditingExtracurricularArray|" + index}>
                   <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('extracurricular', index)}>
@@ -4266,8 +4261,6 @@ class EditProfileDetails extends Component {
 
         } else {
 
-          const event = { target: { name: "isEditingAwardArray|" + index, value: ''}}
-
           rows.push(
             <View key={rowKey}>
               <View style={[styles.width70,styles.rightPadding]}>
@@ -4278,7 +4271,7 @@ class EditProfileDetails extends Component {
                 <Text style={styles.descriptionText1}>{this.state.awards[i - 1].awardDate}</Text>
               </View>
               <View style={[styles.width80]}>
-                <TouchableOpacity onPress={() => this.formChangeHandler(event)} style={[styles.rightPadding20]} name={"isEditingAwardArray|" + index}>
+                <TouchableOpacity onPress={() => this.formChangeHandler("isEditingAwardArray|" + index,'')} style={[styles.rightPadding20]} name={"isEditingAwardArray|" + index}>
                   <Image source={{ uri: editIconGrey}} style={[styles.square20,styles.contain]} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.deleteItem('award', index)}>

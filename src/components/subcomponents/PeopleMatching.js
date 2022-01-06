@@ -17,8 +17,6 @@ const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png';
 
-import SubSendMessage from '../../components/common/SendMessage';
-
 class PeopleMatching extends Component {
   constructor(props) {
     super(props)
@@ -1081,16 +1079,6 @@ class PeopleMatching extends Component {
               </View>
             </ScrollView>
           )}
-
-         {(this.state.showMessageWidget) && (
-           <View key="showServiceDefinitions" style={[styles.calcColumn80,styles.padding20]}>
-              <SubSendMessage
-                profileData={{ firstName: this.state.members[this.state.selectedIndex].firstName, lastName: this.state.members[this.state.selectedIndex].lastName, email: this.state.members[this.state.selectedIndex].email}}
-                navigation={this.props.navigation} closeModal={this.closeModal} source={"peopleMatching"}
-                />
-            </View>
-         )}
-
        </Modal>
 
 
