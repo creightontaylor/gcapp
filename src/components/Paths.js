@@ -30,7 +30,7 @@ class Paths extends Component {
     console.log('home component did mount');
 
     this.retrieveData()
-
+    // this.props.navigation.addListener('retrieveData', this.retrieveData)
   }
 
   retrieveData = async() => {
@@ -38,11 +38,29 @@ class Paths extends Component {
       console.log('retrieving data in parent paths')
       //testing badges
 
-      // if (email !== null) {
-      //   // We have data!!
-      //   console.log('what is the email of this user');
-      //
-      // }
+      const explorationNavSelected = await AsyncStorage.getItem('explorationNavSelected');
+
+      let subNavSelected = 'Careers'
+      let calculateMatches = false
+      let selectedGoal = null
+
+      if (this.props.route && this.props.route.params) {
+
+        if (this.props.route.params.subNavSelected) {
+          subNavSelected = this.props.route.params.subNavSelected
+        } else if (explorationNavSelected) {
+          subNavSelected = explorationNavSelected
+        }
+
+        if (this.props.route.params.calculateMatches) {
+          calculateMatches = this.props.route.params.calculateMatches
+        }
+
+        selectedGoal = this.props.route.params.selectedGoal
+
+      }
+      console.log('show me the money: ', subNavSelected,this.props.route.params)
+      this.setState({ subNavSelected,calculateMatches,selectedGoal})
      } catch (error) {
        // Error retrieving data
        console.log('there was an error in parent paths: ', error)

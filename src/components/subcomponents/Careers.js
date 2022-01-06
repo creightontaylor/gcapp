@@ -49,7 +49,7 @@ class Careers extends Component {
   }
 
   componentDidMount() {
-    console.log('home component did mount');
+    console.log('subCareers component did mount');
 
     this.retrieveData()
 
@@ -116,7 +116,7 @@ class Careers extends Component {
         if (this.props.pageSource !== 'Goal' && !this.props.calculateMatches) {
           Axios.get('https://www.guidedcompass.com/api/careers', { params: { excludeMissingOutlookData, excludeMissingJobZone } })
           .then((response) => {
-            console.log('Careers query worked', response.data);
+            console.log('Careers query worked');
 
             if (response.data.success) {
 
@@ -160,7 +160,7 @@ class Careers extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
         .then((response) => {
-          console.log('User details query 1 attempted', response.data);
+          console.log('User details query 1 attempted');
 
           if (response.data.success) {
              console.log('successfully retrieved user details')
@@ -168,7 +168,7 @@ class Careers extends Component {
              let favorites = []
              if (response.data.user.favoritesArray) {
                favorites = response.data.user.favoritesArray
-               console.log('favorites? ', favorites)
+               // console.log('favorites? ', favorites)
                this.setState({ favorites })
              }
 
@@ -178,7 +178,7 @@ class Careers extends Component {
 
                 if (response2.data.success) {
 
-                  console.log('actual assessment results', response2.data)
+                  console.log('actual assessment results')
 
                   let profile = response.data.user
                   profile['workPreferences'] = response2.data.results.workPreferenceAnswers
@@ -198,7 +198,7 @@ class Careers extends Component {
 
                   this.setState({ profile, matchingCriteria, useCases })
 
-                  console.log('show the props in subCareers: ', this.props)
+                  // console.log('show the props in subCareers: ', this.props)
                   if (this.props.calculateMatches) {
                     this.calculateMatches(true, true, false)
                   } else if (this.props.pageSource === 'Goal') {
@@ -251,7 +251,7 @@ class Careers extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email, includeCollaborations: true } })
             .then((response2) => {
-              console.log('Projects query attempted', response2.data);
+              console.log('Projects query attempted');
 
                 if (response2.data.success && response2.data.projects) {
                   console.log('successfully retrieved projects')
@@ -270,7 +270,7 @@ class Careers extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/experience', { params: { emailId: email } })
             .then((response2) => {
-              console.log('Experience query attempted', response2.data);
+              console.log('Experience query attempted');
 
                 if (response2.data.success && response2.data.experience) {
                   console.log('successfully retrieved experience')
@@ -289,7 +289,7 @@ class Careers extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/story', { params: { emailId: email } })
             .then((response2) => {
-                console.log('Endorsement query worked', response2.data);
+                console.log('Endorsement query worked');
 
                 if (response2.data.success) {
 
@@ -316,7 +316,7 @@ class Careers extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/workoptions')
         .then((response) => {
-          console.log('Work options query tried', response.data);
+          console.log('Work options query tried');
 
           if (response.data.success) {
             console.log('Work options query succeeded')
@@ -537,7 +537,7 @@ class Careers extends Component {
 
       Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, filterString, filters, index, search, excludeMissingOutlookData, excludeMissingJobZone })
       .then((response) => {
-        console.log('Careers query attempted', response.data);
+        console.log('Careers query attempted');
 
           if (response.data.success) {
             console.log('successfully retrieved careers')
@@ -580,7 +580,7 @@ class Careers extends Component {
 
     Axios.put('https://www.guidedcompass.com/api/careers/sort', { sortString, careers, sortName })
     .then((response) => {
-      console.log('Career sort query attempted', response.data);
+      console.log('Career sort query attempted');
 
         if (response.data.success) {
           console.log('posting sort query worked')
@@ -727,7 +727,7 @@ class Careers extends Component {
 
     Axios.put('https://www.guidedcompass.com/api/careers/similar', { selectedCareers })
     .then((response) => {
-      console.log('Similar careers query attempted', response.data);
+      console.log('Similar careers query attempted');
 
         if (response.data.success) {
           console.log('similar careers query worked')
@@ -776,7 +776,7 @@ class Careers extends Component {
           // query postings on back-end
           Axios.put('https://www.guidedcompass.com/api/careers/matches', { profile, matchingCriteria, useCases, excludeMissingOutlookData, excludeMissingJobZone, hourOptions })
           .then((response) => {
-            console.log('Career matches attempted', response.data);
+            console.log('Career matches attempted');
 
               if (response.data.success) {
                 console.log('career match query worked')
@@ -967,7 +967,7 @@ class Careers extends Component {
       .then((response) => {
         console.log('attempting to save favorites')
         if (response.data.success) {
-          console.log('saved successfully', response.data)
+          console.log('saved successfully')
           //clear values
           this.setState({
             serverSuccessPlan: true,
@@ -998,7 +998,7 @@ class Careers extends Component {
       .then((response) => {
         console.log('attempting to save favorites')
         if (response.data.success) {
-          console.log('saved successfully', response.data)
+          console.log('saved successfully')
           //clear values
           this.setState({
             serverSuccessPlan: true,

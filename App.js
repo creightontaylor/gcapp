@@ -47,6 +47,7 @@ import Profiles from './src/components/Profiles';
 import Projects from './src/components/Projects';
 import Groups from './src/components/Groups';
 import Employers from './src/components/Employers';
+import ChangePassword from './src/components/ChangePassword';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -339,6 +340,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Projects" component={Projects} />
           <Stack.Screen name="Groups" component={Groups} />
           <Stack.Screen name="Employers" component={Employers} />
+          <Stack.Screen name="ChangePassword" component={ChangePassword} />
         </Stack.Navigator>
       </NavigationContainer>
     );

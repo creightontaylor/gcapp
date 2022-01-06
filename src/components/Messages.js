@@ -35,7 +35,7 @@ class Messages extends Component {
         let generalPost = null
         let recipient = null
 
-        if (this.props.route) {
+        if (this.props.route && this.props.route.params) {
 
           threadId = this.props.route.params.threadId
           groupPost = this.props.route.params.groupPost

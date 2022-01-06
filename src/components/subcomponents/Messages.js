@@ -6,6 +6,7 @@ import Axios from 'axios';
 const editIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/edit-icon-dark.png';
 const commentIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/comment-icon-dark.png';
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 
 import {convertDateToString} from '../functions/convertDateToString';
 
@@ -100,7 +101,7 @@ class Messages extends Component {
           const searchString = passedRecipient.firstName + ' ' + passedRecipient.lastName
           this.setState({
             emailId: email, username, cuFirstName, cuLastName, roleName, activeOrg, groupPost, newMessage: true,
-            messageDraft, searchString, recipient: passedRecipient
+            messageDraft, searchString, recipient: passedRecipient, viewIndex: 1
           })
         } else {
           this.setState({
@@ -491,7 +492,7 @@ class Messages extends Component {
            console.log('successfully retrieved messages')
 
            const messages = response.data.messages
-           this.setState({ inboxSelected: index, recipient, messages, isLoading: false, newMessage: false })
+           this.setState({ inboxSelected: index, recipient, messages, viewIndex: 1, isLoading: false, newMessage: false })
            this.scrollToBottom();
 
          } else {
@@ -542,33 +543,34 @@ class Messages extends Component {
 
     return (
       <ScrollView>
-        <View style={[styles.card,styles.topMargin20,styles.flex1]}>
+        <View style={[styles.whiteBackground,styles.standardBorder,styles.topMargin20,styles.flex1]}>
           <View style={[styles.rowDirection,styles.flex1,styles.ctaBorder]}>
             <View style={[styles.flex50]}>
               <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 0 })}>
-                <View style={(this.state.viewIndex === 0) ? [styles.row5,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row5,styles.horizontalPadding10,styles.flexCenter]}>
+                <View style={(this.state.viewIndex === 0) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
                   <Text style={(this.state.viewIndex === 0) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Inbox</Text>
                 </View>
               </TouchableOpacity>
             </View>
             <View style={[styles.flex50]}>
               <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 1 })}>
-                <View style={(this.state.viewIndex === 1) ? [styles.row5,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row5,styles.horizontalPadding10,styles.flexCenter]}>
+                <View style={(this.state.viewIndex === 1) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
                   <Text style={(this.state.viewIndex === 1) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Messages</Text>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
+
           {(this.state.viewIndex === 0) && (
-            <View style={[styles.calcColumn60]}>
-              <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding,styles.rowDirection]}>
-                <View style={[styles.calcColumn85]}>
-                  <Text style={[styles.descriptionText1,styles.boldText]}>Messaging</Text>
+            <View style={[styles.fullScreenWidth]}>
+              <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding20,styles.rowDirection]}>
+                <View style={[styles.calcColumn65]}>
+                  <Text style={[styles.descriptionText1,styles.boldText]}>Create New Message</Text>
                 </View>
                 <View style={[styles.width25]}>
-                  <TouchableOpacity onPress={() => this.setState({ newMessage: true, recipient: null, inboxSelected: null, messages: null, searchString: '' })}>
+                  <TouchableOpacity onPress={() => this.setState({ newMessage: true, recipient: null, inboxSelected: null, messages: null, searchString: '', viewIndex: 1 })}>
                     <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                    <Image source={{ uri: editIconDark}} style={[styles.square15,styles.contain]}/>
+                    <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain]}/>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -577,7 +579,7 @@ class Messages extends Component {
                 {(this.state.inboxes && this.state.inboxes.length > 0) ? (
                   <View>
                     {this.state.inboxes.map((value, optionIndex) =>
-                      <View key={value._id} style={(this.state.inboxSelected === optionIndex) ? [styles.calcColumn60,styles.primaryBackgroundSuperLight] : [styles.calcColumn60]}>
+                      <View key={value._id} style={(this.state.inboxSelected === optionIndex) ? [styles.fullScreenWidth,styles.primaryBackgroundSuperLight] : [styles.fullScreenWidth]}>
                         <TouchableOpacity style={[styles.topPadding,styles.bottomPadding20,styles.horizontalPadding10]} disabled={this.state.isLoading} onPress={() => this.selectInbox(value, optionIndex)}>
                           {(value.members.length === 2) && (
                             <View>
@@ -589,14 +591,13 @@ class Messages extends Component {
                                         <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                         <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
                                       </View>
-                                      <View style={[styles.calcColumn180]}>
+                                      <View style={[styles.calcColumn140]}>
                                         <Text>{value2.firstName} {value2.lastName}</Text>
-                                        <Text style={[styles.descriptionText4,styles.height20]}>{(value.senderEmail === this.state.emailId) ? "You: " + value.lastMessage : value2.firstName + ': ' + value.lastMessage}</Text>
+                                        <Text style={[styles.descriptionText4,styles.height20,styles.descriptionTextColor]}>{(value.senderEmail === this.state.emailId) ? "You: " + value.lastMessage : value2.firstName + ': ' + value.lastMessage}</Text>
                                       </View>
                                       <View style={[styles.width50]}>
-                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.rightText]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
                                       </View>
-
                                     </View>
                                   )}
 
@@ -623,7 +624,7 @@ class Messages extends Component {
           )}
           {(this.state.viewIndex === 1) && (
             <View>
-              <View style={[styles.calcColumn60]}>
+              <View style={[styles.fullScreenWidth]}>
                 <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
                   {(this.state.newMessage) ? (
                     <Text style={[styles.descriptionText1,styles.centerText]}>New Message</Text>
@@ -634,10 +635,9 @@ class Messages extends Component {
                           <View style={[styles.width30]}>
                             <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
                           </View>
-                          <View style={[styles.calcColumn110]}>
+                          <View style={[styles.calcColumn50]}>
                             <Text style={[styles.descriptionText2,styles.height20,styles.boldText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
                           </View>
-
                         </TouchableOpacity>
                       )}
                     </View>
@@ -647,11 +647,11 @@ class Messages extends Component {
                 {(this.state.newMessage) && (
                   <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
                     {(this.state.recipient) ? (
-                      <View>
+                      <View style={[styles.rowDirection]}>
                         <View style={[styles.width25]}>
                           <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
                         </View>
-                        <View style={[styles.calcColumn105]}>
+                        <View style={[styles.calcColumn45]}>
                           <TextInput
                             style={styles.height20,styles.descriptionText3,styles.boldText}
                             onChangeText={(text) => this.formChangeHandler('search', text)}
@@ -695,7 +695,7 @@ class Messages extends Component {
                         {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
                           <View>
                             {this.state.memberOptions.map((value, optionIndex) =>
-                              <View key={value._id} style={[styles.calcColumn80,styles.bottomMargin5]}>
+                              <View key={value._id} style={[styles.calcColumn80,styles.bottomMargin]}>
                                 <TouchableOpacity onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
                                   <View style={[styles.leftPadding,styles.calcColumn80,styles.rowDirection]}>
                                     <View style={[styles.rightPadding]}>
@@ -717,9 +717,9 @@ class Messages extends Component {
                   </View>
                 )}
 
-                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height200]}>
+                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.calcHeight500]}>
                   {(this.state.messages && this.state.messages.length > 0) ? (
-                    <View style={[styles.flex1,styles.overflowYAuto]}>
+                    <ScrollView style={[styles.flex1,styles.overflowY]}>
                       {this.state.messages.map((value, optionIndex) =>
                         <View key={value._id} style={[styles.bottomPadding20]}>
                           {(value.senderEmail === this.state.emailId) ? (
@@ -778,16 +778,16 @@ class Messages extends Component {
 
 
                       <View ref={(el) => { this.messagesEnd = el; }} />
-                    </View>
+                    </ScrollView>
                   ) : (
-                    <View>
+                    <View style={[styles.flex1]}>
                       {(this.state.recipient) && (
-                        <View style={[styles.topPadding30]}>
+                        <View style={[styles.flex1]}>
                           <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })} style={[styles.flex1,styles.flexCenter]}>
-                            <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain]} />
+                            <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain, { borderRadius: 30 }]} />
                             <View>
-                              <Text style={[styles.flex1,styles.topPadding,styles.headingText6,styles.horizontalPadding30,styles.centerText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
-                              <Text style={[styles.flex1,styles.descriptionText3,styles.centerText,styles.topPadding]}>You two are not following each other.</Text>
+                              <Text style={[styles.topPadding,styles.headingText6,styles.horizontalPadding30,styles.centerText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
+                              <Text style={[styles.descriptionText3,styles.centerText,styles.topPadding]}>You two are not following each other.</Text>
                             </View>
                           </TouchableOpacity>
                         </View>

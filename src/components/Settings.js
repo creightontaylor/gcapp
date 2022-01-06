@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, SectionList, Linking, AsyncStorage, Share, TouchableOpacity, ScrollView, Image, Switch } from 'react-native';
+import Axios from 'axios';
 import Modal from 'react-native-modal';
 const styles = require('./css/style');
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
+
 
 import SwitchOrgs from './common/SwitchOrgs';
 // import {signOut} from '../services/AuthRoutes';
@@ -53,6 +55,13 @@ class Settings extends Component {
 
     this.exportToCSV = this.exportToCSV.bind(this)
     this.savePreferences = this.savePreferences.bind(this)
+    this.savePersonalInfo = this.savePersonalInfo.bind(this)
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount in settings')
+
+    this.retrieveData()
   }
 
   retrieveData = async() => {
@@ -262,47 +271,41 @@ class Settings extends Component {
            // this.setState({ serverErrorMessage: 'No org found'})
         });
 
-        //fetch text data
-        this.props.fetchUserData({
-            email
-        }).then((responseData) => {
-            if (responseData) {
-              if ( responseData.success === true ) {
-                // report to the user if there was a problem during registration
-                console.log('what is this', responseData);
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
+        .then((response) => {
 
-                const user = responseData.user
-                const roleName = responseData.user.roleName
-                const remoteAuth = responseData.user.remoteAuth
-                const activeOrg = responseData.user.activeOrg
-                const myOrgs = responseData.user.myOrgs
-                const openToMentoring = responseData.user.openToMentoring
-                const workMode = responseData.user.workMode
-                let subscribed = true
-                if (responseData.user.unsubscribed) {
-                  subscribed = false
-                }
+            if (response.data.success) {
+              console.log('User profile query worked', response.data);
 
-                const firstNameValue = responseData.user.firstName
-                const lastNameValue = responseData.user.lastName
-                const publicProfile = responseData.user.publicProfile
-
-                this.setState({
-                  user, roleName, remoteAuth, activeOrg, myOrgs, openToMentoring, workMode, subscribed,
-                  firstNameValue, lastNameValue, publicProfile
-                });
-                /*
-                this.setState({
-                    error: { message: userDataMessage },
-                    isWaiting: false
-                }) */
-              } else {
-                //api call was unsuccessful. responseData was defined though.
+              const user = response.data.user
+              const roleName = response.data.user.roleName
+              const remoteAuth = response.data.user.remoteAuth
+              const activeOrg = response.data.user.activeOrg
+              const myOrgs = response.data.user.myOrgs
+              const openToMentoring = response.data.user.openToMentoring
+              const workMode = response.data.user.workMode
+              let subscribed = true
+              if (response.data.user.unsubscribed) {
+                subscribed = false
               }
+
+              const firstNameValue = response.data.user.firstName
+              const lastNameValue = response.data.user.lastName
+              const publicProfile = response.data.user.publicProfile
+
+              this.setState({
+                user, roleName, remoteAuth, activeOrg, myOrgs, openToMentoring, workMode, subscribed,
+                firstNameValue, lastNameValue, publicProfile
+              });
+
             } else {
-              //api call was unsuccessful. responseData wasn't even defined.
+              console.log('no user details found', response.data.message)
+
             }
-        })
+
+        }).catch((error) => {
+            console.log('User profile query did not work', error);
+        });
       }
 
     } catch (error) {
@@ -328,9 +331,54 @@ class Settings extends Component {
       this.setState({ resumeURLValue: eventValue, textFormHasChanged: true })
     } else if (eventName === 'customWebsiteURL') {
       this.setState({ customWebsiteURLValue: eventValue, textFormHasChanged: true })
+    } else if (eventName === 'subscribed') {
+      this.setState({ [eventName]: eventValue, textFormHasChanged: true })
+      this.savePersonalInfo(eventValue)
     } else {
       this.setState({ [eventName]: eventValue, textFormHasChanged: true })
     }
+  }
+
+  savePersonalInfo(subscribed) {
+    console.log('savePersonalInfo', subscribed)
+
+    this.setState({ serverSuccessMessage: null, serverErrorMessage: null })
+
+    if (!this.state.firstNameValue || this.state.firstNameValue === '') {
+      this.setState({ serverPostSuccess: false, serverErrorMessage: 'Please add your first name'})
+    } else if (!this.state.lastNameValue || this.state.lastNameValue === '') {
+      this.setState({ serverPostSuccess: false, serverErrorMessage: 'Please add your last name'})
+    } else {
+      console.log('saving profile')
+      const emailId = this.state.emailId
+      const firstNameValue = this.state.firstNameValue
+      const lastNameValue = this.state.lastNameValue
+      let unsubscribed = false
+      if (!subscribed) {
+        unsubscribed = true
+      }
+
+      const updatedAt = new Date()
+
+      Axios.post('https://www.guidedcompass.com/api/users/profile/details', {  emailId, firstNameValue, lastNameValue, unsubscribed, updatedAt })
+      .then((response) => {
+        console.log('Saving email preferences attempted', response.data);
+
+        if (response.data.success) {
+          console.log('work mode query worked')
+
+          AsyncStorage.setItem('workMode', workMode)
+          this.setState({ workMode, isSaving: false })
+
+        } else {
+          console.log('work mode query did not work', response.data.message)
+        }
+
+      }).catch((error) => {
+          console.log('Work mode query did not work for some reason', error);
+      });
+    }
+
   }
 
   closeModal() {
@@ -447,7 +495,7 @@ class Settings extends Component {
       //     })
       //     .then((responseData) => {
       //
-      //         if (responseData.success) {
+      //         if (response.data.success) {
       //
       //             //report whether values were successfully saved
       //             this.setState({
@@ -466,7 +514,7 @@ class Settings extends Component {
       //                 textFormHasChanged: false,
       //
       //                 serverSuccessText: false,
-      //                 serverErrorMessageText: responseData.message,
+      //                 serverErrorMessageText: response.data.message,
       //             })
       //         }
       //     })
@@ -483,7 +531,7 @@ class Settings extends Component {
       this.props.saveProfileDetails({ emailId, openToMentoring, updatedAt })
       .then((responseData) => {
 
-        if (responseData.success) {
+        if (response.data.success) {
 
           //report whether values were successfully saved
           this.setState({
@@ -502,7 +550,7 @@ class Settings extends Component {
               textFormHasChanged: false,
 
               serverSuccessText: false,
-              serverErrorMessageText: responseData.message,
+              serverErrorMessageText: response.data.message,
           })
         }
       })
@@ -524,7 +572,7 @@ class Settings extends Component {
         if (response.data.success) {
           console.log('work mode query worked')
 
-          localStorage.setItem('workMode', workMode)
+          AsyncStorage.setItem('workMode', workMode)
           this.setState({ workMode, isSaving: false })
 
         } else {
@@ -769,8 +817,8 @@ class Settings extends Component {
       // const url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
       //
       // // Specify file name
-      // const cuFirstName = localStorage.getItem('firstName');
-      // const cuLastName = localStorage.getItem('lastName');
+      // const cuFirstName = AsyncStorage.getItem('firstName');
+      // const cuLastName = AsyncStorage.getItem('lastName');
       //
       // const filename = cuFirstName + ' ' + cuLastName + '.doc'
       //
@@ -1173,6 +1221,8 @@ class Settings extends Component {
                          value = {this.state.workMode}
                          disabled={this.state.isSaving}
                       />
+
+                      <View style={[styles.spacer]} />
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
@@ -1187,7 +1237,7 @@ class Settings extends Component {
                         <View style={[styles.rowDirection]}>
                           <View style={[styles.width60]}>
                             <Switch
-                               onValueChange = {(value) => this.setState({ subscribed: value })}
+                               onValueChange = {(value) => this.formChangeHandler('subscribed',value)}
                                value = {this.state.subscribed}
                             />
                           </View>
@@ -1210,7 +1260,7 @@ class Settings extends Component {
                   )}
 
                   <View style={[styles.row15]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Trends')}><Text>View Labor Market Trends</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })}><Text>View Labor Market Trends</Text></TouchableOpacity>
                   </View>
 
                   <View style={styles.lightHorizontalLine} />
@@ -1218,6 +1268,7 @@ class Settings extends Component {
                   {(this.state.showWalkthrough) && (
                     <View style={[styles.row10]}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Walkthrough')}><Text>View Walk-through</Text></TouchableOpacity>
+                      <View style={[styles.spacer]} />
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
@@ -1230,13 +1281,15 @@ class Settings extends Component {
                         academies={this.state.academies} academyCodes={this.state.academyCodes}
                         accountCode={this.state.emp}
                       />
+                      <View style={[styles.spacer]} />
+                      <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
 
                   {(!this.state.remoteAuth) && (
                     <View>
                       <View style={[styles.row15]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Change Password')}><Text>Change Password</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ChangePassword')}><Text>Change Password</Text></TouchableOpacity>
                       </View>
 
                       <View style={styles.lightHorizontalLine} />

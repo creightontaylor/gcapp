@@ -344,6 +344,12 @@ module.exports = StyleSheet.create({
   leftMargin30: {
     marginLeft: 30
   },
+  leftMargin40: {
+    marginLeft: 40
+  },
+  leftMargin50: {
+    marginLeft: 50
+  },
   leftMargin58: {
     marginLeft: 58
   },
@@ -713,6 +719,12 @@ module.exports = StyleSheet.create({
   height200: {
     height: 200
   },
+  calcHeight500: {
+    height: Dimensions.get('window').height - 500
+  },
+  calcColumn25: {
+    width: Dimensions.get('window').width - 25
+  },
   calcColumn30: {
     width: Dimensions.get('window').width - 30
   },
@@ -722,11 +734,17 @@ module.exports = StyleSheet.create({
   calcColumn40: {
     width: Dimensions.get('window').width - 40
   },
+  calcColumn45: {
+    width: Dimensions.get('window').width - 45
+  },
   calcColumn50: {
     width: Dimensions.get('window').width - 50
   },
   calcColumn60: {
     width: Dimensions.get('window').width - 60
+  },
+  calcColumn65: {
+    width: Dimensions.get('window').width - 65
   },
   calcColumn70: {
     width: Dimensions.get('window').width - 70
@@ -1270,6 +1288,9 @@ module.exports = StyleSheet.create({
   },
   carousel: {
     overflow: 'scroll',
+  },
+  overflowYAuto: {
+    overflowY: 'hidden'
   },
   selectedCarouselItem: {
     backgroundColor: 'rgba(135,206,250,0.15)',

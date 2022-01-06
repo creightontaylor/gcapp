@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, AsyncStorage } from 'react-native';
 import Axios from 'axios';
 
-import SubNotifications from './subcomponents/Notifications';
+import SubChangePassword from './subcomponents/ChangePassword';
 
-class Notifications extends Component {
+class ChangePassword extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -14,7 +14,7 @@ class Notifications extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount pathways')
+    console.log('componentDidMount ChangePassword')
 
     this.retrieveData()
   }
@@ -30,18 +30,17 @@ class Notifications extends Component {
       }
      } catch (error) {
        // Error retrieving data
-       console.log('there was an error', error)
+       console.log('there was an error')
      }
   }
-
 
   render() {
     return (
       <View>
-        <SubNotifications navigation={this.props.navigation} />
+        <SubChangePassword navigation={this.props.navigation} />
       </View>
     )
   }
 }
 
-export default Notifications;
+export default ChangePassword;

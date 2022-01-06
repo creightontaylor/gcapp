@@ -18,7 +18,6 @@ class SwitchOrgs extends Component {
     }
 
     componentDidMount() {
-      document.body.style.backgroundColor = "#F5F5F5";
 
       this.retrieveData()
     }
@@ -64,7 +63,7 @@ class SwitchOrgs extends Component {
 
       return (
           <ScrollView>
-            <View>In Switch Orgs</View>
+            <View><Text>In Switch Orgs</Text></View>
           </ScrollView>
 
       )
