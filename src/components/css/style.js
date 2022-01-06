@@ -168,6 +168,10 @@ module.exports = StyleSheet.create({
     height: 80,
     width: 80
   },
+  square90: {
+    height: 90,
+    width: 90
+  },
   square100: {
     height: 100,
     width: 100
@@ -356,8 +360,15 @@ module.exports = StyleSheet.create({
   leftMargin67: {
     marginLeft: 67
   },
+  bottomMargin: {
+    marginBottom: 10
+  },
   bottomMargin20: {
     marginBottom: 20
+  },
+  horizontalMargin1: {
+    marginLeft: 1,
+    marginRight: 1
   },
   horizontalMargin5: {
     marginLeft: 5,
@@ -485,6 +496,9 @@ module.exports = StyleSheet.create({
   },
   padding10: {
     padding: 10
+  },
+  padding15: {
+    padding: 15
   },
   padding20: {
     padding: 20

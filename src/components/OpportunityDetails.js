@@ -28,15 +28,6 @@ class OpportunityDetails extends Component {
       if (email !== null) {
         // We have data!!
 
-        let category = null
-        if (this.props) {
-          // console.log('show params: ', this.props.route)
-
-          category = this.props.route.params.category
-          this.setState({ category })
-
-        }
-
         let selectedOpportunity = null
         let objectId = null
         if (this.props) {

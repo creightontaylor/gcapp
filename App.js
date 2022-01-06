@@ -48,6 +48,7 @@ import Projects from './src/components/Projects';
 import Groups from './src/components/Groups';
 import Employers from './src/components/Employers';
 import ChangePassword from './src/components/ChangePassword';
+import AddWorkspaces from './src/components/AddWorkspaces';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
@@ -191,9 +192,10 @@ export default class App extends Component<Props> {
               tabBarIcon: ({ color, size }) => (
                 <Icon name="home" size={size} color={color} />
               ),
-
               headerTitle: () => (
-                <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
+                <TouchableOpacity onPress={() => navigation.navigate('AddWorkspaces')}>
+                  <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
+                </TouchableOpacity>
               ),
               headerLeft: () => (
                 <View style={{ flexDirection: 'row'}}>
@@ -341,6 +343,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Groups" component={Groups} />
           <Stack.Screen name="Employers" component={Employers} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
+          <Stack.Screen name="AddWorkspaces" component={AddWorkspaces} />
         </Stack.Navigator>
       </NavigationContainer>
     );
