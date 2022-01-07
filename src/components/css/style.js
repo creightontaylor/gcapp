@@ -339,6 +339,9 @@ module.exports = StyleSheet.create({
   rightMargin: {
     marginRight: 10
   },
+  rightMargin20: {
+    marginRight: 20
+  },
   rightMargin30: {
     marginRight: 30
   },
