@@ -16,7 +16,6 @@ class EditProject extends Component {
     }
 
     componentDidMount() {
-      document.body.style.backgroundColor = "#F5F5F5";
 
       this.retrieveData()
     }

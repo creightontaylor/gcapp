@@ -2223,9 +2223,9 @@ class EditProfileDetails extends Component {
     console.log('segueToApp called')
 
     if (this.props.opportunityId) {
-      this.props.history.push('/app/opportunities/' + this.props.opportunityId)
+      this.props.navigation.navigate('OpportunityDetails', { objectId: this.props.opportunityId })
     } else {
-      this.props.history.push('/app')
+      this.props.navigation.navigate('App')
     }
   }
 
@@ -6288,15 +6288,15 @@ class EditProfileDetails extends Component {
                       )}
 
                       {(this.props.fromWalkthrough) ? (
-                        <View style={[styles.calcColumn60,styles.topMargin50]}>
+                        <View style={[styles.calcColumn100,styles.topMargin50]}>
                           <View style={styles.horizontalLine} />
 
-                          <View>
-                            <View style={[styles.row10]}>
-                              <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
+                          <View style={[styles.rowDirection,styles.flex1,styles.topMargin]}>
+                            <View style={[styles.flex50,styles.rightPadding5]}>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.props.movePage(false)}><Text style={[styles.standardText,styles.whiteColor]}>Back</Text></TouchableOpacity>
                             </View>
-                            <View style={[styles.row10]}>
-                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.handleSubmit()}><Text>Next step</Text></TouchableOpacity>
+                            <View style={[styles.flex50,styles.leftPadding5]}>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.handleSubmit()}><Text style={[styles.standardText,styles.whiteColor]}>Next step</Text></TouchableOpacity>
                             </View>
 
                           </View>
@@ -6915,8 +6915,8 @@ class EditProfileDetails extends Component {
 
                                 <View style={[styles.row10]}>
                                   <View >
-                                    <View><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>Portfolio Link</Text></View>
-                                    <View><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>LinkedIn</Text></View>
+                                    <View style={[styles.rowDirection]}><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>Portfolio Link</Text></View>
+                                    <View style={[styles.rowDirection]}><Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain,styles.centerItem]} /><Text style={[styles.descriptionText2,styles.boldText,styles.topMargin3]}>LinkedIn</Text></View>
                                   </View>
                                 </View>
                               </View>
@@ -6939,13 +6939,13 @@ class EditProfileDetails extends Component {
                             <View style={[styles.calcColumn60,styles.topMargin30]}>
                               <View style={styles.horizontalLine} />
 
-                              <View style={[styles.calcColumn60,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <TouchableOpacity style={[styles.btnPrimary,styles.mediymBackground,styles.standardBorder,styles.whiteColor]} onPress={() => this.props.movePage(false)}><Text>Back</Text></TouchableOpacity>
+                              <View style={[styles.calcColumn60,styles.topMargin30,styles.rowDirection]}>
+                                <View style={[styles.flex50,styles.rightPadding5]}>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.props.movePage(false)}><Text style={[styles.standardText,styles.whiteColor]}>Back</Text></TouchableOpacity>
                                 </View>
 
-                                <View style={[styles.row10]}>
-                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text>Submit & Get Started</Text></TouchableOpacity>
+                                <View style={[styles.flex50,styles.leftPadding5]}>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text style={[styles.standardText,styles.whiteColor]}>Submit & Get Started</Text></TouchableOpacity>
                                 </View>
 
                               </View>
@@ -7121,7 +7121,7 @@ class EditProfileDetails extends Component {
                     <View style={[styles.row10]}>
                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
                         this.state.email, this.state.activeOrg, this.state.orgFocus,
-                        this.state.accountCode, this.state.roleName, this.props.history
+                        this.state.accountCode, this.state.roleName, this.props.navigatioin
                       )}>Sign Out</TouchableOpacity>
                     </View>
 

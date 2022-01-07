@@ -3052,8 +3052,8 @@ class OpportunityDetails extends Component {
                   <View>
                     <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                    <View style={[styles.rowDirection,styles.flex1]}>
-                      <View style={[styles.flex80]}>
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.calcColumn130]}>
                         <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.name}</Text>
 
                         <View style={[styles.spacer]} />
@@ -3076,7 +3076,7 @@ class OpportunityDetails extends Component {
 
                       </View>
 
-                      <View style={[styles.flex20,styles.rightText]}>
+                      <View style={[styles.width70,styles.rightText]}>
                         {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
                           <View>
                             <Text style={[styles.headingText2,styles.ctaColor]}>${this.state.selectedOpportunity.prizes[0]}</Text>
@@ -3113,8 +3113,8 @@ class OpportunityDetails extends Component {
                           ) : (
                             <View style={[styles.standardBorder,styles.roundedCorners]}>
                               {(this.state.emailId) && (
-                                <View style={[styles.row5,styles.horizontalPadding,styles.centerText]}>
-                                  <Text style={[styles.descriptionText3,styles.boldText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
+                                <View style={[styles.row5,styles.horizontalPadding]}>
+                                  <Text style={[styles.descriptionText3,styles.boldText,styles.centerText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
                                 </View>
                               )}
                             </View>
@@ -3203,7 +3203,7 @@ class OpportunityDetails extends Component {
                         </View>
                       )}
 
-                      {(this.state.selectedOpportunity.pointValue) && (
+                      {(this.state.selectedOpportunity.pointValue) ? (
                         <View style={[styles.rightPadding40]}>
                           <View style={[styles.rowDirection]}>
                             <View style={[styles.rightPadding]}>
@@ -3214,11 +3214,13 @@ class OpportunityDetails extends Component {
 
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
+                      ) : (
+                        <View />
                       )}
 
-                      {(this.state.selectedOpportunity.functions) && (
-                        <View style={[styles.rightPadding40]}>
-                          <View style={[styles.rowDirection]}>
+                      {(this.state.selectedOpportunity.functions) ? (
+                        <View style={[styles.rightPadding40,styles.rowDirection]}>
+                          <View>
                             <View style={[styles.rightPadding]}>
                               <Image source={{ uri: skillsIconBlue}} style={[styles.square25,styles.contain]} />
 
@@ -3227,20 +3229,22 @@ class OpportunityDetails extends Component {
                           </View>
 
                           {this.state.selectedOpportunity.functions.map((value, index) =>
-                            <span>
+                            <View>
                               {(index === this.state.selectedOpportunity.functions.length - 1) ? (
                                 <Text style={[styles.descriptionText1]}>{value}</Text>
                               ) : (
                                 <Text style={[styles.descriptionText1]}>{value}, </Text>
                               )}
-                            </span>
+                            </View>
                           )}
 
                           <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                         </View>
+                      ) : (
+                        <View />
                       )}
 
-                      {(this.state.selectedOpportunity.tags) && (
+                      {(this.state.selectedOpportunity.tags) ? (
                         <View>
                           <View style={[styles.rowDirection]}>
                             <View style={[styles.rightPadding]}>
@@ -3251,6 +3255,8 @@ class OpportunityDetails extends Component {
                           </View>
 
                         </View>
+                      ) : (
+                        <View />
                       )}
                     </View>
 
@@ -3310,6 +3316,7 @@ class OpportunityDetails extends Component {
 
                       {(this.state.viewIndex === 0) && (
                         <View>
+
                           {(this.state.selectedOpportunity.videoLink && this.state.selectedOpportunity.videoLink !== '') && (
                             <View>
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
@@ -3393,15 +3400,6 @@ class OpportunityDetails extends Component {
                                 </View>
                               )}
 
-                              {(this.state.selectedOpportunity.richDescription) && (
-                                <View>
-                                  <Text style={[styles.headingText4]}>Description</Text>
-                                  <View>
-                                    <MyEditor showText={true} existingContent={{ blocks: this.state.selectedOpportunity.richDescription, entityMap: {}}} />
-                                  </View>
-                                  <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                                </View>
-                              )}
                             </View>
                           )}
 
@@ -3497,13 +3495,6 @@ class OpportunityDetails extends Component {
                               </View>
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                              {/*
-                              <View>
-                                <Text style={[styles.headingText4]}>Evaluation Method</Text>
-                                <Text>{this.state.selectedOpportunity.evaluationMethod}</Text>
-                              </View>
-
-                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/>*/}
 
                               <View>
                                 <Text style={[styles.headingText4]}>Timeline</Text>
@@ -3525,8 +3516,6 @@ class OpportunityDetails extends Component {
                           <View>
                             {this.renderDetails('exhibit')}
                           </View>
-
-
 
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                           <View style={[styles.ctaHorizontalLine]} />
@@ -3734,7 +3723,7 @@ class OpportunityDetails extends Component {
                                         )}
 
                                         <View style={[styles.topPadding20,styles.bottomPadding]}>
-                                          <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}><Text style={[styles.whiteColor]}>Register</Text></TouchableOpacity>
+                                          <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}><Text style={[styles.standardText,styles.whiteColor]}>Register</Text></TouchableOpacity>
 
                                           {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.errorMessage}</Text>}
                                           {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.successMessage}</Text>}
@@ -3753,13 +3742,15 @@ class OpportunityDetails extends Component {
                           )}
 
                           <View>
-                            {(((!this.state.registrationPassed) || (this.state.registrationPassed && !this.state.deadlinePassed && this.state.hasRegistered))) && (
+                            {(((!this.state.registrationPassed) || (this.state.registrationPassed && !this.state.deadlinePassed && this.state.hasRegistered))) ? (
                               <View>
                                 <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
                                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ viewIndex: 1 })}>
                                   <Text style={[styles.whiteColor]}>Submit a Project</Text>
                                 </TouchableOpacity>
                               </View>
+                            ) : (
+                              <View />
                             )}
                           </View>
                         </View>

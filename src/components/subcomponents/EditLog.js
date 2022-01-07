@@ -3864,7 +3864,7 @@ class EditLog extends Component {
                                   <View style={[styles.rowDirection]}>
                                     <View style={[styles.standardBorder,styles.lightBackground,styles.width22,styles.centerText,styles.height40]}>
                                       <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles.flex1,styles.centerText]}>$</Text>
                                     </View>
                                     <View style={[styles.width85]}>
                                       <TextInput

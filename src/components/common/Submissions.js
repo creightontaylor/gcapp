@@ -16,7 +16,6 @@ class Submissions extends Component {
     }
 
     componentDidMount() {
-      document.body.style.backgroundColor = "#F5F5F5";
 
       this.retrieveData()
     }
@@ -62,7 +61,7 @@ class Submissions extends Component {
 
       return (
           <ScrollView>
-            <View>In Submissions</View>
+            <Text>In Submissions</Text>
           </ScrollView>
 
       )

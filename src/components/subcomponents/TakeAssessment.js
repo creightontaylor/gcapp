@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput, Picker } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 // import DraggableFlatList from 'react-native-draggable-flatlist'
+import {Picker} from '@react-native-picker/picker';
 
 const dragIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/drag-icon.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
@@ -900,76 +901,76 @@ class TakeAssessment extends Component {
     });
   }
 
-  formChangeHandler(event) {
-    console.log('formChangeHandler called', event )
+  formChangeHandler(eventName,eventValue) {
+    console.log('formChangeHandler called' )
 
     let wpResponses = this.state.wpResponses
-    if (event.target.name === 'shortResponse') {
+    if (eventName === 'shortResponse') {
 
-      if (event.target.value === '') {
+      if (eventValue === '') {
         wpResponses[this.state.questionIndex] = null
-        this.setState({ shortResponse: event.target.value, wpResponses })
+        this.setState({ shortResponse: eventValue, wpResponses })
       } else {
-        wpResponses[this.state.questionIndex] = event.target.value
-        this.setState({ shortResponse: event.target.value, wpResponses })
+        wpResponses[this.state.questionIndex] = eventValue
+        this.setState({ shortResponse: eventValue, wpResponses })
       }
-    } else if (event.target.name.includes('shortResponse')) {
-      const index = Number(event.target.name.split('|')[1])
-      if (event.target.value === '') {
+    } else if (eventName.includes('shortResponse')) {
+      const index = Number(eventName.split('|')[1])
+      if (eventValue === '') {
         wpResponses[index] = null
         this.setState({ wpResponses })
       } else {
-        wpResponses[index] = event.target.value
+        wpResponses[index] = eventValue
         this.setState({ wpResponses })
       }
-    } else if (event.target.name === 'longResponse') {
+    } else if (eventName === 'longResponse') {
 
-      if (event.target.value === '') {
+      if (eventValue === '') {
         wpResponses[this.state.questionIndex] = null
-        this.setState({ longResponse: event.target.value, wpResponses })
+        this.setState({ longResponse: eventValue, wpResponses })
       } else {
-        wpResponses[this.state.questionIndex] = event.target.value
-        this.setState({ longResponse: event.target.value, wpResponses })
+        wpResponses[this.state.questionIndex] = eventValue
+        this.setState({ longResponse: eventValue, wpResponses })
       }
-    } else if (event.target.name.includes('longResponse')) {
-      const index = Number(event.target.name.split('|')[1])
-      if (event.target.value === '') {
+    } else if (eventName.includes('longResponse')) {
+      const index = Number(eventName.split('|')[1])
+      if (eventValue === '') {
         wpResponses[index] = null
         this.setState({ wpResponses })
       } else {
-        wpResponses[index] = event.target.value
+        wpResponses[index] = eventValue
         this.setState({ wpResponses })
       }
-    } else if (event.target.name === 'multipleChoice') {
-      wpResponses[this.state.questionIndex] = event.target.value
-      this.setState({ multipleChoice: event.target.value, wpResponses })
-    } else if (event.target.name.includes('multipleChoice')) {
+    } else if (eventName === 'multipleChoice') {
+      wpResponses[this.state.questionIndex] = eventValue
+      this.setState({ multipleChoice: eventValue, wpResponses })
+    } else if (eventName.includes('multipleChoice')) {
 
-      const index = Number(event.target.name.split('|')[1])
-      if (event.target.value === '') {
+      const index = Number(eventName.split('|')[1])
+      if (eventValue === '') {
         wpResponses[index] = null
         this.setState({ wpResponses })
       } else {
-        wpResponses[index] = event.target.value
+        wpResponses[index] = eventValue
         this.setState({ wpResponses })
       }
 
-    } else if (event.target.name === 'multipleAnswer') {
-      // wpResponses[this.state.questionIndex] = event.target.value
-      // this.setState({ multipleChoice: event.target.value, wpResponses })
+    } else if (eventName === 'multipleAnswer') {
+      // wpResponses[this.state.questionIndex] = eventValue
+      // this.setState({ multipleChoice: eventValue, wpResponses })
 
       if (this.state.type === 'values') {
 
         let topValues = this.state.topValues
-        if (topValues.includes(event.target.value)) {
-          let index = topValues.indexOf(event.target.value);
+        if (topValues.includes(eventValue)) {
+          let index = topValues.indexOf(eventValue);
           if (index > -1) {
             topValues.splice(index, 1);
           }
         } else {
 
           if (topValues.length < 10) {
-            topValues.push(event.target.value)
+            topValues.push(eventValue)
           } else {
             // limiting to 10 values
           }
@@ -980,65 +981,65 @@ class TakeAssessment extends Component {
       } else {
         let thisResponseArray = wpResponses[this.state.questionIndex]
         if (Array.isArray(thisResponseArray)) {
-          if (thisResponseArray.includes(event.target.value)) {
-            let index = thisResponseArray.indexOf(event.target.value);
+          if (thisResponseArray.includes(eventValue)) {
+            let index = thisResponseArray.indexOf(eventValue);
             if (index > -1) {
               thisResponseArray.splice(index, 1);
             }
           } else {
 
-            thisResponseArray.push(event.target.value)
+            thisResponseArray.push(eventValue)
 
           }
         } else {
           thisResponseArray = []
-          thisResponseArray.push(event.target.value)
+          thisResponseArray.push(eventValue)
         }
 
         wpResponses[this.state.questionIndex] = thisResponseArray
         this.setState({ multipleAnswer: thisResponseArray, wpResponses })
       }
-    } else if (event.target.name.includes('multipleAnswer')) {
-      // wpResponses[this.state.questionIndex] = event.target.value
-      // this.setState({ multipleChoice: event.target.value, wpResponses })
+    } else if (eventName.includes('multipleAnswer')) {
+      // wpResponses[this.state.questionIndex] = eventValue
+      // this.setState({ multipleChoice: eventValue, wpResponses })
 
       if (this.state.type === 'values') {
 
         let topGravitateValues = this.state.topGravitateValues
         let topEmployerValues = this.state.topEmployerValues
 
-        let index = Number(event.target.name.split("|")[1])
+        let index = Number(eventName.split("|")[1])
         if (index === 0) {
-          console.log('index is 0', event.target.value)
-          if (topGravitateValues && topGravitateValues.includes(event.target.value)) {
-            let index = topGravitateValues.indexOf(event.target.value);
+          console.log('index is 0', eventValue)
+          if (topGravitateValues && topGravitateValues.includes(eventValue)) {
+            let index = topGravitateValues.indexOf(eventValue);
             if (index > -1) {
               topGravitateValues.splice(index, 1);
             }
           } else {
 
             if (!topGravitateValues) {
-              topGravitateValues = [event.target.value]
+              topGravitateValues = [eventValue]
             } else if (topGravitateValues.length < 10) {
               console.log('adding to gravitateValues')
-              topGravitateValues.push(event.target.value)
+              topGravitateValues.push(eventValue)
             } else {
               // limiting to 10 values
             }
           }
         } else {
           console.log('index is not 0')
-          if (topEmployerValues && topEmployerValues.includes(event.target.value)) {
-            let index = topEmployerValues.indexOf(event.target.value);
+          if (topEmployerValues && topEmployerValues.includes(eventValue)) {
+            let index = topEmployerValues.indexOf(eventValue);
             if (index > -1) {
               topEmployerValues.splice(index, 1);
             }
           } else {
 
             if (!topEmployerValues) {
-              topEmployerValues = [event.target.value]
+              topEmployerValues = [eventValue]
             } else if (topEmployerValues.length < 10) {
-              topEmployerValues.push(event.target.value)
+              topEmployerValues.push(eventValue)
             } else {
               // limiting to 10 values
             }
@@ -1048,32 +1049,32 @@ class TakeAssessment extends Component {
         this.setState({ topGravitateValues, topEmployerValues })
 
       } else {
-        const firstIndex = Number(event.target.name.split('|')[1])
+        const firstIndex = Number(eventName.split('|')[1])
         let thisResponseArray = wpResponses[firstIndex]
         if (Array.isArray(thisResponseArray)) {
-          if (thisResponseArray.includes(event.target.value)) {
-            let index = thisResponseArray.indexOf(event.target.value);
+          if (thisResponseArray.includes(eventValue)) {
+            let index = thisResponseArray.indexOf(eventValue);
             if (index > -1) {
               thisResponseArray.splice(index, 1);
             }
           } else {
 
-            thisResponseArray.push(event.target.value)
+            thisResponseArray.push(eventValue)
 
           }
         } else {
           thisResponseArray = []
-          thisResponseArray.push(event.target.value)
+          thisResponseArray.push(eventValue)
         }
 
         wpResponses[firstIndex] = thisResponseArray
         this.setState({ wpResponses })
       }
-    } else if (event.target.name === 'boolean') {
-      wpResponses[this.state.questionIndex] = event.target.value
-      this.setState({ boolean: event.target.value, wpResponses })
-    } else if (event.target.name === 'pathway') {
-      let selectedPathway = event.target.value
+    } else if (eventName === 'boolean') {
+      wpResponses[this.state.questionIndex] = eventValue
+      this.setState({ boolean: eventValue, wpResponses })
+    } else if (eventName === 'pathway') {
+      let selectedPathway = eventValue
 
       let skills = []
       let competencies = []
@@ -1100,11 +1101,11 @@ class TakeAssessment extends Component {
       }
 
       this.setState({ pathway: selectedPathway, selectedPathway, skills, competencies, responses, questions, categories })
-    } else if (event.target.name === 'skillName') {
-      this.setState({ [event.target.name]: event.target.value })
-      this.searchCompetencies(event.target.value, ['General Skill','Skill','Hard Skill','Soft Skill','Work Style','Ability','Tools Used'], null)
+    } else if (eventName === 'skillName') {
+      this.setState({ [eventName]: eventValue })
+      this.searchCompetencies(eventValue, ['General Skill','Skill','Hard Skill','Soft Skill','Work Style','Ability','Tools Used'], null)
     } else {
-      this.setState({ [event.target.name]: event.target.value })
+      this.setState({ [eventName]: eventValue })
     }
   }
 
@@ -2295,7 +2296,7 @@ class TakeAssessment extends Component {
       } else if (score === 3) {
         backgroundColorClass = styles.secondaryBackgroundLight
       } else if (score === 4) {
-        backgroundColorClass = styles.primaryBackgrounLight
+        backgroundColorClass = styles.primaryBackgroundLight
       } else if (score === 5) {
         backgroundColorClass = styles.senaryBackgroundLight
       }
@@ -2346,7 +2347,7 @@ class TakeAssessment extends Component {
             </Picker>
           </View>
           <View style={[styles.topMargin40]}>
-            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.addItem()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.addItem()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
           </View>
 
         </View>
@@ -2376,10 +2377,10 @@ class TakeAssessment extends Component {
         )}
 
         {(this.state.resultsData && this.state.resultsData[3] && this.state.resultsData[3].length > 0) && (
-          <View style={[styles.row20, styles.rowDirection]}>
+          <View style={[styles.row20, styles.rowDirection,styles.flexWrap]}>
             {this.state.resultsData[3].map((value, optionIndex) =>
-              <View key={value}>
-                <View style={[styles.relativePosition,styles.rightMarginNegative12]}>
+              <View key={value} style={[styles.rowDirection]}>
+                <View style={[styles.relativePosition,styles.rightMarginNegative12,styles.zIndex1]}>
                   <View style={[styles.miniSpacer]} />
                   <TouchableOpacity onPress={() => this.removeItem(optionIndex)}>
                     <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
@@ -2668,7 +2669,6 @@ class TakeAssessment extends Component {
                                 )}
 
                                 {(this.state.resultsErrorMessage) && <Text style={[styles.errorColor,styles.row10]}>{this.state.resultsErrorMessage}</Text>}
-
 
                                 {(!this.props.fromWalkthrough && (this.props.fromApply || this.state.type !== 'skills')) && (
                                   <View style={[styles.flexCenter, styles.flex1]}>

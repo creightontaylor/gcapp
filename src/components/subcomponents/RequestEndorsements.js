@@ -1797,8 +1797,8 @@ class RequestEndorsements extends Component {
                   </View>
 
                   {(this.props.fromWalkthrough) && (
-                    <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                      <View style={[styles.flex50,styles.rightPadding]}>
+                    <View style={[styles.row10]}>
+                      <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Would you like to request an endorsement?<Text style={[styles.errorColor]}>*</Text></Text>
                         <Picker
                           selectedValue={this.state.enableRequestEndorsement}
@@ -1808,7 +1808,6 @@ class RequestEndorsements extends Component {
                           {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
                         </Picker>
                       </View>
-                      <View style={[styles.flex50]} />
                     </View>
                   )}
 
@@ -1817,8 +1816,8 @@ class RequestEndorsements extends Component {
                       {(this.state.controlledRequest) ? (
                         <View>
                           <View>
-                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                              <View style={[styles.flex50,styles.rightPadding]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Search Portal<Text style={[styles.errorColor]}>*</Text></Text>
                                 <View style={[styles.standardBorder,styles.row3,styles.horizontalPadding5,styles.rowDirection]}>
                                   <View style={[styles.topPadding,styles.leftPadding5]}>
@@ -1876,7 +1875,7 @@ class RequestEndorsements extends Component {
                                 )}
 
                               </View>
-                              <View style={[styles.flex50,styles.leftPadding]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.relationship}
@@ -1904,8 +1903,8 @@ class RequestEndorsements extends Component {
                       ) : (
                         <View>
                           <View>
-                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                              <View style={[styles.flex50,styles.rightPadding]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Endorser First Name<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
@@ -1915,7 +1914,7 @@ class RequestEndorsements extends Component {
                                   placeholderTextColor="grey"
                                 />
                               </View>
-                              <View style={[styles.flex50,styles.leftPadding]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Endorser Last Name<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
@@ -1928,8 +1927,8 @@ class RequestEndorsements extends Component {
 
                             </View>
 
-                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                              <View style={[styles.flex50,styles.rightPadding]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Endorser Email<Text style={[styles.errorColor]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
@@ -1939,7 +1938,7 @@ class RequestEndorsements extends Component {
                                   placeholderTextColor="grey"
                                 />
                               </View>
-                              <View style={[styles.flex50,styles.leftPadding]}>
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
                                 <Picker
                                   selectedValue={this.state.relationship}
@@ -1966,8 +1965,8 @@ class RequestEndorsements extends Component {
                         </View>
                       )}
 
-                      <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-                        <View style={[styles.flex50,styles.rightPadding]}>
+                      <View style={[styles.row10]}>
+                        <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Select a Goal Type<Text style={[styles.errorColor]}>*</Text></Text>
                           <Picker
                             selectedValue={this.state.goalType.description}
@@ -1978,7 +1977,7 @@ class RequestEndorsements extends Component {
                           </Picker>
 
                         </View>
-                        <View style={[styles.flex50,styles.leftPadding]}>
+                        <View style={[styles.row10]}>
                           {(this.state.goalType.name === 'Career') && (
                             <View>
                               <Text style={[styles.row10]}>Pathway<Text style={[styles.errorColor]}>*</Text></Text>
@@ -2080,8 +2079,8 @@ class RequestEndorsements extends Component {
 
                       <View>
                         <View style={[styles.row10]}>
-                          <View style={[styles.rowDirection,styles.flex1]}>
-                            <View style={[styles.flex50,styles.rightPadding]}>
+                          <View>
+                            <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Add a Competency</Text>
                               <View style={[styles.rowDirection]}>
                                 <View style={[styles.calcColumn130]}>
@@ -2098,7 +2097,6 @@ class RequestEndorsements extends Component {
                                 </View>
                               </View>
                             </View>
-                            <View style={[styles.flex50]}/>
                           </View>
 
                           {(this.state.competencyOptions && this.state.competencyOptions.length > 0) && (

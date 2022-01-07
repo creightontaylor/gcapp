@@ -4,7 +4,8 @@
 // import Axios from 'axios';
 // import Swiper from 'react-native-swiper';
 // import { Dropdown } from 'react-native-material-dropdown';
-//
+// import Icon from 'react-native-vector-icons/Ionicons';
+// Icon.loadFont()
 // //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 //
 // class WalkthroughScreen extends Component {

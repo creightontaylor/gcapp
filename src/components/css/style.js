@@ -194,6 +194,14 @@ module.exports = StyleSheet.create({
     height: 200,
     width: 200
   },
+  square280: {
+    height: 280,
+    width: 280
+  },
+  square300: {
+    height: 300,
+    width: 300
+  },
   profileThumbnail25: {
     height: 25,
     width: 25,
@@ -731,6 +739,9 @@ module.exports = StyleSheet.create({
   height5: {
     height: 5
   },
+  height6: {
+    height: 6
+  },
   height20: {
     height: 20
   },
@@ -1016,6 +1027,9 @@ module.exports = StyleSheet.create({
   circleRadius: {
     borderRadius: '50%'
   },
+  borderRadius50: {
+    borderRadius: 50
+  },
   fullWidth: {
     width: null
   },
@@ -1041,7 +1055,7 @@ module.exports = StyleSheet.create({
   },
   progressBarThin: {
     position: 'relative',
-    height: '6',
+    height: 6,
     width: Dimensions.get('window').width,
     borderRadius: 50,
     borderWidth: 1,
