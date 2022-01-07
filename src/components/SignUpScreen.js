@@ -6,11 +6,14 @@ import Axios from 'axios';
 
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 //import { configurePushNotifications } from '../services/PushNotifications';
+import LoginForm from './subcomponents/LoginForm';
 
 class SignUpScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      showModule: true,
+
       firstName: '',
       lastName: '',
       email: '',
@@ -36,7 +39,28 @@ class SignUpScreen extends Component {
       tracker.trackScreenView("SignUp - android");
     }*/
     //configurePushNotifications();
+
+    let orgCode = null
+    let opportunityId = null
+    let opportunityOrg = null
+    let fromExternal = null
+    let roleName = null
+
+    if (this.props.route && this.props.route.params) {
+      // console.log('show params: ', this.props.route)
+
+      orgCode = this.props.route.params.orgCode
+      opportunityId = this.props.route.params.opportunityId
+      opportunityOrg = this.props.route.params.opportunityOrg
+      fromExternal = this.props.route.params.fromExternal
+      roleName = this.props.route.params.roleName
+
+
+    }
+
+    this.setState({ orgCode, opportunityId,opportunityOrg,fromExternal,roleName})
   }
+
   //static navigationOptions = { header: null };
   static navigationOptions = ({ navigation }) => {
     return {
@@ -140,77 +164,83 @@ class SignUpScreen extends Component {
   }
 
   render() {
-    return (
 
-      <ImageBackground source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={{ width: '100%', height: '100%'}}>
-      {/*<ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={styles.imageStyle}>*/}
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    if (this.state.showModule) {
+      return (
+        <LoginForm roleName={this.state.roleName} opportunityId={this.state.opportunityId} opportunityOrg={this.state.opportunityOrg} orgCode={this.state.orgCode} courseId={this.state.courseId} fromExternal={this.state.fromExternal} navigation={this.props.navigation} type="SignUp" />
+      )
+    } else {
+      return (
 
-            <View style={styles.container}>
+        <ImageBackground source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={{ width: '100%', height: '100%'}}>
+        {/*<ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={styles.imageStyle}>*/}
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
 
-              <View style={{ height: 10 }}/>
-              <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={styles.logoStyle} />
-              <Text style={styles.subtitleStyle}>Welcome to Guided Compass!</Text>
-              <KeyboardAvoidingView style={styles.signUpContainer} behavior="padding">
-                <TextInput
-                  style={styles.email}
-                  onChangeText={(text) => this.setState({firstName: text})}
-                  value={this.state.firstName}
-                  placeholder="first name*"
-                  placeholderTextColor="white"
-                />
-                <TextInput
-                  style={styles.password}
-                  onChangeText={(text) => this.setState({lastName: text})}
-                  value={this.state.lastName}
-                  placeholder="last name*"
-                  placeholderTextColor="white"
-                />
-                <TextInput
-                  style={styles.email}
-                  onChangeText={(text) => this.setState({email: text})}
-                  value={this.state.email}
-                  autoCapitalize="none"
-                  placeholder="email*"
-                  placeholderTextColor="white"
-                />
-                <TextInput
-                  style={styles.password}
-                  onChangeText={(text) => this.setState({password: text})}
-                  value={this.state.password}
-                  autoCapitalize="none"
-                  placeholder="password*"
-                  placeholderTextColor="white"
-                  secureTextEntry={true}
-                />
+              <View style={styles.container}>
 
-                <TextInput
-                  style={styles.email}
-                  onChangeText={(text) => this.setState({orgCode: text.toLowerCase()})}
-                  value={this.state.orgCode}
-                  autoCapitalize="none"
-                  placeholder="add an org code (optional)"
-                  placeholderTextColor="white"
-                  secureTextEntry={true}
-                />
-                { (this.state.errorMessage !== '') && (
-                  <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
-                )}
-                <TouchableOpacity onPress={this.signUp}>
-                  <View style={styles.primaryButtonView}>
-                    <Text style={styles.primaryButtonText}>Sign Up</Text>
-                  </View>
-                </TouchableOpacity>
-              </KeyboardAvoidingView>
+                <View style={{ height: 10 }}/>
+                <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={styles.logoStyle} />
+                <Text style={styles.subtitleStyle}>Welcome to Guided Compass!</Text>
+                <KeyboardAvoidingView style={styles.signUpContainer} behavior="padding">
+                  <TextInput
+                    style={styles.email}
+                    onChangeText={(text) => this.setState({firstName: text})}
+                    value={this.state.firstName}
+                    placeholder="first name*"
+                    placeholderTextColor="white"
+                  />
+                  <TextInput
+                    style={styles.password}
+                    onChangeText={(text) => this.setState({lastName: text})}
+                    value={this.state.lastName}
+                    placeholder="last name*"
+                    placeholderTextColor="white"
+                  />
+                  <TextInput
+                    style={styles.email}
+                    onChangeText={(text) => this.setState({email: text})}
+                    value={this.state.email}
+                    autoCapitalize="none"
+                    placeholder="email*"
+                    placeholderTextColor="white"
+                  />
+                  <TextInput
+                    style={styles.password}
+                    onChangeText={(text) => this.setState({password: text})}
+                    value={this.state.password}
+                    autoCapitalize="none"
+                    placeholder="password*"
+                    placeholderTextColor="white"
+                    secureTextEntry={true}
+                  />
 
-            </View>
+                  <TextInput
+                    style={styles.email}
+                    onChangeText={(text) => this.setState({orgCode: text.toLowerCase()})}
+                    value={this.state.orgCode}
+                    autoCapitalize="none"
+                    placeholder="add an org code (optional)"
+                    placeholderTextColor="white"
+                    secureTextEntry={true}
+                  />
+                  { (this.state.errorMessage !== '') && (
+                    <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+                  )}
+                  <TouchableOpacity onPress={this.signUp}>
+                    <View style={styles.primaryButtonView}>
+                      <Text style={styles.primaryButtonText}>Sign Up</Text>
+                    </View>
+                  </TouchableOpacity>
+                </KeyboardAvoidingView>
 
-        </TouchableWithoutFeedback>
-      </ImageBackground>
+              </View>
 
-    );
-  }
+          </TouchableWithoutFeedback>
+        </ImageBackground>
 
+      );
+    }
+    }
 }
 
 export default SignUpScreen;

@@ -239,6 +239,10 @@ module.exports = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: standardColor
   },
+  whiteUnderline: {
+    borderBottomWidth: 2,
+    borderColor: '#fff'
+  },
   ctaUnderline: {
     borderBottomWidth: 2,
     borderColor: primaryColor
@@ -281,6 +285,9 @@ module.exports = StyleSheet.create({
   },
   topMargin20: {
     marginTop: 20
+  },
+  topMargin25: {
+    marginTop: 25
   },
   topMargin30: {
     marginTop: 30
@@ -718,6 +725,9 @@ module.exports = StyleSheet.create({
   height40: {
     height: 40
   },
+  height50: {
+    height: 50
+  },
   height76: {
     height: 76
   },
@@ -931,6 +941,9 @@ module.exports = StyleSheet.create({
   flex55: {
     flex: 55
   },
+  flex60: {
+    flex: 60
+  },
   flex65: {
     flex: 65
   },
@@ -1098,6 +1111,12 @@ module.exports = StyleSheet.create({
   },
   whiteColor: {
     color: 'white'
+  },
+  faintColor: {
+    color: faintColor
+  },
+  extremelyFaintColor: {
+    color: extremelyFaintColor
   },
   ctaBackgroundColor: {
     backgroundColor: primaryColor

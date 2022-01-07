@@ -279,7 +279,7 @@ class SwitchOrgs extends Component {
     }
 
     orgClicked(index, type) {
-      console.log('orgClicked clicked', index, type, this.state.roleName)
+      console.log('orgClicked clicked', index, type, this.state.roleName, this.state.myOrgs)
 
       let orgOptions = []
       if (type === 'all') {
@@ -293,7 +293,7 @@ class SwitchOrgs extends Component {
         activeOrg = orgOptions[index]
 
         this.setState({ activeOrg })
-        localStorage.setItem('activeOrg', activeOrg)
+        AsyncStorage.setItem('activeOrg', activeOrg)
 
         const emailId = this.state.emailId
         const updatedAt = new Date()
@@ -317,8 +317,8 @@ class SwitchOrgs extends Component {
                  const orgFocus = response.data.orgInfo.orgFocus
                  const studentAlias = response.data.orgInfo.studentAlias
 
-                 localStorage.setItem('orgFocus', orgFocus)
-                 localStorage.setItem('studentAlias', studentAlias)
+                 AsyncStorage.setItem('orgFocus', orgFocus)
+                 AsyncStorage.setItem('studentAlias', studentAlias)
 
                  const serverPostSuccess = true
                  const serverSuccessMessage = 'Active org successfully changed and saved!'
@@ -413,10 +413,10 @@ class SwitchOrgs extends Component {
           const orgFocus = this.state.tempOrg.orgFocus
           const studentAlias = this.state.tempOrg.studentAlias
 
-          localStorage.setItem('activeOrg', activeOrg)
-          localStorage.setItem('myOrgs', JSON.stringify(myOrgs))
-          localStorage.setItem('orgFocus', orgFocus)
-          localStorage.setItem('studentAlias', studentAlias)
+          AsyncStorage.setItem('activeOrg', activeOrg)
+          AsyncStorage.setItem('myOrgs', JSON.stringify(myOrgs))
+          AsyncStorage.setItem('orgFocus', orgFocus)
+          AsyncStorage.setItem('studentAlias', studentAlias)
 
           const searchString = ''
           const modalIsOpen = false

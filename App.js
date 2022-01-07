@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 // import Router from './src/Router';
+import Axios from 'axios';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -49,9 +50,11 @@ import Groups from './src/components/Groups';
 import Employers from './src/components/Employers';
 import ChangePassword from './src/components/ChangePassword';
 import AddWorkspaces from './src/components/AddWorkspaces';
+import OrgDetails from './src/components/OrgDetails';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
+const orgLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -62,6 +65,43 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
+
+  // componentDidMount() {
+  //   console.log('componentDidMount MASTER')
+  //
+  //   async function retrieveData() {
+  //     try {
+  //
+  //       // console.log('this is causing the error')
+  //       const activeOrg = await AsyncStorage.getItem('activeOrg')
+  //       if (activeOrg) {
+  //         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+  //         .then((response) => {
+  //           console.log('Org info query attempted in SubOrgDetails', response.data);
+  //
+  //             if (response.data.success) {
+  //               console.log('org info query worked')
+  //
+  //               orgLogo = response.data.orgInfo.webLogoURIColor
+  //
+  //
+  //             } else {
+  //               console.log('org info query did not work', response.data.message)
+  //             }
+  //
+  //         }).catch((error) => {
+  //             console.log('Org info query did not work for some reason', error);
+  //         });
+  //       }
+  //
+  //      } catch (error) {
+  //        // Error retrieving data
+  //        console.log('there was an error', error)
+  //      }
+  //   }
+  //
+  //   retrieveData()
+  // }
 
   render() {
 
@@ -194,7 +234,7 @@ export default class App extends Component<Props> {
               ),
               headerTitle: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('AddWorkspaces')}>
-                  <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
+                  <Image source={{uri: orgLogo}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
                 </TouchableOpacity>
               ),
               headerLeft: () => (
@@ -344,6 +384,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="Employers" component={Employers} />
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="AddWorkspaces" component={AddWorkspaces} />
+          <Stack.Screen name="OrgDetails" component={OrgDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     );

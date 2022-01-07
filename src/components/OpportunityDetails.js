@@ -30,7 +30,7 @@ class OpportunityDetails extends Component {
 
         let selectedOpportunity = null
         let objectId = null
-        if (this.props) {
+        if (this.props.route && this.props.route.params) {
           selectedOpportunity = this.props.route.params.selectedOpportunity
           objectId = this.props.route.params.objectId
         }

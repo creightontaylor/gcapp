@@ -1316,6 +1316,8 @@ class Settings extends Component {
                     </TouchableOpacity>
                   </View>
 
+                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
               </View>
 
               <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
