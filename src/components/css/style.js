@@ -64,6 +64,12 @@ module.exports = StyleSheet.create({
   justifyStart: {
     justifyContent: 'flex-start'
   },
+  alignCenter: {
+    alignItems: 'center'
+  },
+  justifyCenter: {
+    justifyContent: 'center'
+  },
   alignEnd: {
     alignItems: 'flex-end'
   },
@@ -372,6 +378,12 @@ module.exports = StyleSheet.create({
   },
   bottomMargin20: {
     marginBottom: 20
+  },
+  bottomMargin50: {
+    marginBottom: 50
+  },
+  bottomMargin200: {
+    marginBottom: 200
   },
   horizontalMargin1: {
     marginLeft: 1,
@@ -713,6 +725,9 @@ module.exports = StyleSheet.create({
   width220: {
     width: 220
   },
+  width300: {
+    width: 300
+  },
   height5: {
     height: 5
   },
@@ -727,6 +742,9 @@ module.exports = StyleSheet.create({
   },
   height50: {
     height: 50
+  },
+  height60: {
+    height: 60
   },
   height76: {
     height: 76
@@ -1004,8 +1022,14 @@ module.exports = StyleSheet.create({
   fullScreenWidth: {
     width: Dimensions.get('window').width
   },
+  fullScreenHeight: {
+    height: Dimensions.get('window').height
+  },
   screenHeight20: {
     height: (Dimensions.get('window').height) * 0.2
+  },
+  screenHeight10: {
+    height: (Dimensions.get('window').height) * 0.1
   },
   progressBar: {
     position: 'relative',
@@ -1138,6 +1162,9 @@ module.exports = StyleSheet.create({
   },
   lightBackground: {
     backgroundColor: extremelyFaintColor
+  },
+  transparentBackground: {
+    backgroundColor: 'transparent'
   },
   whiteBackground: {
     backgroundColor: 'white'
@@ -1301,11 +1328,17 @@ module.exports = StyleSheet.create({
   absolutePosition: {
       position: 'absolute'
   },
+  absoluteTop0: {
+    top: 0
+  },
   absoluteBottom0: {
     bottom: 0
   },
   absoluteRight0: {
     right: 0
+  },
+  absoluteLeft0: {
+    left: 0
   },
   absoluteTop5: {
     top: '5%'

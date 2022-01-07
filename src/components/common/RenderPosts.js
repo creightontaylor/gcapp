@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Text, View, Image, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, ActivityIndicator, Linking } from 'react-native';
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+import { WebView } from 'react-native-webview';
 const styles = require('../css/style');
 
 // import {
@@ -374,7 +375,6 @@ class RenderPosts extends Component {
                         <View>
                           {(value.education && value.education[0] && value.education[0].name && value.education[0].isContinual) ? (
                             <View>
-                              {console.log('show edu: ', value.education)}
                               <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>Student @ {value.education[0].name}</Text>
                             </View>
                           ) : (
@@ -546,12 +546,11 @@ class RenderPosts extends Component {
                   <View style={styles.spacer}/>
 
                   <View>
-                    <View style={styles.videoContainer}>
-                      <iframe
-                        title="videoLink"
-                        style={styles.videoIframe}
-                        src={`${value.videoURL}`}
-                        frameBorder="0"
+                    <View>
+                      <WebView
+                        style={[styles.calcColumn60,styles.screenHeight20]}
+                        javaScriptEnabled={true}
+                        source={{uri: value.videoURL}}
                       />
                     </View>
 
@@ -645,11 +644,11 @@ class RenderPosts extends Component {
                 <View style={[styles.bottomPadding]}>
                   <View style={[styles.ctaBorder]}>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends'})} style={[styles.padding20,styles.fullWidth]}>
-                      <View style={[styles.padding20, styles.rowDirection]}>
+                      <View style={[styles.rowDirection]}>
                         <View style={[styles.width60]}>
                           <Image source={(value.trendTags[0].imageURL) ? { uri: value.trendTags[0].imageURL} : { uri: trendsIconDark}} alt="GC" style={[styles.square50]} />
                         </View>
-                        <View style={styles.calcColumn200}>
+                        <View style={styles.calcColumn220}>
                           <Text>{value.trendTags[0].name}</Text>
                           <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{value.trendTags[0].category}</Text>
                         </View>
@@ -804,7 +803,7 @@ class RenderPosts extends Component {
                   <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail43]} alt="GC" />
                 )}
               </View>
-              <View style={styles.calcColumn105}>
+              <View style={[styles.calcColumn150]}>
                 <View>
                   <Text style={[styles.descriptionText1,styles.boldText]}>{value.originalPost.firstName} {value.originalPost.lastName}</Text>
                 </View>
@@ -853,18 +852,14 @@ class RenderPosts extends Component {
               <View style={[styles.spacer]}/>
 
               <View>
-                <View style={[styles.videoContainer]}>
-                  <iframe
-                    title="videoLink"
-                    style={[styles.videoIframe]}
-                    src={`${value.originalPost.videoURL}`}
-                    frameBorder="0"
+                <View>
+                  <WebView
+                    style={[styles.calcColumn60,styles.screenHeight20]}
+                    javaScriptEnabled={true}
+                    source={{uri: value.originalPost.videoURL}}
                   />
                 </View>
-
               </View>
-
-
               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
             </View>
           )}

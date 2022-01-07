@@ -11,7 +11,7 @@ import AuthLoadingScreen from './src/components/AuthLoadingScreen';
 import WelcomeScreen from './src/components/WelcomeScreen';
 import SignUpScreen from './src/components/SignUpScreen';
 import SignInScreen from './src/components/SignInScreen';
-import WalkthroughScreen from './src/components/WalkthroughScreen';
+import Walkthrough from './src/components/Walkthrough';
 
 import Home from './src/components/Home';
 import Community from './src/components/Community';
@@ -135,7 +135,7 @@ export default class App extends Component<Props> {
               </TouchableOpacity>
             ),
           }} />
-          <Stack.Screen name="Walkthrough" component={WalkthroughScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Walkthrough" component={Walkthrough} options={{ headerShown: false }} />
         </Stack.Navigator>
       );
     }
@@ -385,6 +385,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="ChangePassword" component={ChangePassword} />
           <Stack.Screen name="AddWorkspaces" component={AddWorkspaces} />
           <Stack.Screen name="OrgDetails" component={OrgDetails} />
+          <Stack.Screen name="Walkthrough" component={Walkthrough} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     );

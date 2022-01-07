@@ -350,7 +350,7 @@ class NewsFeed extends Component {
               </View>
             ) : (
               <View>
-                <SubRenderPosts posts={this.state.posts} passedGroupPost={this.state.passedGroupPost} />
+                <SubRenderPosts navigation={this.props.navigation} posts={this.state.posts} passedGroupPost={this.state.passedGroupPost} />
               </View>
             )}
 

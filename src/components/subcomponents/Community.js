@@ -869,11 +869,15 @@ class Community extends Component {
                         </View>
 
                         <Text style={[styles.calcColumn100,styles.centerText,styles.headingText6,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
-                        {(item.school) && (
+                        {(item.school) ? (
                           <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
+                        ) : (
+                          <View />
                         )}
-                        {(item.major) && (
+                        {(item.major) ? (
                           <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding5]}>{item.major}</Text>
+                        ) : (
+                          <View />
                         )}
 
                         <View style={[styles.topPadding20]}>

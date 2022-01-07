@@ -5,15 +5,18 @@ import Axios from 'axios';
 //import PushNotification from 'react-native-push-notification';
 
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
+import LoginForm from './subcomponents/LoginForm';
 
 class SignInScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        email: '',
-        password: '',
-        isWaiting: false,
-        errorMessage: ''
+      showModule: true,
+
+      email: '',
+      password: '',
+      isWaiting: false,
+      errorMessage: ''
     }
 
     this.signIn = this.signIn.bind(this)
@@ -43,6 +46,26 @@ class SignInScreen extends Component {
     } else {
       tracker.trackScreenView("SignIn - android");
     }*/
+
+    let orgCode = null
+    let opportunityId = null
+    let opportunityOrg = null
+    let courseId = null
+    let roleName = null
+
+    if (this.props.route && this.props.route.params) {
+      // console.log('show params: ', this.props.route)
+
+      orgCode = this.props.route.params.orgCode
+      opportunityId = this.props.route.params.opportunityId
+      opportunityOrg = this.props.route.params.opportunityOrg
+      courseId = this.props.route.params.courseId
+      roleName = this.props.route.params.roleName
+
+
+    }
+
+    this.setState({ orgCode, courseId, roleName, opportunityId, opportunityOrg })
   }
 
   signIn = async() => {
@@ -175,43 +198,51 @@ class SignInScreen extends Component {
   }
 
   render() {
-    return (
-      <ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={styles.imageStyle}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.container}>
-            <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={styles.logoStyle} />
-            <Text style={styles.subtitleStyle}>Welcome Back!</Text>
-            <KeyboardAvoidingView style={styles.signInContainer} behavior="padding">
-              <TextInput
-                style={styles.email}
-                onChangeText={(text) => this.setState({email: text})}
-                value={this.state.email}
-                autoCapitalize="none"
-                placeholder="email"
-                placeholderTextColor="white"
-              />
-              <TextInput
-                style={styles.password}
-                onChangeText={(text) => this.setState({password: text})}
-                value={this.state.password}
-                autoCapitalize="none"
-                placeholder="password"
-                placeholderTextColor="white"
-                secureTextEntry={true}
-              />
-              { (this.state.errorMessage !== '') && (
-                <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
-              )}
-              <TouchableOpacity onPress={this.signIn}>
-                <View style={styles.primaryButtonView}>
-                  <Text style={styles.primaryButtonText}>Sign In</Text>
-                </View>
-              </TouchableOpacity>
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
-      </ImageBackground>
-    );
+
+    if (this.state.showModule) {
+      return (
+        <LoginForm roleName={this.state.roleName} orgCode={this.state.orgCode} opportunityId={this.state.opportunityId} opportunityOrg={this.state.opportunityOrg} courseId={this.state.courseId} fromExternal={this.state.fromExternal} navigation={this.props.navigation} type="SignIn" />
+      )
+    } else {
+      return (
+        <ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={styles.imageStyle}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+              <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={styles.logoStyle} />
+              <Text style={styles.subtitleStyle}>Welcome Back!</Text>
+              <KeyboardAvoidingView style={styles.signInContainer} behavior="padding">
+                <TextInput
+                  style={styles.email}
+                  onChangeText={(text) => this.setState({email: text})}
+                  value={this.state.email}
+                  autoCapitalize="none"
+                  placeholder="email"
+                  placeholderTextColor="white"
+                />
+                <TextInput
+                  style={styles.password}
+                  onChangeText={(text) => this.setState({password: text})}
+                  value={this.state.password}
+                  autoCapitalize="none"
+                  placeholder="password"
+                  placeholderTextColor="white"
+                  secureTextEntry={true}
+                />
+                { (this.state.errorMessage !== '') && (
+                  <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+                )}
+                <TouchableOpacity onPress={this.signIn}>
+                  <View style={styles.primaryButtonView}>
+                    <Text style={styles.primaryButtonText}>Sign In</Text>
+                  </View>
+                </TouchableOpacity>
+              </KeyboardAvoidingView>
+            </View>
+          </TouchableWithoutFeedback>
+        </ImageBackground>
+      );
+    }
+
   }
 }
 
