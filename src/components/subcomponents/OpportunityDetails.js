@@ -111,7 +111,7 @@ class OpportunityDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props, prevProps)
+    console.log('componentDidUpdate called ')
 
     if (!prevProps.selectedOpportunity) {
       console.log('t1')
@@ -212,7 +212,7 @@ class OpportunityDetails extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
           .then((response) => {
-            console.log('Profile query attempted', response.data);
+            console.log('Profile query attempted');
 
              if (response.data.success) {
                console.log('successfully retrieved profile information')
@@ -234,7 +234,7 @@ class OpportunityDetails extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
           .then((response) => {
-            console.log('Favorites query attempted', response.data);
+            console.log('Favorites query attempted');
 
              if (response.data.success) {
                console.log('successfully retrieved favorites')
@@ -919,7 +919,7 @@ class OpportunityDetails extends Component {
             });
 
           } else if (selectedOpportunity.postType === 'Assignment' || selectedOpportunity.postType === 'Problem' || selectedOpportunity.postType === 'Challenge') {
-
+            console.log('in project opp retrieveData')
             let summarySplit = []
             if (selectedOpportunity.summary) {
               summarySplit = selectedOpportunity.summary.split('//n')
@@ -929,7 +929,7 @@ class OpportunityDetails extends Component {
             //update submissions
             Axios.get('https://www.guidedcompass.com/api/postings/byid', { params: { _id: selectedOpportunity._id } })
             .then((response) => {
-              console.log('Postings by id query attempted', response.data);
+              console.log('Postings by id query attempted');
 
                 if (response.data.success) {
                   console.log('successfully retrieved postings')
@@ -1033,7 +1033,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/rsvps/bypost', { params: { postingId: selectedOpportunity._id } })
             .then((response) => {
-              console.log('Rsvp query attempted', response.data);
+              console.log('Rsvp query attempted');
 
               if (response.data.success) {
                 console.log('rsvp query worked')
@@ -1157,7 +1157,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/workoptions')
             .then((response) => {
-              console.log('Work options query tried', response.data);
+              console.log('Work options query tried');
 
               if (response.data.success) {
                 console.log('Work options query succeeded')
@@ -1246,7 +1246,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: selectedOpportunity.orgCode } })
             .then((response) => {
-              console.log('Org info query attempted', response.data);
+              console.log('Org info query attempted');
 
                 if (response.data.success) {
                   console.log('org info query worked')
@@ -1267,7 +1267,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId: selectedOpportunity._id } })
             .then((response) => {
-              console.log('Comments query attempted', response.data);
+              console.log('Comments query attempted');
 
                if (response.data.success) {
                  console.log('successfully retrieved comments')
@@ -1294,193 +1294,6 @@ class OpportunityDetails extends Component {
             }).catch((error) => {
                console.log('Comments query did not work', error);
             });
-
-          // } else if (selectedOpportunity.postType === 'Assignment') {
-          //   const collaboratorOptions = [{value: '0'},{value: '1'},{value: '2'}, {value: '3'}, {value: '4'}, {value: '5'}]
-          //   const hourOptions = [{value: ''}, {value: '< 10'},{value: '10 - 50'}, {value: '50 - 100'}, {value: '100 - 500'}, {value: '500 - 1000'}, {value: '1000 - 5000'}, {value: '5000 - 10000'}, {value: '10000+'}]
-          //
-          //   let dateOptions = []
-          //
-          //   const currentMonth = new Date().getMonth()
-          //   const currentYear = new Date().getFullYear()
-          //
-          //   let month = ''
-          //   let year = currentYear - 10
-          //
-          //   console.log('show me current stuff', currentMonth, currentYear)
-          //   for (let i = 1; i <= 120 + currentMonth; i++) {
-          //     console.log('show me stuff', i)
-          //     if (i % 12 === 0) {
-          //       month = 'January'
-          //     } else if (i % 12 === 1) {
-          //       month = 'February'
-          //     } else if (i % 12 === 2) {
-          //       month = 'March'
-          //     } else if (i % 12 === 3) {
-          //       month = 'April'
-          //     } else if (i % 12 === 4) {
-          //       month = 'May'
-          //     } else if (i % 12 === 5) {
-          //       month = 'June'
-          //     } else if (i % 12 === 6) {
-          //       month = 'July'
-          //     } else if (i % 12 === 7) {
-          //       month = 'August'
-          //     } else if (i % 12 === 8) {
-          //       month = 'September'
-          //     } else if (i % 12 === 9) {
-          //       month = 'October'
-          //     } else if (i % 12 === 10) {
-          //       month = 'November'
-          //     } else if (i % 12 === 11) {
-          //       month = 'December'
-          //     }
-          //
-          //     if (i > 12 && i <= 24) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 1 + 1
-          //       } else {
-          //         year = currentYear - 10 + 1
-          //       }
-          //     } else if (i > 24 && i <= 36) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 2 + 1
-          //       } else {
-          //         year = currentYear - 10 + 2
-          //       }
-          //     } else if (i > 36 && i <= 48) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 3 + 1
-          //       } else {
-          //         year = currentYear - 10 + 3
-          //       }
-          //     } else if (i > 48 && i <= 60) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 4 + 1
-          //       } else {
-          //         year = currentYear - 10 + 4
-          //       }
-          //     } else if (i > 60 && i <= 72) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 5 + 1
-          //       } else {
-          //         year = currentYear - 10 + 5
-          //       }
-          //     } else if (i > 72 && i <= 84) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 6 + 1
-          //       } else {
-          //         year = currentYear - 10 + 6
-          //       }
-          //     } else if (i > 84 && i <= 96) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 7 + 1
-          //       } else {
-          //         year = currentYear - 10 + 7
-          //       }
-          //     } else if (i > 96 && i <= 108) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 8 + 1
-          //       } else {
-          //         year = currentYear - 10 + 8
-          //       }
-          //     } else if (i > 108 && i <= 120) {
-          //       if (i % 12 === 0) {
-          //         year = currentYear - 10 + 9 + 1
-          //       } else {
-          //         year = currentYear - 10 + 9
-          //       }
-          //     }
-          //     dateOptions.push({ value: month + ' ' + year})
-          //   }
-          //
-          //   Axios.get('https://www.guidedcompass.com/api/workoptions')
-          //   .then((response) => {
-          //     console.log('Work options query tried', response.data);
-          //
-          //     if (response.data.success) {
-          //       console.log('Work options query succeeded')
-          //
-          //       let functionOptions = [{value: 'I am not sure'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].functionOptions.length; i++) {
-          //         if (i > 1) {
-          //           functionOptions.push({ value: response.data.workOptions[0].functionOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let industryOptions = [{value: 'I am not sure'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].industryOptions.length; i++) {
-          //         if (i > 1) {
-          //           industryOptions.push({ value: response.data.workOptions[0].industryOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].workDistanceOptions.length; i++) {
-          //         if (i > 1) {
-          //           workDistanceOptions.push({ value: response.data.workOptions[0].workDistanceOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let hoursPerWeekOptions = [{value: '~ 40 hours / week'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].hoursPerWeekOptions.length; i++) {
-          //         if (i > 1) {
-          //           hoursPerWeekOptions.push({ value: response.data.workOptions[0].hoursPerWeekOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let workTypeOptions = [{value: 'Internship'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].workTypeOptions.length; i++) {
-          //         if (i > 1) {
-          //           workTypeOptions.push({ value: response.data.workOptions[0].workTypeOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let hourlyPayOptions = [{value: 'Flexible'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].hourlyPayOptions.length; i++) {
-          //         if (i > 1) {
-          //           hourlyPayOptions.push({ value: response.data.workOptions[0].hourlyPayOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let annualPayOptions = [{value: 'I am not sure'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].annualPayOptions.length; i++) {
-          //         if (i > 1) {
-          //           annualPayOptions.push({ value: response.data.workOptions[0].annualPayOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       let projectCategoryOptions = [{value: 'I am not sure'}]
-          //       for (let i = 1; i <= response.data.workOptions[0].projectCategoryOptions.length; i++) {
-          //         if (i > 1) {
-          //           projectCategoryOptions.push({ value: response.data.workOptions[0].projectCategoryOptions[i - 1]})
-          //         }
-          //       }
-          //
-          //       this.setState({ functionOptions, industryOptions,
-          //       workDistanceOptions, hoursPerWeekOptions, workTypeOptions, hourlyPayOptions, payOptions: annualPayOptions,
-          //       projectCategoryOptions, dateOptions, collaboratorOptions, hourOptions })
-
-            //   } else {
-            //     console.log('no jobFamilies data found', response.data.message)
-            //
-            //     const functionOptions = [{value: 'Undecided'}]
-            //     const industryOptions = [{value: 'Undecided'}]
-            //     //const workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
-            //     const hoursPerWeekOptions = [{value: '~ 40 hours / week'}]
-            //     //const workTypeOptions = [{value: 'Internship'}]
-            //     //const hourlyPayOptions = [{value: 'Flexible'}]
-            //     const payOptions = [{value: 'Flexible'}]
-            //
-            //     this.setState({ functionOptions, industryOptions, hoursPerWeekOptions, payOptions, dateOptions, collaboratorOptions, hourOptions })
-            //
-            //   }
-            // }).catch((error) => {
-            //     console.log('query for work options did not work', error);
-            // })
-          // } else if (selectedOpportunity.postType === 'Scholarship') {
-          //
-          //   this.setState({ selectedOpportunity })
           } else {
             console.log('spot check', selectedOpportunity.postType)
           }
@@ -3808,7 +3621,7 @@ class OpportunityDetails extends Component {
                                         onValueChange={(itemValue, itemIndex) =>
                                           this.formChangeHandler("selectProject",itemValue)
                                         }>
-                                        {this.state.projectOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
                                       </Picker>
                                     </View>
                                   ) : (

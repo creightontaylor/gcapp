@@ -321,6 +321,15 @@ module.exports = StyleSheet.create({
   topMarginNegative4: {
     marginTop: -4
   },
+  topMarginNegative5: {
+    marginTop: -5
+  },
+  topMarginNegative7: {
+    marginTop: -7
+  },
+  topMarginNegative8: {
+    marginTop: -8
+  },
   topMarginNegative10: {
     marginTop: -10
   },
@@ -673,6 +682,9 @@ module.exports = StyleSheet.create({
   width45: {
     width: 45
   },
+  width48: {
+    width: 48
+  },
   width50: {
     width: 50
   },
@@ -705,6 +717,9 @@ module.exports = StyleSheet.create({
   },
   width120: {
     width: 120
+  },
+  width121: {
+    width: 121
   },
   width130: {
     width: 130
@@ -856,6 +871,12 @@ module.exports = StyleSheet.create({
   calcColumn130: {
     width: Dimensions.get('window').width - 130
   },
+  calcColumn135: {
+    width: Dimensions.get('window').width - 135
+  },
+  calcColumn138: {
+    width: Dimensions.get('window').width - 138
+  },
   calcColumn140: {
     width: Dimensions.get('window').width - 140
   },
@@ -885,6 +906,9 @@ module.exports = StyleSheet.create({
   },
   calcColumn180: {
     width: Dimensions.get('window').width - 180
+  },
+  calcColumn181: {
+    width: Dimensions.get('window').width - 181
   },
   calcColumn185: {
     width: Dimensions.get('window').width - 185
@@ -1294,6 +1318,11 @@ module.exports = StyleSheet.create({
   },
   commentBackgroundAdmin: {
     backgroundColor: 'rgba(135,206,250,0.25);'
+  },
+  verticalSeparator15: {
+    width: 1,
+    height: 15,
+    backgroundColor: slightFaintColor
   },
   verticalSeparator: {
     width: 1,

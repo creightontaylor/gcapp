@@ -216,84 +216,86 @@ class Submissions extends Component {
         }
 
         rows.push(
-          <View key={i} className="full-width">
+          <View key={i}>
 
               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
 
-              <View className="fixed-column-50 center-text">
-                <View>
-                  <TouchableOpacity disabled={disableVoting} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'up', index) }>
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.width50]}>
+                  <View>
+                    <TouchableOpacity disabled={disableVoting} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'up', index) }>
+                      {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
+                        <Image source={(this.state.selectedOpportunity.submissions[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      ) : (
+                        <Image source={{ uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  <View>
                     {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
-                      <Image source={(this.state.selectedOpportunity.submissions[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      <Text style={[styles.standardText]}>{this.state.selectedOpportunity.submissions[index].upvotes.length - this.state.selectedOpportunity.submissions[index].downvotes.length}</Text>
                     ) : (
-                      <Image source={{ uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      <Text style={[styles.standardText]}>0</Text>
                     )}
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
-                    <Text style={[styles.standardText]}>{this.state.selectedOpportunity.submissions[index].upvotes.length - this.state.selectedOpportunity.submissions[index].downvotes.length}</Text>
-                  ) : (
-                    <Text style={[styles.standardText]}>0</Text>
-                  )}
 
-                </View>
-                <View>
-                  <TouchableOpacity disabled={disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'down', index) }>
-                    {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
-                      <Image source={(this.state.selectedOpportunity.submissions[index].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
-                    ) : (
-                      <Image source={{ uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
-                    )}
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TouchableOpacity onPress={() => Linking.openURL(projectURL)} className={"background-button-better calc-column-offset-50 left-padding " + enableClass}>
-
-                <View className="calc-column-offset-25">
-                  <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[i - 1].name}</Text>
-
-                  <Text style={[styles.descriptionText1]}>{userFullName}</Text>
-
-                  <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.submissions[i - 1].category} | {this.state.selectedOpportunity.submissions[i - 1].hours} Hours</Text>
-                </View>
-                <View className="fixed-column-25">
-                  <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-                  <View className="float-right">
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
+                  </View>
+                  <View>
+                    <TouchableOpacity disabled={disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'down', index) }>
+                      {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
+                        <Image source={(this.state.selectedOpportunity.submissions[index].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      ) : (
+                        <Image source={{ uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                      )}
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => Linking.openURL(projectURL)} style={[styles.calcColumn110,styles.leftPadding]}>
 
+                  <View style={[styles.calcColumn135]}>
+                    <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[i - 1].name}</Text>
 
+                    <Text style={[styles.descriptionText1]}>{userFullName}</Text>
 
+                    <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.submissions[i - 1].category} | {this.state.selectedOpportunity.submissions[i - 1].hours} Hours</Text>
+                  </View>
+                  <View style={[styles.width25]}>
+                    <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                    <View>
+                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
 
-              <View className="left-padding-50 calc-column-offset-50">
-                <View style={[styles.halfSpacer]} />
-                <TouchableOpacity className="btn background-button float-left right-padding-20" onPress={() => this.showComments(index) }>
+              <View style={[styles.leftPadding50,styles.calcColumn110, styles.topPadding5,styles.rowDirection]}>
+
+                <TouchableOpacity style={[styles.rightPadding20]} onPress={() => this.showComments(index) }>
 
                   <View style={[styles.spacer]} />
-                  <View className="float-left left-margin right-margin">
-                    <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
-                  </View>
-                  <View className="float-left top-margin-negative-8">
-                    <Text style={[styles.descriptionText2]}>{submissionCommentCount} Comments</Text>
+
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.horizontalMargin]}>
+                      <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
+                    </View>
+                    <View style={[styles.topMarginNegative8]}>
+                      <Text style={[styles.descriptionText2]}>{submissionCommentCount} Comments</Text>
+                    </View>
                   </View>
 
                   <View style={[styles.halfSpacer]} />
                 </TouchableOpacity>
 
-                <View className="vertical-separator-2" />
+                <View style={[styles.verticalSeparator15]} />
 
-                <View className="float-left">
+                <View>
                   <View style={[styles.halfSpacer]} />
-                  <TouchableOpacity className="btn background-button floaat-left left-padding-20 right-padding-20" type="button" onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, selectedIndex: index, showGrade: false, showComments: false, showJobFunction: false, showIndustry: false }) }>
-                    <View className="float-left right-margin-5">
+                  <TouchableOpacity style={[styles.horizontalPadding20,styles.rowDirection ]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, selectedIndex: index, showGrade: false, showComments: false, showJobFunction: false, showIndustry: false }) }>
+                    <View style={[styles.rightMargin5]}>
                       <View>
-                        <Image source={{ uri: detailsIconGrey}} className="image-auto-17" />
+                        <Image source={{ uri: detailsIconGrey}} style={[styles.square17,styles.contain]} />
                       </View>
                     </View>
-                    <View className="float-left top-margin-negative-7">
+                    <View style={[styles.topMarginNegative7]}>
                       <Text style={[styles.descriptionText2]}>View Details</Text>
                     </View>
                   </TouchableOpacity>
@@ -301,7 +303,7 @@ class Submissions extends Component {
                   <View style={[styles.halfSpacer]} />
                 </View>
 
-                <View className="vertical-separator-2" />
+                <View style={[styles.verticalSeparator15]} />
 
               </View>
 
@@ -330,19 +332,19 @@ class Submissions extends Component {
 
           if (submissionComments[index].parentSubmissionId === this.state.selectedOpportunity.submissions[submissionIndex]._id) {
 
-            let commentBackgroundColor = "comment-background-student"
+            let commentBackgroundColor = [styles.commentBackgroundStudent]
             if (submissionComments[i - 1].roleName === 'Mentor') {
 
-              commentBackgroundColor = "comment-background-mentor"
+              commentBackgroundColor = [styles.commentBackgroundMentor]
             } else if (submissionComments[i - 1].roleName === 'Employer') {
 
-              commentBackgroundColor = "comment-background-employer"
+              commentBackgroundColor = [styles.commentBackgroundEmployer]
             } else if (submissionComments[i - 1].roleName === 'Teacher') {
 
-              commentBackgroundColor = "comment-background-teacher"
+              commentBackgroundColor = [styles.commentBackgroundTeacher]
             } else if (submissionComments[i - 1].roleName === 'Admin') {
 
-              commentBackgroundColor = "comment-background-admin"
+              commentBackgroundColor = [styles.commentBackgroundAdmin]
             }
 
             let dateString = ''
@@ -351,23 +353,9 @@ class Submissions extends Component {
             }
 
             let showEditOption = false
-            let mainClass = 'calc-column-offset-100'
 
-            let smallClass = "fixed-column-100"
             if (submissionComments[i - 1].email === this.state.emailId) {
               showEditOption = true
-              mainClass = 'calc-column-offset-121'
-              smallClass = "fixed-column-121"
-            }
-
-            if (this.state.onMobile) {
-              mainClass = 'float-left full-width'
-              smallClass = "full-width"
-            }
-
-            let commentClass = 'calc-column-offset-160'
-            if (this.state.onMobile) {
-              commentClass = "full-width"
             }
 
             let disabled = true
@@ -378,84 +366,83 @@ class Submissions extends Component {
             rows.push(
               <View key={i}>
                 <View style={[styles.spacer]} />
-                <View className="fixed-column-48 right-padding-8">
-                  <Image source={(submissionComments[i - 1].pictureURL) ? { uri: submissionComments[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
-                </View>
 
-                <View className={"comment-bubble-2 calc-column-offset-48 " + commentBackgroundColor}>
-                  <View className={mainClass}>
-                    <Text style={[styles.descriptionText2,styles.boldText]}>{submissionComments[i - 1].firstName} {submissionComments[i - 1].lastName}</Text>
-                    <Text style={[styles.descriptionText3]}>{submissionComments[i - 1].roleName}</Text>
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.width48,styles.rightPadding8]}>
+                    <Image source={(submissionComments[i - 1].pictureURL) ? { uri: submissionComments[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
                   </View>
 
-                  <View className={smallClass}>
-                    <View className="float-left">
-                      <Text style={[styles.descriptionText3]}>{dateString}</Text>
+                  <View style={[styles.calcColumn108, styles.roundedCorners,styles.transparentBorder,styles.padding10,commentBackgroundColor]}>
+                    <View style={[styles.calcColumn108]}>
+                      <Text style={[styles.descriptionText2,styles.boldText]}>{submissionComments[i - 1].firstName} {submissionComments[i - 1].lastName}</Text>
+                      <Text style={[styles.descriptionText3]}>{submissionComments[i - 1].roleName}</Text>
                     </View>
-                    {(showEditOption) && (
-                      <View className="float-left left-margin">
-                        <TouchableOpacity onPress={() => this.editComment(index,'submission',true) }>
-                          <Image source={{ uri: editIconGrey}} style={[styles.square11,styles.contain]} />
-                        </TouchableOpacity>
+
+                    <View style={[styles.calcColumn108,styles.rowDirection]}>
+                      <View>
+                        <Text style={[styles.descriptionText3]}>{dateString}</Text>
+                      </View>
+                      {(showEditOption) && (
+                        <View style={[styles.leftMargin]}>
+                          <TouchableOpacity onPress={() => this.editComment(index,'submission',true) }>
+                            <Image source={{ uri: editIconGrey}} style={[styles.square11,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    </View>
+
+                    <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+
+                    <View style={[styles.calcColumn108]}>
+                      {(this.state.editSubmissionComments[index]) ? (
+                        <TextInput
+                          style={styles.textInput}
+                          onChangeText={(text) => this.formChangeHandler("myEditedSubmissionComment", text)}
+                          value={this.state.myEditedSubmissionComment}
+                          placeholder="Change comment..."
+                          placeholderTextColor="grey"
+                        />
+                      ) : (
+                        <Text style={[styles.descriptionText1]}>{submissionComments[i - 1].comment}</Text>
+                      )}
+                    </View>
+
+                    {(this.state.editSubmissionComments[index]) && (
+                      <View style={[styles.rowDirection]}>
+                        <View>
+                          <TouchableOpacity style={[styles.btnSmall,styles.ctaBorder,styles.flexCenter]} onPress={() => this.editComment(index,'submission',false)}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                        </View>
+                        <View style={[styles.leftPadding15]}>
+                          <TouchableOpacity style={(this.state.myEditedSubmissionComment) ? [styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSmall,styles.ctaBackgroundColor,styles.washOut,styles.flexCenter]} disabled={disabled} onPress={() => this.postComment(submissionIndex, 'submission', index)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
+                        </View>
                       </View>
                     )}
 
+
+                    <View style={[styles.spacer]} />
                   </View>
-
-
-
-                  <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-
-                  <View className={commentClass}>
-                    {(this.state.editSubmissionComments[index]) ? (
-                      <TextInput
-                        style={styles.textInput}
-                        onChangeText={(text) => this.formChangeHandler("myEditedSubmissionComment", text)}
-                        value={this.state.myEditedSubmissionComment}
-                        placeholder="Change comment..."
-                        placeholderTextColor="grey"
-                      />
-                    ) : (
-                      <Text style={[styles.descriptionText1]}>{submissionComments[i - 1].comment}</Text>
-                    )}
-                  </View>
-
-                  {(this.state.editSubmissionComments[index]) && (
-                    <View className="fixed-column-160">
-                      <View className="float-left">
-                        <TouchableOpacity style={[styles.btnSmall,styles.ctaBorder,styles.flexCenter]} onPress={() => this.editComment(index,'submission',false)}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
-                      </View>
-                      <View className="float-left left-padding-15">
-                        <TouchableOpacity style={(this.state.myEditedSubmissionComment) ? [styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSmall,styles.ctaBackgroundColor,styles.washOut,styles.flexCenter]} disabled={disabled} onPress={() => this.postComment(submissionIndex, 'submission', index)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
-                      </View>
-                    </View>
-                  )}
-
-
-                  <View style={[styles.spacer]} />
                 </View>
-
 
                 <View style={[styles.spacer]} />
 
-                <View className="left-margin-58">
-                  <View className="float-left right-margin">
+                <View style={[styles.leftMargin58,styles.rowDirection]}>
+                  <View style={[styles.rightMargin]}>
                     <TouchableOpacity disabled={this.state.savingLike} onPress={() => this.likeItem(index,'submission') }>
                       <Image source={submissionComments[index].likes.includes(this.state.emailId) ? { uri: thumbsUpIconBlue} : { uri: thumbsUpIconGrey}} style={[styles.square25,styles.contain]} />
                     </TouchableOpacity>
                   </View>
-                  <View className="float-left right-margin">
+                  <View style={[styles.rightMargin]}>
                     <Text style={[styles.standardText]}>{submissionComments[i - 1].likes.length} Likes</Text>
                   </View>
 
-                  <View className="vertical-separator" />
+                  <View style={[styles.verticalSeparator]} />
 
-                  <View className="float-left left-margin right-margin">
+                  <View style={[styles.rightMargin]}>
                     <TouchableOpacity onPress={() => this.showReplies(index,'submission') }>
                       <Image source={{ uri: commentIconGrey}} style={[styles.square25,styles.contain]} />
                     </TouchableOpacity>
                   </View>
-                  <View className="float-left">
+                  <View>
                     <TouchableOpacity onPress={() => this.showReplies(index,'submission') }>
                       <Text style={[styles.standardText]}>{submissionComments[i - 1].replies.length} Replies</Text>
                     </TouchableOpacity>
@@ -464,7 +451,7 @@ class Submissions extends Component {
                 </View>
                 <View style={[styles.spacer]} />
                 {(submissionComments[i - 1].showReplies) && (
-                  <View className="left-margin-58">
+                  <View style={[styles.leftMargin58]}>
                     {this.renderReplies(index, 'submission')}
                   </View>
                 )}
@@ -706,22 +693,25 @@ class Submissions extends Component {
       rows.push(
         <View key={0}>
           <View style={[styles.spacer]} />
-          <View className="float-left right-padding-8">
-            <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
-          </View>
 
-          <View className="comment-container top-margin-negative-10">
-            <TextInput
-              style={styles.textInput}
-              onChangeText={(text) => this.formChangeHandler("reply|" + index, text)}
-              value={myReply}
-              placeholder="Add a reply..."
-              placeholderTextColor="grey"
-            />
+          <View style={[styles.rowDirection]}>
+            <View style={[styles.rightPadding8]}>
+              <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
+            </View>
+
+            <View style={[styles.calcColumn138,styles.topMarginNegative10,styles.roundedCorners,styles.transparentBorder,styles.padding10]}>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={(text) => this.formChangeHandler("reply|" + index, text)}
+                value={myReply}
+                placeholder="Add a reply..."
+                placeholderTextColor="grey"
+              />
+            </View>
           </View>
 
           {(this.state.myReplies[index] !== '') && (
-            <View className="left-margin-67">
+            <View style={[styles.leftMargin67]}>
               <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.postComment(index,postType)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Reply</Text></TouchableOpacity>
             </View>
           )}
@@ -734,15 +724,15 @@ class Submissions extends Component {
 
           const replyIndex = i - 1
 
-          let commentBackgroundColor = "comment-background-student"
+          let commentBackgroundColor = [styles.commentBackgroundStudent]
           if (this.state.comments[i - 1].roleName === 'Mentor') {
-            commentBackgroundColor = "comment-background-mentor"
+            commentBackgroundColor = [styles.commentBackgroundMentor]
           } else if (this.state.comments[i - 1].roleName === 'Employer') {
-            commentBackgroundColor = "comment-background-employer"
+            commentBackgroundColor = [styles.commentBackgroundEmployer]
           } else if (this.state.comments[i - 1].roleName === 'Teacher') {
-            commentBackgroundColor = "comment-background-teacher"
+            commentBackgroundColor = [styles.commentBackgroundTeacher]
           } else if (this.state.comments[i - 1].roleName === 'Admin') {
-            commentBackgroundColor = "comment-background-admin"
+            commentBackgroundColor = [styles.commentBackgroundAdmin]
           }
 
           let dateString = ''
@@ -755,30 +745,30 @@ class Submissions extends Component {
           rows.push(
             <View key={i}>
               <View style={[styles.spacer]} />
-              <View className="float-left right-padding-8">
-                <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
-              </View>
 
-              <View className={"comment-bubble-2 calc-column-offset-48 " + commentBackgroundColor}>
-                <View className="calc-column-offset-100">
-                  <Text style={[styles.descriptionText2]}>{replies[i - 1].firstName} {replies[i - 1].lastName}</Text>
-
-                  <Text style={[styles.descriptionText3]}>{replies[i - 1].roleName}</Text>
-
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.rightPadding8]}>
+                  <Image source={(replies[i - 1].pictureURL) ? { uri: replies[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
                 </View>
-                <View className="fixed-column-100">
-                  <View className="float-left">
-                    <Text style={[styles.descriptionText3]}>{dateString}</Text>
+
+                <View style={[styles.calcColumn108,styles.roundedCorners,styles.transparentBorder,styles.padding15,commentBackgroundColor]}>
+                  <View style={[styles.calcColumn210]}>
+                    <Text style={[styles.descriptionText2]}>{replies[i - 1].firstName} {replies[i - 1].lastName}</Text>
+
+                    <Text style={[styles.descriptionText3]}>{replies[i - 1].roleName}</Text>
+
+                  </View>
+                  <View style={[styles.width100]}>
+                    <View>
+                      <Text style={[styles.descriptionText3]}>{dateString}</Text>
+                    </View>
                   </View>
 
+                  <View style={[styles.spacer]} />
+                  <Text style={[styles.descriptionText2]}>{replies[i - 1].comment}</Text>
+
                 </View>
-
-
-                <View style={[styles.spacer]} />
-                <Text style={[styles.descriptionText2]}>{replies[i - 1].comment}</Text>
-
               </View>
-
 
               <View style={[styles.spacer]} />
 
@@ -1106,10 +1096,10 @@ class Submissions extends Component {
           ) : (
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
             {(this.state.showComments) && (
-              <View key="submissionDetail" className="full-width">
+              <View key="submissionDetail">
                {(this.state.selectedOpportunity && this.state.selectedOpportunity.submissions && this.state.selectedOpportunity.submissions.length > 0) && (
-                 <View>
-                   <View className="fixed-column-50 center-text">
+                 <View style={[styles.rowDirection]}>
+                   <View style={[styles.width50]}>
                      <View style={[styles.halfSpacer]} />
                      <View>
                        <TouchableOpacity disabled={(this.state.disabledVoting || this.state.savingVote) ? true : false} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'up', this.state.selectedIndex) }>
@@ -1117,18 +1107,18 @@ class Submissions extends Component {
                        </TouchableOpacity>
                      </View>
                      <View>
-                       <Text style={[styles.standardText]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.length - this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.length}</Text>
+                       <Text style={[styles.standardText,styles.centerText]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.length - this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.length}</Text>
 
                      </View>
                      <View>
-                       <TouchableOpacity className={(this.state.selectedOpportunity.disableDownvoting) ? "btn background-button no-pointers" : "btn background-button auto-pointers"} disabled={this.state.disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'down', this.state.selectedIndex) }>
+                       <TouchableOpacity disabled={this.state.disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'down', this.state.selectedIndex) }>
                          <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.selectedOpportunity.disableDownvoting === true) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]} />
                        </TouchableOpacity>
                      </View>
                    </View>
 
-                   <TouchableOpacity onPress={(this.state.disableLinks) ? console.log('disabled') : () => Linking.openURL(this.state.selectedOpportunity.submissions[this.state.selectedIndex].url)} className={(this.state.disableLinks) ? "background-button-better calc-column-offset-50 left-padding no-pointers" : "background-button-better calc-column-offset-50 left-padding auto-pointers"}>
-                     <View className="calc-column-offset-30">
+                   <TouchableOpacity onPress={(this.state.disableLinks) ? console.log('disabled') : () => Linking.openURL(this.state.selectedOpportunity.submissions[this.state.selectedIndex].url)} style={(this.state.disableLinks) ? [styles.calcColumn110,styles.leftPadding,styles.rowDirection] : [styles.calcColumn110,styles.leftPadding,styles.rowDirection]}>
+                     <View style={[styles.calcColumn140]}>
                        <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].name}</Text>
 
                        <Text style={[styles.descriptionText1]}>{(this.state.selectedOpportunity.submissions[this.state.selectedIndex].anonymizeSubmissions) ? "Anonymous Submitter" : this.state.selectedOpportunity.submissions[this.state.selectedIndex].userFirstName + " " + this.state.selectedOpportunity.submissions[this.state.selectedIndex].userLastName}</Text>
@@ -1137,49 +1127,49 @@ class Submissions extends Component {
                      </View>
                      <View style={[styles.width30]}>
                       <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-                       <View className="float-right">
+                       <View>
                          <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
                        </View>
                      </View>
                    </TouchableOpacity>
 
+                   <View style={[styles.calcColumn110,styles.leftMargin50]}>
+                    <View style={[styles.spacer]} />
 
-                   <View style={[styles.spacer]} />
-
-                   <View className="calc-column-offset-50 left-margin-50">
-                     <View className="float-left left-margin right-margin">
-                       <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
-                     </View>
-                     <View className="float-left top-margin-negative-5">
-                       {(this.state.submissionCommentCount) ? (
-                         <Text style={[styles.descriptionText2]}>{this.state.submissionCommentCount} Comments</Text>
-                       ) : (
-                         <Text style={[styles.descriptionText2]}>0 Comments</Text>
-                       )}
-                     </View>
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.rightMargin]}>
+                        <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
+                      </View>
+                      <View style={[styles.topMarginNegative5]}>
+                        {(this.state.submissionCommentCount) ? (
+                          <Text style={[styles.descriptionText2]}>{this.state.submissionCommentCount} Comments</Text>
+                        ) : (
+                          <Text style={[styles.descriptionText2]}>0 Comments</Text>
+                        )}
+                      </View>
+                    </View>
 
                    </View>
-
-
-
                    <View style={[styles.topMargin20,styles.rightMargin20,styles.bottomMargin20,styles.leftMargin50]} />
 
-                   <View className="left-padding-50 right-margin-20">
-                     <View className="float-left">
-                       <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
-                     </View>
-                     <View className="comment-container top-margin-negative-10">
-                       <TextInput
-                         style={styles.textInput}
-                         onChangeText={(text) => this.formChangeHandler("submissionComment|" + this.state.selectedIndex, text)}
-                         value={this.state.mySubmissionComments[this.state.selectedIndex]}
-                         placeholder="Add a comment..."
-                         placeholderTextColor="grey"
-                       />
-                     </View>
+                   <View style={[styles.leftPadding50,styles.rightMargin20]}>
+                    <View style={[styles.rowDirection]}>
+                      <View>
+                        <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
+                      </View>
+                      <View style={[styles.roundedCorners,styles.transparentBorder,styles.padding10,styles.topMarginNegative10, styles.calcColumn170]}>
+                        <TextInput
+                          style={styles.textInput}
+                          onChangeText={(text) => this.formChangeHandler("submissionComment|" + this.state.selectedIndex, text)}
+                          value={this.state.mySubmissionComments[this.state.selectedIndex]}
+                          placeholder="Add a comment..."
+                          placeholderTextColor="grey"
+                        />
+                      </View>
+                    </View>
 
                      {(this.state.mySubmissionComments[this.state.selectedIndex] !== '') && (
-                       <View className="left-margin-56">
+                       <View style={[styles.leftMargin57]}>
                          <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.postComment(this.state.selectedIndex, 'submission')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
                        </View>
                      )}
@@ -1195,7 +1185,7 @@ class Submissions extends Component {
             )}
 
             {(this.state.showGrade) && (
-              <View key="gradeProject" className="full-width">
+              <View key="gradeProject" style={[styles.calcColumn80]}>
                 <View style={[styles.row10]}>
                   <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex1].name}</Text>
                   <View style={[styles.halfSpacer]} />
@@ -1246,12 +1236,14 @@ class Submissions extends Component {
                     <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
                   )}
 
-                  <View className="float-left">
-                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.saveFeedback()}><Text style={[styles.standardText,styles.whiteColor]}>Save Feedback</Text></TouchableOpacity>
-                  </View>
+                  <View style={[styles.rowDirection]}>
+                    <View>
+                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.saveFeedback()}><Text style={[styles.standardText,styles.whiteColor]}>Save Feedback</Text></TouchableOpacity>
+                    </View>
 
-                  <View className="float-left left-padding">
-                    <TouchableOpacity style={[styles.btnPrimary,styels.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: false })}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                    <View style={[styles.leftPadding]}>
+                      <TouchableOpacity style={[styles.btnPrimary,styels.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: false })}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                    </View>
                   </View>
 
                 </View>
