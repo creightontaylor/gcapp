@@ -720,10 +720,10 @@ class RenderPosts extends Component {
                 <View style={[styles.topPadding,styles.rowDirection]}>
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onClick={(e) => this.voteOnItem(e, value, 'up', index) }>
-                      <View style={styles.rightPadding8}>
-                        <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
+                      <View style={styles.rightPadding5}>
+                        <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
-                      <View style={styles.rightPadding20}>
+                      <View style={styles.rightPadding15}>
                         <Text style={(value.upvotes.includes(this.state.emailId)) ? [styles.descriptionText2,styles.ctaColor,styles.boldText] : [styles.descriptionText2]}>{(value.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
                       </View>
                     </TouchableOpacity>
@@ -731,11 +731,11 @@ class RenderPosts extends Component {
 
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onClick={() => this.retrieveComments(index)} disabled={this.state.isLoading}>
-                      <View style={styles.rightPadding8}>
+                      <View style={styles.rightPadding5}>
                         <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                        <Image source={{ uri: commentIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
+                        <Image source={{ uri: commentIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
-                      <View style={styles.rightPadding20}>
+                      <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Comment</Text>
                       </View>
 
@@ -743,10 +743,10 @@ class RenderPosts extends Component {
                   </View>
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onClick={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
-                      <View style={styles.rightPadding8}>
-                        <Image source={{ uri: shareIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
+                      <View style={styles.rightPadding5}>
+                        <Image source={{ uri: shareIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
-                      <View style={styles.rightPadding20}>
+                      <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Share</Text>
                       </View>
 
@@ -755,10 +755,10 @@ class RenderPosts extends Component {
 
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onPress={() => this.props.navigation.navigate('Messages', { generalPost: value })}>
-                      <View style={styles.rightPadding8}>
-                        <Image source={{uri: sendIconDark}} alt="GC" style={[styles.square18,styles.centerHorizontally]} />
+                      <View style={styles.rightPadding5}>
+                        <Image source={{uri: sendIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
-                      <View style={styles.rightPadding20}>
+                      <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Send</Text>
                       </View>
                     </TouchableOpacity>

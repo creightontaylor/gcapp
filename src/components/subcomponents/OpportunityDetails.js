@@ -3095,12 +3095,15 @@ class OpportunityDetails extends Component {
                               <Text style={(this.state.viewIndex === 2) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Submissions</Text>
                             </TouchableOpacity>
                           ) : (
-                            <View>
-                              <Text style={(this.state.viewIndex === 2) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>Submissions</TouchableOpacity></Text>
+                            <View style={[styles.rowDirection]}>
+                              <TouchableOpacity onPress={() => this.setState({ viewIndex: 2 })}>
+                                <Text style={(this.state.viewIndex === 2) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}>Submissions</Text>
+                              </TouchableOpacity>
+
                               {(this.state.viewIndex === 2) ? (
-                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4,styles.whiteColor]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
                               ) : (
-                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</View>
+                                <View style={[styles.notiBubble,styles.mediumBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
                               )}
                             </View>
                           )}

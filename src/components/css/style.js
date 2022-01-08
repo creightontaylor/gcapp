@@ -509,6 +509,9 @@ module.exports = StyleSheet.create({
   leftPadding20: {
     paddingLeft: 20
   },
+  leftPadding30: {
+    paddingLeft: 30
+  },
   leftPadding40: {
     paddingLeft: 40
   },

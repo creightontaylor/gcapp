@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Linking, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Linking, TextInput, Image } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -209,10 +209,8 @@ class Submissions extends Component {
         }
 
         let projectURL = this.state.selectedOpportunity.submissions[i - 1].url
-        let enableClass = "auto-pointers"
         if (this.state.disableLinks) {
           projectURL = ""
-          enableClass = "no-pointers"
         }
 
         rows.push(
@@ -221,13 +219,13 @@ class Submissions extends Component {
               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
 
               <View style={[styles.rowDirection]}>
-                <View style={[styles.width50]}>
+                <View style={[styles.width30,styles.alignCenter]}>
                   <View>
                     <TouchableOpacity disabled={disableVoting} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'up', index) }>
                       {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
-                        <Image source={(this.state.selectedOpportunity.submissions[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                        <Image source={(this.state.selectedOpportunity.submissions[index].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]}/>
                       ) : (
-                        <Image source={{ uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                        <Image source={{ uri: upvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]}/>
                       )}
                     </TouchableOpacity>
                   </View>
@@ -242,23 +240,23 @@ class Submissions extends Component {
                   <View>
                     <TouchableOpacity disabled={disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[index], 'down', index) }>
                       {(this.state.selectedOpportunity.submissions[index].upvotes) ? (
-                        <Image source={(this.state.selectedOpportunity.submissions[index].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                        <Image source={(this.state.selectedOpportunity.submissions[index].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]}/>
                       ) : (
-                        <Image source={{ uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]}/>
+                        <Image source={{ uri: downvoteIconGrey}} style={(this.state.disableVoting || this.state.savingVote) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]}/>
                       )}
                     </TouchableOpacity>
                   </View>
                 </View>
-                <TouchableOpacity onPress={() => Linking.openURL(projectURL)} style={[styles.calcColumn110,styles.leftPadding]}>
+                <TouchableOpacity disabled={(this.state.disableLinks) ? true : false} onPress={(projectURL) ? () => Linking.openURL(projectURL) : () => console.log('link is invalid')} style={[styles.calcColumn90,styles.leftPadding,styles.rowDirection]}>
 
-                  <View style={[styles.calcColumn135]}>
+                  <View style={[styles.calcColumn120]}>
                     <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[i - 1].name}</Text>
 
                     <Text style={[styles.descriptionText1]}>{userFullName}</Text>
 
                     <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.submissions[i - 1].category} | {this.state.selectedOpportunity.submissions[i - 1].hours} Hours</Text>
                   </View>
-                  <View style={[styles.width25]}>
+                  <View style={[styles.width30]}>
                     <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                     <View>
                       <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
@@ -267,17 +265,16 @@ class Submissions extends Component {
                 </TouchableOpacity>
               </View>
 
-              <View style={[styles.leftPadding50,styles.calcColumn110, styles.topPadding5,styles.rowDirection]}>
+              <View style={[styles.leftPadding30,styles.calcColumn90, styles.topPadding,styles.rowDirection]}>
 
                 <TouchableOpacity style={[styles.rightPadding20]} onPress={() => this.showComments(index) }>
 
-                  <View style={[styles.spacer]} />
 
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.horizontalMargin]}>
                       <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
                     </View>
-                    <View style={[styles.topMarginNegative8]}>
+                    <View>
                       <Text style={[styles.descriptionText2]}>{submissionCommentCount} Comments</Text>
                     </View>
                   </View>
@@ -288,22 +285,19 @@ class Submissions extends Component {
                 <View style={[styles.verticalSeparator15]} />
 
                 <View>
-                  <View style={[styles.halfSpacer]} />
                   <TouchableOpacity style={[styles.horizontalPadding20,styles.rowDirection ]} onPress={() => this.setState({ modalIsOpen: true, showProjectDetail: true, selectedIndex: index, showGrade: false, showComments: false, showJobFunction: false, showIndustry: false }) }>
                     <View style={[styles.rightMargin5]}>
                       <View>
                         <Image source={{ uri: detailsIconGrey}} style={[styles.square17,styles.contain]} />
                       </View>
                     </View>
-                    <View style={[styles.topMarginNegative7]}>
+                    <View>
                       <Text style={[styles.descriptionText2]}>View Details</Text>
                     </View>
                   </TouchableOpacity>
 
                   <View style={[styles.halfSpacer]} />
                 </View>
-
-                <View style={[styles.verticalSeparator15]} />
 
               </View>
 
@@ -1112,7 +1106,7 @@ class Submissions extends Component {
                      </View>
                      <View>
                        <TouchableOpacity disabled={this.state.disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'down', this.state.selectedIndex) }>
-                         <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.selectedOpportunity.disableDownvoting === true) ? [square15,styles.contain,styles.washOut] : [square15,styles.contain]} />
+                         <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.selectedOpportunity.disableDownvoting === true) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]} />
                        </TouchableOpacity>
                      </View>
                    </View>
