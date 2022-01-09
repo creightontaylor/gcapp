@@ -177,7 +177,7 @@ class RenderPosts extends Component {
     }
 
     calculateWidth(item, answer) {
-      console.log('calculateWidth called', item, answer)
+      console.log('calculateWidth called')
 
       let width = '0%'
 

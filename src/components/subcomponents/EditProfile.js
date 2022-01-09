@@ -389,7 +389,7 @@ class EditProfile extends Component {
                               <View>
                                 <View>
                                   <View style={styles.spacer} />
-                                  <Image source={(this.state.profilePicURL) ? { uri: this.state.pictureURL } : { uri: profileIconDark }} style={[styles.square60,styles.contain]}/>
+                                  <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL } : { uri: profileIconDark }} style={[styles.square60,styles.contain, { borderRadius: 30 }]}/>
 
                                   <View style={styles.spacer} />
                                 </View>

@@ -2,23 +2,28 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, Image} from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 
 import SubRenderPosts from '../common/RenderPosts';
 
-const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+// const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
 const assigneeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignee-icon-dark.png';
-const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
-const eventIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/event-icon-dark.png';
-const assignmentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignments-icon-dark.png';
-const problemIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/problem-icon-dark.png';
-const challengeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/challenge-icon-dark.png';
-const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png';
-const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png';
+// const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
+// const eventIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/event-icon-dark.png';
+// const assignmentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignments-icon-dark.png';
+// const problemIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/problem-icon-dark.png';
+// const challengeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/challenge-icon-dark.png';
+// const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png';
+// const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png';
 const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
-const targetIconOrange = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon-orange.png';
+// const targetIconOrange = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon-orange.png';
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdownArrow.png';
 const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png';
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
+const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon-blue.png';
+const mentoringIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/mentoring-icon-blue.png';
+const gcSquareLogo = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/gc-square-logo.png';
 
 class NewsFeed extends Component {
   constructor(props) {
@@ -27,6 +32,9 @@ class NewsFeed extends Component {
     }
 
     this.retrieveData = this.retrieveData.bind(this)
+    this.closeModal = this.closeModal.bind(this)
+    this.navigateAway = this.navigateAway.bind(this)
+    this.workspaceClicked = this.workspaceClicked.bind(this)
 
   }
 
@@ -55,11 +63,12 @@ class NewsFeed extends Component {
         activeOrg = 'guidedcompass'
       }
       //const email = 'harry@potter.com'
-      this.setState({ emailId, postsAreLoading: true })
+
 
       if (emailId !== null) {
         // We have data!!
         console.log('email ', emailId);
+        this.setState({ emailId, activeOrg, orgName, cuFirstName,cuLastName, username, orgFocus, roleName })
 
         const resLimit = 4
         const self = this
@@ -120,7 +129,7 @@ class NewsFeed extends Component {
                          posts.splice(pinnedIndex,1)
                          posts.unshift(pinnedPost)
                        }
-                       console.log('show posts: !!!!!!!!!!!!!!!!!!!!', posts )
+                       // console.log('show posts: !!!!!!!!!!!!!!!!!!!!', posts )
 
 
                      }
@@ -170,6 +179,27 @@ class NewsFeed extends Component {
                 }).catch((error) => {
                     console.log('Group posts query did not work', error);
                 });
+
+                if (response.data.user.myOrgs && response.data.user.myOrgs.length > 0) {
+                  Axios.get('https://www.guidedcompass.com/api/orgs', { params: { orgCodes: response.data.user.myOrgs } })
+                   .then((response) => {
+                     console.log('Org objects info query attempted');
+
+                     if (response.data.success) {
+                       console.log('org info query worked')
+
+                       const myOrgObjects = response.data.orgs
+                       self.setState({ myOrgObjects })
+
+                     } else {
+                       console.log('org info query did not work', response.data.message)
+
+                     }
+
+                   }).catch((error) => {
+                       console.log('Org info query did not work for some reason', error);
+                   });
+                }
 
               } else {
                 console.log('error response', response.data)
@@ -253,8 +283,9 @@ class NewsFeed extends Component {
              const orgName = response.data.orgInfo.orgName
              const orgMission = response.data.orgInfo.orgMission
              self.setState({ orgContactEmail, orgLogo, orgName, orgMission })
+
              this.props.navigation.setOptions({ headerTitle: () => (
-               <TouchableOpacity onPress={() => this.props.navigation.navigate('AddWorkspaces')}>
+               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showWorkspaces: true })}>
                  <Image source={{uri: orgLogo}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
                </TouchableOpacity>
              )})
@@ -271,6 +302,55 @@ class NewsFeed extends Component {
        // Error retrieving data
        console.log('there was an error', error)
      }
+  }
+
+  closeModal() {
+    console.log('closeModal called')
+
+    this.setState({ modalIsOpen: false, showWorkspaces: false })
+  }
+
+  navigateAway(component) {
+    console.log('navigateAway called')
+
+    this.closeModal()
+    this.props.navigation.navigate(component)
+  }
+
+  workspaceClicked(orgCode) {
+    console.log('workspaceClicked called: ', orgCode)
+
+    if (orgCode !== this.state.activeOrg) {
+
+      this.setState({ serverSuccessMessage: null, serverErrorMessage: null })
+
+      const emailId = this.state.emailId
+      const activeOrg = orgCode
+      const updatedAt = new Date()
+
+      Axios.post('https://www.guidedcompass.com/api/users/profile/details', {
+        emailId, activeOrg, updatedAt })
+      .then((response) => {
+
+        if (response.data.success) {
+          //save values
+          console.log('Org switch worked', response.data);
+
+          AsyncStorage.setItem('activeOrg', activeOrg)
+          this.setState({ activeOrg, modalIsOpen: false, showWorkspaces: false })
+          // if (this.props.loadWorkspace) {
+          //   this.props.loadWorkspace(activeOrg)
+          // }
+          this.retrieveData()
+
+        } else {
+          console.error('there was an error switching the orgs', response.data);
+
+        }
+      }).catch((error) => {
+          console.log('Org switch did not work', error);
+      });
+    }
   }
 
   render() {
@@ -361,6 +441,96 @@ class NewsFeed extends Component {
 
           </View>
         )}
+
+        <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+          {(this.state.showWorkspaces) && (
+            <ScrollView style={[styles.flex1,styles.padding20]}>
+              <View style={[styles.flex1]}>
+                <View style={[styles.rowDirection,styles.row20]}>
+                  <View style={[styles.calcColumn110]}>
+                    <Text style={[styles.headingText4]}>Switch Workspaces</Text>
+                  </View>
+                  <View style={[styles.width30, styles.topMargin5]}>
+                    <TouchableOpacity onPress={() => this.closeModal()}>
+                      <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View>
+                  <View style={[styles.row10]}>
+                    <TouchableOpacity style={[styles.row5,styles.rowDirection]} onPress={() => this.workspaceClicked('guidedcompass')}>
+                      <View style={[styles.rightPadding]}>
+                        <Image source={{ uri: gcSquareLogo }} style={[styles.square30,styles.contain]} />
+                      </View>
+                      <View style={[styles.calcColumn150]}>
+                        <Text style={[styles.standardText]}>Guided Compass</Text>
+                      </View>
+
+                      {(this.state.activeOrg === 'guidedcompass') && (
+                        <View style={[styles.leftPadding,styles.topMargin5]}>
+                          <View style={[styles.miniSpacer]} />
+                          <Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain]} />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.horizontalLine]} />
+                </View>
+
+                {(this.state.myOrgObjects && this.state.myOrgObjects.length > 0) ? (
+                  <View>
+                    {this.state.myOrgObjects.map((org, optionIndex) =>
+                      <View key={org._id}>
+                        {(org.orgCode !== 'guidedcompass') && (
+                          <View style={[styles.row10]}>
+                            <View>
+                              <TouchableOpacity style={[styles.row5,styles.rowDirection]} onPress={() => this.workspaceClicked(org.orgCode)}>
+                                <View style={[styles.rightPadding]}>
+                                  <Image source={(org.webLogoURIColor) ? { uri: org.webLogoURIColor} : { uri: mentoringIconBlue}} style={[styles.square30,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn150]}>
+                                  <Text style={[styles.standardText]}>{org.orgName}</Text>
+                                </View>
+
+                                {(this.state.activeOrg === org.orgCode) && (
+                                  <View style={[styles.leftPadding,styles.topMargin5]}>
+                                    <View style={[styles.miniSpacer]} />
+                                    <Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain]} />
+                                  </View>
+                                )}
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        )}
+
+                        <View style={[styles.horizontalLine]} />
+                      </View>
+                    )}
+                  </View>
+                ) : (
+                  <View />
+                )}
+
+                <View style={[styles.lightHorizontalLine]} />
+
+                <View style={[styles.row20]}>
+                  <TouchableOpacity onPress={() => this.navigateAway('AddWorkspaces')}>
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.width25, styles.topMargin5]}>
+                        <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain ]} />
+                      </View>
+                      <View style={[styles.calcColumn90]}>
+                        <Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Join Org Workspaces</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+            </ScrollView>
+          )}
+        </Modal>
       </ScrollView>
     );
   }

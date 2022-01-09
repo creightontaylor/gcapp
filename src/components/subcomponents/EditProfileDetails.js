@@ -2012,7 +2012,7 @@ class EditProfileDetails extends Component {
     let originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
 
     //adjust file
-    passedFile['name'] = passedFile.fileName
+    passedFile['name'] = originalName
     passedFile['size'] = passedFile.fileSize
     passedFile['uri'] = passedFile.uri
     if (Platform.OS === 'ios') {
@@ -2025,12 +2025,6 @@ class EditProfileDetails extends Component {
     // const fileName = 'profileImage'
     // const fileName = 'newFile'
     fileData.append('baseFileName', passedFile, originalName)
-
-    console.log('essentials 1:', originalName)
-    console.log('essentials 2:', passedFile.name)
-    console.log('essentials 3:', passedFile.size)
-    console.log('essentials 4:', passedFile.uri)
-    console.log('essentials 5:', passedFile.type)
 
     fetch("https://www.guidedcompass.com/api/file-upload", {
         mode: 'no-cors',
