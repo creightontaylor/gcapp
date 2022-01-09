@@ -4,6 +4,8 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from "react-native-modal";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -1208,31 +1210,81 @@ class EditProfileDetails extends Component {
       console.log('resumeURLSelectedHandler changed', event)
       this.setState({ resumeURLValue: eventValue, textFormHasChanged: true })
     } else if (eventName === 'resume') {
-      console.log('profilePicSelectedHandler changed', event.target.files[0])
+      // console.log('profilePicSelectedHandler changed')
 
-      if (event.target.files[0]) {
-        if ( event.target.files[0].size > 1 * 1024 * 1024) {
-          console.log('file is too big')
+      // DocumentPicker.pickSingleFile({
+      //   filetype: [DocumentPickerUtil.allFiles()],
+      // },(error,res) => {
+      //   // Android
+      //   console.log(
+      //      res.uri,
+      //      res.type, // mime type
+      //      res.fileName,
+      //      res.fileSize
+      //   );
+      // });
+      const self = this
+      const openDocumentPicker = async ()=>{
+          // Pick a single file
+          try {
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            });
+            console.log('output' + JSON.stringify(res));
 
-          const errorMessage = 'File must be less than 1MB.'
-          this.setState({ serverSuccessResume: false, serverErrorMessageResume: errorMessage, serverSuccessMessageResume: null })
+            const mbLimit = 10
+            if (res.size > mbLimit * 1024 * 1024) {
+              console.log('file is too big')
 
-        } else {
-          console.log('file is small enough', event.target.files[0].size)
+              const errorMessage = 'File must be less than ' + mbLimit + 'MB. This file is ' + (file.fileSize / (1024 * 1024)).toFixed() + 'MB'
+              self.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
 
-          let reader = new FileReader();
-          reader.onload = (e) => {
+            } else {
+              console.log('file is small enough')
 
-            // const resumeName = e.target.result
-            // this.setState({ profilePicImage: e.target.result });
-            // console.log('how do i access the image', event.target.files[0].name)
-          };
-          reader.readAsDataURL(event.target.files[0]);
-          // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-          console.log('how do i access the image', event.target.files[0].name)
-          this.saveFile(eventName, event.target.files[0])
-        }
+              let file = res[0]
+              file['fileName'] = file.name
+              file['fileSize'] = file.size
+              file['uri'] = file.uri
+              file['type'] = file.type
+              console.log('show me the uri: ', file.uri)
+              self.saveFile(eventName, file)
+            }
+
+          } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                // User cancelled the picker, exit any dialogs or menus and move on
+            } else {
+                throw err
+            }
+          }
       }
+
+      openDocumentPicker()
+
+      // if (event.target.files[0]) {
+      //   if ( event.target.files[0].size > 1 * 1024 * 1024) {
+      //     console.log('file is too big')
+      //
+      //     const errorMessage = 'File must be less than 1MB.'
+      //     this.setState({ serverSuccessResume: false, serverErrorMessageResume: errorMessage, serverSuccessMessageResume: null })
+      //
+      //   } else {
+      //     console.log('file is small enough', event.target.files[0].size)
+      //
+      //     let reader = new FileReader();
+      //     reader.onload = (e) => {
+      //
+      //       // const resumeName = e.target.result
+      //       // this.setState({ profilePicImage: e.target.result });
+      //       // console.log('how do i access the image', event.target.files[0].name)
+      //     };
+      //     reader.readAsDataURL(event.target.files[0]);
+      //     // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+      //     console.log('how do i access the image', event.target.files[0].name)
+      //     this.saveFile(eventName, event.target.files[0])
+      //   }
+      // }
     } else if (eventName === 'customWebsiteURL') {
       console.log('customWebsiteURLSelectedHandler changed', event)
       this.setState({ customWebsiteURL: eventValue, textFormHasChanged: true })
@@ -2010,6 +2062,8 @@ class EditProfileDetails extends Component {
     const emailId = this.state.emailId
     const fileName = passedFile.fileName
     let originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
+
+    console.log('show passedFile uri: ', passedFile.uri)
 
     //adjust file
     passedFile['name'] = originalName
@@ -5282,9 +5336,9 @@ class EditProfileDetails extends Component {
                             <Text style={[styles.headingText3]}>Resumes</Text>
                             <View style={[styles.leftPadding]}>
                               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <View style={[styles.padding7,styles.standardBorder, {borderRadius: 6 }]}>
+                              <TouchableOpacity style={[styles.padding7,styles.standardBorder, {borderRadius: 13 }]} onPress={() => this.formChangeHandler('resume',null)}>
                                 <Image source={{ uri: addIcon}} style={[styles.square12,styles.contain]}/>
-                              </View>
+                              </TouchableOpacity>
 
                               {/*<input type="file" id="resumeUpload" name="resume" onChange={this.formChangeHandler} accept="application/pdf" />*/}
                             </View>
@@ -5297,7 +5351,7 @@ class EditProfileDetails extends Component {
 
                         {(!this.props.fromWalkthrough) ? (
                           <View style={[styles.row10]}>
-                            <TouchableOpacity onPress={() => this.props.navigations.navigate('Resume Builder')} style={styles.rowDirection}>
+                            <TouchableOpacity onPress={() => this.props.navigations.navigate('ResumeBuilder')} style={styles.rowDirection}>
                               <View style={styles.width30}>
                                 <View style={styles.halfSpacer} /><View style={[styles.miniSpacer]} />
                                 <Image source={{ uri: skillsIcon}} style={[styles.square15,styles.contain]} />
@@ -5402,7 +5456,7 @@ class EditProfileDetails extends Component {
                       </View>
                       <View style={styles.leftPadding}>
                         <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                        <TouchableOpacity onPress={() => this.addItem('education')} style={[styles.padding7,styles.standardBorder, { borderRadius: 10 }]}>
+                        <TouchableOpacity onPress={() => this.addItem('education')} style={[styles.padding7,styles.standardBorder, {borderRadius: 13 }]}>
                           <Image source={{ uri: addIcon}} style={[styles.square12,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
