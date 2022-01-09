@@ -29,7 +29,6 @@ class Home extends Component {
       console.log('this is causing the error')
       const email = await AsyncStorage.getItem('email')
       //const email = 'harry@potter.com'
-      this.setState({ emailId: email })
 
       const newUser = await AsyncStorage.getItem('newUser')
       if (newUser === 'true') {

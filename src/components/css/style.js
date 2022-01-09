@@ -908,6 +908,9 @@ module.exports = StyleSheet.create({
   calcColumn162: {
     width: Dimensions.get('window').width - 162
   },
+  calcColumn165: {
+    width: Dimensions.get('window').width - 165
+  },
   calcColumn170: {
     width: Dimensions.get('window').width - 170
   },

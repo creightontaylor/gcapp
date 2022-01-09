@@ -136,7 +136,8 @@ class RenderPosts extends Component {
     closeModal() {
 
       this.setState({ modalIsOpen: false, showMessageWidget: false, showUpvotes: false, showComments: false, showShareButtons: false,
-        sharePosting: false, adjustFeedPreferences: false, reportPostView: false, showDeletePost: false, showReports: false, originalPost: null
+        sharePosting: false, adjustFeedPreferences: false, reportPostView: false, showDeletePost: false, showReports: false, originalPost: null,
+        showPostMenu: false
       });
     }
 
@@ -294,9 +295,9 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate(profileLink, passedState)} style={[styles.rowDirection, styles.calcColumn120]}>
                   <View style={[styles.width70, styles.rightPadding]}>
                     {(value.roleName === 'Admin') ? (
-                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain]} alt="GC" />
+                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain]} />
                     ) : (
-                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
+                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} />
                     )}
                   </View>
                   <View style={[styles.calcColumn130,styles.rowDirection]} >
@@ -305,7 +306,7 @@ class RenderPosts extends Component {
                         <Text style={[styles.headingText5, styles.boldText,styles.calcColumn190]}>{value.firstName} {value.lastName}</Text>
                         {(value.pinned) && (
                           <View style={[styles.width25,styles.topPadding5,styles.leftPadding]}>
-                            <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} alt="GC" />
+                            <Image source={{ uri: pinIcon}} style={[styles.square10,styles.contain]} />
                           </View>
                         )}
                         {(this.props.inGroup) ? (
@@ -313,7 +314,7 @@ class RenderPosts extends Component {
                             <TouchableOpacity onPress={(e) => this.voteOnItem(e, value, 'up', index) }>
                               <View style={[styles.standardBorder, styles.roundedCorners, styles.rowDirection]}>
                                 <View style={styles.padding7}>
-                                  <Image source={(value.upvotes && value.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} alt="GC" style={[styles.square15,styles.contain]}/>
+                                  <Image source={(value.upvotes && value.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
                                 </View>
                                 <View style={styles.verticalSeparator} />
                                 <View style={styles.horizontalPadding}>
@@ -327,51 +328,12 @@ class RenderPosts extends Component {
                           <View style={styles.width30}>
                             {(!inModal) && (
                               <View>
-                                <TouchableOpacity onPress={(value.showPostMenu) ? () => this.togglePostMenu(index) : () => this.togglePostMenu(index)}>
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPostMenu: true, selectedIndex: index })}>
                                   <View style={[styles.row5,styles.horizontalPadding10]}>
                                     <Image source={{ uri: menuIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
                                   </View>
                                 </TouchableOpacity>
-                                {/*
-                                {(value.showPostMenu) && (
-                                  <div className="menu-bottom description-text-3">
-                                    <div>
-                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, selectedIndex: index })}>
-                                        <div className="row-5">
-                                          <div className="fixed-column-25">
-                                            <img src={shareIconDark} alt="GC" className="image-auto-15" />
-                                          </div>
-                                          <div className="calc-column-offset-25">
-                                            <p>Share outside of Guided Compass</p>
-                                          </div>
-                                          <div className="clear" />
-                                        </div>
-                                      </button>
-                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, adjustFeedPreferences: true, selectedIndex: index })}>
-                                        <div className="row-5">
-                                          <div className="fixed-column-25">
-                                            <img src={hideIconDark} alt="GC" className="image-auto-15" />
-                                          </div>
-                                          <div className="calc-column-offset-25">
-                                            <p>I don't want to see this</p>
-                                          </div>
-                                          <div className="clear" />
-                                        </div>
-                                      </button>
-                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, reportPostView: true, selectedIndex: index })}>
-                                        <div className="row-5">
-                                          <div className="fixed-column-25">
-                                            <img src={reportIconDark} alt="GC" className="image-auto-15" />
-                                          </div>
-                                          <div className="calc-column-offset-25">
-                                            <p>Report this post</p>
-                                          </div>
-                                          <div className="clear" />
-                                        </div>
-                                      </button>
-                                    </div>
-                                  </div>
-                                )}*/}
+
                               </View>
                             )}
                           </View>
@@ -425,7 +387,7 @@ class RenderPosts extends Component {
                             <Text style={[styles.descriptionText3, styles.ctaColor]}>{(value.showPollDetails) ? "Collapse Details" : "Expand Details"}</Text>
                           </View>
                           <View style={[styles.leftPadding,styles.topPadding5]}>
-                            <Image source={{ uri: dropdownArrow }} alt="GC" style={[styles.square8, styles.contain, styles.pinRight]} />
+                            <Image source={{ uri: dropdownArrow }} style={[styles.square8, styles.contain, styles.pinRight]} />
                           </View>
                         </View>
                       </TouchableOpacity>
@@ -551,7 +513,7 @@ class RenderPosts extends Component {
 
               {(value.imageURL) && (
                 <View style={styles.row10}>
-                  <Image source={{ uri: value.imageURL}} alt="GC" style={styles.imageFullAuto} />
+                  <Image source={{ uri: value.imageURL}} style={styles.imageFullAuto} />
                 </View>
               )}
 
@@ -580,7 +542,7 @@ class RenderPosts extends Component {
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('profile', { profileId: value.profileItem.objectId })} style={[styles.padding20, styles.fullWidth]}>
                       <View style={[styles.padding20, styles.rowDirection]}>
                         <View style={styles.width60}>
-                          <Image source={(value.profileItem.imageURL) ? { uri: value.profileItem.imageURL } : { uri: defaultProfileItemIcon}} alt="GC" style={styles.square50} />
+                          <Image source={(value.profileItem.imageURL) ? { uri: value.profileItem.imageURL } : { uri: defaultProfileItemIcon}} style={styles.square50} />
                         </View>
                         <View style={styles.calcColumn160}>
                           <Text>{value.profileItem.name}</Text>
@@ -613,7 +575,7 @@ class RenderPosts extends Component {
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { objectId: value.opportunityTags[0]._id })} style={[styles.padding20,styles.fullWidth]}>
                       <View style={[styles.padding20]}>
                         <View style={[styles.width60]}>
-                          <Image source={(value.opportunityTags[0].imageURL) ? { uri: value.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} alt="GC" style={[styles.square50]} />
+                          <Image source={(value.opportunityTags[0].imageURL) ? { uri: value.opportunityTags[0].imageURL} : { uri: opportunitiesIconDark}} style={[styles.square50]} />
                         </View>
                         <View style={[styles.calcColumn160]}>
                           {(value.opportunityTags[0].title) ? (
@@ -638,7 +600,7 @@ class RenderPosts extends Component {
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: value.careerTags[0].name })} style={[styles.padding20,styles.fullWidth]}>
                       <View style={[styles.padding20,styles.rowDirection]}>
                         <View style={[styles.width60]}>
-                          <Image source={(value.careerTags[0].imageURL) ? { uri: value.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} alt="GC" style={[styles.square50]} />
+                          <Image source={(value.careerTags[0].imageURL) ? { uri: value.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} style={[styles.square50]} />
                         </View>
                         <View style={[styles.calcColumn160]}>
                           <Text>{value.careerTags[0].name}</Text>
@@ -660,7 +622,7 @@ class RenderPosts extends Component {
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends'})} style={[styles.padding20,styles.fullWidth]}>
                       <View style={[styles.rowDirection]}>
                         <View style={[styles.width60]}>
-                          <Image source={(value.trendTags[0].imageURL) ? { uri: value.trendTags[0].imageURL} : { uri: trendsIconDark}} alt="GC" style={[styles.square50]} />
+                          <Image source={(value.trendTags[0].imageURL) ? { uri: value.trendTags[0].imageURL} : { uri: trendsIconDark}} style={[styles.square50]} />
                         </View>
                         <View style={styles.calcColumn220}>
                           <Text>{value.trendTags[0].name}</Text>
@@ -699,7 +661,7 @@ class RenderPosts extends Component {
                   {value.entityTags.map((value2, optionIndex2) =>
                     <View key={value2} style={styles.rightPadding}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username})}>
-                        <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.profileThumbnail25]} />
+                        <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail25]} />
                       </TouchableOpacity>
                     </View>
                   )}
@@ -735,7 +697,7 @@ class RenderPosts extends Component {
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onPress={(e) => this.voteOnItem(e, value, 'up', index) }>
                       <View style={styles.rightPadding5}>
-                        <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
+                        <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} style={[styles.square17,styles.centerHorizontally]} />
                       </View>
                       <View style={styles.rightPadding15}>
                         <Text style={(value.upvotes.includes(this.state.emailId)) ? [styles.descriptionText2,styles.ctaColor,styles.boldText] : [styles.descriptionText2]}>{(value.upvotes.includes(this.state.emailId)) ? "Liked" : "Like"}</Text>
@@ -747,7 +709,7 @@ class RenderPosts extends Component {
                     <TouchableOpacity style={styles.rowDirection} onPress={() => this.retrieveComments(index)} disabled={this.state.animating}>
                       <View style={styles.rightPadding5}>
                         <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                        <Image source={{ uri: commentIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
+                        <Image source={{ uri: commentIconDark}} style={[styles.square17,styles.centerHorizontally]} />
                       </View>
                       <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Comment</Text>
@@ -757,7 +719,7 @@ class RenderPosts extends Component {
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onPress={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
                       <View style={styles.rightPadding5}>
-                        <Image source={{ uri: shareIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
+                        <Image source={{ uri: shareIconDark}} style={[styles.square17,styles.centerHorizontally]} />
                       </View>
                       <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Share</Text>
@@ -769,7 +731,7 @@ class RenderPosts extends Component {
                   <View>
                     <TouchableOpacity style={styles.rowDirection} onPress={() => this.props.navigation.navigate('Messages', { generalPost: value })}>
                       <View style={styles.rightPadding5}>
-                        <Image source={{uri: sendIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
+                        <Image source={{uri: sendIconDark}} style={[styles.square17,styles.centerHorizontally]} />
                       </View>
                       <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Send</Text>
@@ -811,9 +773,9 @@ class RenderPosts extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate(profileLink)} style={[styles.fullScreenWidth,styles.rowDirection]}>
               <View style={styles.width55}>
                 {(value.originalPost.roleName === 'Admin') ? (
-                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40]} alt="GC" />
+                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.square40]} />
                 ) : (
-                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail43]} alt="GC" />
+                  <Image source={(value.originalPost.pictureURL) ? { uri: value.originalPost.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail43]} />
                 )}
               </View>
               <View style={[styles.calcColumn150]}>
@@ -856,7 +818,7 @@ class RenderPosts extends Component {
           </View>
           {(value.originalPost.imageURL) && (
             <View style={[styles.row10]}>
-              <Image source={{uri: value.originalPost.imageURL}} alt="GC" style={[styles.imageFullAuto]} />
+              <Image source={{uri: value.originalPost.imageURL}} style={[styles.imageFullAuto]} />
             </View>
           )}
 
@@ -883,7 +845,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.originalPost.username })} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={[styles.width60]}>
-                      <Image source={(value.originalPost.profileItem.imageURL) ? { uri: value.originalPost.profileItem.imageURL } : { uri: defaultProfileItemIcon }} alt="GC" style={[styles.square50]} />
+                      <Image source={(value.originalPost.profileItem.imageURL) ? { uri: value.originalPost.profileItem.imageURL } : { uri: defaultProfileItemIcon }} style={[styles.square50]} />
                     </View>
                     <View style={[styles.calcColumn160]}>
                       <Text>{value.originalPost.profileItem.name}</Text>
@@ -917,7 +879,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { objectId: value.originalPost.opportunityTags[0]._id})} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={[styles.width60]}>
-                      <Image source={(value.originalPost.opportunityTags[0].imageURL) ? { uri: value.originalPost.opportunityTags[0].imageURL } : { uri: opportunitiesIconDark }} alt="GC" style={[styles.square50]} />
+                      <Image source={(value.originalPost.opportunityTags[0].imageURL) ? { uri: value.originalPost.opportunityTags[0].imageURL } : { uri: opportunitiesIconDark }} style={[styles.square50]} />
                     </View>
                     <View style={[styles.calcColumn160]}>
                       {(value.originalPost.opportunityTags[0].title) ? (
@@ -944,7 +906,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: value.originalPost.careerTags[0].name })} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={[styles.width60]}>
-                      <Image source={(value.originalPost.careerTags[0].imageURL) ? { uri: value.originalPost.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} alt="GC" style={[styles.square50]} />
+                      <Image source={(value.originalPost.careerTags[0].imageURL) ? { uri: value.originalPost.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} style={[styles.square50]} />
                     </View>
                     <View style={[styles.calcColumn160]}>
                       <Text>{value.originalPost.careerTags[0].name}</Text>
@@ -968,7 +930,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends'})} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={[styles.width60]}>
-                      <Image source={(value.originalPost.trendTags[0].imageURL) ? { uri: value.originalPost.trendTags[0].imageURL} : { uri: trendsIconDark}} alt="GC" style={[styles.square50]} />
+                      <Image source={(value.originalPost.trendTags[0].imageURL) ? { uri: value.originalPost.trendTags[0].imageURL} : { uri: trendsIconDark}} style={[styles.square50]} />
                     </View>
                     <View style={styles.calcColumn160}>
                       <Text>{value.originalPost.trendTags[0].name}</Text>
@@ -1007,7 +969,7 @@ class RenderPosts extends Component {
               {value.originalPost.entityTags.map((value2, optionIndex2) =>
                 <View key={value2} style={styles.rightPadding}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })}>
-                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} alt="GC" style={[styles.square20,styles.contain]} />
+                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
               )}
@@ -1423,7 +1385,7 @@ class RenderPosts extends Component {
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { objectId: itemObject._id })} style={[styles.padding20,styles.fullWidth]}>
                     <View style={[styles.padding20]}>
                       <View style={[styles.width60]}>
-                        <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} alt="GC" style={[styles.square50]} />
+                        <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50]} />
                       </View>
                       <View style={[styles.calcColumn160]}>
                         <Text>{itemObject.name}</Text>
@@ -1463,7 +1425,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails',  { objectId: itemObject._id })} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={styles.width50}>
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL } : { uri: defaultProfileItemIcon}} alt="GC" style={[styles.square40]} />
+                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL } : { uri: defaultProfileItemIcon}} style={[styles.square40]} />
                     </View>
                     <View style={styles.calcColumn150}>
                       {(itemObject.title) ? (
@@ -1510,7 +1472,7 @@ class RenderPosts extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: itemObject.name })} style={[styles.padding20,styles.fullWidth]}>
                   <View style={[styles.padding20]}>
                     <View style={[styles.width60]}>
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} alt="GC" style={[styles.square50]} />
+                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50]} />
                     </View>
                     <View style={[styles.calcColumn160]}>
                       <Text>{itemObject.name}</Text>
@@ -1553,7 +1515,7 @@ class RenderPosts extends Component {
                 <View style={[styles.padding20,styles.fullWidth]}>
                   <View>
                     <View style={[styles.width60]}>
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} alt="GC" style={[styles.square50]} />
+                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50]} />
                     </View>
                     <View style={[styles.calcColumn160]}>
                       <Text>{itemObject.name}</Text>
@@ -1681,7 +1643,21 @@ class RenderPosts extends Component {
 
                       {(this.state.showShareButtons) && (
                          <View style={[styles.fullWidth,styles.padding20,styles.centerText]}>
-                           <Text style={[styles.headingText2]}>Share This Post with Friends!</Text>
+
+                           <View style={[styles.topPadding,styles.bottomPadding20]}>
+                             <View style={[styles.rowDirection]}>
+                               <View style={[styles.calcColumn150]}>
+                                 <Text style={[styles.headingText6]}>Share This Post with Friends!</Text>
+                               </View>
+                               <View style={[styles.width40]}>
+                                 <TouchableOpacity onPress={() => this.closeModal()}>
+                                   <View style={[styles.row5,styles.horizontalPadding10]}>
+                                     <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                   </View>
+                                 </TouchableOpacity>
+                               </View>
+                             </View>
+                           </View>
 
                            <View style={[styles.topPadding20]}>
                              <Text>Share this link:</Text>
@@ -1698,7 +1674,21 @@ class RenderPosts extends Component {
 
                       {(this.state.adjustFeedPreferences) && (
                         <View key="adjustFeedPreferences" style={[styles.fullWidth,styles.padding20]}>
-                           <Text style={[styles.headingText4]}>Don't want to see this</Text>
+                          <View style={[styles.topPadding,styles.bottomPadding20]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.calcColumn150]}>
+                                <Text style={[styles.headingText4]}>Don't want to see this</Text>
+                              </View>
+                              <View style={[styles.width40]}>
+                                <TouchableOpacity onPress={() => this.closeModal()}>
+                                  <View style={[styles.row5,styles.horizontalPadding10]}>
+                                    <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </View>
+
                            <View style={[styles.spacer]} />
 
                            <View style={[styles.row10,styles.descriptionText2]}>
@@ -1713,11 +1703,11 @@ class RenderPosts extends Component {
                                <View style={styles.width40}>
                                  {(this.state.selectedPreferences && this.state.selectedPreferences.includes(item2)) ? (
                                    <TouchableOpacity onPress={() => this.itemClicked(item2,'adjustFeedPreferences') }>
-                                     <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
+                                     <Image source={{ uri: checkboxChecked }} style={[styles.square18,styles.contain]} />
                                    </TouchableOpacity>
                                  ) : (
                                    <TouchableOpacity onPress={() => this.itemClicked(item2,'adjustFeedPreferences')}>
-                                     <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
+                                     <Image source={{ uri: checkboxEmpty }} style={[styles.square18,styles.contain]} />
                                    </TouchableOpacity>
                                  )}
                                </View>
@@ -1736,14 +1726,31 @@ class RenderPosts extends Component {
 
                            <View style={[styles.spacer]} />
 
-                           <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('preference')}>Submit</TouchableOpacity>
-                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>Cancel</TouchableOpacity>
+                           <View style={[styles.rowDirection,styles.flex1]}>
+                            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.rightMargin5,styles.ctabackgroundColor,styles.flexCenter,styles.flex50]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('preference')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Submit</Text></TouchableOpacity>
+                            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter,styles.leftMargin5,styles.flex50]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                           </View>
+
                          </View>
                       )}
 
                       {(this.state.reportPostView) && (
                         <View key="reportPostView" style={[styles.fullWidth,styles.padding20]}>
-                           <Text style={[styles.headingText4]}>Report</Text>
+                          <View style={[styles.topPadding,styles.bottomPadding20]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.calcColumn150]}>
+                                <Text style={[styles.headingText4]}>Report</Text>
+                              </View>
+                              <View style={[styles.width40]}>
+                                <TouchableOpacity onPress={() => this.closeModal()}>
+                                  <View style={[styles.row5,styles.horizontalPadding10]}>
+                                    <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </View>
+
                            <View style={[styles.spacer]} />
 
                            <View style={[styles.row10,styles.descriptionText2]}>
@@ -1754,15 +1761,15 @@ class RenderPosts extends Component {
                            <View style={[styles.spacer]} />
 
                            {this.state.reportOptions.map((item2, index2) =>
-                             <View key={index2} style={[styles.row5]}>
+                             <View key={index2} style={[styles.row5,styles.rowDirection]}>
                                <View style={styles.width40}>
                                  {(this.state.selectedReportReasons && this.state.selectedReportReasons.includes(item2)) ? (
                                    <TouchableOpacity onPress={() => this.itemClicked(item2,'report') }>
-                                     <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
+                                     <Image source={{ uri: checkboxChecked }} style={[styles.square18,styles.contain]} />
                                    </TouchableOpacity>
                                  ) : (
                                    <TouchableOpacity onPress={() => this.itemClicked(item2,'report')}>
-                                     <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
+                                     <Image source={{ uri: checkboxEmpty }} style={[styles.square18,styles.contain]} />
                                    </TouchableOpacity>
                                  )}
                                </View>
@@ -1774,8 +1781,11 @@ class RenderPosts extends Component {
 
                            <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                           <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('report')}>Submit</TouchableOpacity>
-                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>Cancel</TouchableOpacity>
+                           <View style={[styles.rowDirection,styles.flex1]}>
+                             <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.rightMargin5,styles.ctabackgroundColor,styles.flexCenter,styles.flex50]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('report')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Submit</Text></TouchableOpacity>
+                             <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter,styles.leftMargin5,styles.flex50]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                           </View>
+
                          </View>
                       )}
 
@@ -1802,7 +1812,7 @@ class RenderPosts extends Component {
 
                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>
                             <View style={styles.rowDirection}>
-                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon }} /></View>
+                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} source={{ uri: closeIcon }} /></View>
                               <View style={styles.leftPadding}>Close View</View>
 
                             </View>
@@ -1824,7 +1834,7 @@ class RenderPosts extends Component {
                                <View key={"upvote|" + optionIndex}>
                                  <View style={styles.rowDirection}>
                                    <View style={[styles.width60]}>
-                                     <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} alt="GC" style={styles.profileThumbnail50} />
+                                     <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} style={styles.profileThumbnail50} />
                                    </View>
                                    <View style={[styles.flexGrow, styles.leftPadding, styles.topPadding5]}>
                                      <Text style={[styles.headingText4]}>{value.firstName} {value.lastName}</Text>
@@ -1854,11 +1864,63 @@ class RenderPosts extends Component {
 
                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>
                             <View style={styles.rowDirection}>
-                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon}} /></View>
+                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} source={{ uri: closeIcon}} /></View>
                               <View style={styles.leftPadding}>Close View</View>
 
                             </View>
                           </TouchableOpacity>
+                        </View>
+                      )}
+
+                      {(this.state.showPostMenu) && (
+                        <View style={[styles.flex1,styles.padding40]}>
+                          <View>
+                            <View style={[styles.topPadding,styles.bottomPadding20]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn150]}>
+                                  <Text style={[styles.headingText6]}>What would you like to do?</Text>
+                                </View>
+                                <View style={[styles.width40]}>
+                                  <TouchableOpacity onPress={() => this.closeModal()}>
+                                    <View style={[styles.row5,styles.horizontalPadding10]}>
+                                      <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                    </View>
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, showPostMenu: false })}>
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width30]}>
+                                  <Image source={{ uri: shareIconDark}} style={[styles.square20,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn160]}>
+                                  <Text style={[styles.descriptionText2]}>Share outside of Guided Compass</Text>
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, adjustFeedPreferences: true, showPostMenu: false })}>
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width30]}>
+                                  <Image source={{ uri: hideIconDark}} style={[styles.square20,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn160]}>
+                                  <Text style={[styles.descriptionText2]}>I don't want to see this</Text>
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, reportPostView: true, showPostMenu: false })}>
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width30]}>
+                                  <Image source={{ uri: reportIconDark}} style={[styles.square20,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn160]}>
+                                  <Text style={[styles.descriptionText2]}>Report this post</Text>
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       )}
 

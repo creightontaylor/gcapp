@@ -318,7 +318,9 @@ class SwitchOrgs extends Component {
                  const studentAlias = response.data.orgInfo.studentAlias
 
                  AsyncStorage.setItem('orgFocus', orgFocus)
-                 AsyncStorage.setItem('studentAlias', studentAlias)
+                 if (studentAlias) {
+                   AsyncStorage.setItem('studentAlias', studentAlias)
+                 }
 
                  const serverPostSuccess = true
                  const serverSuccessMessage = 'Active org successfully changed and saved!'
@@ -416,7 +418,9 @@ class SwitchOrgs extends Component {
           AsyncStorage.setItem('activeOrg', activeOrg)
           AsyncStorage.setItem('myOrgs', JSON.stringify(myOrgs))
           AsyncStorage.setItem('orgFocus', orgFocus)
-          AsyncStorage.setItem('studentAlias', studentAlias)
+          if (studentAlias) {
+            AsyncStorage.setItem('studentAlias', studentAlias)
+          }
 
           const searchString = ''
           const modalIsOpen = false

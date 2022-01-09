@@ -9,7 +9,7 @@ const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com
 const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 
 import {convertDateToString} from '../functions/convertDateToString';
-
+// const scrollRef = React.createRef();
 class Messages extends Component {
   constructor(props) {
     super(props)
@@ -26,6 +26,9 @@ class Messages extends Component {
     this.selectInbox = this.selectInbox.bind(this)
     this.clearUnreadMessages = this.clearUnreadMessages.bind(this)
 
+
+    // this.ScrollView = React.createRef();
+
   }
 
   componentDidMount() {
@@ -36,7 +39,7 @@ class Messages extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called in messaging', this.props, prevProps)
+    console.log('componentDidUpdate called in messaging')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       this.retrieveData()
@@ -509,9 +512,13 @@ class Messages extends Component {
 
   scrollToBottom = () => {
     console.log('scrollToBottom called')
-    if (this.messagesEnd) {
-      this.messagesEnd.scrollIntoView({ behavior: "smooth" });
-    }
+
+    // this.refs.scrollView0.scrollTo(0);
+    // this.ScrollView.scrollToEnd({animated: true})
+    // scrollRef.current?.scrollToEnd({animated: true});
+    // if (this.messagesEnd) {
+    //   this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    // }
   }
 
   clearUnreadMessages(selectedInbox, index) {
@@ -720,7 +727,7 @@ class Messages extends Component {
 
                 <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.calcHeight500]}>
                   {(this.state.messages && this.state.messages.length > 0) ? (
-                    <ScrollView style={[styles.flex1,styles.overflowY]}>
+                    <ScrollView style={[styles.flex1,styles.overflowY]} ref={ref => {this.scrollView = ref}} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
                       {this.state.messages.map((value, optionIndex) =>
                         <View key={value._id} style={[styles.bottomPadding20]}>
                           {(value.senderEmail === this.state.emailId) ? (
@@ -776,9 +783,6 @@ class Messages extends Component {
                           )}
                         </View>
                       )}
-
-
-                      <View ref={(el) => { this.messagesEnd = el; }} />
                     </ScrollView>
                   ) : (
                     <View style={[styles.flex1]}>

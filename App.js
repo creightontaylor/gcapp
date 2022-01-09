@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, AsyncStorage} from 'react-native';
 // import Router from './src/Router';
 import Axios from 'axios';
+import Modal from 'react-native-modal';
+const styles = require('./src/components/css/style');
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -65,7 +68,11 @@ const instructions = Platform.select({
 
 type Props = {};
 export default class App extends Component<Props> {
-
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+  }
   // componentDidMount() {
   //   console.log('componentDidMount MASTER')
   //
@@ -377,7 +384,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="EmployerDetails" component={EmployerDetails} />
           <Stack.Screen name="GroupDetails" component={GroupDetails} />
           <Stack.Screen name="ProjectDetails" component={ProjectDetails} />
-          <Stack.Screen name="CreatePost" component={CreatePost} />
+          <Stack.Screen name="CreatePost" component={CreatePost}/>
           <Stack.Screen name="Profiles" component={Profiles} />
           <Stack.Screen name="Projects" component={Projects} />
           <Stack.Screen name="Groups" component={Groups} />

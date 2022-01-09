@@ -253,6 +253,11 @@ class NewsFeed extends Component {
              const orgName = response.data.orgInfo.orgName
              const orgMission = response.data.orgInfo.orgMission
              self.setState({ orgContactEmail, orgLogo, orgName, orgMission })
+             this.props.navigation.setOptions({ headerTitle: () => (
+               <TouchableOpacity onPress={() => this.props.navigation.navigate('AddWorkspaces')}>
+                 <Image source={{uri: orgLogo}} style={{ width: 200, height: 32, resizeMode: 'contain' }} />
+               </TouchableOpacity>
+             )})
 
            } else {
              console.log('org info query did not work', response.data.message)
