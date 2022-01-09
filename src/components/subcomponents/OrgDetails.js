@@ -80,7 +80,7 @@ class OrgDetails extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: this.props.orgId } })
         .then((response) => {
-          console.log('Org info query attempted in SubOrgDetails', response.data);
+          console.log('Org info query attempted in SubOrgDetails');
 
             if (response.data.success) {
               console.log('org info query worked')
@@ -110,7 +110,7 @@ class OrgDetails extends Component {
 
               Axios.get('https://www.guidedcompass.com/api/org/members/count', { params: { orgCode: orgSelected.orgCode }})
               .then((response) => {
-                 console.log('Org member count query attempted', response.data);
+                 console.log('Org member count query attempted');
 
                  if (response.data.success) {
                    console.log('successfully retrieved org member count')
@@ -144,7 +144,7 @@ class OrgDetails extends Component {
         if (accountCode) {
           Axios.get('https://www.guidedcompass.com/api/account', { params: { accountCode } })
           .then((response) => {
-            console.log('Account info query attempted in employer dashboard', response.data);
+            console.log('Account info query attempted in employer dashboard');
 
             if (response.data.success) {
               console.log('account info query worked in sub settings')

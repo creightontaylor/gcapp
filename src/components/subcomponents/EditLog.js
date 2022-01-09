@@ -2426,7 +2426,7 @@ class EditLog extends Component {
           this.closeModal()
           this.props.reloadScreen()
         } else {
-          this.props.history.push('/app/logs')
+          this.props.navigation.navigate('Logs')
         }
 
         // this.setState({
@@ -3634,12 +3634,12 @@ class EditLog extends Component {
                                     {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                                     {(this.state.searchIsAnimatingCareersA) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingCareersA}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -3714,12 +3714,12 @@ class EditLog extends Component {
                                     {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                                     {(this.state.searchIsAnimatingOpportunitiesA) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingOpportunitiesA}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -3789,12 +3789,12 @@ class EditLog extends Component {
                                     {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                                     {(this.state.searchIsAnimatingCompetenciesA) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingCompetenciesA}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -3980,12 +3980,12 @@ class EditLog extends Component {
                                     {(this.state.successMessageB && this.state.successMessageB !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessageB}</Text>}
 
                                     {(this.state.searchIsAnimatingCareersB) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingCareersB}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -4060,12 +4060,12 @@ class EditLog extends Component {
                                     {(this.state.successMessageB && this.state.successMessageB !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessageB}</Text>}
 
                                     {(this.state.searchIsAnimatingOpportunitiesB) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingOpportunitiesB}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -4135,12 +4135,12 @@ class EditLog extends Component {
                                     {(this.state.successMessageB && this.state.successMessageB !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessageB}</Text>}
 
                                     {(this.state.searchIsAnimatingCompetenciesB) ? (
-                                      <View style={[styles.flexCenter,syles.flex1]}>
+                                      <View style={[styles.flexCenter,styles.flex1]}>
                                         <View>
                                           <View style={[styles.superSpacer]} />
 
                                           <ActivityIndicator
-                                             animating = {this.state.animating}
+                                             animating = {this.state.searchIsAnimatingCompetenciesB}
                                              color = '#87CEFA'
                                              size = "large"
                                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -4414,12 +4414,12 @@ class EditLog extends Component {
                               {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                               {(this.state.searchIsAnimatingCareers) ? (
-                                <View style={[styles.flexCenter,syles.flex1]}>
+                                <View style={[styles.flexCenter,styles.flex1]}>
                                   <View>
                                     <View style={[styles.superSpacer]} />
 
                                     <ActivityIndicator
-                                       animating = {this.state.animating}
+                                       animating = {this.state.searchIsAnimatingCareers}
                                        color = '#87CEFA'
                                        size = "large"
                                        style={[styles.square80, styles.centerHorizontally]}/>
@@ -4490,12 +4490,12 @@ class EditLog extends Component {
                               {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                               {(this.state.searchIsAnimatingOpportunities) ? (
-                                <View style={[styles.flexCenter,syles.flex1]}>
+                                <View style={[styles.flexCenter,styles.flex1]}>
                                   <View>
                                     <View style={[styles.superSpacer]} />
 
                                     <ActivityIndicator
-                                       animating = {this.state.animating}
+                                       animating = {this.state.searchIsAnimatingOpportunities}
                                        color = '#87CEFA'
                                        size = "large"
                                        style={[styles.square80, styles.centerHorizontally]}/>
@@ -4764,12 +4764,12 @@ class EditLog extends Component {
                             {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                             {(this.state.searchIsAnimatingCompetencies) ? (
-                              <View style={[styles.flexCenter,syles.flex1]}>
+                              <View style={[styles.flexCenter,styles.flex1]}>
                                 <View>
                                   <View style={[styles.superSpacer]} />
 
                                   <ActivityIndicator
-                                     animating = {this.state.animating}
+                                     animating = {this.state.searchIsAnimatingCompetencies}
                                      color = '#87CEFA'
                                      size = "large"
                                      style={[styles.square80, styles.centerHorizontally]}/>
@@ -5047,19 +5047,19 @@ class EditLog extends Component {
 
                 {(this.state.currentPage === 'People') && (
                   <View>
-                    <SubPeopleMatching history={this.props.history} userType={null} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <SubPeopleMatching navigation={this.props.navigation} userType={null} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Courses') && (
                   <View style={[styles.topPadding20]}>
-                    <SubCourses history={this.props.history} activeOrg={this.state.activeOrg} selectedGoal={this.state.selectedGoal} competencies={this.state.competencies} subNavSelected="Browse" pageSource="Goal"/>
+                    <SubCourses navigation={this.props.navigation} activeOrg={this.state.activeOrg} selectedGoal={this.state.selectedGoal} competencies={this.state.competencies} subNavSelected="Browse" pageSource="Goal"/>
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Careers') && (
                   <View style={[styles.topPadding20]}>
-                    <SubCareers history={this.props.history} calculateMatches={this.state.calculateMatches} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <SubCareers navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
@@ -5181,12 +5181,12 @@ class EditLog extends Component {
                       </View>
 
                       {(this.state.searchIsAnimatingMembers) ? (
-                        <View style={[styles.flexCenter,syles.flex1]}>
+                        <View style={[styles.flexCenter,styles.flex1]}>
                           <View>
                             <View style={[styles.superSpacer]} />
 
                             <ActivityIndicator
-                               animating = {this.state.animating}
+                               animating = {this.state.searchIsAnimatingMembers}
                                color = '#87CEFA'
                                size = "large"
                                style={[styles.square80, styles.centerHorizontally]}/>
@@ -5383,12 +5383,12 @@ class EditLog extends Component {
                       </View>
 
                       {(this.state.searchIsAnimatingMembers) ? (
-                        <View style={[styles.flexCenter,syles.flex1]}>
+                        <View style={[styles.flexCenter,styles.flex1]}>
                           <View>
                             <View style={[styles.superSpacer]} />
 
                             <ActivityIndicator
-                               animating = {this.state.animating}
+                               animating = {this.state.searchIsAnimatingMembers}
                                color = '#87CEFA'
                                size = "large"
                                style={[styles.square80, styles.centerHorizontally]}/>

@@ -116,7 +116,7 @@ class CreatePost extends Component {
           sharePosting, originalPost, posts, groupId, groupName, jobTitle
         })
 
-        Axios.get('https://www.guidedcomapss.com/api/org', { params: { orgCode: activeOrg } })
+        Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
           console.log('Org info query attempted for orgFocus on login');
 
@@ -137,7 +137,7 @@ class CreatePost extends Component {
         });
 
         if (this.props.accountCode) {
-          Axios.get('https://www.guidedcomapss.com/api/account', { params: { accountCode: this.props.accountCode } })
+          Axios.get('https://www.guidedcompass.com/api/account', { params: { accountCode: this.props.accountCode } })
           .then((response) => {
             console.log('Account info query attempted in employer dashboard');
 
@@ -166,20 +166,20 @@ class CreatePost extends Component {
       }
     }
 
-    formChangeHandler = (event) => {
-      console.log('formChangeHandler called', event.target.name, event.target.value)
+    formChangeHandler = (eventName,eventValue) => {
+      console.log('formChangeHandler called')
 
-      if (event.target.name === 'profileItemType') {
+      if (eventName === 'profileItemType') {
         let profileItemOptions = []
-        this.setState({ [event.target.name]: event.target.value, profileItemOptions })
-        // console.log('t0', event.target.value)
-        if (event.target.value !== '' && event.target.value !== 'Select an Item Type') {
-          // console.log('t1', event.target.value)
-          this.pullItems(event.target.value)
+        this.setState({ [eventName]: eventValue, profileItemOptions })
+        // console.log('t0', eventValue)
+        if (eventValue !== '' && eventValue !== 'Select an Item Type') {
+          // console.log('t1', eventValue)
+          this.pullItems(eventValue)
         }
-      } else if (event.target.name === 'searchEntities' || event.target.name === 'searchOpportunities' || event.target.name === 'searchCareers' || event.target.name === 'searchTrends') {
-        this.searchItems(event.target.value, event.target.name)
-      } else if (event.target.name === 'postImage') {
+      } else if (eventName === 'searchEntities' || eventName === 'searchOpportunities' || eventName === 'searchCareers' || eventName === 'searchTrends') {
+        this.searchItems(eventValue, eventName)
+      } else if (eventName === 'postImage') {
         // console.log('profilePicSelectedHandler changed', event.target.files[0])
         this.setState({ errorMessage: null, successMessage: null })
 
@@ -201,11 +201,11 @@ class CreatePost extends Component {
             reader.readAsDataURL(event.target.files[0]);
             this.setState({ postImageFile: event.target.files[0] })
             // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-            // this.saveFile(event.target.name, event.target.files[0])
+            // this.saveFile(eventName, event.target.files[0])
           }
         }
       } else {
-        this.setState({ [event.target.name]: event.target.value })
+        this.setState({ [eventName]: eventValue })
       }
     }
 
@@ -227,7 +227,7 @@ class CreatePost extends Component {
             const excludeMissingOutlookData = true
             const excludeMissingJobZone = true
 
-            Axios.put('https://www.guidedcomapss.com/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
+            Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
             .then((response) => {
               console.log('Careers query attempted', response.data);
 
@@ -279,7 +279,7 @@ class CreatePost extends Component {
             const search = true
             const postTypes = ['Internship','Work','Assignment','Problem','Challenge','Event']
 
-            Axios.get('https://www.guidedcomapss.com/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
+            Axios.get('https://www.guidedcompass.com/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
             .then((response) => {
               console.log('Opportunity search query attempted', response.data);
 
@@ -328,7 +328,7 @@ class CreatePost extends Component {
             const excludeCurrentUser = true
             const orgCode = self.state.activeOrg
 
-            Axios.get('https://www.guidedcomapss.com/api/entities/search', {  params: { searchString, search, emailId, excludeCurrentUser, orgCode }})
+            Axios.get('https://www.guidedcompass.com/api/entities/search', {  params: { searchString, search, emailId, excludeCurrentUser, orgCode }})
             .then((response) => {
               console.log('Entities query attempted', response.data);
 
@@ -376,7 +376,7 @@ class CreatePost extends Component {
           function officiallyFilter() {
             console.log('officiallyFilter called')
 
-            Axios.get('https://www.guidedcomapss.com/api/trends/search', {  params: { searchString, search }})
+            Axios.get('https://www.guidedcompass.com/api/trends/search', {  params: { searchString, search }})
             .then((response) => {
               console.log('Trends query attempted', response.data);
 
@@ -422,7 +422,7 @@ class CreatePost extends Component {
       const emailId = this.state.emailId
 
       if (value === 'Project') {
-        Axios.get('https://www.guidedcomapss.com/api/projects', { params: { emailId, includeCollaborations: true } })
+        Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId, includeCollaborations: true } })
         .then((response) => {
           console.log('Projects query attempted', response.data);
 
@@ -445,7 +445,7 @@ class CreatePost extends Component {
         });
 
       } else if (value === 'Experience') {
-        Axios.get('https://www.guidedcomapss.com/api/experience', { params: { emailId } })
+        Axios.get('https://www.guidedcompass.com/api/experience', { params: { emailId } })
         .then((response) => {
           console.log('Experience query attempted for profile items', response.data);
 
@@ -473,7 +473,7 @@ class CreatePost extends Component {
         });
       } else if (value === 'Education') {
 
-        Axios.get('https://www.guidedcomapss.com/api/users/profile/details', { params: { email: emailId } })
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: emailId } })
         .then((response) => {
           console.log('User details query 1 attempted', response.data);
 
@@ -495,7 +495,7 @@ class CreatePost extends Component {
         });
       } else if (value === 'Career Goal') {
 
-        Axios.get('https://www.guidedcomapss.com/api/logs/goals', { params: { emailId } })
+        Axios.get('https://www.guidedcompass.com/api/logs/goals', { params: { emailId } })
         .then((response) => {
 
             if (response.data.success) {
@@ -522,7 +522,7 @@ class CreatePost extends Component {
         });
 
       } else if (value === 'Passion') {
-        Axios.get('https://www.guidedcomapss.com/api/logs/passions', { params: { emailId } })
+        Axios.get('https://www.guidedcompass.com/api/logs/passions', { params: { emailId } })
         .then((response) => {
 
             if (response.data.success) {
@@ -627,7 +627,7 @@ class CreatePost extends Component {
           createdAt: new Date(), updatedAt: new Date()
         }
 
-        Axios.post('https://www.guidedcomapss.com/api/group-posts', postObject)
+        Axios.post('https://www.guidedcompass.com/api/group-posts', postObject)
         .then((response) => {
           console.log('attempting to save addition to groups')
           if (response.data.success) {
@@ -656,7 +656,7 @@ class CreatePost extends Component {
 
                 const saveNewPost = true
 
-                Axios.get('https://www.guidedcomapss.com/api/group-posts/byid', { params: { _id: postId } })
+                Axios.get('https://www.guidedcompass.com/api/group-posts/byid', { params: { _id: postId } })
                 .then((response) => {
                   console.log('Post query attempted one', response.data);
 
@@ -768,7 +768,7 @@ class CreatePost extends Component {
                 {selectedCareers.map((value, optionIndex) =>
                   <View key={"career|" + optionIndex}>
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.positionRelative,styles.zIndex1]} >
-                      <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                       </TouchableOpacity>
                     </View>
@@ -798,7 +798,7 @@ class CreatePost extends Component {
                   <View key={"career|" + optionIndex}>
 
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.positionRelative,styles.zIndex1]} >
-                      <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                       </TouchableOpacity>
                     </View>
@@ -830,7 +830,7 @@ class CreatePost extends Component {
                   <View key={"entity|" + optionIndex}>
 
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.positionRelative,styles.zIndex1]} >
-                      <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                       </TouchableOpacity>
                     </View>
@@ -862,7 +862,7 @@ class CreatePost extends Component {
                   <View key={"entity|" + optionIndex}>
 
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.positionRelative,styles.zIndex1]} >
-                      <TouchableOpacity onClick={() => this.removeTag(optionIndex,type)}>
+                      <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
                         <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                       </TouchableOpacity>
                     </View>
@@ -1288,7 +1288,7 @@ class CreatePost extends Component {
               const deleteKey = deleteArray[1].replace(/%7C/g,"|").replace(/%40/g,"@").replace(/\+/gi,' ').replace(/%3A/g,":").replace(/%20/g," ").replace(/%28/g,"(").replace(/%29/g,")").replace(/%2B/g,"+")
               console.log('show deleteKey: ', deleteKey)
 
-              Axios.put('https://www.guidedcomapss.com/api/file', { deleteKey })
+              Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
               .then((response) => {
                 console.log('tried to delete', response.data)
                 if (response.data.success) {
@@ -1335,18 +1335,21 @@ class CreatePost extends Component {
     render() {
 
       return (
-        <View style={[styles.calcColumn80]}>
-          <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-            <View style={[styles.flex5]}>
-              <TouchableOpacity onPress={() => this.props.closeModal()}>
-                <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-              </TouchableOpacity>
+        <View>
+          {(this.props.modalIsOpen) && (
+            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+              <View style={[styles.flex5]}>
+                <TouchableOpacity onPress={() => this.props.closeModal()}>
+                  <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.flex95]}>
+              </View>
             </View>
-            <View style={[styles.flex95]}>
-            </View>
-          </View>
+          )}
+
           <View>
-            <View key="showPost" style={[styles.calcColumn80,styles.padding20]}>
+            <View key="showPost" style={(this.props.modalIsOpen) ? [styles.calcColumn80,styles.padding20] : [styles.calcColumn40,styles.padding20]}>
                <View style={[styles.row10,styles.rowDirection]}>
                  <View style={[styles.width60,styles.rightPadding]}>
                   {(this.state.pictureURL) ? (
@@ -1356,13 +1359,13 @@ class CreatePost extends Component {
                   )}
                  </View>
 
-                 <View style={[styles.calcColumn200,styles.topPadding5]}>
+                 <View style={(this.props.modalIsOpen) ? [styles.calcColumn200,styles.topPadding5] : [styles.calcColumn160,styles.topPadding5]}>
                    <View>
                     <Text style={[styles.headingText3]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
                    </View>
                  </View>
                  <View style={[styles.width30,styles.rightPadding]}>
-                   <TouchableOpacity onClick={(this.state.showTips) ? () => this.setState({ showTips: false }) : () => this.setState({ showTips: true })}>
+                   <TouchableOpacity onPress={(this.state.showTips) ? () => this.setState({ showTips: false }) : () => this.setState({ showTips: true })}>
                      <Image source={{ uri: infoIcon}} style={[styles.square20,styles.contain]} />
                    </TouchableOpacity>
                  </View>
@@ -1415,34 +1418,34 @@ class CreatePost extends Component {
                  <View>
                    <View style={[styles.row10,styles.rowDirection,styles.flexWrap]}>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
+                       <TouchableOpacity onPress={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
                          <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} style={[styles.square20,styles.contain]} />
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
+                       <TouchableOpacity onPress={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
                          <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} style={[styles.square20,styles.contain]}/>
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showImage) ? () => this.setState({ showImage: false }) : () => this.setState({ showImage: true })}>
+                       <TouchableOpacity onPress={(this.state.showImage) ? () => this.setState({ showImage: false }) : () => this.setState({ showImage: true })}>
                          <Image source={(this.state.showImage) ? { uri: imageIconBlue} : { uri: imageIconDark}} style={[styles.square20,styles.contain]} />
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showVideo) ? () => this.setState({ showVideo: false }) : () => this.setState({ showVideo: true })}>
+                       <TouchableOpacity onPress={(this.state.showVideo) ? () => this.setState({ showVideo: false }) : () => this.setState({ showVideo: true })}>
                          <Image source={(this.state.showVideo) ? { uri: videoIconBlue} : { uri: videoIconDark}} style={[styles.square20,styles.contain]} />
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
+                       <TouchableOpacity onPress={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
                          <Image source={(this.state.showProfileItems) ? { uri: profileIconBlue} : { uri: profileIconDark}} style={[styles.square20,styles.contain]}/>
                          <Image source={(this.state.showProfileItems) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.contain]}/>
                        </TouchableOpacity>
                      </View>
 
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showOpportunity) ? () => this.setState({ showOpportunity: false }) : () => this.setState({ showOpportunity: true })} style={styles.rowDirection}>
+                       <TouchableOpacity onPress={(this.state.showOpportunity) ? () => this.setState({ showOpportunity: false }) : () => this.setState({ showOpportunity: true })} style={styles.rowDirection}>
                          <Image source={(this.state.showOpportunity) ? { uri: opportunitiesIconBlue} : { uri: opportunitiesIconDark}} style={[styles.square20,styles.contain]} />
                          <Image source={(this.state.showOpportunity) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.contain]} />
 
@@ -1450,14 +1453,14 @@ class CreatePost extends Component {
                      </View>
 
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })} style={styles.rowDirection}>
+                       <TouchableOpacity onPress={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })} style={styles.rowDirection}>
                          <Image source={(this.state.showPaths) ? { uri: pathsIconBlue} : { uri: pathsIconDark}} style={[styles.square20,styles.contain]} />
                          <Image source={(this.state.showPaths) ? { uri: tagIconBlue } : { uri: tagIconDark}} style={[styles.square9,styles.contain]} />
 
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onClick={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
+                       <TouchableOpacity onPress={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
                          <Image source={(this.state.showTrends) ? { uri: trendsIconBlue} : { uri: trendsIconDark}} style={[styles.square20,styles.contain]}/>
                          <Image source={(this.state.showTrends) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.contain]} />
 
@@ -1482,7 +1485,7 @@ class CreatePost extends Component {
                            />
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
-                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onClick={() => this.addItem('entity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('entity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                          </View>
                        </View>
 
@@ -1497,7 +1500,7 @@ class CreatePost extends Component {
                              <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
-                                animating = {this.state.animating}
+                                animating = {this.state.searchIsAnimating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
@@ -1514,7 +1517,7 @@ class CreatePost extends Component {
                                <View style={[styles.card,styles.topMargin]}>
                                  {this.state.entityOptions.map((value, optionIndex) =>
                                    <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn80]}>
-                                     <TouchableOpacity style={[styles.row7,styles.calcColumn60]} onClick={() => this.searchItemClicked(value, 'entity')}>
+                                     <TouchableOpacity style={[styles.row7,styles.calcColumn60]} onPress={() => this.searchItemClicked(value, 'entity')}>
                                        <View style={[styles.calcColumn80,styles.rowDirection]}>
                                          <View style={styles.width40}>
                                            <View style={styles.miniSpacer} />
@@ -1678,7 +1681,7 @@ class CreatePost extends Component {
                            />
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
-                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onClick={() => this.addItem('opportunity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                          </View>
 
                        </View>
@@ -1694,7 +1697,7 @@ class CreatePost extends Component {
                              <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
-                                animating = {this.state.animating}
+                                animating = {this.state.searchIsAnimating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
@@ -1711,7 +1714,7 @@ class CreatePost extends Component {
                                <View style={[styles.card,styles.topMargin]}>
                                  {this.state.opportunityOptions.map((value, optionIndex) =>
                                    <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn80]}>
-                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onClick={() => this.searchItemClicked(value, 'opportunity')}>
+                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunity')}>
                                        <View style={[styles.calcColumn80,styles.rowDirection]}>
                                          <View style={styles.width40}>
                                            <View style={styles.miniSpacer} />
@@ -1753,7 +1756,7 @@ class CreatePost extends Component {
                            />
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
-                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onClick={() => this.addItem('career')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('career')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                          </View>
 
                        </View>
@@ -1769,7 +1772,7 @@ class CreatePost extends Component {
                              <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
-                                animating = {this.state.animating}
+                                animating = {this.state.searchIsAnimating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
@@ -1785,7 +1788,7 @@ class CreatePost extends Component {
                                <View style={[styles.card,styles.topMargin]}>
                                  {this.state.careerOptions.map((value, optionIndex) =>
                                    <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn80]}>
-                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onClick={() => this.searchItemClicked(value, 'career')}>
+                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onPress={() => this.searchItemClicked(value, 'career')}>
                                        <View style={[styles.calcColumn80,styles.rowDirection]}>
                                          <View style={styles.width40}>
                                            <View style={styles.miniSpacer} />
@@ -1830,7 +1833,7 @@ class CreatePost extends Component {
                            />
                          </View>
                          <View style={[styles.width70,styles.leftPadding]}>
-                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onClick={() => this.addItem('trend')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                           <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.standardBorder,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('trend')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                          </View>
 
                        </View>
@@ -1846,7 +1849,7 @@ class CreatePost extends Component {
                              <View style={[styles.superSpacer]} />
 
                              <ActivityIndicator
-                                animating = {this.state.animating}
+                                animating = {this.state.searchIsAnimating}
                                 color = '#87CEFA'
                                 size = "large"
                                 style={styles.square80, styles.centerHorizontally}/>
@@ -1863,7 +1866,7 @@ class CreatePost extends Component {
                                <View style={[styles.card,styles.topMargin]}>
                                  {this.state.trendOptions.map((value, optionIndex) =>
                                    <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn80]}>
-                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onClick={() => this.searchItemClicked(value, 'trend')}>
+                                     <TouchableOpacity style={[styles.calcColumn80,styles.row5]} onPress={() => this.searchItemClicked(value, 'trend')}>
                                        <View style={[styles.calcColumn80,styles.rowDirection]}>
                                          <View style={styles.width40}>
                                            <View style={styles.miniSpacer} />
@@ -1905,7 +1908,7 @@ class CreatePost extends Component {
                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text>}
 
                <View style={[styles.row10]}>
-                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onClick={() => this.postPost()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.postPost()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
                </View>
 
              </View>

@@ -90,7 +90,7 @@ class RenderPosts extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in renderPosts', this.props, prevProps)
+      console.log('componentDidUpdate called in renderPosts')
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode || this.props.posts !== prevProps.posts  || this.props.passedGroupPost !== prevProps.passedGroupPost) {
         this.retrieveData()
@@ -99,8 +99,6 @@ class RenderPosts extends Component {
 
     retrieveData = async() => {
       try {
-        console.log('retrieveData called in renderPosts')
-
         console.log('retrieveData called in renderPosts')
 
         let emailId = await AsyncStorage.getItem('email');
@@ -157,7 +155,7 @@ class RenderPosts extends Component {
         favoritesArray.push(itemId)
       }
 
-      Axios.post('https://www.guidedcomapss.com/api/favorites/save', {
+      Axios.post('https://www.guidedcompass.com/api/favorites/save', {
         favoritesArray, emailId: this.state.emailId
       })
       .then((response) => {
@@ -211,7 +209,7 @@ class RenderPosts extends Component {
     }
 
     renderPost(value, index, inModal, passedGroupPost) {
-      console.log('renderPost called', passedGroupPost, value)
+      console.log('renderPost called')
 
       if (value) {
         let defaultProfileItemIcon = projectsIconDark
@@ -228,16 +226,20 @@ class RenderPosts extends Component {
         }
 
         let profileLink = "Profile"
+        let passedState = { username: value.username }
         let isDisabled = false
         let newTab = false
 
         if (value.employerId) {
-          profileLink = "EmployerProfile"
+          profileLink = "EmployerDetails"
+          passedState = { objectId: value.employerId }
         }
+
         if (value.roleName === 'Admin') {
-          profileLink = "OrgProfile"
+          profileLink = "OrgDetails"
+          passedState = { orgCode: value.orgCode }
         } else if (value.roleName === 'Teacher' || value.roleName === 'School Support' || value.roleName === 'Counselor' || value.roleName === 'WBLC' || value.roleName === 'Work-Based Learning Coordinator') {
-          profileLink = "AdisorProfile"
+          profileLink = "AdvisorProfile"
           isDisabled = true
         }
         // if (this.props.fromAdvisor) {
@@ -278,16 +280,24 @@ class RenderPosts extends Component {
 
         return (
           <View key={value + index}>
+            {(inModal) && (
+              <View style={[styles.calcColumn80, styles.row20]}>
+                <TouchableOpacity onPress={() => this.closeModal()}>
+                  <View style={[styles.row5,styles.horizontalPadding10]}>
+                    <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
             <View style={(!inModal) && [styles.card, styles.topMargin20,styles.fullScreenWidth]}>
               <View style={styles.rowDirection}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value.username })} style={[styles.rowDirection, styles.calcColumn120]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate(profileLink, passedState)} style={[styles.rowDirection, styles.calcColumn120]}>
                   <View style={[styles.width70, styles.rightPadding]}>
                     {(value.roleName === 'Admin') ? (
                       <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain]} alt="GC" />
                     ) : (
                       <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.profileThumbnail50,styles.standardBorder]} alt="GC" />
                     )}
-
                   </View>
                   <View style={[styles.calcColumn130,styles.rowDirection]} >
                     <View style={styles.fullWidth}>
@@ -300,7 +310,7 @@ class RenderPosts extends Component {
                         )}
                         {(this.props.inGroup) ? (
                           <View style={styles.width80, styles.rightPadding}>
-                            <TouchableOpacity onClick={(e) => this.voteOnItem(e, value, 'up', index) }>
+                            <TouchableOpacity onPress={(e) => this.voteOnItem(e, value, 'up', index) }>
                               <View style={[styles.standardBorder, styles.roundedCorners, styles.rowDirection]}>
                                 <View style={styles.padding7}>
                                   <Image source={(value.upvotes && value.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} alt="GC" style={[styles.square15,styles.contain]}/>
@@ -315,51 +325,55 @@ class RenderPosts extends Component {
                           </View>
                         ) : (
                           <View style={styles.width30}>
-                            <TouchableOpacity onPress={(value.showPostMenu) ? () => this.togglePostMenu(index) : () => this.togglePostMenu(index)}>
-                              <View style={[styles.row5,styles.horizontalPadding10]}>
-                                <Image source={{ uri: menuIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
+                            {(!inModal) && (
+                              <View>
+                                <TouchableOpacity onPress={(value.showPostMenu) ? () => this.togglePostMenu(index) : () => this.togglePostMenu(index)}>
+                                  <View style={[styles.row5,styles.horizontalPadding10]}>
+                                    <Image source={{ uri: menuIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                  </View>
+                                </TouchableOpacity>
+                                {/*
+                                {(value.showPostMenu) && (
+                                  <div className="menu-bottom description-text-3">
+                                    <div>
+                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true, selectedIndex: index })}>
+                                        <div className="row-5">
+                                          <div className="fixed-column-25">
+                                            <img src={shareIconDark} alt="GC" className="image-auto-15" />
+                                          </div>
+                                          <div className="calc-column-offset-25">
+                                            <p>Share outside of Guided Compass</p>
+                                          </div>
+                                          <div className="clear" />
+                                        </div>
+                                      </button>
+                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, adjustFeedPreferences: true, selectedIndex: index })}>
+                                        <div className="row-5">
+                                          <div className="fixed-column-25">
+                                            <img src={hideIconDark} alt="GC" className="image-auto-15" />
+                                          </div>
+                                          <div className="calc-column-offset-25">
+                                            <p>I don't want to see this</p>
+                                          </div>
+                                          <div className="clear" />
+                                        </div>
+                                      </button>
+                                      <button className="background-button full-width left-text" onPress={() => this.setState({ modalIsOpen: true, reportPostView: true, selectedIndex: index })}>
+                                        <div className="row-5">
+                                          <div className="fixed-column-25">
+                                            <img src={reportIconDark} alt="GC" className="image-auto-15" />
+                                          </div>
+                                          <div className="calc-column-offset-25">
+                                            <p>Report this post</p>
+                                          </div>
+                                          <div className="clear" />
+                                        </div>
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}*/}
                               </View>
-                            </TouchableOpacity>
-                            {/*
-                            {(value.showPostMenu) && (
-                              <div className="menu-bottom description-text-3">
-                                <div>
-                                  <button className="background-button full-width left-text" onClick={() => this.setState({ modalIsOpen: true, showShareButtons: true, selectedIndex: index })}>
-                                    <div className="row-5">
-                                      <div className="fixed-column-25">
-                                        <img src={shareIconDark} alt="GC" className="image-auto-15" />
-                                      </div>
-                                      <div className="calc-column-offset-25">
-                                        <p>Share outside of Guided Compass</p>
-                                      </div>
-                                      <div className="clear" />
-                                    </div>
-                                  </button>
-                                  <button className="background-button full-width left-text" onClick={() => this.setState({ modalIsOpen: true, adjustFeedPreferences: true, selectedIndex: index })}>
-                                    <div className="row-5">
-                                      <div className="fixed-column-25">
-                                        <img src={hideIconDark} alt="GC" className="image-auto-15" />
-                                      </div>
-                                      <div className="calc-column-offset-25">
-                                        <p>I don't want to see this</p>
-                                      </div>
-                                      <div className="clear" />
-                                    </div>
-                                  </button>
-                                  <button className="background-button full-width left-text" onClick={() => this.setState({ modalIsOpen: true, reportPostView: true, selectedIndex: index })}>
-                                    <div className="row-5">
-                                      <div className="fixed-column-25">
-                                        <img src={reportIconDark} alt="GC" className="image-auto-15" />
-                                      </div>
-                                      <div className="calc-column-offset-25">
-                                        <p>Report this post</p>
-                                      </div>
-                                      <div className="clear" />
-                                    </div>
-                                  </button>
-                                </div>
-                              </div>
-                            )}*/}
+                            )}
                           </View>
                         )}
                       </View>
@@ -405,7 +419,7 @@ class RenderPosts extends Component {
                   <View style={styles.topPadding}>
 
                     <View style={styles.row10}>
-                      <TouchableOpacity style={styles.fullWidth} onClick={() => this.showPollDetails(value, index)}>
+                      <TouchableOpacity style={styles.fullWidth} onPress={() => this.showPollDetails(value, index)}>
                         <View style={styles.rowDirection}>
                           <View>
                             <Text style={[styles.descriptionText3, styles.ctaColor]}>{(value.showPollDetails) ? "Collapse Details" : "Expand Details"}</Text>
@@ -484,7 +498,7 @@ class RenderPosts extends Component {
 
                     {((value.aVotes && value.aVotes.includes(this.state.emailId)) || (value.bVotes && value.bVotes.includes(this.state.emailId))) ? (
                       <View>
-                        <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'a')}>
+                        <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'a')}>
                           <View>
                             <View style={styles.progressBarFat} >
                               <View style={[styles.fillerError, { width: this.calculateWidth(value, 'a'), zIndex: -1, height: 36 }]} />
@@ -499,7 +513,7 @@ class RenderPosts extends Component {
                             </View>
                           </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'b')}>
+                        <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'b')}>
                           <View>
                             <View style={styles.progressBarFat} >
                               <View style={[styles.fillerError, { width: this.calculateWidth(value, 'b'), zIndex: -1, height: 36 }]} />
@@ -518,12 +532,12 @@ class RenderPosts extends Component {
                       </View>
                     ) : (
                       <View>
-                        <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'a')}>
+                        <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'a')}>
                           <View style={[styles.row10,styles.horizontalPadding30, styles.ctaBorder]} style={[styles.row10,styles.horizontalPadding30,styles.ctaBorder]}>
                             <Text style={styles.descriptionText2}>{value.aName}</Text>
                           </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.fullWidth} onClick={() => this.selectAnswer(value, index,'b')}>
+                        <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'b')}>
                           <View style={[styles.row10, styles.horizontalPadding30, styles.ctaBorder]}>
                             <Text style={styles.descriptionText2}>{value.bName}</Text>
                           </View>
@@ -702,11 +716,11 @@ class RenderPosts extends Component {
               {(value.upvotes || (value.comments && value.comments.length > 0)) && (
                 <View>
                   <View style={[styles.bottomPadding5,styles.width160,styles.rowDirection,styles.topPadding]}>
-                    <TouchableOpacity onClick={() => this.retrieveLikes(index)}>
+                    <TouchableOpacity onPress={() => this.retrieveLikes(index)}>
                       <Text style={[styles.descriptionText4]}>{(value.upvotes) ? value.upvotes.length : 0} Upvotes</Text>
                     </TouchableOpacity>
                     <Text style={[styles.descriptionText4,styles.horizontalPadding5]}>&#8226;</Text>
-                    <TouchableOpacity onClick={() => this.retrieveComments(index)}>
+                    <TouchableOpacity onPress={() => this.retrieveComments(index)}>
                       <Text style={[styles.descriptionText4]}>{(value.commentCount) ? value.commentCount : 0} Comments</Text>
                     </TouchableOpacity>
                   </View>
@@ -719,7 +733,7 @@ class RenderPosts extends Component {
               {(!inModal) && (
                 <View style={[styles.topPadding,styles.rowDirection]}>
                   <View>
-                    <TouchableOpacity style={styles.rowDirection} onClick={(e) => this.voteOnItem(e, value, 'up', index) }>
+                    <TouchableOpacity style={styles.rowDirection} onPress={(e) => this.voteOnItem(e, value, 'up', index) }>
                       <View style={styles.rightPadding5}>
                         <Image source={(value.upvotes.includes(this.state.emailId))? { uri: likeIconBlue} : { uri: likeIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
@@ -730,7 +744,7 @@ class RenderPosts extends Component {
                   </View>
 
                   <View>
-                    <TouchableOpacity style={styles.rowDirection} onClick={() => this.retrieveComments(index)} disabled={this.state.isLoading}>
+                    <TouchableOpacity style={styles.rowDirection} onPress={() => this.retrieveComments(index)} disabled={this.state.animating}>
                       <View style={styles.rightPadding5}>
                         <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
                         <Image source={{ uri: commentIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
@@ -738,11 +752,10 @@ class RenderPosts extends Component {
                       <View style={styles.rightPadding15}>
                         <Text style={[styles.descriptionText2]}>Comment</Text>
                       </View>
-
                     </TouchableOpacity>
                   </View>
                   <View>
-                    <TouchableOpacity style={styles.rowDirection} onClick={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
+                    <TouchableOpacity style={styles.rowDirection} onPress={(value.originalPost && value.originalPost.message) ? () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value.originalPost, selectedIndex: index }) : () => this.setState({ modalIsOpen: true, sharePosting: true, originalPost: value, selectedIndex: index })}>
                       <View style={styles.rightPadding5}>
                         <Image source={{ uri: shareIconDark}} alt="GC" style={[styles.square17,styles.centerHorizontally]} />
                       </View>
@@ -772,7 +785,7 @@ class RenderPosts extends Component {
     }
 
     renderOriginalPost(value) {
-      console.log('renderOriginalPost called', value)
+      console.log('renderOriginalPost called')
 
       let defaultProfileItemIcon = projectsIconDark
       if (value.profileItem) {
@@ -1013,7 +1026,7 @@ class RenderPosts extends Component {
       const emailId = this.state.emailId
 
       // do all this on the backend
-      Axios.put('https://www.guidedcomapss.com/api/group-post/poll-vote', {  _id: posts[index]._id, answer, emailId })
+      Axios.put('https://www.guidedcompass.com/api/group-post/poll-vote', {  _id: posts[index]._id, answer, emailId })
       .then((response) => {
         console.log('Poll vote attempted', response.data);
 
@@ -1038,14 +1051,13 @@ class RenderPosts extends Component {
     retrieveComments(index) {
       console.log('retrieveComments called', index)
 
+      this.setState({ animating: true })
+      // this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [] })
+
       let parentPostId = this.state.posts[index]._id
-      // if (index || index === 0) {
-      //   parentPostId = this.state.posts[index]._id
-      // } else {
-      //   parentPostId = this.state.passedGroupPost
-      // }
+      console.log('show parentPostId: ', parentPostId)
       // pull comments
-      Axios.get('https://www.guidedcomapss.com/api/comments', { params: { parentPostId } })
+      Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId } })
       .then((response) => {
         console.log('Comments query attempted', response.data);
 
@@ -1053,15 +1065,15 @@ class RenderPosts extends Component {
            console.log('successfully retrieved comments')
 
            const comments = response.data.comments
-           this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments })
+           this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments, animating: false })
 
          } else {
            console.log('no comments data found', response.data.message)
-           this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [] })
+           this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [], animating: false })
          }
       }).catch((error) => {
          console.log('Comments query did not work', error);
-         this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [] })
+         this.setState({ modalIsOpen: true, showComments: true, selectedIndex: index, comments: [], animating: false })
       });
     }
 
@@ -1071,9 +1083,9 @@ class RenderPosts extends Component {
       const userIds = this.state.posts[index].upvotes
       if (userIds) {
         // pull comments
-        Axios.get('https://www.guidedcomapss.com/api/users', { params: { userIds } })
+        Axios.get('https://www.guidedcompass.com/api/users', { params: { userIds } })
         .then((response) => {
-          console.log('Users query attempted', response.data);
+          console.log('Users query attempted');
 
            if (response.data.success) {
              console.log('successfully retrieved users')
@@ -1128,7 +1140,7 @@ class RenderPosts extends Component {
       let changeUpvote = true
       const updatedAt = new Date()
 
-      Axios.post('https://www.guidedcomapss.com/api/group-posts', { _id, emailId, changeUpvote, updatedAt })
+      Axios.post('https://www.guidedcompass.com/api/group-posts', { _id, emailId, changeUpvote, updatedAt })
       .then((response) => {
 
         if (response.data.success) {
@@ -1322,7 +1334,7 @@ class RenderPosts extends Component {
         selectedPreferences = this.state.selectedReportReasons
       }
 
-      Axios.post('https://www.guidedcomapss.com/api/group-posts/report', {
+      Axios.post('https://www.guidedcompass.com/api/group-posts/report', {
         postId, postName, emailId, posterFirstName, posterLastName, type, selectedPreferences
       }).then((response) => {
         console.log('attempting to remove favorites')
@@ -1576,7 +1588,7 @@ class RenderPosts extends Component {
       this.setState({ isSaving: true, successMessage: null, errorMessage: null })
       const _id = this.state.posts[this.state.selectedIndex]._id
 
-      Axios.delete('https://www.guidedcomapss.com/api/group-posts/' + _id)
+      Axios.delete('https://www.guidedcompass.com/api/group-posts/' + _id)
       .then((response) => {
         console.log('tried to delete the post', response.data)
         if (response.data.success) {
@@ -1601,249 +1613,263 @@ class RenderPosts extends Component {
 
       return (
         <View>
-          {(this.state.posts) && (
-            <View>
+
+          {(this.state.animating) ? (
+            <View style={[styles.flexCenter,styles.flex1]}>
               <View>
-                {this.state.posts.map((value, index) =>
-                  <View key={index}>
-                    <View>
-                      {this.renderPost(value, index)}
-                    </View>
-                  </View>
-                )}
+                <View style={[styles.superSpacer]} />
+
+                <ActivityIndicator
+                   animating = {this.state.animating}
+                   color = '#87CEFA'
+                   size = "large"
+                   style={[styles.square80, styles.centerHorizontally]}/>
+
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Loading...</Text>
+
               </View>
-              {/*
-              <Modal
-               isOpen={this.state.modalIsOpen}
-               onAfterOpen={this.afterOpenModal}
-               onRequestClose={this.closeModal}
-               className="modal"
-               overlayClassName="modal-overlay"
-               contentLabel="Example Modal"
-               ariaHideApp={false}
-             >
-               <View key="showShareButtons" style={[styles.fullWidth]}>
+            </View>
+          ) : (
+            <View>
+              {(this.state.posts) && (
+                <View>
+                  <View>
+                    {this.state.posts.map((value, index) =>
+                      <View key={index}>
+                        <View>
+                          {this.renderPost(value, index)}
+                        </View>
+                      </View>
+                    )}
+                  </View>
 
-                 {(this.state.showPost || this.state.sharePosting) && (
-                   <View key="showPost" style={[styles.fullWidth,styles.padding20]}>
-                      <SubCreatePost sharePosting={this.state.sharePosting} originalPost={this.state.originalPost} posts={this.state.posts} passPosts={this.passPosts} closeModal={this.closeModal} />
-                    </View>
-                 )}
+                  <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+                   <ScrollView key="showShareButtons" style={[styles.flex1]}>
 
-                  {(this.state.showComments) && (
-                    <View key="showPost" style={[styles.fullWidth,styles.padding20]}>
-                      {this.renderPost(this.state.posts[this.state.selectedIndex], this.state.selectedIndex, true)}
-
-                      <View style={[styles.spacer]} />
-
-                      {(this.state.posts && this.state.activeOrg) && (
-                        <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} history={this.props.history} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
-                      )}
-                    </View>
-                  )}
-
-                  {(this.state.passedGroupPost) && (
-                    <View key="passedGroupPost" style={[styles.fullWidth]}>
-
-                     {this.renderPost(this.state.passedGroupPost, null, true, true)}
-
-                     <View style={[styles.spacer]} />
-
-                     {(this.state.passedGroupPost && this.state.activeOrg) && (
-                       <SubComments selectedGroup={null} selectedGroupPost={this.state.passedGroupPost} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} history={this.props.history} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
+                     {(this.state.showPost || this.state.sharePosting) && (
+                       <View key="showPost" style={[styles.fullWidth,styles.padding20]}>
+                          <SubCreatePost sharePosting={this.state.sharePosting} originalPost={this.state.originalPost} posts={this.state.posts} passPosts={this.passPosts} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
+                        </View>
                      )}
 
-                    </View>
-                  )}
+                      {(this.state.showComments) && (
+                        <View key="showPost" style={[styles.fullWidth,styles.padding20]}>
+                          {this.renderPost(this.state.posts[this.state.selectedIndex], this.state.selectedIndex, true)}
 
-                  {(this.state.showShareButtons) && (
-                     <View style={[styles.fullWidth,styles.padding20,styles.centerText]}>
-                       <Text style={[styles.headingText2]}>Share This Post with Friends!</Text>
+                          <View style={[styles.spacer]} />
 
-                       <View style={[styles.topPadding20]}>
-                         <Text>Share this link:</Text>
-                         <Text style={[styles.boldText,styles.ctaColor]}>{"https://www.guidedcompass.com/app/social-posts/" + this.state.posts[this.state.selectedIndex]._id}</Text>
-                       </View>
+                          {(this.state.posts && this.state.activeOrg) && (
+                            <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} navigation={this.props.navigation} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
+                          )}
+                        </View>
+                      )}
 
-                       <View style={[styles.spacer]} />
+                      {(this.state.passedGroupPost) && (
+                        <View key="passedGroupPost" style={[styles.fullWidth]}>
 
-                       <View style={[styles.topPadding20]}>
-                         {this.renderShareButtons()}
-                       </View>
-                     </View>
-                  )}
+                         {this.renderPost(this.state.passedGroupPost, null, true, true)}
 
-                  {(this.state.adjustFeedPreferences) && (
-                    <View key="adjustFeedPreferences" style={[styles.fullWidth,styles.padding20]}>
-                       <Text style={[styles.headingText4]}>Don't want to see this</Text>
-                       <View style={[styles.spacer]} />
+                         <View style={[styles.spacer]} />
 
-                       <View style={[styles.row10,styles.descriptionText2]}>
-                         <Text>Tell us why you don't want to see this</Text>
-                         <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Your feedback will help us improve your experience</Text>
-                       </View>
-
-                       <View style={[styles.spacer]} />
-
-                       {this.state.adjustFeedPreferenceOptions.map((item2, index2) =>
-                         <View key={index2} style={[styles.row5, styles.rowDirection]}>
-                           <View style={styles.width40}>
-                             {(this.state.selectedPreferences && this.state.selectedPreferences.includes(item2)) ? (
-                               <TouchableOpacity onClick={() => this.itemClicked(item2,'adjustFeedPreferences') }>
-                                 <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
-                               </TouchableOpacity>
-                             ) : (
-                               <TouchableOpacity onClick={() => this.itemClicked(item2,'adjustFeedPreferences')}>
-                                 <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
-                               </TouchableOpacity>
-                             )}
-                           </View>
-                           <View style={styles.calcColumn140}>
-                             <Text style={[styles.descriptionText2]}>{item2}</Text>
-                           </View>
-
-                         </View>
-                       )}
-
-                       <View style={[styles.spacer]} />
-
-                       <View style={[styles.row10,styles.descriptionText2]}>
-                         <Text>If you think this post goes against our Professional Community Policies, please report this post.</Text>
-                       </View>
-
-                       <View style={[styles.spacer]} />
-
-                       <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onClick={() => this.submitReport('preference')}>Submit</TouchableOpacity>
-                       <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>Cancel</TouchableOpacity>
-                     </View>
-                  )}
-
-                  {(this.state.reportPostView) && (
-                    <View key="reportPostView" style={[styles.fullWidth,styles.padding20]}>
-                       <Text style={[styles.headingText4]}>Report</Text>
-                       <View style={[styles.spacer]} />
-
-                       <View style={[styles.row10,styles.descriptionText2]}>
-                         <Text>Why are you reporting this?</Text>
-                         <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Your feedback will help us improve your experience</Text>
-                       </View>
-
-                       <View style={[styles.spacer]} />
-
-                       {this.state.reportOptions.map((item2, index2) =>
-                         <View key={index2} style={[styles.row5]}>
-                           <View style={styles.width40}>
-                             {(this.state.selectedReportReasons && this.state.selectedReportReasons.includes(item2)) ? (
-                               <TouchableOpacity onClick={() => this.itemClicked(item2,'report') }>
-                                 <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
-                               </TouchableOpacity>
-                             ) : (
-                               <TouchableOpacity onClick={() => this.itemClicked(item2,'report')}>
-                                 <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
-                               </TouchableOpacity>
-                             )}
-                           </View>
-                           <View style={styles.calcColumn140}>
-                             <Text style={[styles.descriptionText2]}>{item2}</Text>
-                           </View>
-                         </View>
-                       )}
-
-                       <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                       <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onClick={() => this.submitReport('report')}>Submit</TouchableOpacity>
-                       <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>Cancel</TouchableOpacity>
-                     </View>
-                  )}
-
-                  {(this.state.showDeletePost) && (
-                    <View key="deletePost" style={[styles.fullWidth,styles.padding20]}>
-                      <Text style={[styles.headingText4]}>Are you sure you want to delete this post?</Text>
-                      <View style={[styles.spacer]} />
-
-                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                      <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.errorBackgroundColor, styles.rightMargin]} disabled={(this.state.isSaving) ? true : false} onClick={() => this.deletePost()}>Delete</TouchableOpacity>
-                      <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>Cancel</TouchableOpacity>
-                    </View>
-                  )}
-
-                  {(this.state.showReports) && (
-                    <View key="reports" style={[styles.fullWidth,styles.padding20]}>
-                      <Text style={[styles.headingText4]}>Reports on this post</Text>
-                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                      <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>There has not been any reports on this post</Text>
-
-                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                      <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>
-                        <View style={styles.rowDirection}>
-                          <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon }} /></View>
-                          <View style={styles.leftPadding}>Close View</View>
+                         {(this.state.passedGroupPost && this.state.activeOrg) && (
+                           <SubComments selectedGroup={null} selectedGroupPost={this.state.passedGroupPost} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} navigation={this.props.navigation} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
+                         )}
 
                         </View>
-                      </TouchableOpacity>
-                    </View>
-                  )}
+                      )}
 
-                  {(this.state.showUpvotes) && (
-                    <View key="showPost" style={[styles.fullWidth]}>
-                      <View style={[styles.bottomPadding]}>
-                        <Text style={[styles.headingText2]}>Post Upvotes</Text>
-                      </View>
+                      {(this.state.showShareButtons) && (
+                         <View style={[styles.fullWidth,styles.padding20,styles.centerText]}>
+                           <Text style={[styles.headingText2]}>Share This Post with Friends!</Text>
 
-                     <View style={[styles.spacer]} />
+                           <View style={[styles.topPadding20]}>
+                             <Text>Share this link:</Text>
+                             <Text style={[styles.boldText,styles.ctaColor]}>{"https://www.guidedcompass.com/app/social-posts/" + this.state.posts[this.state.selectedIndex]._id}</Text>
+                           </View>
 
-                     {(this.state.upvotes && this.state.upvotes.length > 0) ? (
-                       <View style={[styles.topPadding]}>
-                         {this.state.upvotes.map((value, optionIndex) =>
-                           <View key={"upvote|" + optionIndex}>
-                             <View style={styles.rowDirection}>
-                               <View style={[styles.width60]}>
-                                 <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} alt="GC" style={styles.profileThumbnail50} />
+                           <View style={[styles.spacer]} />
+
+                           <View style={[styles.topPadding20]}>
+                             {this.renderShareButtons()}
+                           </View>
+                         </View>
+                      )}
+
+                      {(this.state.adjustFeedPreferences) && (
+                        <View key="adjustFeedPreferences" style={[styles.fullWidth,styles.padding20]}>
+                           <Text style={[styles.headingText4]}>Don't want to see this</Text>
+                           <View style={[styles.spacer]} />
+
+                           <View style={[styles.row10,styles.descriptionText2]}>
+                             <Text>Tell us why you don't want to see this</Text>
+                             <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Your feedback will help us improve your experience</Text>
+                           </View>
+
+                           <View style={[styles.spacer]} />
+
+                           {this.state.adjustFeedPreferenceOptions.map((item2, index2) =>
+                             <View key={index2} style={[styles.row5, styles.rowDirection]}>
+                               <View style={styles.width40}>
+                                 {(this.state.selectedPreferences && this.state.selectedPreferences.includes(item2)) ? (
+                                   <TouchableOpacity onPress={() => this.itemClicked(item2,'adjustFeedPreferences') }>
+                                     <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
+                                   </TouchableOpacity>
+                                 ) : (
+                                   <TouchableOpacity onPress={() => this.itemClicked(item2,'adjustFeedPreferences')}>
+                                     <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
+                                   </TouchableOpacity>
+                                 )}
                                </View>
-                               <View style={[styles.flexGrow, styles.leftPadding, styles.topPadding5]}>
-                                 <Text style={[styles.headingText4]}>{value.firstName} {value.lastName}</Text>
+                               <View style={styles.calcColumn140}>
+                                 <Text style={[styles.descriptionText2]}>{item2}</Text>
                                </View>
 
                              </View>
+                           )}
+
+                           <View style={[styles.spacer]} />
+
+                           <View style={[styles.row10,styles.descriptionText2]}>
+                             <Text>If you think this post goes against our Professional Community Policies, please report this post.</Text>
+                           </View>
+
+                           <View style={[styles.spacer]} />
+
+                           <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('preference')}>Submit</TouchableOpacity>
+                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>Cancel</TouchableOpacity>
+                         </View>
+                      )}
+
+                      {(this.state.reportPostView) && (
+                        <View key="reportPostView" style={[styles.fullWidth,styles.padding20]}>
+                           <Text style={[styles.headingText4]}>Report</Text>
+                           <View style={[styles.spacer]} />
+
+                           <View style={[styles.row10,styles.descriptionText2]}>
+                             <Text>Why are you reporting this?</Text>
+                             <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Your feedback will help us improve your experience</Text>
+                           </View>
+
+                           <View style={[styles.spacer]} />
+
+                           {this.state.reportOptions.map((item2, index2) =>
+                             <View key={index2} style={[styles.row5]}>
+                               <View style={styles.width40}>
+                                 {(this.state.selectedReportReasons && this.state.selectedReportReasons.includes(item2)) ? (
+                                   <TouchableOpacity onPress={() => this.itemClicked(item2,'report') }>
+                                     <Image source={{ uri: checkboxChecked }} alt="GC" style={[styles.square18,styles.contain]} />
+                                   </TouchableOpacity>
+                                 ) : (
+                                   <TouchableOpacity onPress={() => this.itemClicked(item2,'report')}>
+                                     <Image source={{ uri: checkboxEmpty }} alt="GC" style={[styles.square18,styles.contain]} />
+                                   </TouchableOpacity>
+                                 )}
+                               </View>
+                               <View style={styles.calcColumn140}>
+                                 <Text style={[styles.descriptionText2]}>{item2}</Text>
+                               </View>
+                             </View>
+                           )}
+
+                           <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                           <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.rightMargin,ctaBackgroundColor]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.submitReport('report')}>Submit</TouchableOpacity>
+                           <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>Cancel</TouchableOpacity>
+                         </View>
+                      )}
+
+                      {(this.state.showDeletePost) && (
+                        <View key="deletePost" style={[styles.fullWidth,styles.padding20]}>
+                          <Text style={[styles.headingText4]}>Are you sure you want to delete this post?</Text>
+                          <View style={[styles.spacer]} />
+
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <TouchableOpacity style={[styles.btnSquarish,styles.whiteColor,styles.descriptionText1,styles.errorBackgroundColor, styles.rightMargin]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.deletePost()}>Delete</TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>Cancel</TouchableOpacity>
+                        </View>
+                      )}
+
+                      {(this.state.showReports) && (
+                        <View key="reports" style={[styles.fullWidth,styles.padding20]}>
+                          <Text style={[styles.headingText4]}>Reports on this post</Text>
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>There has not been any reports on this post</Text>
+
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>
+                            <View style={styles.rowDirection}>
+                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon }} /></View>
+                              <View style={styles.leftPadding}>Close View</View>
+
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+
+                      {(this.state.showUpvotes) && (
+                        <View key="showPost" style={[styles.fullWidth]}>
+                          <View style={[styles.bottomPadding]}>
+                            <Text style={[styles.headingText2]}>Post Upvotes</Text>
+                          </View>
+
+                         <View style={[styles.spacer]} />
+
+                         {(this.state.upvotes && this.state.upvotes.length > 0) ? (
+                           <View style={[styles.topPadding]}>
+                             {this.state.upvotes.map((value, optionIndex) =>
+                               <View key={"upvote|" + optionIndex}>
+                                 <View style={styles.rowDirection}>
+                                   <View style={[styles.width60]}>
+                                     <Image source={(value.pictureURL) ? { uri: value.pictureURL } : { uri: profileIconDark}} alt="GC" style={styles.profileThumbnail50} />
+                                   </View>
+                                   <View style={[styles.flexGrow, styles.leftPadding, styles.topPadding5]}>
+                                     <Text style={[styles.headingText4]}>{value.firstName} {value.lastName}</Text>
+                                   </View>
+
+                                 </View>
+                               </View>
+                             )}
+                           </View>
+                         ) : (
+                           <View>
+                             <Text style={[styles.errorColor]}>There are no upvotes</Text>
                            </View>
                          )}
-                       </View>
-                     ) : (
-                       <View>
-                         <Text style={[styles.errorColor]}>There are no upvotes</Text>
-                       </View>
-                     )}
-
-                    </View>
-                  )}
-
-                  {(this.state.showReports) && (
-                    <View key="reports" style={[styles.fullWidth,styles.padding20]}>
-                      <Text style={[styles.headingText4]}>Reports on this post</Text>
-                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                      <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>There has not been any reports on this post</Text>
-
-                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-                      <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onClick={() => this.closeModal()}>
-                        <View style={styles.rowDirection}>
-                          <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon}} /></View>
-                          <View style={styles.leftPadding}>Close View</View>
 
                         </View>
-                      </TouchableOpacity>
-                    </View>
-                  )}
+                      )}
 
+                      {(this.state.showReports) && (
+                        <View key="reports" style={[styles.fullWidth,styles.padding20]}>
+                          <Text style={[styles.headingText4]}>Reports on this post</Text>
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>There has not been any reports on this post</Text>
+
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <TouchableOpacity style={[styles.btnSquarish,styles.ctaColor,styles.descriptionText1]} onPress={() => this.closeModal()}>
+                            <View style={styles.rowDirection}>
+                              <View style={styles.topPadding5}><Image style={[styles.square11, styles.contain]} alt="img" source={{ uri: closeIcon}} /></View>
+                              <View style={styles.leftPadding}>Close View</View>
+
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+
+                    </ScrollView>
+
+                 </Modal>
                 </View>
-
-             </Modal>*/}
+              )}
             </View>
           )}
+
         </View>
       )
     }

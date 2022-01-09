@@ -340,7 +340,7 @@ class NewsFeed extends Component {
               <View style={[styles.flexCenter, styles.fullSpace]}>
                 <View>
                  <ActivityIndicator
-                    animating = {this.state.animating}
+                    animating = {this.state.postsAreLoading}
                     color = '#87CEFA'
                     size = "large"
                     style={[styles.square80, styles.centerHorizontally]}/>

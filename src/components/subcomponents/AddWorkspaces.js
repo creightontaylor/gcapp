@@ -286,7 +286,6 @@ class AddWorkspaces extends Component {
             // orgFocus, orgName, orgLogo
 
             if (this.props.opportunityId) {
-              // this.props.history.push({ pathname: '/app/opportunities/' + this.props.opportunityId})
               this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: null, objectId: this.props.opportunityId })
             }
           } else {
@@ -715,7 +714,7 @@ class AddWorkspaces extends Component {
             </View>
           </View>
           {/*
-          {(window.location.pathname.includes('/employers')) && (
+          {(this.props.fromAdvisor) && (
             <View className={(this.props.fromWalkthrough) ? "full-width" : "width-70-percent center-horizontally max-width-1400"}>
               <View className="filter-field-search full-width white-background clear-margin medium-shadow">
                 <View className="search-icon-container">
@@ -759,7 +758,7 @@ class AddWorkspaces extends Component {
                     <View style={[styles.superSpacer]} />
 
                     <ActivityIndicator
-                       animating = {this.state.animating}
+                       animating = {this.state.isAnimating}
                        color = '#87CEFA'
                        size = "large"
                        style={[styles.square80, styles.centerHorizontally]}/>

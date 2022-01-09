@@ -1796,7 +1796,7 @@ class GroupDetails extends Component {
 
            {(this.state.showEditGroup) && (
              <View key="showEditGroup" style={[styles.flex1,styles.padding20]}>
-                <SubEditGroup selectedGroup={this.state.groupToEdit} history={this.props.history} closeModal={this.closeModal} />
+                <SubEditGroup selectedGroup={this.state.groupToEdit} navigation={this.props.navigation} closeModal={this.closeModal} />
               </View>
            )}
 
@@ -1804,7 +1804,7 @@ class GroupDetails extends Component {
              <View key="showAddMeeting" style={[styles.flex1,styles.padding20]}>
                <View style={[styles.bottomPadding]}>
                  <Text style={[styles.headingText2]}>Add a Meeting</Text>
-                 <SubEditLog modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} history={this.props.history} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType="Meeting" selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId} selectedGroup={this.state.selectedGroup} passMeeting={this.passMeeting}/>
+                 <SubEditLog modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} navigation={this.props.navigation} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType="Meeting" selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId} selectedGroup={this.state.selectedGroup} passMeeting={this.passMeeting}/>
                 </View>
               </View>
            )}
@@ -1859,7 +1859,7 @@ class GroupDetails extends Component {
 
            {(this.state.showGoalDetails || this.state.showHelpOutWidget) && (
              <View>
-               <SubGoalDetails history={this.props.history} selectedGoal={this.state.selectedGoal} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} showGoalDetails={this.state.showGoalDetails} showHelpOutWidget={this.state.showHelpOutWidget} profileData={this.state.profileData}/>
+               <SubGoalDetails navigation={this.props.navigation} selectedGoal={this.state.selectedGoal} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} showGoalDetails={this.state.showGoalDetails} showHelpOutWidget={this.state.showHelpOutWidget} profileData={this.state.profileData}/>
             </View>
            )}
 

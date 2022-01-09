@@ -5079,7 +5079,7 @@ class EditProfileDetails extends Component {
                 <View style={[styles.row10]}>
                   <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
                     this.state.email, this.state.activeOrg, this.state.orgFocus,
-                    this.state.accountCode, this.state.roleName, this.props.history
+                    this.state.accountCode, this.state.roleName, this.props.navigation
                   )}>Sign Out</TouchableOpacity>
                 </View>
 
@@ -5460,7 +5460,7 @@ class EditProfileDetails extends Component {
                                         <View style={[styles.superSpacer]} />
 
                                         <ActivityIndicator
-                                           animating = {this.state.animating}
+                                           animating = {this.state.schoolsAreLoading}
                                            color = '#87CEFA'
                                            size = "large"
                                            style={[styles.square80, styles.centerHorizontally]}/>

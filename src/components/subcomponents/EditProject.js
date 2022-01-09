@@ -631,7 +631,7 @@ class EditProject extends Component {
               if (!this.state.selectedOpportunity) {
                 this.setState({ disableSubmit: false })
                 this.props.finishedEditing(this.state.selectedIndex, true)
-                if (window.location.pathname.includes('/apply')) {
+                if (this.props.fromApply) {
                   this.props.passData('project', projectObject, this.state.selectedIndex)
                 }
               } else {
@@ -1225,7 +1225,7 @@ class EditProject extends Component {
                     <View style={[styles.superSpacer]} />
 
                     <ActivityIndicator
-                       animating = {this.state.animating}
+                       animating = {this.state.searchIsAnimating}
                        color = '#87CEFA'
                        size = "large"
                        style={[styles.square80, styles.centerHorizontally]}/>

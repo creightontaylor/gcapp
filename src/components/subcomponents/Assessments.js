@@ -443,17 +443,17 @@ class Assessments extends Component {
 
   }
 
-  handleChange(event) {
+  handleChange(eventName,eventValue) {
     console.log('handleChange called')
 
-    if (event.target.name === 'matchCriteria') {
+    if (eventName === 'matchCriteria') {
 
-      const matchCriteria = event.target.value
+      const matchCriteria = eventValue
       this.setState({ matchCriteria })
 
       this.calculateMatches(this.state.emailId, this.state.scholars, this.state.interestsData, this.state.skillsAnswers, this.state.personalityData, matchCriteria, null, this.state.valuesData )
-    } else if (event.target.name === 'sortDirection') {
-      const sortDirection = event.target.value
+    } else if (eventName === 'sortDirection') {
+      const sortDirection = eventValue
       this.setState({ sortDirection })
 
       this.calculateMatches(this.state.emailId, this.state.scholars, this.state.interestsData, this.state.skillsAnswers, this.state.personalityData, null, sortDirection, this.state.valuesData )
@@ -594,7 +594,7 @@ class Assessments extends Component {
 
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
              <View key="skillAssessment" style={[styles.calcColumn60,styles.padding20]}>
-              <SubTakeAssessment history={this.props.history} type={this.state.type} assessmentTitle={this.state.assessmentTitle} assessments={this.state.assessments} index={this.state.index} assessment={this.state.assessment} resultsData={this.state.resultsData} assessmentDescription={this.state.assessmentDescription} closeModal={this.closeModal} passData={this.passData} skillQuestions={this.state.skillQuestions} />
+              <SubTakeAssessment navigation={this.props.navigation} type={this.state.type} assessmentTitle={this.state.assessmentTitle} assessments={this.state.assessments} index={this.state.index} assessment={this.state.assessment} resultsData={this.state.resultsData} assessmentDescription={this.state.assessmentDescription} closeModal={this.closeModal} passData={this.passData} skillQuestions={this.state.skillQuestions} />
              </View>
            </Modal>
           </View>

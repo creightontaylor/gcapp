@@ -185,7 +185,7 @@ class ChangePassword extends Component {
 
                   <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onClick={() => this.savePassword()}><Text style={[styles.standardText,styles.whiteColor]}>Save New Password</Text></TouchableOpacity>
+                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.savePassword()}><Text style={[styles.standardText,styles.whiteColor]}>Save New Password</Text></TouchableOpacity>
                   { (this.state.successMessage !== '') && (
                     <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text>
                   )}

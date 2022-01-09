@@ -29,11 +29,14 @@ class EmployerDetails extends Component {
         // We have data!!
 
         let selectedEmployer = null
-        if (this.props) {
+        let employerId = null
+        if (this.props.route && this.props.route.params) {
           // console.log('show params: ', this.props.route)
 
           selectedEmployer = this.props.route.params.selectedEmployer
-          this.setState({ selectedEmployer })
+          employerId = this.props.route.params.objectId
+
+          this.setState({ selectedEmployer, employerId })
 
         }
 
@@ -47,16 +50,19 @@ class EmployerDetails extends Component {
   componentDidUpdate(prevProps) {
     console.log('componentDidUpdate called within employerDetails ')
 
-    if (this.props.route.params && this.props.route.params.selectedEmployer !== prevProps.route.params.selectedEmployer) {
+    if (this.props.route.params && (this.props.route.params.selectedEmployer !== prevProps.route.params.selectedEmployer || this.props.route.params.employerId !== prevProps.route.params.employerId)) {
       console.log('new career selected in parent')
-      this.setState({ selectedEmployer: this.props.route.params.selectedEmployer })
+      this.setState({
+        selectedEmployer: this.props.route.params.selectedEmployer,
+        employerId: this.props.route.params.objectId
+      })
     }
   }
 
   render() {
     return (
       <View>
-        <SubEmployerDetails navigation={this.props.navigation} selectedEmployer={this.state.selectedEmployer} />
+        <SubEmployerDetails navigation={this.props.navigation} selectedEmployer={this.state.selectedEmployer} employerId={this.state.employerId} />
       </View>
     )
   }

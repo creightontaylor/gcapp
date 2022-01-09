@@ -11,7 +11,6 @@ class Trends extends Component {
     }
 
     this.retrieveData = this.retrieveData.bind(this)
-    this.formChangeHandler = this.formChangeHandler.bind(this);
     this.convertTextToNumber = this.convertTextToNumber.bind(this)
 
   }
@@ -128,14 +127,6 @@ class Trends extends Component {
        // Error retrieving data
        console.log('there was an error', error)
      }
-  }
-
-  formChangeHandler(event) {
-    console.log('formChangeHandler called')
-
-    if (event.target.name === 'email') {
-      this.setState({ email: event.target.value })
-    }
   }
 
   convertTextToNumber(passedText) {
@@ -316,8 +307,6 @@ class Trends extends Component {
                               <Text style={[styles.flex25,styles.descriptionText2]}>${Number(oValue.worth.toFixed()).toLocaleString()}</Text>
                             </View>
                           </View>
-
-
                         </View>
                       </View>
                     </View>

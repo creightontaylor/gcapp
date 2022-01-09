@@ -824,7 +824,7 @@ class EditGroup extends Component {
                      <View style={[styles.superSpacer]} />
 
                      <ActivityIndicator
-                        animating = {this.state.animating}
+                        animating = {this.state.isSaving}
                         color = '#87CEFA'
                         size = "large"
                         style={styles.square80, styles.centerHorizontally}/>
@@ -1128,7 +1128,7 @@ class EditGroup extends Component {
                            <View style={[styles.superSpacer]} />
 
                            <ActivityIndicator
-                              animating = {this.state.animating}
+                              animating = {this.state.searchIsAnimating}
                               color = '#87CEFA'
                               size = "large"
                               style={styles.square80, styles.centerHorizontally}/>
@@ -1208,7 +1208,7 @@ class EditGroup extends Component {
                                    <View style={[styles.superSpacer]} />
 
                                    <ActivityIndicator
-                                      animating = {this.state.animating}
+                                      animating = {this.state.searchIsAnimating}
                                       color = '#87CEFA'
                                       size = "large"
                                       style={styles.square80, styles.centerHorizontally}/>

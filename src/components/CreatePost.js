@@ -58,7 +58,7 @@ class CreatePost extends Component {
 
   render() {
     return (
-      <View style={[styles.cardClearPadding,styles.padding40,styles.topMargin20,styles.horizontalMargin20]}>
+      <View style={[styles.cardClearPadding,styles.topMargin20,styles.padding20]}>
         <SubCreatePost navigation={this.props.navigation} sharePosting={null} originalPost={null}  posts={[]} passPosts={this.passPosts} closeModal={this.closeModal} pictureURL={this.state.pictureURL} groupId={null} groupName={null}/>
       </View>
     )

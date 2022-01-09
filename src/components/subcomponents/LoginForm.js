@@ -862,7 +862,6 @@ class LogInForm extends Component {
       // mentor or teacher
 
       if (responseData.user.roleName !== 'Student') {
-        // this.props.history.push('/advisor')
         this.setState({ successMessage: "You have been signed up. The mobile app isn't the best user experience, so please sign on using the web app at www.guidedcompass.com"})
       } else {
         // error - students can't view

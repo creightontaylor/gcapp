@@ -31,10 +31,12 @@ class OrgDetails extends Component {
         let selectedOrg = null
         let orgId = null
         if (this.props.route && this.props.route.params) {
-          // console.log('show params: ', this.props.route)
+          console.log('show params: ', this.props.route.params.orgCode)
           selectedOrg = this.props.route.params.selectedOrg
           if (selectedOrg) {
             orgId = selectedOrg.orgCode
+          } else if (this.props.route.params.orgCode) {
+            orgId = this.props.route.params.orgCode
           }
         }
 

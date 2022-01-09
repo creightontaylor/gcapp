@@ -1840,7 +1840,7 @@ class RequestEndorsements extends Component {
                                       <View style={[styles.superSpacer]} />
 
                                       <ActivityIndicator
-                                         animating = {this.state.animating}
+                                         animating = {this.state.searchIsAnimating}
                                          color = '#87CEFA'
                                          size = "large"
                                          style={[styles.square80, styles.centerHorizontally]}/>
@@ -2023,7 +2023,7 @@ class RequestEndorsements extends Component {
                                     <View style={[styles.superSpacer]} />
 
                                     <ActivityIndicator
-                                       animating = {this.state.animating}
+                                       animating = {this.state.searchIsAnimating}
                                        color = '#87CEFA'
                                        size = "large"
                                        style={[styles.square80, styles.centerHorizontally]}/>

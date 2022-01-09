@@ -500,10 +500,11 @@ class CareerDetails extends Component {
     });
   }
 
-  formChangeHandler(event) {
+  formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called')
 
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ [eventName]: eventValue })
+
   }
   renderKnowledge() {
     console.log('renderKnowledge called');
@@ -1812,7 +1813,7 @@ class CareerDetails extends Component {
                       <View style={[styles.flex1,styles.flexCenter]}>
                         <View>
                           <ActivityIndicator
-                             animating = {this.state.animating}
+                             animating = {this.state.groupPostsAreLoading}
                              color = '#87CEFA'
                              size = "large"
                              style={[styles.square80, styles.centerHorizontally]}/>
@@ -1884,7 +1885,7 @@ class CareerDetails extends Component {
                           <View style={[styles.flex1,styles.flexCenter]}>
                             <View>
                               <ActivityIndicator
-                                 animating = {this.state.animating}
+                                 animating = {this.state.projectsAreLoading}
                                  color = '#87CEFA'
                                  size = "large"
                                  style={[styles.square80, styles.centerHorizontally]}/>
@@ -2231,7 +2232,7 @@ class CareerDetails extends Component {
                 <View style={[styles.spacer]} />
 
                 {(this.state.selectedGroup) && (
-                  <SubComments selectedGroup={this.state.selectedGroup} selectedGroupPost={this.state.groupPosts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={'guidedcompass'} postingOrgName={'Guided Compass'} orgContactEmail={'creighton@guidedcompass.com'} pictureURL={this.state.pictureURL} history={this.props.history} pageSource={"groupDetails"} />
+                  <SubComments selectedGroup={this.state.selectedGroup} selectedGroupPost={this.state.groupPosts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={'guidedcompass'} postingOrgName={'Guided Compass'} orgContactEmail={'creighton@guidedcompass.com'} pictureURL={this.state.pictureURL} navigation={this.props.navigation} pageSource={"groupDetails"} />
                 )}
 
                </View>

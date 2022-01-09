@@ -199,238 +199,82 @@ export const signIn = async(email, password, orgFocus)=>{
     return { error: { message: 'please enter your password' }}
   } else {
 
-    if (window.location.pathname.includes('/employers')) {
-      return await Axios.post('/api/users/login', { email, password })
-      .then((response) => {
-        console.log('Login attempted', response.data);
+    return await Axios.post('/api/users/login', { email, password })
+    .then((response) => {
+      console.log('Login attempted', response.data);
 
-          if (response.data.success) {
-            console.log('Login worked', email)
+        if (response.data.success) {
+          console.log('Login worked', email)
 
-            if (!window.location.pathname.includes('/employers')) {
+          AsyncStorage.setItem('email', email)
+          AsyncStorage.setItem('username', response.data.user.username)
+          AsyncStorage.setItem('firstName', response.data.user.firstName)
+          AsyncStorage.setItem('lastName', response.data.user.lastName)
+          AsyncStorage.setItem('unreadNotificationsCount', 0)
 
-              AsyncStorage.setItem('email', email)
-              AsyncStorage.setItem('pictureURL', response.data.user.pictureURL)
-              AsyncStorage.setItem('username', response.data.user.username)
-              AsyncStorage.setItem('firstName', response.data.user.firstName)
-              AsyncStorage.setItem('lastName', response.data.user.lastName)
-              AsyncStorage.setItem('unreadNotificationsCount', 0)
+          if (response.data.user.workMode === true) {
+            AsyncStorage.setItem('workMode', 'true')
+          } else {
+            AsyncStorage.setItem('workMode', 'false')
+          }
 
-              if (response.data.user.workMode === true) {
-                AsyncStorage.setItem('workMode', 'true')
-              } else {
-                AsyncStorage.setItem('workMode', 'false')
-              }
+          if (response.data.user.isAdvisor) {
+            AsyncStorage.setItem('isAdvisor', 'true')
+          } else {
+            AsyncStorage.setItem('isAdvisor', 'false')
+            AsyncStorage.setItem('isAdvisee', 'true')
+          }
 
-              if (response.data.user.isAdvisor) {
-
-                AsyncStorage.setItem('isAdvisor', 'true')
-              } else {
-
-                AsyncStorage.setItem('isAdvisor', 'false')
-                AsyncStorage.setItem('isAdvisee', 'true')
-              }
-
-              if (response.data.user.orgAffiliation) {
-                if (response.data.user.orgAffiliation === 'admin') {
-                  AsyncStorage.setItem('orgAffiliation', 'admin')
-                } else {
-                  AsyncStorage.setItem('orgAffiliation', '')
-                }
-              } else {
-                AsyncStorage.setItem('orgAffiliation', '')
-              }
-              if (response.data.user.myOrgs) {
-                AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
-              }
-
-              if (response.data.user.activeOrg) {
-                AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
-                AsyncStorage.setItem('orgFocus', orgFocus)
-              }
-              console.log('show roleName on signin: ', response.data.user.roleName)
-              if (response.data.user.roleName) {
-                AsyncStorage.setItem('roleName', response.data.user.roleName)
-              }
-            }
-
-            if (window.location.pathname === '/signin' || window.location.pathname.includes('student') || response.data.user.roleName === 'Student') {
-              return { success: true, message: 'successfully logged in as student', user: response.data.user }
-            } else if (window.location.pathname === '/organizations/' + response.data.user.activeOrg + '/signin' || window.location.pathname.includes('admin')) {
-              if (response.data.user.roleName === 'Admin' || response.data.user.roleName === 'admin' || response.data.user.roleName === 'Admin' || response.data.user.roleName === 'WBLC') {
-                return { success: true, message: 'successfully logged in as admin', user: response.data.user }
-              } else {
-                this.setState({ error: { message: 'You do not have admin permissions'}})
-              }
-            } else if ((window.location.pathname && window.location.pathname.includes('/employers')) || response.data.user.roleName === 'Employer') {
-              return { success: true, message: 'successfully logged in as employer', user: response.data.user }
-
-            } else if (window.location.pathname.includes('/advisor') || window.location.pathname.includes('/teacher') || window.location.pathname.includes('/mentor') || response.data.user.roleName === 'Teacher' || response.data.user.roleName === 'Mentor') {
-              // mentor or teacher
-
-              if (response.data.user.roleName !== 'Student') {
-                return { success: true, message: 'successfully logged in as advisor', user: response.data.user }
-              } else {
-                // error - students can't view
-                this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
-              }
-
-            } else if (response.data.user.roleName === 'Admin') {
-              return { success: true, message: 'successfully logged in as admin', user: response.data.user }
+          if (response.data.user.orgAffiliation) {
+            if (response.data.user.orgAffiliation === 'admin') {
+              AsyncStorage.setItem('orgAffiliation', 'admin')
             } else {
-              console.log('show crucial values: ', response.data.user.activeOrg, window.location.pathname, window.location.pathname)
-              // this.setState({ error: { message: 'Something went wrong identifying your permissions'}})
-              return { error: { message: 'Something went wrong identifying your role or your permissions 2'}}
+              AsyncStorage.setItem('orgAffiliation', '')
+            }
+          } else {
+            AsyncStorage.setItem('orgAffiliation', '')
+          }
+          if (response.data.user.myOrgs) {
+            AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
+          }
+
+          if (response.data.user.activeOrg) {
+            AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
+            AsyncStorage.setItem('orgFocus', orgFocus)
+          }
+          console.log('show roleName on signin: ', response.data.user.roleName)
+          if (response.data.user.roleName) {
+            AsyncStorage.setItem('roleName', response.data.user.roleName)
+          }
+
+          if (this.props.fromAdvisor) {
+            // mentor or teacher
+
+            if (response.data.user.roleName !== 'Student') {
+
+              return { success: true, message: 'successfully logged in as advisor', user: response.data.user }
+            } else {
+              // error - students can't view
+              this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
             }
 
           } else {
-            console.log('login did not work', response.data.message)
-            //don't allow signups without an org affiliation
-            // return { error: { message: response.data.message }}
-            return { success: false, message: response.data.message }
 
+            return { success: true, message: 'successfully logged in as student', user: response.data.user }
           }
 
-      }).catch((error) => {
-          console.log('Login did not work for some reason', error);
-          return { error: { message: error }}
-      });
-    } else {
-      return await Axios.post('/api/users/login', { email, password })
-      .then((response) => {
-        console.log('Login attempted', response.data);
+        } else {
+          console.log('login did not work', response.data.message)
+          //don't allow signups without an org affiliation
+          // return { error: { message: response.data.message }}
+          return { success: false, message: response.data.message }
 
-          if (response.data.success) {
-            console.log('Login worked', email)
+        }
 
-            if (!window.location.pathname.includes('/employers')) {
-
-              AsyncStorage.setItem('email', email)
-              AsyncStorage.setItem('username', response.data.user.username)
-              AsyncStorage.setItem('firstName', response.data.user.firstName)
-              AsyncStorage.setItem('lastName', response.data.user.lastName)
-              AsyncStorage.setItem('unreadNotificationsCount', 0)
-
-              if (response.data.user.workMode === true) {
-                AsyncStorage.setItem('workMode', 'true')
-              } else {
-                AsyncStorage.setItem('workMode', 'false')
-              }
-
-              if (response.data.user.isAdvisor) {
-                AsyncStorage.setItem('isAdvisor', 'true')
-              } else {
-                AsyncStorage.setItem('isAdvisor', 'false')
-                AsyncStorage.setItem('isAdvisee', 'true')
-              }
-
-              if (response.data.user.orgAffiliation) {
-                if (response.data.user.orgAffiliation === 'admin') {
-                  AsyncStorage.setItem('orgAffiliation', 'admin')
-                } else {
-                  AsyncStorage.setItem('orgAffiliation', '')
-                }
-              } else {
-                AsyncStorage.setItem('orgAffiliation', '')
-              }
-              if (response.data.user.myOrgs) {
-                AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
-              }
-
-              if (response.data.user.activeOrg) {
-                AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
-                AsyncStorage.setItem('orgFocus', orgFocus)
-              }
-              console.log('show roleName on signin: ', response.data.user.roleName)
-              if (response.data.user.roleName) {
-                AsyncStorage.setItem('roleName', response.data.user.roleName)
-              }
-            }
-
-            if (window.location.pathname === '/signin' || window.location.pathname.includes('student') || response.data.user.roleName === 'Student') {
-
-              return { success: true, message: 'successfully logged in as student', user: response.data.user }
-            } else if (window.location.pathname === '/organizations/' + response.data.user.activeOrg + '/signin' || window.location.pathname.includes('admin')) {
-              if (response.data.user.roleName === 'Admin' || response.data.user.roleName === 'admin' || response.data.user.roleName === 'Admin' || response.data.user.roleName === 'WBLC') {
-
-                return { success: true, message: 'successfully logged in as admin', user: response.data.user }
-              } else {
-                this.setState({ error: { message: 'You do not have admin permissions'}})
-              }
-            } else if ((window.location.pathname && window.location.pathname.includes('/employers')) || response.data.user.roleName === 'Employer') {
-              const accountCode = response.data.user.accountCode
-              if (accountCode !== '') {
-                Axios.get('/api/account', { params: { accountCode } })
-                .then((response2) => {
-                  console.log('Account info query attempted', response2.data);
-
-                  if (response.data.success) {
-                    console.log('account info query worked')
-
-                    AsyncStorage.setItem('email', email)
-                    AsyncStorage.setItem('username', response.data.user.username)
-                    AsyncStorage.setItem('firstName', response.data.user.firstName)
-                    AsyncStorage.setItem('lastName', response.data.user.lastName)
-                    AsyncStorage.setItem('roleName', response.data.user.roleName)
-                    AsyncStorage.setItem('isEmployer', 'true')
-                    AsyncStorage.setItem('unreadNotificationsCount', 0)
-                    AsyncStorage.setItem('emp', accountCode)
-                    AsyncStorage.setItem('activeOrg', response2.data.accountInfo.activeOrg)
-                    AsyncStorage.setItem('accountOrgs', JSON.stringify([response2.data.accountInfo.sharePartners]))
-                    AsyncStorage.setItem('orgFocus', orgFocus)
-
-                    return { success: true, message: 'successfully logged in as employer', user: response.data.user, accountInfo: response2.data.accountInfo }
-
-                  } else {
-                    this.setState({
-                        error: { message: response.data.message },
-                        isWaiting: false
-                    })
-                  }
-
-                }).catch((error) => {
-                  console.log('Account info query did not work for some reason', error);
-                  this.setState({
-                      error: { message: error },
-                      isWaiting: false
-                  })
-                });
-              } else {
-                this.setState({ error: { message: 'No account code found'}})
-              }
-
-            } else if (window.location.pathname.includes('/advisor') || window.location.pathname.includes('/teacher') || window.location.pathname.includes('/mentor') || response.data.user.roleName === 'Teacher' || response.data.user.roleName === 'Mentor') {
-              // mentor or teacher
-
-              if (response.data.user.roleName !== 'Student') {
-
-                return { success: true, message: 'successfully logged in as advisor', user: response.data.user }
-              } else {
-                // error - students can't view
-                this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
-              }
-
-            } else if (response.data.user.roleName === 'Admin' || response.data.user.roleName === 'Work-Based Learning Coordinator') {
-              return { success: true, message: 'successfully logged in as admin', user: response.data.user }
-            } else {
-              console.log('show crucial values: ', response.data.user.activeOrg, window.location.pathname, window.location.pathname)
-              // this.setState({ error: { message: 'Something went wrong identifying your permissions'}})
-              return { error: { message: 'Something went wrong identifying your role or your permissions 1'}}
-            }
-
-          } else {
-            console.log('login did not work', response.data.message)
-            //don't allow signups without an org affiliation
-            // return { error: { message: response.data.message }}
-            return { success: false, message: response.data.message }
-
-          }
-
-      }).catch((error) => {
-          console.log('Login did not work for some reason', error);
-          return { error: { message: error }}
-      });
-    }
+    }).catch((error) => {
+        console.log('Login did not work for some reason', error);
+        return { error: { message: error }}
+    });
   }
 }
 
@@ -438,7 +282,7 @@ export const signOut = async(email, activeOrg, orgFocus, accountCode, roleName, 
   console.log('signOut called', email, activeOrg, orgFocus, accountCode, roleName, navigation)
 
   let logoutLink = '/signin'
-  if (window.location.pathname.includes('/advisor')) {
+  if (this.props.fromAdvisor) {
     logoutLink = '/advisor/signin'
     if (orgFocus && orgFocus === 'Placement' && roleName) {
         //organizations
@@ -449,14 +293,6 @@ export const signOut = async(email, activeOrg, orgFocus, accountCode, roleName, 
         logoutLink = '/schools/' + activeOrg + '/' + roleName.toLowerCase() + '/signin'
       }
     }
-  } else if (window.location.pathname.includes('/organizations')) {
-    logoutLink = '/organizations/' + activeOrg + '/signin'
-  } else if (window.location.pathname.includes('/employers') && !window.location.pathname.includes('/app/employers')) {
-    logoutLink = '/employers/' + accountCode + '/signin'
-  } else if (window.location.pathname.includes('/problem-platform')) {
-    logoutLink = '/problem-platform/signin'
-  } else if (window.location.pathname.includes('/app')) {
-    logoutLink = '/signin'
   } else {
     // student
     if (orgFocus && orgFocus === 'Placement') {

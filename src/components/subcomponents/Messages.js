@@ -408,7 +408,7 @@ class Messages extends Component {
         }
       }).catch((error) => {
           console.log('save did not work', error);
-          this.setState({ errorMessage: 'there was an error saving groups', isSaving: false})
+          this.setState({ errorMessage: 'there was an sending the message', error, isSaving: false})
       });
     }
   }
@@ -508,6 +508,7 @@ class Messages extends Component {
   }
 
   scrollToBottom = () => {
+    console.log('scrollToBottom called')
     if (this.messagesEnd) {
       this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
@@ -535,7 +536,7 @@ class Messages extends Component {
       }
     }).catch((error) => {
         console.log('save did not work', error);
-        this.setState({ errorMessage: 'there was an error saving groups' })
+        this.setState({ errorMessage: 'there was an error clearing unread messages', error })
     });
   }
 

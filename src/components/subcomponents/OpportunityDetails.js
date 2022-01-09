@@ -1905,9 +1905,6 @@ class OpportunityDetails extends Component {
       const orgCode = this.state.activeOrg
       const accountCode = 'N/A'
       let roleName = "Student"
-      // if (window.location.pathname.includes('/app')) {
-      //   roleName = 'Student'
-      // }
 
       const createdAt = new Date()
       const updatedAt = new Date()
