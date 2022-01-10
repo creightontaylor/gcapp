@@ -157,7 +157,7 @@ class SearchItems extends Component {
                   searchResults.push({
                     category: 'Career Path',
                     name: response.data.careers[i - 1].name, imageURL,
-                    url: 'CareerDetails', passedState: { careerName: response.data.careers[i - 1] }
+                    url: 'CareerDetails', passedState: { careerName: response.data.careers[i - 1].name }
                   })
                 }
               }

@@ -326,7 +326,7 @@ class EmployerDetails extends Component {
 
                   <View style={[styles.topPadding20,styles.rowDirection,styles.flex1]}>
                     <View style={[styles.flex50,styles.horizontalPadding5]}>
-                      <TouchableOpacity style={(this.state.favorites.includes(this.state.employer._id)) ? [styles.btnSquarish,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.favoriteItem(this.state.employer)}><Text style={[styles.whiteColor,styles.descriptionText1]}>{(this.state.favorites.includes(this.state.employer._id)) ? "Following" : "+ Follow"}</Text></TouchableOpacity>
+                      <TouchableOpacity style={(this.state.favorites.includes(this.state.employer._id)) ? [styles.btnSquarish,styles.mediumBackground,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.favoriteItem(this.state.employer)}><Text style={[styles.whiteColor,styles.descriptionText1]}>{(this.state.favorites.includes(this.state.employer._id)) ? "Following" : "+ Follow"}</Text></TouchableOpacity>
                     </View>
 
                     {(this.state.employer.employerURL) && (
