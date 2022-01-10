@@ -146,6 +146,10 @@ module.exports = StyleSheet.create({
     height: 30,
     width: 30
   },
+  square35: {
+    height: 35,
+    width: 35
+  },
   square38: {
     height: 38,
     width: 38
