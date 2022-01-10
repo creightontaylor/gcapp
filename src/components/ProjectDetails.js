@@ -23,24 +23,27 @@ class ProjectDetails extends Component {
     try {
       const email = await AsyncStorage.getItem('email')
 
-      console.log('show me values in ProjectDetails', email, this.props);
+      // console.log('show me values in ProjectDetails', email, this.props);
 
       if (email !== null) {
         // We have data!!
 
         let selectedProject = null
-        if (this.props) {
+        let objectId = null
+        if (this.props.route && this.props.route.params) {
           // console.log('show params: ', this.props.route)
 
           selectedProject = this.props.route.params.selectedProject
-          this.setState({ selectedProject })
+          objectId = this.props.route.params.objectId
 
         }
+
+        this.setState({ selectedProject, objectId })
 
       }
      } catch (error) {
        // Error retrieving data
-       console.log('there was an error')
+       console.log('there was an error', error)
      }
   }
 
@@ -56,7 +59,7 @@ class ProjectDetails extends Component {
   render() {
     return (
       <View>
-        <SubProjectDetails navigation={this.props.navigation} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.selectedProject} orgCode={this.state.activeOrg} excludeModal={true} />
+        <SubProjectDetails navigation={this.props.navigation} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.selectedProject} objectId={this.state.objectId} orgCode={this.state.activeOrg} excludeModal={true} />
       </View>
     )
   }

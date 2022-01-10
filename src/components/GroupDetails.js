@@ -29,13 +29,16 @@ class GroupDetails extends Component {
         // We have data!!
 
         let employerSelected = null
-        if (this.props) {
+        let groupId = null
+        if (this.props.route && this.props.route.params) {
           // console.log('show params: ', this.props.route)
 
           selectedGroup = this.props.route.params.selectedGroup
-          this.setState({ selectedGroup })
+          groupId = this.props.route.params.objectId
 
         }
+
+        this.setState({ selectedGroup, groupId })
 
       }
      } catch (error) {
@@ -56,7 +59,7 @@ class GroupDetails extends Component {
   render() {
     return (
       <View>
-        <SubGroupDetails navigation={this.props.navigation} selectedGroup={this.state.selectedGroup} />
+        <SubGroupDetails navigation={this.props.navigation} selectedGroup={this.state.selectedGroup} groupId={this.state.groupId} />
       </View>
     )
   }

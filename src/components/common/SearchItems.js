@@ -66,6 +66,26 @@ class SearchItems extends Component {
 
         this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, pictureURL})
 
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: emailId } })
+        .then((response) => {
+
+            if (response.data.success) {
+              console.log('User profile query worked', response.data);
+
+              if (response.data.user.searches && response.data.user.searches.length > 0) {
+                const previousSearches = response.data.user.searches
+                this.setState({ previousSearches })
+              }
+
+            } else {
+              console.log('no user details found', response.data.message)
+
+            }
+
+        }).catch((error) => {
+            console.log('User profile query did not work', error);
+        });
+
       } catch (error) {
        // Error retrieving data
        console.log('there was an error', error)
@@ -116,6 +136,7 @@ class SearchItems extends Component {
                   })
                 }
               }
+
               if (response.data.projects) {
                 for (let i = 1; i <= response.data.projects.length; i++) {
                   let imageURL = projectsIconDark
@@ -126,7 +147,7 @@ class SearchItems extends Component {
                     category: 'Project',
                     name: response.data.projects[i - 1].name,
                     imageURL,
-                    url: 'ProjectDetails', passedState: { selectedProject: response.data.projects[i - 1]}
+                    url: 'ProjectDetails', passedState: { selectedProject: response.data.projects[i - 1], objectId: response.data.projects[i - 1]._id }
                   })
                 }
               }
@@ -136,10 +157,11 @@ class SearchItems extends Component {
                   searchResults.push({
                     category: 'Career Path',
                     name: response.data.careers[i - 1].name, imageURL,
-                    url: 'CareerDetails', passedState: { careerSelected: response.data.careers[i - 1] }
+                    url: 'CareerDetails', passedState: { careerName: response.data.careers[i - 1] }
                   })
                 }
               }
+
               if (response.data.employers) {
                 for (let i = 1; i <= response.data.employers.length; i++) {
                   let imageURL = industryIconDark
@@ -150,10 +172,11 @@ class SearchItems extends Component {
                     category: 'Employer',
                     name: response.data.employers[i - 1].employerName,
                     imageURL,
-                    url: 'EmployerDetails', passedState: { selectedEmployer: response.data.employers[i - 1]}
+                    url: 'EmployerDetails', passedState: { selectedEmployer: response.data.employers[i - 1], objectId: response.data.employers[i - 1]._id }
                   })
                 }
               }
+
               if (response.data.groups) {
                 for (let i = 1; i <= response.data.groups.length; i++) {
                   let imageURL = socialIconDark
@@ -164,10 +187,11 @@ class SearchItems extends Component {
                     category: 'Group',
                     name: response.data.groups[i - 1].name,
                     imageURL,
-                    url: 'GroupDetails', passedState: { selectedGroup: response.data.groups[i - 1]}
+                    url: 'GroupDetails', passedState: { selectedGroup: response.data.groups[i - 1], objectId: response.data.groups[i - 1]._id }
                   })
                 }
               }
+
               if (response.data.postings) {
                 for (let i = 1; i <= response.data.postings.length; i++) {
                   let name = response.data.postings[i - 1].title
@@ -191,7 +215,7 @@ class SearchItems extends Component {
                   searchResults.push({
                     category: response.data.postings[i - 1].postType,
                     name, imageURL,
-                    url: 'OpportunityDetails', passedState: { selectedOpportunity: response.data.postings[i - 1] }
+                    url: 'OpportunityDetails', passedState: { selectedOpportunity: response.data.postings[i - 1], objectId: response.data.postings[i - 1]._id }
                   })
                 }
               }
@@ -214,13 +238,15 @@ class SearchItems extends Component {
       delayFilter();
     }
 
-    navigateAway(url,passedState,name,category) {
+    navigateAway(url,passedState,name,category,imageURL) {
       console.log('navigateAway called')
 
       this.setState({ isSaving: true })
 
-      Axios.post('https://www.guidedcompass.com/api/save-search', {
-        url,passedState,name,category
+      const emailId = this.state.emailId
+
+      Axios.post('https://www.guidedcompass.com/api/users/save-search', {
+        emailId, url,passedState,name,category,imageURL
       })
       .then((response) => {
         console.log('attempting to save search')
@@ -308,12 +334,12 @@ class SearchItems extends Component {
               </View>
             ) : (
               <View>
-                {(this.state.showSearchResults && this.state.searchString !== '') && (
+                {(this.state.showSearchResults && this.state.searchString !== '') ? (
                   <ScrollView>
                     {this.state.searchResults.map((item, index) =>
                       <View key={index} style={[styles.row7]}>
                         <View>
-                          <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.navigateAway(item.url,item.passedState,item.name,item.category)} style={[styles.rowDirection]}>
+                          <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.navigateAway(item.url,item.passedState,item.name,item.category,item.imageURL)} style={[styles.rowDirection]}>
                             <View style={[styles.width45,styles.topMargin]}>
                               <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: careerMatchesIconDark}} style={[styles.square35,styles.contain]} />
                             </View>
@@ -325,6 +351,31 @@ class SearchItems extends Component {
                       </View>
                     )}
                   </ScrollView>
+                ) : (
+                  <View>
+                    {(this.state.previousSearches && this.state.previousSearches.length > 0) && (
+                      <ScrollView>
+                        <View style={[styles.row10]}>
+                          <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Previous Searches</Text>
+                        </View>
+
+                        {this.state.previousSearches.map((item, index) =>
+                          <View key={index} style={[styles.row7]}>
+                            <View>
+                              <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.navigateAway(item.url,item.passedState,item.name,item.category)} style={[styles.rowDirection]}>
+                                <View style={[styles.width45,styles.topMargin]}>
+                                  <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: careerMatchesIconDark}} style={[styles.square35,styles.contain]} />
+                                </View>
+                                <View style={[styles.calcColumn110,styles.topPadding5]}>
+                                  <Text style={[styles.descriptionText1,styles.ctaColor,styles.boldText]}>{item.name}</Text><Text style={[styles.descriptionText2,styles.descriptionTextColor]}>({item.category})</Text>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        )}
+                      </ScrollView>
+                    )}
+                  </View>
                 )}
 
                 {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text style={[styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text> : <View />}

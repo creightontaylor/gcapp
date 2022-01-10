@@ -29,18 +29,24 @@ class CareerDetails extends Component {
         // We have data!!
 
         let careerSelected = null
-        if (this.props) {
+        if (this.props.route && this.props.route.params) {
           // console.log('show params: ', this.props.route)
+          if (this.props.route.params.careerSelected) {
+            careerSelected = this.props.route.params.careerSelected.name
+          }
 
-          careerSelected = this.props.route.params.careerSelected.name
-          this.setState({ careerSelected })
-
+          if (this.props.route.params.careerName) {
+            careerSelected = this.props.route.params.careerName
+          }
+          console.log('show careerSelected: ', careerSelected)
         }
+
+        this.setState({ careerSelected })
 
       }
      } catch (error) {
        // Error retrieving data
-       console.log('there was an error')
+       console.log('there was an error', error)
      }
   }
 
@@ -56,7 +62,7 @@ class CareerDetails extends Component {
   render() {
     return (
       <View>
-        <SubCareerDetails navigation={this.props.navigation} careerSelected={this.state.careerSelected}/>
+        <SubCareerDetails navigation={this.props.navigation} careerSelected={this.state.careerSelected} />
       </View>
     )
   }
