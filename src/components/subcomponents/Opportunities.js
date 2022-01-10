@@ -4455,7 +4455,7 @@ class Opportunities extends Component {
             <View>
               {(this.props.pageSource !== 'Goal') && (
                 <View>
-                  <View style={[styles.row10,styles.horizontalPadding30,styles.cardClearPadding,styles.bottomMargin20]}>
+                  <View style={[styles.row10,styles.horizontalPadding,styles.cardClearPadding,styles.bottomMargin20]}>
                     <View>
                       {(this.state.matchingView) ? (
                         <View>
@@ -4495,14 +4495,14 @@ class Opportunities extends Component {
 
                           {(!this.state.matchingView) && (
                             <View style={styles.rowDirection}>
-                              <View style={[styles.calcColumn130,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
-                                <View style={[styles.row7,styles.horizontalPadding3]}>
+                              <View style={[styles.calcColumn100,styles.lightBorder,styles.topMargin15,styles.rightMargin10, styles.rowDirection]}>
+                                <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin3,styles.leftMargin5]}>
                                   <Image source={{ uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                                 </View>
-                                <View style={[styles.calcColumn230]}>
+                                <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
                                   {(this.props.passedType) ? (
                                     <TextInput
-                                      style={styles.height30}
+                                      style={[styles.height30,,styles.descriptionText2]}
                                       onChangeText={(text) => this.formChangeHandler('search', text)}
                                       value={this.state.searchString}
                                       placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
@@ -4510,7 +4510,7 @@ class Opportunities extends Component {
                                     />
                                   ) : (
                                     <TextInput
-                                      style={[styles.height30]}
+                                      style={[styles.height30,styles.descriptionText2]}
                                       onChangeText={(text) => this.formChangeHandler('search', text)}
                                       value={this.state.searchString}
                                       placeholder={"Search " + postings.length + ' Opportunities...'}
@@ -4518,9 +4518,10 @@ class Opportunities extends Component {
                                     />
                                   )}
                                 </View>
+
                               </View>
 
-                              <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin]}>
+                              <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin,styles.leftPadding]}>
                                 <TouchableOpacity onPress={() => this.toggleSearchBar('show')} >
                                   {(this.state.showingSearchBar) ? <Image source={{ uri: filterIconSelected}} style={[styles.square25,styles.contain]} /> : <Image source={{ uri: filterIcon}} style={[styles.square25,styles.contain]} />}
                                 </TouchableOpacity>
@@ -4620,13 +4621,14 @@ class Opportunities extends Component {
                                       )}
                                     </View>
                                   )}
+                                  {/*
                                   {(value === 'View External Jobs') && (
-                                    <View style={styles.leftPadding50}>
+                                    <View style={[styles.leftPadding50,styles.topPadding]}>
                                       <TouchableOpacity onPress={() => this.props.navigation.navigate('Jobs')}>
                                         <Text style={[styles.errorColor,styles.descriptionText2,styles.boldText]}>{value}</Text>
                                       </TouchableOpacity>
                                     </View>
-                                  )}
+                                  )}*/}
                                 </View>
                               )}
                             </View>

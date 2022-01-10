@@ -277,54 +277,19 @@ export default class App extends Component<Props> {
               tabBarLabel: 'Community',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="people" size={size} color={color} />
-              ),
-              headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
-                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="search" size={25} color='black' />
-                  </View>
-                </TouchableOpacity>
-              ),
+              )
             }}/>
             <Tab.Screen name="Paths" component={Paths} options={{
               tabBarLabel: 'Paths',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="compass" size={size} color={color} />
-              ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
-                  </View>
-                </TouchableOpacity>
-              ),
-              headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
-                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="search" size={25} color='black' />
-                  </View>
-                </TouchableOpacity>
-              ),
+              )
             }}/>
             <Tab.Screen name="Opportunities" component={Opportunities} options={{
               tabBarLabel: 'Opportunities',
               tabBarIcon: ({ color, size }) => (
                 <Icon name="briefcase" size={size} color={color} />
-              ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/icons/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
-                  </View>
-                </TouchableOpacity>
-              ),
-              headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
-                  <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="search" size={25} color='black' />
-                  </View>
-                </TouchableOpacity>
-              ),
+              )
             }}/>
             <Tab.Screen name="EditProfile" component={EditProfile} options={{
               tabBarLabel: 'Profile',

@@ -1070,18 +1070,19 @@ class Careers extends Component {
                   </View>
                 ) : (
                   <View>
-                    <View style={[styles.fullScreenWidth,styles.row5,styles.whiteBackground,styles.standardBorder,styles.mediumShadow,styles.rowDirection]}>
-                      <View style={(this.state.matchingView) ? [styles.fullScreenWidth] : [styles.width50,styles.centerItem]}>
+                    <View style={[styles.fullScreenWidth,styles.row5,styles.whiteBackground,styles.standardBorder,styles.mediumShadow,styles.rowDirection,styles.horizontalPadding]}>
+                      <View style={(this.state.matchingView) ? [styles.fullScreenWidth] : [styles.width45,styles.centerItem]}>
                         <TouchableOpacity style={(this.state.matchingView) ? [] : [styles.fullScreenWidth,styles.bottomPadding]} onPress={() => this.calculateMatches(true, true, false)}>
-                          <Image source={(this.state.matchingView) ? {uri: matchIconSelected} : {uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.centerItem,styles.topMargin]} />
+                          <Image source={(this.state.matchingView) ? {uri: matchIconSelected} : {uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.topMargin]} />
                         </TouchableOpacity>
                       </View>
-                      <View style={[styles.filterFieldSearch,styles.calcColumn100,styles.whiteBackground,styles.rowDirection,styles.topMargin3]}>
+                      <View style={[styles.filterFieldSearch,styles.calcColumn110,styles.whiteBackground,styles.rowDirection,styles.topMargin5]}>
                         <View style={[styles.row7,styles.horizontalPadding3]}>
                           <Image source={{uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                         </View>
-                        <View style={[styles.width210,styles.calcColumn100,styles.topPadding5]}>
+                        <View style={[styles.calcColumn140,styles.topPadding5,styles.leftPadding5]}>
                           <TextInput
+                            style={[styles.descriptionText2]}
                             onChangeText={(text) => this.formChangeHandler('search',text)}
                             value={this.state.searchString}
                             placeholder="Search 1,000+ careers..."

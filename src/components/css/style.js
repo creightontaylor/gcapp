@@ -448,8 +448,14 @@ module.exports = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30
   },
+  topPadding3: {
+    paddingTop: 3
+  },
   topPadding5: {
     paddingTop: 5
+  },
+  topPadding7: {
+    paddingTop: 7
   },
   topPadding8: {
     paddingTop: 8
@@ -510,6 +516,9 @@ module.exports = StyleSheet.create({
   },
   leftPadding3: {
     paddingLeft: 3
+  },
+  leftPadding5: {
+    paddingLeft: 5
   },
   leftPadding: {
     paddingLeft: 10
@@ -1481,7 +1490,6 @@ module.exports = StyleSheet.create({
     paddingBottom: 3,
     paddingLeft: 5,
     paddingRight: 5,
-    width: 250,
     height: 38
   },
   notiBubble: {
