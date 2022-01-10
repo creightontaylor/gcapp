@@ -3498,7 +3498,7 @@ class Apply extends Component {
 
                           {(this.state.isSaving) ? (
                             <View style={[styles.leftPadding20]}>
-                              <TouchableOpacity disabled={true} style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>..saving...</Text></TouchableOpacity>
+                              <TouchableOpacity disabled={true} style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.standardText,styles.whiteColor]}>..saving...</Text></TouchableOpacity>
                             </View>
                           ) : (
                             <View>
@@ -3510,11 +3510,11 @@ class Apply extends Component {
                                 <View>
                                   {(this.state.applicationComplete) ? (
                                     <View>
-                                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
+                                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
                                     </View>
                                   ) : (
                                     <View>
-                                      <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
+                                      <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.apply()}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.application ? "Update" : "Submit"}</Text></TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -3526,7 +3526,7 @@ class Apply extends Component {
                       </View>
                     ) : (
                       <View style={[styles.row20]}>
-                        <Text style={[styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <TouchableOpacity onPress={() => this.switchWorkspaces()}><Text style={[styles.ctaColor]}>here</Text></TouchableOpacity> to switch workspaces.</Text>
+                        <Text style={[styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <TouchableOpacity onPress={() => this.switchWorkspaces()}><Text style={[styles.standardText,styles.ctaColor]}>here</Text></TouchableOpacity> to switch workspaces.</Text>
                       </View>
                     )}
 

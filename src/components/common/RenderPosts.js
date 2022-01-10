@@ -460,12 +460,12 @@ class RenderPosts extends Component {
 
                     {((value.aVotes && value.aVotes.includes(this.state.emailId)) || (value.bVotes && value.bVotes.includes(this.state.emailId))) ? (
                       <View>
-                        <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'a')}>
+                        <TouchableOpacity style={[styles.fullWidth]} onPress={() => this.selectAnswer(value, index,'a')}>
                           <View>
-                            <View style={styles.progressBarFat} >
+                            <View style={[styles.progressBarFat,styles.calcColumn60]} >
                               <View style={[styles.fillerError, { width: this.calculateWidth(value, 'a'), zIndex: -1, height: 36 }]} />
-                              <View style={[styles.row10, styles.horizontalPadding30, styles.topMarginNegative36, styles.rowDirection]}>
-                                <View style={[styles.calcColumn100]}>
+                              <View style={[styles.row10, styles.horizontalPadding20, styles.topMarginNegative36, styles.rowDirection]}>
+                                <View style={[styles.calcColumn130,styles.rightPadding]}>
                                   <Text style={styles.descriptionText2}>{value.aName}</Text>
                                 </View>
                                 <View style={[styles.width40, styles.rightText]} >
@@ -477,10 +477,10 @@ class RenderPosts extends Component {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.fullWidth} onPress={() => this.selectAnswer(value, index,'b')}>
                           <View>
-                            <View style={styles.progressBarFat} >
+                            <View style={[styles.progressBarFat,styles.calcColumn60]} >
                               <View style={[styles.fillerError, { width: this.calculateWidth(value, 'b'), zIndex: -1, height: 36 }]} />
-                              <View style={[styles.row10, styles.horizontalPadding30, styles.topMarginNegative36, styles.rowDirection]}>
-                                <View style={[styles.calcColumn100]}>
+                              <View style={[styles.row10, styles.horizontalPadding20, styles.topMarginNegative36, styles.rowDirection]}>
+                                <View style={[styles.calcColumn130]}>
                                   <Text style={styles.descriptionText2}>{value.bName}</Text>
                                 </View>
                                 <View style={[styles.width40, styles.rightText]} >

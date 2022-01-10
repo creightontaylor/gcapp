@@ -401,13 +401,13 @@ class AssessmentDetails extends Component {
             <View key={0} style={[styles.row20]}>
               <View style={[styles.spacer]} /><View style={[styles.spacer]} />
               <Text style={[styles.headingText4,styles.bottomPadding]}>16 Personalities</Text>
-              <Text>Learn about your type here: <TouchableOpacity onPress={() => Linking.openURL("https://www.16personalities.com/" + this.state.resultsData[2].myersBriggs + "-personality")}>https://www.16personalities.com/{this.state.resultsData[2].myersBriggs}-personality</TouchableOpacity></Text>
+              <Text>Learn about your type here: <TouchableOpacity onPress={() => Linking.openURL("https://www.16personalities.com/" + this.state.resultsData[2].myersBriggs + "-personality")}><Text style={[styles.ctaColor,styles.boldText]}>https://www.16personalities.com/{this.state.resultsData[2].myersBriggs}-personality</Text></TouchableOpacity></Text>
               <Text style={[styles.headingText2,styles.ctaColor]}>{this.state.resultsData[2].myersBriggs}</Text>
 
               <View style={[styles.spacer]} />
 
               <Text style={[styles.headingText4,styles.row10]}>Five Factors</Text>
-              <Text>Learn about the big five personality traits: <TouchableOpacity onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}>https://en.wikipedia.org/wiki/Big_Five_personality_traits</TouchableOpacity></Text>
+              <Text>Learn about the big five personality traits: <TouchableOpacity onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}><Text style={[styles.ctaColor,styles.boldText]}>https://en.wikipedia.org/wiki/Big_Five_personality_traits</Text></TouchableOpacity></Text>
               <Text style={[styles.headingText6,styles.row10]}>Extraversion Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.extraversionScore / 16)*100).toString() + '%'}</Text></Text>
               <Text style={[styles.headingText6,styles.row10]}>Openness Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.opennessScore / 16)*100).toString() + '%'}</Text></Text>
               <Text style={[styles.headingText6,styles.row10]}>Conscientiousness Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.conscientiousnessScore / 16)*100).toString() + '%'}</Text></Text>
@@ -534,13 +534,15 @@ class AssessmentDetails extends Component {
               <Text style={[styles.headingText5]}>Top Skills</Text>
               <Text style={[styles.descriptionTextColor,styles.descriptionText1]}>(Ranked from best to worst)</Text>
 
-              <View style={[styles.topPadding,styles.rowDirection]}>
+              <View style={[styles.topPadding,styles.rowDirection,styles.flexWrap]}>
                 {this.state.resultsData[3].map((value, optionIndex) =>
                   <View key={value}>
-                    {(this.state.resultsData[3][optionIndex].score && this.state.resultsData[3][optionIndex].score > 0) && (
+                    {(this.state.resultsData[3][optionIndex].score && this.state.resultsData[3][optionIndex].score > 0) ? (
                       <View style={[styles.row15,styles.horizontalPadding5,styles.slightlyRoundedCorners,styles.rightMargin,styles.topMargin,tagBackgroundConverter(this.state.resultsData[3][optionIndex].score)]}>
                         <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.resultsData[3][optionIndex].name} - {this.state.resultsData[3][optionIndex].score}</Text>
                       </View>
+                    ) : (
+                      <View />
                     )}
                   </View>
                 )}

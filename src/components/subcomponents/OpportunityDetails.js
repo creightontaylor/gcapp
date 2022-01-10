@@ -2144,7 +2144,7 @@ class OpportunityDetails extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('TrackPostings', { programTitle: this.state.selectedOpportunity.title, trackName:this.state.selectedOpportunity.tracks[i - 1].name, orgName: this.state.selectedOpportunity.orgName, postings: this.state.selectedOpportunity.tracks[i - 1].jobs })}>
               <View>
                <Text style={[styles.headingText5]}>{this.state.selectedOpportunity.tracks[i - 1].name}</Text>
-                <Text>{this.state.selectedOpportunity.tracks[i - 1].jobs.length} Internship Postings</Text>
+                <Text style={[styles.standardText]}>{this.state.selectedOpportunity.tracks[i - 1].jobs.length} Internship Postings</Text>
               </View>
             </TouchableOpacity>
 
@@ -2185,7 +2185,7 @@ class OpportunityDetails extends Component {
                 <Image source={collaborators[i - 1].pictureURL ? { uri: collaborators[i - 1].pictureURL} : { uri: profileIconBig}} style={[styles.square20,styles.contain, { borderRadius: 10 }]}/>
               </View>
               <View style={[styles.calcColumn160,styles.leftPadding]}>
-                <Text>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
+                <Text style={[styles.standardText]}>{collaborators[i - 1].firstName} {collaborators[i - 1].lastName} ({collaborators[i - 1].email})</Text>
                 <View style={[styles.halfSpacer]} />
                 {(collaborators[i - 1].joined) ? (
                   <Text style={[styles.descriptionText2]}>{collaborators[i - 1].roleName}</Text>
@@ -2356,7 +2356,7 @@ class OpportunityDetails extends Component {
                                 <View>
                                   {(!this.state.isApproved && this.state.selectedOpportunity.isChild) && (
                                     <View>
-                                      <Text style={[styles.errorColor,styles.centerText,styles.boldText]}>***This can only be applied to after you have been approved to this track attached to the {(this.state.parentPost) ? <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.parentPost })}><Text style={[styles.ctaColor]}>{this.state.selectedOpportunity.orgName} posting</Text></TouchableOpacity> : this.state.selectedOpportunity.orgName + " posting"}. Apply then await approval from their team administrator.***</Text>
+                                      <Text style={[styles.errorColor,styles.centerText,styles.boldText]}>***This can only be applied to after you have been approved to this track attached to the {(this.state.parentPost) ? <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.parentPost })}><Text style={[styles.standardText,styles.ctaColor]}>{this.state.selectedOpportunity.orgName} posting</Text></TouchableOpacity> : this.state.selectedOpportunity.orgName + " posting"}. Apply then await approval from their team administrator.***</Text>
                                       <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                                     </View>
                                   )}
@@ -2383,8 +2383,8 @@ class OpportunityDetails extends Component {
                                 <Image source={{ uri: industryIconDark}} style={[styles.square23,styles.contain]} />
                               </View>
                               <View>
-                                <Text>{this.state.selectedOpportunity.employerName}</Text>
-                                <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text>{this.state.selectedOpportunity.employerURL}</Text></TouchableOpacity>
+                                <Text style={[styles.standardText]}>{this.state.selectedOpportunity.employerName}</Text>
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text style={[styles.standardText]}>{this.state.selectedOpportunity.employerURL}</Text></TouchableOpacity>
                               </View>
                             </View>
 
@@ -2394,7 +2394,7 @@ class OpportunityDetails extends Component {
                                 <Image source={{ uri: locationIcon}} style={[styles.square23,styles.contain,styles.rightMargin5]} />
                               </View>
                               <View>
-                                <Text>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</Text>
+                                <Text style={[styles.standardText]}>{this.state.selectedOpportunity.location}{(this.state.selectedOpportunity.location && this.state.selectedOpportunity.zipcode) && this.state.selectedOpportunity.zipcode}</Text>
                               </View>
                             </View>
 
@@ -2406,7 +2406,7 @@ class OpportunityDetails extends Component {
                                 </View>
 
                                 <View>
-                                  <Text>Posted on {convertDateToString(this.state.selectedOpportunity.createdAt,'date')}</Text>
+                                  <Text style={[styles.standardText]}>Posted on {convertDateToString(this.state.selectedOpportunity.createdAt,'date')}</Text>
                                 </View>
                               </View>
                             )}
@@ -2419,7 +2419,7 @@ class OpportunityDetails extends Component {
                                 </View>
 
                                 <View>
-                                  <Text>{convertDateToString(this.state.selectedOpportunity.startDate,"date")} - {this.state.selectedOpportunity.isPerpetual ? "Continual" : convertDateToString(this.state.selectedOpportunity.endDate,"date")}</Text>
+                                  <Text style={[styles.standardText]}>{convertDateToString(this.state.selectedOpportunity.startDate,"date")} - {this.state.selectedOpportunity.isPerpetual ? "Continual" : convertDateToString(this.state.selectedOpportunity.endDate,"date")}</Text>
                                 </View>
                               </View>
                             )}
@@ -2431,7 +2431,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: timeIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.selectedOpportunity.hoursPerWeek} Per Week</Text>
+                                  <Text style={[styles.standardText]}>{this.state.selectedOpportunity.hoursPerWeek} Per Week</Text>
                                 </View>
 
                               </View>
@@ -2444,7 +2444,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: skillsIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.workFunction}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.workFunction}</Text>
                                 </View>
                               </View>
                             )}
@@ -2456,7 +2456,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: industryIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.industry}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.industry}</Text>
                                 </View>
                               </View>
                             )}
@@ -2468,7 +2468,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: subsidyIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>This role is subsidized</Text>
+                                  <Text style={[styles.standardText]}>This role is subsidized</Text>
                                   <Text style={[styles.descriptionText2]}>***Only people 16 - 24 within Los Angeles county limits are eligible to receive subsidized internships***</Text>
                                 </View>
                               </View>
@@ -2481,7 +2481,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: skillsIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.selectedOpportunity.workType}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.selectedOpportunity.workType}</Text>
                                 </View>
                               </View>
                             )}
@@ -2493,7 +2493,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: moneyIconDark}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.selectedOpportunity.payRange}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.selectedOpportunity.payRange}</Text>
                                 </View>
                               </View>
                             )}
@@ -2505,7 +2505,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: tagIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.selectedOpportunity.supplementalPayArray.toString()}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.selectedOpportunity.supplementalPayArray.toString()}</Text>
                                 </View>
                               </View>
                             )}
@@ -2517,7 +2517,7 @@ class OpportunityDetails extends Component {
                                   <Image source={{ uri: tagIcon}} style={[styles.square23,styles.contain]} />
                                 </View>
                                 <View style={[styles.calcColumn93]}>
-                                  <Text>{this.state.selectedOpportunity.benefits.toString()}</Text>
+                                  <Text style={[styles.standardText]}>{this.state.selectedOpportunity.benefits.toString()}</Text>
                                 </View>
                               </View>
                             )}
@@ -2547,17 +2547,17 @@ class OpportunityDetails extends Component {
                                           </View>
                                           <View style={[styles.calcColumn93]}>
                                             <Text style={[styles.headingText4]}>Apply via Email</Text>
-                                            <Text><Text style={[styles.boldText]}>Address to:</Text> {this.state.selectedOpportunity.employerContactFirstName} {this.state.selectedOpportunity.employerContactLastName}</Text>
-                                            <Text><Text style={[styles.boldText]}>Email:</Text> {this.state.selectedOpportunity.employerContactEmail}</Text>
-                                            <Text><Text style={[styles.boldText]}>Subject Line:</Text> {this.state.selectedOpportunity.subjectLine}</Text>
+                                            <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Address to:</Text> {this.state.selectedOpportunity.employerContactFirstName} {this.state.selectedOpportunity.employerContactLastName}</Text>
+                                            <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Email:</Text> {this.state.selectedOpportunity.employerContactEmail}</Text>
+                                            <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Subject Line:</Text> {this.state.selectedOpportunity.subjectLine}</Text>
                                             {(this.state.selectedOpportunity.appRequirements && this.state.selectedOpportunity.appRequirements !== '') && (
                                               <View>
-                                                <Text><Text style={[styles.boldText]}>Please include:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
+                                                <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Please include:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
                                               </View>
                                             )}
                                             {(this.state.selectedOpportunity.submissionDeadline && this.state.selectedOpportunity.submissionDeadline !== '') && (
                                               <View>
-                                                <Text><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"date")}</Text>
+                                                <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"date")}</Text>
                                               </View>
                                             )}
                                           </View>
@@ -2567,7 +2567,7 @@ class OpportunityDetails extends Component {
                                         <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                                         <View>
-                                          <Text>AND</Text>
+                                          <Text style={[styles.standardText]}>AND</Text>
                                         </View>
 
                                       </View>
@@ -2584,7 +2584,7 @@ class OpportunityDetails extends Component {
                                             </View>
                                             <View style={[styles.calcColumn93]}>
                                               <Text style={[styles.headingText4]}>Apply via Website</Text>
-                                              <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.jobLink)}><Text>{this.state.selectedOpportunity.jobLink}</Text></TouchableOpacity>
+                                              <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.jobLink)}><Text style={[styles.standardText]}>{this.state.selectedOpportunity.jobLink}</Text></TouchableOpacity>
                                             </View>
                                           </View>
 
@@ -2601,12 +2601,12 @@ class OpportunityDetails extends Component {
                                                   <View style={[styles.spacer]} />
                                                   {(this.state.selectedOpportunity.appRequirements !== '') && (
                                                     <View>
-                                                      <Text><Text style={[styles.boldText]}>Application Requirements:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
+                                                      <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Application Requirements:</Text> {this.state.selectedOpportunity.appRequirements}</Text>
                                                     </View>
                                                   )}
                                                   {(this.state.selectedOpportunity.submissionDeadline !== '') && (
                                                     <View>
-                                                      <Text><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
+                                                      <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
 
                                                     </View>
                                                   )}
@@ -2621,7 +2621,7 @@ class OpportunityDetails extends Component {
                                         </View>
 
                                         <View>
-                                          <Text>AND</Text>
+                                          <Text style={[styles.standardText]}>AND</Text>
                                         </View>
 
                                       </View>
@@ -2646,9 +2646,9 @@ class OpportunityDetails extends Component {
                                           <View>
                                             <Text style={[styles.headingText4]}>{this.state.orgName} Referral</Text>
                                             {(this.props.fromAdvisor) ? (
-                                              <Text>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</Text>
+                                              <Text style={[styles.standardText]}>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</Text>
                                             ) : (
-                                              <Text>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text style={[styles.ctaColor]}>here.</Text></TouchableOpacity></Text>
+                                              <Text style={[styles.standardText]}>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text style={[styles.standardText,styles.ctaColor]}>here.</Text></TouchableOpacity></Text>
                                             )}
                                           </View>
                                         )}
@@ -2687,7 +2687,7 @@ class OpportunityDetails extends Component {
                               <View style={[styles.horizontalPadding5]}>
                                 <Text style={[styles.headingText3]}>Tracks</Text>
                                 <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-                                <Text>{this.state.selectedOpportunity.title} has {this.state.selectedOpportunity.tracks.length} tracks. You must be accepted into a given track before you allowed to apply to any of the roles within that track. Tracks will appear as you are approved for them.</Text>
+                                <Text style={[styles.standardText]}>{this.state.selectedOpportunity.title} has {this.state.selectedOpportunity.tracks.length} tracks. You must be accepted into a given track before you allowed to apply to any of the roles within that track. Tracks will appear as you are approved for them.</Text>
                               </View>
 
                               {(!this.state.emailId || this.state.emailId === '') ? (
@@ -2749,7 +2749,7 @@ class OpportunityDetails extends Component {
                         <View style={[styles.spacer]}/>
                         { (this.state.sessionErrorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.sessionErrorMessage}</Text> }
                         { (this.state.serverPostSuccess) ? (
-                          <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
+                          <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
                         ) : (
                           <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
                         )}
@@ -2763,11 +2763,11 @@ class OpportunityDetails extends Component {
 
                             <View>
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                              <Text>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
+                              <Text style={[styles.standardText]}>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
 
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
                           </View>
                         ) : (
                           <View>
@@ -2778,11 +2778,11 @@ class OpportunityDetails extends Component {
                                 <View>
                                   {this.state.selectedOpportunity.isChild ? (
                                     <View style={[styles.flexCenter]}>
-                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Update</Text></TouchableOpacity>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Update</Text></TouchableOpacity>
                                     </View>
                                   ) : (
                                     <View style={[styles.flexCenter]}>
-                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Update</Text></TouchableOpacity>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Update</Text></TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -2800,7 +2800,7 @@ class OpportunityDetails extends Component {
                                         <View>
                                           {this.state.isApproved ? (
                                             <View>
-                                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Submit Application for Referral</Text></TouchableOpacity>
+                                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Submit Application for Referral</Text></TouchableOpacity>
                                             </View>
                                           ) : (
                                             <View>
@@ -2817,7 +2817,7 @@ class OpportunityDetails extends Component {
                                       ) : (
                                         <View>
                                           {(this.state.selectedOpportunity.postType === 'Track' || this.state.selectedOpportunity.subPostType === 'Track') ? (
-                                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Apply</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Apply</Text></TouchableOpacity>
                                           ) : (
                                             <View>
                                               {(this.state.selectedOpportunity.submissionDeadline && new Date(this.state.selectedOpportunity.submissionDeadline) < new Date()) ? (
@@ -2828,9 +2828,9 @@ class OpportunityDetails extends Component {
                                                 <View>
 
                                                   {(this.state.selectedOpportunity.direct) ? (
-                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Apply</Text></TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Apply</Text></TouchableOpacity>
                                                   ) : (
-                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Request a Referral</Text></TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Request a Referral</Text></TouchableOpacity>
                                                   )}
                                                 </View>
                                               )}
@@ -2851,7 +2851,7 @@ class OpportunityDetails extends Component {
                         <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                       </View>
-                      {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+                      {this.state.serverSuccessMessage !== '' && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
                       {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
 
                     </View>
@@ -3098,9 +3098,9 @@ class OpportunityDetails extends Component {
                               </TouchableOpacity>
 
                               {(this.state.viewIndex === 2) ? (
-                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4,styles.whiteColor]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
+                                <View style={[styles.notiBubble,styles.selectedBackground]}><Text style={[styles.descriptionText4,styles.whiteColor]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
                               ) : (
-                                <View style={[styles.notiBubble,styles.mediumBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
+                                <View style={[styles.notiBubble,styles.mediumBackground]}><Text style={[styles.descriptionText4]}>{this.state.selectedOpportunity.submissions.length}</Text></View>
                               )}
                             </View>
                           )}
@@ -3112,12 +3112,15 @@ class OpportunityDetails extends Component {
                               <Text style={(this.state.viewIndex === 3) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Comments</Text>
                             </TouchableOpacity>
                           ) : (
-                            <View>
-                              <Text style={(this.state.viewIndex === 3) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}><TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>Comments</TouchableOpacity></Text>
+                            <View style={[styles.rowDirection]}>
+                              <TouchableOpacity onPress={() => this.setState({ viewIndex: 3 })}>
+                                <Text style={(this.state.viewIndex === 3) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}>Comments</Text>
+                              </TouchableOpacity>
+
                               {(this.state.viewIndex === 3) ? (
-                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground]}><Text style={[styles.descriptionText4,styles.whiteColor]}>{this.state.comments.length}</Text></View>
                               ) : (
-                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.mediumBackground]}><Text style={[styles.descriptionText4]}>{this.state.comments.length}</Text></View>
                               )}
                             </View>
                           )}
@@ -3341,7 +3344,7 @@ class OpportunityDetails extends Component {
                                 <View>
 
                                   {(this.state.hasRegistered) ? (
-                                    <Text style={[styles.ctaColor]}>You have already registered for this challenge.</Text>
+                                    <Text style={[styles.standardText,styles.ctaColor]}>You have already registered for this challenge.</Text>
                                   ) : (
                                     <Text style={[styles.errorColor]}>Registration has passed for this challenge.</Text>
                                   )}
@@ -3559,7 +3562,7 @@ class OpportunityDetails extends Component {
                               <View>
                                 <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
                                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ viewIndex: 1 })}>
-                                  <Text style={[styles.whiteColor]}>Submit a Project</Text>
+                                  <Text style={[styles.standardText,styles.whiteColor]}>Submit a Project</Text>
                                 </TouchableOpacity>
                               </View>
                             ) : (
@@ -3639,17 +3642,17 @@ class OpportunityDetails extends Component {
                                     <View>
                                       {(!this.state.showSubEditProject) && (
                                         <View>
-                                          {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+                                          {this.state.serverSuccessMessage !== '' && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
                                           {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
-                                          <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.whiteColor]}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</Text></TouchableOpacity>
+                                          <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</Text></TouchableOpacity>
                                         </View>
                                       )}
                                     </View>
                                   ) : (
                                     <View>
-                                      {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+                                      {this.state.serverSuccessMessage !== '' && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
                                       {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
-                                      <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.whiteColor]}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</Text></TouchableOpacity>
+                                      <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.standardText,styles.whiteColor]}>{this.state.submitted ? "Update Your Solution" : "Submit Your Solution"}</Text></TouchableOpacity>
                                     </View>
                                   )}
                                 </View>
@@ -3717,14 +3720,15 @@ class OpportunityDetails extends Component {
                               <Text style={(this.state.viewIndex === 1) ? [styles.headingText5,styles.ctaColor] : [styles.headingText5,styles.descriptionTextColor]}>Comments</Text>
                             </TouchableOpacity>
                           ) : (
-                            <View>
+                            <View style={[styles.rowDirection]}>
                               <TouchableOpacity onPress={() => this.setState({ viewIndex: 1 })}>
                                 <Text style={(this.state.viewIndex === 1) ? [styles.headingText4,styles.ctaColor,styles.rightMargin3] : [styles.headingText4,styles.unselectedColor,styles.rightMargin3]}>Comments</Text>
                               </TouchableOpacity>
+
                               {(this.state.viewIndex === 1) ? (
-                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.selectedBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4,styles.whiteColor]}>{this.state.comments.length}</Text></View>
                               ) : (
-                                <View style={[styles.notiBubble,styles.unselectedBackground,styles.descriptionText4]}>{this.state.comments.length}</View>
+                                <View style={[styles.notiBubble,styles.mediumBackground,styles.descriptionText4]}><Text style={[styles.descriptionText4]}>{this.state.comments.length}</Text></View>
                               )}
                             </View>
                           )}
@@ -3742,7 +3746,7 @@ class OpportunityDetails extends Component {
                             </View>
                             <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Text>Hosted by {this.state.selectedOpportunity.orgName}</Text>
+                              <Text style={[styles.standardText]}>Hosted by {this.state.selectedOpportunity.orgName}</Text>
                             </View>
                           </View>
 
@@ -3753,7 +3757,7 @@ class OpportunityDetails extends Component {
                             </View>
                             <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Text>Location: {this.state.selectedOpportunity.location}</Text>
+                              <Text style={[styles.standardText]}>Location: {this.state.selectedOpportunity.location}</Text>
                             </View>
                           </View>
 
@@ -3764,7 +3768,7 @@ class OpportunityDetails extends Component {
                             </View>
                             <View style={[styles.calcColumn100]}>
                               <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Text>{this.state.startDateString} - {this.state.endDateString}</Text>
+                              <Text style={[styles.standardText]}>{this.state.startDateString} - {this.state.endDateString}</Text>
                             </View>
                           </View>
 
@@ -3791,7 +3795,7 @@ class OpportunityDetails extends Component {
                                   <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   {this.state.selectedOpportunity.links.map((value, index) =>
                                     <View key={index}>
-                                      <Text><TouchableOpacity onPress={() => Linking.openURL(value.url)}><Text>{value.name}</Text></TouchableOpacity></Text>
+                                      <Text style={[styles.standardText]}><TouchableOpacity onPress={() => Linking.openURL(value.url)}><Text style={[styles.standardText]}>{value.name}</Text></TouchableOpacity></Text>
                                       <View style={[styles.spacer]}/>
                                     </View>
                                   )}
@@ -3819,9 +3823,9 @@ class OpportunityDetails extends Component {
                                   </View>
                                 ) : (
                                   <View>
-                                    {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+                                    {this.state.serverSuccessMessage !== '' && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
                                     {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
-                                    <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.whiteColor]}>RSVP</Text></TouchableOpacity>
+                                    <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType)}><Text style={[styles.standardText,styles.whiteColor]}>RSVP</Text></TouchableOpacity>
                                   </View>
                                 )}
                               </View>
@@ -3881,23 +3885,23 @@ class OpportunityDetails extends Component {
                         <View>
                           <View style={[styles.row10]}>
                             <Text style={[styles.headingText4]}>Endorse a Student for this Posting</Text>
-                            <Text>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
+                            <Text style={[styles.standardText]}>Endorsing a student allows him / her to automatically import that endorsement into scholarship and internship applications.{(this.state.benchmark) && " Clicking the button below will auto-populate the skills and traits information relevant to this posting so that you provide a relevant endorsement."}</Text>
                           </View>
 
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })}><Text style={[styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.navigation.navigate('SendEndorsement', { benchmark: this.state.benchmark })}><Text style={[styles.standardText,styles.whiteColor]}>Endorse a Student</Text></TouchableOpacity>
                         </View>
                       </View>
                     ) : (
                       <View>
-                        {this.state.serverSuccessMessage !== '' && <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
+                        {this.state.serverSuccessMessage !== '' && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>}
                         {this.state.serverErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
 
                         {this.state.hasApplied ? (
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.ctaColor]}>Update</Text></TouchableOpacity>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.ctaColor]}>Update</Text></TouchableOpacity>
                         ) : (
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.ctaColor]}>Apply</Text></TouchableOpacity>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.ctaColor]}>Apply</Text></TouchableOpacity>
                         )}
                       </View>
                     )}
@@ -3918,7 +3922,7 @@ class OpportunityDetails extends Component {
                     <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
                       <Text style={[styles.headingText2]}>Job Function</Text>
                       <View style={[styles.spacer]}/>
-                      <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
+                      <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
                     </View>
                   )}
 
@@ -3926,12 +3930,12 @@ class OpportunityDetails extends Component {
                     <View key="showIndustry" style={[styles.fullScreenWidth,styles.padding20]}>>
                       <Text style={[styles.headingText2]}>Industry</Text>
                       <View style={[styles.spacer]}/>
-                      <Text>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+                      <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
                     </View>
                   )}
 
                   <View style={[styles.row20]}>
-                   <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.flexCenter,styles.ctaBorder]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                   <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.flexCenter,styles.ctaBorder]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                   </View>
 
                  </Modal>

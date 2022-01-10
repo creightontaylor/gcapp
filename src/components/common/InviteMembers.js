@@ -153,15 +153,19 @@ class InviteMembers extends Component {
       return (
         <ScrollView>
           <View style={[styles.padding20]}>
-            <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection]}>
-              <View style={[styles.calcColumn115]}>
-                <Text style={[styles.headingText2]}>Invite People to {this.state.orgName}</Text>
+            <View>
+              <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection]}>
+                <View style={[styles.calcColumn115]}>
+                  <Text style={[styles.headingText6]}>Invite People to {this.state.orgName}</Text>
+                </View>
+                <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                  <TouchableOpacity onPress={() => this.props.closeModal()}>
+                    <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
-                <TouchableOpacity onPress={() => this.props.closeModal()}>
-                  <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
-                </TouchableOpacity>
-              </View>
+
+              <View style={[styles.lightHorizontalLine]} />
             </View>
 
             <View style={[styles.spacer]} /><View style={[styles.spacer]} />

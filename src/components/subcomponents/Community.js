@@ -15,6 +15,7 @@ const defaultProfileBackgroundImage = 'https://guidedcompass-bucket.s3.us-west-2
 const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png'
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png'
 const rightCarrotBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/right-carrot-blue.png'
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
 
 const upvoteIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-blue.png'
 const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/upvote-icon-grey.png'
@@ -1041,7 +1042,7 @@ class Community extends Component {
                       <View style={styles.width70}>
                         <Image source={(item.employerLogoURI) ? {uri: item.employerLogoURI} : {uri: industryIconDark}} style={[styles.square50,styles.contain]}/>
                       </View>
-                      <View style={styles.calcColumn170}>
+                      <View style={[styles.calcColumn180]}>
                         <Text style={[styles.headingText5]}>{item.employerName}</Text>
                         <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.topPadding5]}>{item.employerIndustry}</Text>
                       </View>
@@ -1433,8 +1434,8 @@ class Community extends Component {
 
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                <View style={[styles.rightPadding]}>
-                  <Text>Browse All Profiles</Text>
+                <View style={[styles.rightPadding,styles.topMargin5]}>
+                  <Text style={[styles.descriptionText2]}>Browse All Profiles</Text>
                 </View>
                 <View style={[styles.topMargin5]}>
                   <View style={styles.miniSpacer} />
@@ -1455,8 +1456,8 @@ class Community extends Component {
 
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                <View style={[styles.rightPadding]}>
-                  <Text>Browse All Projects</Text>
+                <View style={[styles.rightPadding,styles.topMargin5]}>
+                  <Text style={[styles.descriptionText2]}>Browse All Projects</Text>
                 </View>
                 <View style={[styles.topMargin5]}>
                   <View style={styles.miniSpacer} />
@@ -1475,8 +1476,8 @@ class Community extends Component {
 
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                <View style={[styles.rightPadding]}>
-                  <Text>Browse All Groups</Text>
+                <View style={[styles.rightPadding,styles.topMargin5]}>
+                  <Text style={[styles.descriptionText2]}>Browse All Groups</Text>
                 </View>
                 <View style={[styles.topMargin5]}>
                   <View style={styles.miniSpacer} />
@@ -1496,8 +1497,8 @@ class Community extends Component {
 
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
-                <View style={[styles.rightPadding]}>
-                  <Text>Browse All Employers</Text>
+                <View style={[styles.rightPadding,styles.topMargin5]}>
+                  <Text style={[styles.descriptionText2]}>Browse All Employers</Text>
                 </View>
                 <View style={[styles.topMargin5]}>
                   <View style={styles.miniSpacer} />
@@ -1513,19 +1514,47 @@ class Community extends Component {
         <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
             <ScrollView style={[styles.row10]}>
               {(this.state.showPeopleYouFollow) && (
-                <View>
-                  <Text style={[styles.headingText4]}>Your Connections</Text>
+                <View style={[styles.flex1]}>
+                  <View style={[styles.topMargin30]}>
+                    <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.headingText6]}>{this.state.friends.length} Connections</Text>
+                      </View>
+                      <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
                   <View style={styles.spacer} />
+                  <View style={[styles.lightHorizontalLine]} />
                   {this.renderItems('people','existing')}
 
                   <View style={styles.spacer} />
                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
+
               {(this.state.showProjectsYouFollow) && (
-                <View>
-                  <Text style={[styles.headingText4]}>Projects You Follow</Text>
+                <View style={[styles.flex1]}>
+                  <View style={[styles.topMargin30]}>
+                    <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.headingText6]}>{this.state.projectFollows.length} Projects You Follow</Text>
+                      </View>
+                      <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
                   <View style={styles.spacer} />
+                  <View style={[styles.lightHorizontalLine]} />
+
                   {this.renderItems('projects','existing')}
 
 
@@ -1534,20 +1563,46 @@ class Community extends Component {
                 </View>
               )}
               {(this.state.showEmployersYouFollow) && (
-                <View>
-                  <Text style={[styles.headingText4]}>Employers You Follow</Text>
+                <View style={[styles.flex1]}>
+                  <View style={[styles.topMargin30]}>
+                    <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.headingText6]}>{this.state.employerFollows.length} Employers You Follow</Text>
+                      </View>
+                      <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
                   <View style={styles.spacer} />
                   {this.renderItems('employers','existing')}
 
 
                   <View style={styles.spacer} />
+                  <View style={[styles.lightHorizontalLine]} />
                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
                 </View>
               )}
               {(this.state.showGroupsYouJoined) && (
                 <View>
-                  <Text style={[styles.headingText4]}>Groups You Follow</Text>
+                  <View style={[styles.topMargin30]}>
+                    <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.headingText6]}>{this.state.employerFollows.length} Groups You Joined</Text>
+                      </View>
+                      <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
                   <View style={styles.spacer} />
+                  <View style={[styles.lightHorizontalLine]} />
                   {this.renderItems('groups','existing')}
 
                   <View style={styles.spacer} />

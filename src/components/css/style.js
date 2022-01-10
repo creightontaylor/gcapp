@@ -484,6 +484,9 @@ module.exports = StyleSheet.create({
   bottomPadding: {
     paddingBottom: 10
   },
+  bottomPadding15: {
+    paddingBottom: 15
+  },
   bottomPadding20: {
     paddingBottom: 20
   },
@@ -1116,7 +1119,6 @@ module.exports = StyleSheet.create({
   },
   progressBarFat: {
     position: 'relative',
-    width: Dimensions.get('window').width,
     borderWidth: 1,
     borderColor: primaryColor,
   },

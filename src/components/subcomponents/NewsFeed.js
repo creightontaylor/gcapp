@@ -143,7 +143,7 @@ class NewsFeed extends Component {
                 if (self.props.mySocialPosts) {
                   postQueryParams = { groupId: null, orgCode: activeOrg, onlyCUPosts: true, emailId }
                 }
-
+                console.log('postQueryParams: ', postQueryParams)
                 Axios.get(baseURL + '/api/group-posts', { params: postQueryParams })
                 .then((response) => {
                    console.log('Group posts query attempted in newsfeed');
@@ -206,6 +206,7 @@ class NewsFeed extends Component {
                      }
 
                    } else {
+                     console.log('there was an issue: ', response.data.message)
                      self.setState({ postsAreLoading: false })
                    }
                 }).catch((error) => {

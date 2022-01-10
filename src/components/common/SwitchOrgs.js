@@ -251,9 +251,9 @@ class SwitchOrgs extends Component {
               <View style={[styles.rowDirection]}>
                 <View>
                   {(type === 'all') ? (
-                    <Text>{orgOptions[i - 1]}</Text>
+                    <Text style={[styles.descriptionText1]}>{orgOptions[i - 1]}</Text>
                   ) : (
-                    <Text>{orgOptions[i - 1].name}</Text>
+                    <Text style={[styles.descriptionText1]}>{orgOptions[i - 1].name}</Text>
                   )}
                 </View>
                 {(type === 'all') ? (
@@ -463,7 +463,7 @@ class SwitchOrgs extends Component {
                   <Image source={{ uri: checkmarkIcon}} className="image-auto-20" />
                 </View>
                 <View className="float-left">
-                  <Text>{this.state.dataToShare[index]}</Text>
+                  <Text style={[styles.standardText]}>{this.state.dataToShare[index]}</Text>
                 </View>
 
                 <View style={[styles.halfSpacer]} />
@@ -564,8 +564,8 @@ class SwitchOrgs extends Component {
 
               </View>
 
-              <View style={[styles.spacer]} />
-              <View style={[styles.horizontalLine]} />
+              <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+              <View style={[styles.lightHorizontalLine]} />
             </View>
           )}
 
@@ -575,7 +575,7 @@ class SwitchOrgs extends Component {
                 {(this.state.modalIsOpen) && (
                   <View>
                     <Text style={[styles.headingText2]}>You Are About to Join the {this.state.orgName} Portal</Text>
-                    <Text>But before you do, please confirm that you are willing to share the following profile data:</Text>
+                    <Text style={[styles.standardText]}>But before you do, please confirm that you are willing to share the following profile data:</Text>
 
                     <View style={[styles.spacer]} />
 

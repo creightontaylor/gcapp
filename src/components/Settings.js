@@ -403,7 +403,7 @@ class Settings extends Component {
                 <Image src={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain]} />
               </View>
               <View>
-                <Text>{this.state.dataToShare[index]}</Text>
+                <Text style={[styles.standardText]}>{this.state.dataToShare[index]}</Text>
               </View>
 
               <View style={styles.halfSpacer} />
@@ -865,7 +865,7 @@ class Settings extends Component {
       //
       //             {(this.state.courses && this.state.courses.length > 0) && (
       //               <View style={styles.row10}>
-      //                 <Text>Courses</Text>
+      //                 <Text style={[styles.standardText]}>Courses</Text>
       //                 <View style={styles.spacer} />
       //                 {this.renderCourses()}
       //
@@ -880,12 +880,12 @@ class Settings extends Component {
       //               <View>
       //                 <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
       //                   <View style={[styles.flex50,styles.rightPadding]}>
-      //                     <Text>Role</Text>
-      //                     <Text>{this.state.roleName ? this.state.roleName : "No first name added"}</Text>
+      //                     <Text style={[styles.standardText]}>Role</Text>
+      //                     <Text style={[styles.standardText]}>{this.state.roleName ? this.state.roleName : "No first name added"}</Text>
       //                   </View>
       //                   <View style={[styles.flex50,styles.leftPadding]>
-      //                     <Text>Academy Name</Text>
-      //                     <Text>{this.state.orgName}</Text>
+      //                     <Text style={[styles.standardText]}>Academy Name</Text>
+      //                     <Text style={[styles.standardText]}>{this.state.orgName}</Text>
       //                   </View>
       //
       //                 </View>
@@ -903,7 +903,7 @@ class Settings extends Component {
       //               <View>
       //                 <View>
       //                   <TouchableOpacity target="_blank" rel="noopener noreferrer" href="https://docs.google.com/document/d/1oJfMa46Sqzf7U--ImBk-Rc41r9aqqc4FOW160F6ECPU/edit?usp=sharing">
-      //                     <Text>View Lesson Plans</Text>
+      //                     <Text style={[styles.standardText]}>View Lesson Plans</Text>
       //                   </TouchableOpacity>
       //                 </View>
       //                 <View style={styles.spacer}/><View style={styles.halfSpacer}/>
@@ -916,7 +916,7 @@ class Settings extends Component {
       //               <View>
       //                 <View>
       //                   <TouchableOpacity style={[styles.ctaColor]} onPress={() => this.setState({ modalIsOpen: true, showWBLPreferences: true })}>
-      //                     <Text>PBL & WBL Preferences</Text>
+      //                     <Text style={[styles.standardText]}>PBL & WBL Preferences</Text>
       //                   </TouchableOpacity>
       //                 </View>
       //                 <View style={styles.spacer}/><View style={styles.halfSpacer}/>
@@ -929,7 +929,7 @@ class Settings extends Component {
       //               <View>
       //                 <View>
       //                   <TouchableOpacity style={[styles.ctaColor]} onPress={() => this.setState({ modalIsOpen: true, showGrades: true })}>
-      //                     <Text>View Grades</Text>
+      //                     <Text style={[styles.standardText]}>View Grades</Text>
       //                   </TouchableOpacity>
       //                 </View>
       //                 <View style={styles.spacer}/><View style={styles.halfSpacer}/>
@@ -941,7 +941,7 @@ class Settings extends Component {
       //
       //             <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { passedRoleName: 'Student'})}>
       //               <View>
-      //                 <Text>View Student Portal</Text>
+      //                 <Text style={[styles.standardText]}>View Student Portal</Text>
       //               </View>
       //
       //             </TouchableOpacity>
@@ -954,7 +954,7 @@ class Settings extends Component {
       //
       //                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Change Password')}>
       //                   <View>
-      //                     <Text>Change Password</Text>
+      //                     <Text style={[styles.standardText]}>Change Password</Text>
       //                   </View>
       //                 </TouchableOpacity>
       //               </View>
@@ -980,7 +980,7 @@ class Settings extends Component {
       //             <View style={styles.topPadding}>
       //               <TouchableOpacity onPress={() => this.props.navigation.navigate('Walkthrough')}>
       //                 <View>
-      //                   <Text>Change Password</Text>
+      //                   <Text style={[styles.standardText]}>Change Password</Text>
       //                 </View>
       //               </TouchableOpacity>
       //             </View>
@@ -992,7 +992,7 @@ class Settings extends Component {
       //         )}
       //
                 // <TouchableOpacity onPress={() => this.signOut()} style={[styles.btnPrimary,styles.ctaBorder]}>
-                //   <Text style={[styles.ctaColor]}>Log Out</Text>
+                //   <Text style={[styles.standardText,styles.ctaColor]}>Log Out</Text>
                 // </TouchableOpacity>
       //     </View>
       //
@@ -1004,22 +1004,22 @@ class Settings extends Component {
       //
       //           <View style={[styles.descriptionText2,styles.rowDirection]}>
       //             <View style={[styles.width40,styles.row10]}>
-      //               <Text>No.</Text>
+      //               <Text style={[styles.standardText]}>No.</Text>
       //             </View>
       //             <View style={[styles.width60,styles.row10]}>
-      //               <Text>Grade</Text>
+      //               <Text style={[styles.standardText]}>Grade</Text>
       //             </View>
       //             <View style={[styles.width100,styles.row10]}>
-      //               <Text>Project Name</Text>
+      //               <Text style={[styles.standardText]}>Project Name</Text>
       //             </View>
       //             <View style={[styles.width150,styles.row10]}>
-      //               <Text>Student Name</Text>
+      //               <Text style={[styles.standardText]}>Student Name</Text>
       //             </View>
       //             <View style={[styles.width150,styles.row10]}>
-      //               <Text>Ind. Rep. Name</Text>
+      //               <Text style={[styles.standardText]}>Ind. Rep. Name</Text>
       //             </View>
       //             <View style={[styles.width80,styles.row10]}>
-      //               <Text>Ind. Rep. Email</Text>
+      //               <Text style={[styles.standardText]}>Ind. Rep. Email</Text>
       //             </View>
       //
       //
@@ -1035,13 +1035,13 @@ class Settings extends Component {
       //                <View>
       //                  <View style={[styles.descriptionText2,styles.rowDirection]}>
       //                    <View style={[styles.width40,styles.topMargin5]}>
-      //                      <Text>#{index + 1}.</Text>
+      //                      <Text style={[styles.standardText]}>#{index + 1}.</Text>
       //                    </View>
       //                    <View style={[styles.width60,styles.headingText2,styles.ctaColor, styles.boldText]}>
       //                      {(value.grade) ? (
-      //                        <Text>{value.grade}</Text>
+      //                        <Text style={[styles.standardText]}>{value.grade}</Text>
       //                      ) : (
-      //                        <Text>N/A</Text>
+      //                        <Text style={[styles.standardText]}>N/A</Text>
       //                      )}
       //                    </View>
       //                    <View style={[styles.width100,styles.topMargin5]}>
@@ -1110,7 +1110,7 @@ class Settings extends Component {
       //
       //         <View style={[styles.row10]}>
                 // <TouchableOpacity onPress={() => this.signOut()} style={[styles.btnPrimary,styles.ctaBorder]}>
-                //   <Text style={[styles.ctaColor]}>Log Out</Text>
+                //   <Text style={[styles.standardText,styles.ctaColor]}>Log Out</Text>
                 // </TouchableOpacity>
       //         </View>
       //
@@ -1126,7 +1126,7 @@ class Settings extends Component {
       //         <Text style={[styles.headingText2]}>PBL & WBL Preferences</Text>
       //
       //         <View style={[styles.row10]}>
-      //           <Text style={[styles.row10]}>Would you like to automatically include project-based learning and work-based learning opportunities from the broader Guided Compass community?</Text>
+      //           <Text style={[styles.standardText,styles.row10]}>Would you like to automatically include project-based learning and work-based learning opportunities from the broader Guided Compass community?</Text>
                     // <Switch
                     //    onValueChange = {(value) => this.setState({ includeGuidedCompass: value })}
                     //    value = {this.state.includeGuidedCompass}
@@ -1135,7 +1135,7 @@ class Settings extends Component {
       //
       //         {(this.state.includeGuidedCompass) && (
       //           <View style={[styles.row10]}>
-      //               <Text style={[styles.row10]}>What types of opportunities would you like to include?</Text>
+      //               <Text style={[styles.standardText,styles.row10]}>What types of opportunities would you like to include?</Text>
       //               {this.state.wblPreferenceOptions.map((value, optionIndex) =>
       //                 <View key={optionIndex} style={styles.rowDirection}>
       //                   <View style={[styles.row10,styles.rightPadding]}>
@@ -1155,7 +1155,7 @@ class Settings extends Component {
       //         )}
       //
       //         {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor]}>{this.state.errorMessage}</Text>}
-      //         {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text>}
+      //         {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.standardText,styles.ctaColor]}>{this.state.successMessage}</Text>}
       //
       //         <View style={[styles.row20]}>
       //           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.savePreferences()}><Text style={[styles.whiteColor]}>Save Preferences</Text></TouchableOpacity>
@@ -1177,7 +1177,7 @@ class Settings extends Component {
               <View>
                   { (this.state.orgFocus === 'School' && this.state.roleName !== 'Student') && (
                     <View style={[styles.row10]}>
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { passedRoleName: 'Advisor' })}><Text>Switch to Advisor App</Text></TouchableOpacity>
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Home', { passedRoleName: 'Advisor' })}><Text style={[styles.standardText]}>Switch to Advisor App</Text></TouchableOpacity>
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
@@ -1185,7 +1185,7 @@ class Settings extends Component {
                   {(this.state.activeOrg === 'c2c') && (
                     <View style={[styles.rowDirection,styles.flex1,styles.row10]}>
                       <View style={styles.flex80}>
-                        <Text>Are you open to being mentored?</Text>
+                        <Text style={[styles.standardText]}>Are you open to being mentored?</Text>
                       </View>
                       <View style={styles.flex20}>
                         <View style={styles.halfSpacer}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
@@ -1214,15 +1214,15 @@ class Settings extends Component {
                   )}
 
                   {(this.state.isWorking || this.state.workMode) && (
-                    <View style={[styles.row10]}>
-                      <Text style={[styles.row10]}>Switch to Work Mode?</Text>
+                    <View style={[styles.bottomPadding]}>
+                      <Text style={[styles.standardText,styles.row10]}>Switch to Work Mode?</Text>
                       <Switch
                          onValueChange = {(value) => this.switchMode(value)}
                          value = {this.state.workMode}
                          disabled={this.state.isSaving}
                       />
 
-                      <View style={[styles.spacer]} />
+                      <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
@@ -1231,10 +1231,10 @@ class Settings extends Component {
                     <View>
                       <View style={[styles.row15]}>
                         <View style={styles.bottomPadding10}>
-                          <Text>Email Preferences</Text>
+                          <Text style={[styles.standardText]}>Email Preferences</Text>
                         </View>
 
-                        <View style={[styles.rowDirection]}>
+                        <View style={[styles.rowDirection,styles.row10]}>
                           <View style={[styles.width60]}>
                             <Switch
                                onValueChange = {(value) => this.formChangeHandler('subscribed',value)}
@@ -1251,30 +1251,30 @@ class Settings extends Component {
 
                       <View style={styles.lightHorizontalLine} />
 
-                      <View style={[styles.row15]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>{(this.state.publicProfile) ? "Make Your Profile Private" : "Make Your Profile Public"}</Text></TouchableOpacity>
+                      <View style={[styles.row20]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text style={[styles.standardText]}>{(this.state.publicProfile) ? "Make Your Profile Private" : "Make Your Profile Public"}</Text></TouchableOpacity>
                       </View>
 
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
 
-                  <View style={[styles.row15]}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })}><Text>View Labor Market Trends</Text></TouchableOpacity>
+                  <View style={[styles.row20]}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Paths', { subNavSelected: 'Trends' })}><Text style={[styles.standardText]}>View Labor Market Trends</Text></TouchableOpacity>
                   </View>
 
                   <View style={styles.lightHorizontalLine} />
 
                   {(this.state.showWalkthrough) && (
-                    <View style={[styles.row10]}>
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Walkthrough')}><Text>View Walk-through</Text></TouchableOpacity>
-                      <View style={[styles.spacer]} />
+                    <View style={[styles.row20]}>
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Walkthrough')}><Text style={[styles.standardText]}>View Walk-through</Text></TouchableOpacity>
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                       <View style={styles.lightHorizontalLine} />
                     </View>
                   )}
 
                   {(this.state.orgFocus === 'Placement') && (
-                    <View style={[styles.row10]}>
+                    <View style={[styles.bottomPadding]}>
                       <SwitchOrgs
                         emailId={this.state.emailId} activeOrg={this.state.activeOrg} myOrgs={this.state.myOrgs}
                         sharePartners={this.state.sharePartners} roleName={this.state.roleName}
@@ -1286,16 +1286,16 @@ class Settings extends Component {
 
                   {(!this.state.remoteAuth) && (
                     <View>
-                      <View style={[styles.row15]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ChangePassword')}><Text>Change Password</Text></TouchableOpacity>
+                      <View style={[styles.topPadding,styles.bottomPadding20]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('ChangePassword')}><Text style={[styles.standardText]}>Change Password</Text></TouchableOpacity>
                       </View>
 
                       <View style={styles.lightHorizontalLine} />
 
-                      <View style={[styles.row15]}>
+                      <View style={[styles.row20]}>
                         <TouchableOpacity onPress={() => this.shareApp()}>
                           <View>
-                            <Text style={[styles.ctaColor]}>Invite People to Join</Text>
+                            <Text style={[styles.standardText,styles.ctaColor]}>Invite People to Join</Text>
                           </View>
                         </TouchableOpacity >
                       </View>
@@ -1304,19 +1304,20 @@ class Settings extends Component {
                     </View>
                   )}
 
-                  <View style={[styles.row15]}>
-                    <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}><Text>Contact Us > ></Text></TouchableOpacity >
+                  <View style={[styles.row20]}>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}><Text style={[styles.standardText]}>Contact Us > ></Text></TouchableOpacity >
                   </View>
 
                   <View style={styles.lightHorizontalLine} />
+                  <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
                   <View style={[styles.row15]}>
                     <TouchableOpacity onPress={() => this.signOut()} style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
-                      <Text style={[styles.ctaColor,styles.centerText]}>Log Out</Text>
+                      <Text style={[styles.standardText,styles.ctaColor,,styles.centerText]}>Log Out</Text>
                     </TouchableOpacity>
                   </View>
 
-                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                  <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
               </View>
 

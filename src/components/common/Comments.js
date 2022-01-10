@@ -704,7 +704,6 @@ class Comments extends Component {
     }
 
     render() {
-
       return (
         <ScrollView>
           {(this.state.selectedOpportunity || this.state.selectedGroup || this.state.selectedGroupPost || this.state.selectedCurriculumPost) ? (
@@ -717,7 +716,7 @@ class Comments extends Component {
                       <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square42,styles.contain,{ borderRadius: 21 }]} />
                     </View>
                   </View>
-                  <View style={[styles.calcColumn200,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
+                  <View style={[styles.calcColumn180,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
                     <TextInput
                       style={[styles.commentTextField,styles.flex1]}
                       onChangeText={(text) => this.formChangeHandler('comment',text)}

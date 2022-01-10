@@ -520,21 +520,28 @@ class OrgDetails extends Component {
             {(this.state.orgSelected) && (
               <View style={[styles.row20]}>
                 <View style={[styles.card]}>
-                  <View style={[styles.rowDirection]}>
-                    <View style={[styles.width110]}>
+                  <View style={[styles.topPadding,styles.rowDirection]}>
+                    <View style={[styles.square30 ]}/>
+                    <View style={[styles.calcColumn120,styles.alignCenter]}>
                       <Image source={(this.state.orgSelected.webLogoURIColor) ? { uri: this.state.orgSelected.webLogoURIColor} : { uri: industryIconDark}} style={[styles.square80,styles.contain]} />
                     </View>
-                    <View style={[styles.calcColumn200]}>
-                      <Text style={[styles.headingText2]}>{this.state.orgSelected.orgName}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(this.state.orgSelected.orgURL)}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>{this.state.orgSelected.orgURL}</Text></TouchableOpacity>
-                    </View>
-                    {(this.state.inModal) && (
+
+                    {(this.state.inModal) ? (
                       <View style={[styles.width30]}>
                         <TouchableOpacity onPress={() => this.closeModal()}>
                           <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
                         </TouchableOpacity>
                       </View>
+                    ) : (
+                      <View style={[styles.square30 ]}/>
                     )}
+                  </View>
+                  <View style={[styles.row10,styles.rowDirection,styles.flexCenter]}>
+                    <View>
+                      <Text style={[styles.headingText2,styles.centerText]}>{this.state.orgSelected.orgName}</Text>
+                      <TouchableOpacity onPress={() => Linking.openURL(this.state.orgSelected.orgURL)}><Text style={[styles.standardText,styles.ctaColor,styles.boldText,styles.centerText]}>{this.state.orgSelected.orgURL}</Text></TouchableOpacity>
+                    </View>
+
                   </View>
 
                   <View style={[styles.row10,styles.rowDirection]}>
