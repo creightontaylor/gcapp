@@ -33,6 +33,7 @@ class SearchItems extends Component {
 
     componentDidMount() {
 
+      this.textInput.focus();
       this.retrieveData()
     }
 
@@ -135,7 +136,7 @@ class SearchItems extends Component {
                   searchResults.push({
                     category: 'Career Path',
                     name: response.data.careers[i - 1].name, imageURL,
-                    url: 'CareerDetails', passedState: { careerSelected: response.data.careers[i - 1].name }
+                    url: 'CareerDetails', passedState: { careerSelected: response.data.careers[i - 1] }
                   })
                 }
               }
@@ -213,11 +214,32 @@ class SearchItems extends Component {
       delayFilter();
     }
 
-    navigateAway(url,passedState) {
+    navigateAway(url,passedState,name,category) {
       console.log('navigateAway called')
 
-      this.props.closeModal()
-      this.props.navigation.navigate(url,passedState)
+      this.setState({ isSaving: true })
+
+      Axios.post('https://www.guidedcompass.com/api/save-search', {
+        url,passedState,name,category
+      })
+      .then((response) => {
+        console.log('attempting to save search')
+        if (response.data.success) {
+          console.log('saved search', response.data)
+
+          this.setState({ isSaving: false })
+          this.props.closeModal()
+          this.props.navigation.navigate(url,passedState)
+
+        } else {
+          console.log('did not save successfully')
+          this.setState({ isSaving: false })
+        }
+      }).catch((error) => {
+          console.log('save did not work', error);
+          this.setState({ isSaving: false })
+      });
+
     }
 
     render() {
@@ -233,6 +255,7 @@ class SearchItems extends Component {
                     </View>
                     <View>
                       <TextInput
+                        ref={(input) => { this.textInput = input; }}
                         style={[styles.lightBackground,styles.height40,styles.leftPadding,styles.roundedCorners,styles.descriptionText2]}
                         onChangeText={(text) => this.formChangeHandler('searchString',text)}
                         value={this.state.searchString}
@@ -290,7 +313,7 @@ class SearchItems extends Component {
                     {this.state.searchResults.map((item, index) =>
                       <View key={index} style={[styles.row7]}>
                         <View>
-                          <TouchableOpacity onPress={() => this.navigateAway(item.url,item.passedState)} style={[styles.rowDirection]}>
+                          <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.navigateAway(item.url,item.passedState,item.name,item.category)} style={[styles.rowDirection]}>
                             <View style={[styles.width45,styles.topMargin]}>
                               <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: careerMatchesIconDark}} style={[styles.square35,styles.contain]} />
                             </View>
