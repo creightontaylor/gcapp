@@ -260,7 +260,7 @@ export default class App extends Component<Props> {
               ),
               headerRight: () => (
                 <View style={{ flexDirection: 'row'}}>
-                  <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                  <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
                       <Icon name="search" size={25} color='black' />
                     </View>
@@ -278,15 +278,8 @@ export default class App extends Component<Props> {
               tabBarIcon: ({ color, size }) => (
                 <Icon name="people" size={size} color={color} />
               ),
-              headerLeft: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Match')}>
-                  <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Image source={{uri: "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/benchmarks-icon-dark.png"}} style={{ width: 25, height: 25, resizeMode: 'contain' }} />
-                  </View>
-                </TouchableOpacity>
-              ),
               headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Icon name="search" size={25} color='black' />
                   </View>
@@ -306,7 +299,7 @@ export default class App extends Component<Props> {
                 </TouchableOpacity>
               ),
               headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Icon name="search" size={25} color='black' />
                   </View>
@@ -326,7 +319,7 @@ export default class App extends Component<Props> {
                 </TouchableOpacity>
               ),
               headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Icon name="search" size={25} color='black' />
                   </View>

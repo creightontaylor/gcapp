@@ -1337,14 +1337,20 @@ class CreatePost extends Component {
       return (
         <View>
           {(this.props.modalIsOpen) && (
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View style={[styles.flex5]}>
-                <TouchableOpacity onPress={() => this.props.closeModal()}>
-                  <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-                </TouchableOpacity>
+            <View>
+              <View style={[styles.row10,styles.rowDirection,styles.horizontalPadding20,styles.topMargin20]}>
+
+                <View style={[styles.calcColumn160]}>
+                  <Text style={[styles.standardText]}>Create a Post</Text>
+                </View>
+                <View style={[styles.width60,styles.topMargin5]}>
+                  <TouchableOpacity onPress={() => this.props.closeModal()}>
+                    <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.rightText]}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={[styles.flex95]}>
-              </View>
+              <View style={[styles.lightHorizontalLine]} />
+              <View style={[styles.spacer]} />
             </View>
           )}
 

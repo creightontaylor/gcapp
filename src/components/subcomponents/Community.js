@@ -50,9 +50,19 @@ class Community extends Component {
 
   componentDidMount() {
     console.log('home component did mount');
-
     this.retrieveData()
 
+    const communityReload = this.props.navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      console.log('reloadData called')
+      this.retrieveData()
+    });
+  }
+
+  componentWillUnmount () {
+    console.log('componentWillUnmount called')
+    this.props.navigation.removeListener('communityReload')
   }
 
   retrieveData = async() => {

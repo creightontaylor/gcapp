@@ -295,6 +295,9 @@ module.exports = StyleSheet.create({
   topMargin5: {
     marginTop: 5
   },
+  topMargin8: {
+    marginTop: 8
+  },
   topMargin: {
     marginTop: 10
   },

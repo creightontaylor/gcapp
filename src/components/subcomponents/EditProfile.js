@@ -34,10 +34,20 @@ class EditProfile extends Component {
   }
 
   componentDidMount() {
-    console.log('home component did mount');
-
+    console.log('SubOpportunities did mount');
     this.retrieveData()
 
+    const editProfileReload = this.props.navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      console.log('reloadData called')
+      this.retrieveData()
+    });
+  }
+
+  componentWillUnmount () {
+    console.log('componentWillUnmount called')
+    this.props.navigation.removeListener('editProfileReload')
   }
 
   retrieveData = async() => {

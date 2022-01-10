@@ -49,10 +49,20 @@ class Careers extends Component {
   }
 
   componentDidMount() {
-    console.log('subCareers component did mount');
-
+    console.log('subCareers did mount');
     this.retrieveData()
 
+    const careersReload = this.props.navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      console.log('reloadData called')
+      this.retrieveData()
+    });
+  }
+
+  componentWillUnmount () {
+    console.log('componentWillUnmount called')
+    this.props.navigation.removeListener('careersReload')
   }
 
   retrieveData = async() => {

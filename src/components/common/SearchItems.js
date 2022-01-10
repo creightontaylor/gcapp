@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Image } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 
-class EditProject extends Component {
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
+
+class SearchItems extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-
         }
 
         this.retrieveData = this.retrieveData.bind(this)
@@ -47,9 +48,7 @@ class EditProject extends Component {
         const roleName = await AsyncStorage.getItem('roleName');
         let pictureURL = await AsyncStorage.getItem('pictureURL');
 
-        this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, pictureURL,
-          sharePosting, originalPost, posts, groupId, groupName, jobTitle
-        })
+        this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, pictureURL})
 
       } catch (error) {
        // Error retrieving data
@@ -61,11 +60,27 @@ class EditProject extends Component {
 
       return (
           <ScrollView>
-            <View>In Edit Project</View>
-          </ScrollView>
+            {(this.props.modalIsOpen) && (
+              <View>
+                <View style={[styles.row10,styles.rowDirection,styles.horizontalPadding20,styles.topMargin20]}>
+                  <View style={[styles.calcColumn160]}>
+                    <Text style={[styles.standardText]}>Search</Text>
+                  </View>
+                  <View style={[styles.width60,styles.topMargin5]}>
+                    <TouchableOpacity onPress={() => this.props.closeModal()}>
+                      <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.rightText]}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={[styles.lightHorizontalLine]} />
+                <View style={[styles.spacer]} />
+              </View>
+            )}
 
+            <Text>In Search Items</Text>
+          </ScrollView>
       )
     }
 }
 
-export default EditProject
+export default SearchItems

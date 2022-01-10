@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Pla
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
+import { useIsFocused } from '@react-navigation/native';
 
 import SubRenderPosts from '../common/RenderPosts';
 
@@ -25,6 +26,12 @@ const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/app
 const mentoringIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/mentoring-icon-blue.png';
 const gcSquareLogo = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/gc-square-logo.png';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+Icon.loadFont()
+
+import SubSearchItems from '../../components/common/SearchItems';
+import SubCreatePost from '../../components/common/CreatePost';
+
 class NewsFeed extends Component {
   constructor(props) {
     super(props)
@@ -40,9 +47,19 @@ class NewsFeed extends Component {
 
   componentDidMount() {
     console.log('home component did mount');
-
     this.retrieveData()
 
+    const newsFeedReload = this.props.navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      console.log('reloadData called')
+      this.retrieveData()
+    });
+  }
+
+  componentWillUnmount () {
+    console.log('componentWillUnmount called')
+    this.props.navigation.removeListener('newsFeedReload')
   }
 
   retrieveData = async() => {
@@ -69,6 +86,21 @@ class NewsFeed extends Component {
         // We have data!!
         console.log('email ', emailId);
         this.setState({ emailId, activeOrg, orgName, cuFirstName,cuLastName, username, orgFocus, roleName })
+
+        this.props.navigation.setOptions({ headerRight: () => (
+          <View style={{ flexDirection: 'row'}}>
+            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showSearch: true })}>
+              <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                <Icon name="search" size={25} color='black' />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showCreatePost: true })}>
+              <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
+                <Icon name="add-circle-outline" size={25} color='black' />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )})
 
         const resLimit = 4
         const self = this
@@ -307,7 +339,8 @@ class NewsFeed extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showWorkspaces: false })
+    this.setState({ modalIsOpen: false, showWorkspaces: false, showSearch: false, showCreatePost: false })
+
   }
 
   navigateAway(component) {
@@ -530,6 +563,19 @@ class NewsFeed extends Component {
 
             </ScrollView>
           )}
+
+          {(this.state.showSearch) && (
+            <View style={[styles.flex1,styles.padding20]}>
+              <SubSearchItems navigation={this.props.navigation} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} />
+            </View>
+          )}
+
+          {(this.state.showCreatePost) && (
+            <View style={[styles.flex1,styles.padding20]}>
+              <SubCreatePost navigation={this.props.navigation} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} />
+            </View>
+          )}
+
         </Modal>
       </ScrollView>
     );

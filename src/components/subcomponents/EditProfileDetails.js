@@ -2063,7 +2063,7 @@ class EditProfileDetails extends Component {
     const fileName = passedFile.fileName
     let originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
 
-    console.log('show passedFile uri: ', passedFile.uri)
+    // console.log('show passedFile uri: ', passedFile.uri)
 
     //adjust file
     passedFile['name'] = originalName
@@ -3456,8 +3456,6 @@ class EditProfileDetails extends Component {
 
     let rows = []
 
-    let showModule = true
-
     for (let i = 1; i <= this.state.projects.length; i++) {
 
       const index = i - 1
@@ -3466,22 +3464,15 @@ class EditProfileDetails extends Component {
       if (this.state.isEditingProjectsArray[i - 1]) {
         rows.push(
           <View key={rowKey}>
-            {(showModule) ? (
-              <View>
-                {i > 1 && <View><View style={styles.spacer}/><View style={styles.halfSpacer}/></View>}
-                <EditProject selectedProject={this.state.projects[i - 1]} selectedIndex={index}
-                  projectCategoryOptions={this.state.projectCategoryOptions} dateOptions={this.state.dateOptions}
-                  collaboratorOptions={this.state.collaboratorOptions}  hourOptions={this.state.hourOptions}
-                  functionOptions={this.state.functionOptions}  industryOptions={this.state.industryOptions}
-                  finishedEditing={this.finishedEditing} userPic={this.state.pictureURL} passData={this.passData}
-                />
-              </View>
-            ) : (
-              <View>
-
-              </View>
-            )}
-
+            <View>
+              {i > 1 && <View><View style={styles.spacer}/><View style={styles.halfSpacer}/></View>}
+              <EditProject selectedProject={this.state.projects[i - 1]} selectedIndex={index}
+                projectCategoryOptions={this.state.projectCategoryOptions} dateOptions={this.state.dateOptions}
+                collaboratorOptions={this.state.collaboratorOptions}  hourOptions={this.state.hourOptions}
+                functionOptions={this.state.functionOptions}  industryOptions={this.state.industryOptions}
+                finishedEditing={this.finishedEditing} userPic={this.state.pictureURL} passData={this.passData}
+              />
+            </View>
           </View>
         )
       } else {

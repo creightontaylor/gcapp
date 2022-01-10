@@ -4,6 +4,7 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DocumentPicker from 'react-native-document-picker';
 
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
 const xIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/x-icon.png';
@@ -1261,62 +1262,122 @@ class Apply extends Component {
     if (eventName === 'resumeURL') {
       this.setState({ resumeURL: eventValue })
     } else if (eventName === 'resume' || eventName === 'coverLetter' || eventName === 'letterOfRecommendation' || eventName === 'identification' || eventName === 'transcript') {
-      console.log('show event name 1: ', event.target.files[0])
+      // console.log('show event name 1: ', event.target.files[0])
 
-      if (event.target.files[0]) {
+      const self = this
+      const openDocumentPicker = async ()=>{
+          // Pick a single file
+          try {
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+            });
+            console.log('output' + JSON.stringify(res));
 
-        if(event.target.files[0].size > 2 * 1024 * 1024) {
-          console.log('file is too big')
+            const mbLimit = 10
+            if (res.size > mbLimit * 1024 * 1024) {
+              console.log('file is too big')
 
-          let tasks = this.state.tasks
-          const errorMessage = 'File must be less than 2MB.'
-          for (let i = 1; i <= tasks.length; i++) {
-            if (tasks[i - 1].shorthand === eventName) {
-              tasks[i - 1]['isCompleted'] = false
-              // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
-              tasks[i - 1]['message'] = errorMessage
-            }
-          }
-
-          this.setState({ tasks })
-
-        } else {
-          console.log('file is small enough', event.target.files[0].size)
-
-          let reader = new FileReader();
-          reader.onload = (e) => {
-            if (event.target) {
-              console.log('show event name 2: ', eventName)
-              if (eventName === 'resume') {
-                this.setState({ resume: e.target.result });
-              } else if (eventName === 'coverLetter') {
-                this.setState({ coverLetter: e.target.result });
-              } else if (eventName === 'letterOfRecommendation') {
-                this.setState({ letterOfRecommendation: e.target.result });
-              } else if (eventName === 'identification') {
-                this.setState({ identification: e.target.result });
-              } else if (eventName === 'transcript') {
-                this.setState({ transcript: e.target.result });
+              let tasks = this.state.tasks
+              const errorMessage = 'File must be less than 2MB.'
+              for (let i = 1; i <= tasks.length; i++) {
+                if (tasks[i - 1].shorthand === eventName) {
+                  tasks[i - 1]['isCompleted'] = false
+                  // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
+                  tasks[i - 1]['message'] = errorMessage
+                }
               }
-              console.log('how do i access the image', e.target.result)
-            }
-          };
-          reader.readAsDataURL(event.target.files[0]);
-          // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-          this.saveFile(eventName, event.target.files[0])
 
-          let tasks = this.state.tasks
-          for (let i = 1; i <= tasks.length; i++) {
-            if (tasks[i - 1].shorthand === eventName) {
-              tasks[i - 1]['isCompleted'] = true
-              // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
-              tasks[i - 1]['message'] = event.target.files[0].name
+              self.setState({ tasks })
+
+            } else {
+              console.log('file is small enough')
+
+              let tasks = this.state.tasks
+              for (let i = 1; i <= tasks.length; i++) {
+                if (tasks[i - 1].shorthand === eventName) {
+                  tasks[i - 1]['isCompleted'] = true
+                  // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
+                  tasks[i - 1]['message'] = res[0].name
+                }
+              }
+
+              self.setState({ tasks })
+
+              let file = res[0]
+              file['fileName'] = file.name
+              file['fileSize'] = file.size
+              file['uri'] = file.uri
+              file['type'] = file.type
+              // console.log('show me the uri: ', file.uri)
+              self.saveFile(eventName, file)
+
+            }
+
+          } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                // User cancelled the picker, exit any dialogs or menus and move on
+            } else {
+                throw err
             }
           }
-
-          this.setState({ tasks })
-        }
       }
+
+      openDocumentPicker()
+
+      // if (event.target.files[0]) {
+      //
+      //   if(event.target.files[0].size > 2 * 1024 * 1024) {
+      //     console.log('file is too big')
+      //
+      //     let tasks = this.state.tasks
+      //     const errorMessage = 'File must be less than 2MB.'
+      //     for (let i = 1; i <= tasks.length; i++) {
+      //       if (tasks[i - 1].shorthand === eventName) {
+      //         tasks[i - 1]['isCompleted'] = false
+      //         // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
+      //         tasks[i - 1]['message'] = errorMessage
+      //       }
+      //     }
+      //
+      //     this.setState({ tasks })
+      //
+      //   } else {
+      //     console.log('file is small enough', event.target.files[0].size)
+      //
+      //     let reader = new FileReader();
+      //     reader.onload = (e) => {
+      //       if (event.target) {
+      //         console.log('show event name 2: ', eventName)
+      //         if (eventName === 'resume') {
+      //           this.setState({ resume: e.target.result });
+      //         } else if (eventName === 'coverLetter') {
+      //           this.setState({ coverLetter: e.target.result });
+      //         } else if (eventName === 'letterOfRecommendation') {
+      //           this.setState({ letterOfRecommendation: e.target.result });
+      //         } else if (eventName === 'identification') {
+      //           this.setState({ identification: e.target.result });
+      //         } else if (eventName === 'transcript') {
+      //           this.setState({ transcript: e.target.result });
+      //         }
+      //         console.log('how do i access the image', e.target.result)
+      //       }
+      //     };
+      //     reader.readAsDataURL(event.target.files[0]);
+      //     // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+      //     this.saveFile(eventName, event.target.files[0])
+      //
+      //     let tasks = this.state.tasks
+      //     for (let i = 1; i <= tasks.length; i++) {
+      //       if (tasks[i - 1].shorthand === eventName) {
+      //         tasks[i - 1]['isCompleted'] = true
+      //         // tasks[i - 1]['message'] = eventName.charAt(0).toUpperCase() + eventName.slice(1) + ' was successfully uploaded'
+      //         tasks[i - 1]['message'] = event.target.files[0].name
+      //       }
+      //     }
+      //
+      //     this.setState({ tasks })
+      //   }
+      // }
     } else if (eventName === 'resumeName') {
       const resumeName = eventValue
       const index = this.state.resumeNames.indexOf(eventValue)
@@ -1547,15 +1608,23 @@ class Apply extends Component {
     // 2.16 MB
 
     const emailId = this.state.emailId
-    const fileName = passedFile.name
+    // const fileName = passedFile.name
+    const fileName = passedFile.fileName
     const originalName = category + '|' + emailId + '|' + fileName + '|' + new Date()
+
+    passedFile['name'] = originalName
+    passedFile['size'] = passedFile.fileSize
+    passedFile['uri'] = passedFile.uri
+    if (Platform.OS === 'ios') {
+      passedFile['uri'] = passedFile.uri.replace('file://', '')
+    }
 
     let fileData = new FormData();
     // const fileName = 'profileImage'
     // const fileName = 'newFile'
     fileData.append('baseFileName', passedFile, originalName)
 
-    fetch("/api/file-upload", {
+    fetch("https://www.guidedcompass.com/api/file-upload", {
         mode: 'no-cors',
         method: "POST",
         body: fileData
@@ -2867,8 +2936,10 @@ class Apply extends Component {
                   <View>
                     <View>
                       <Text style={[styles.row10]}>Submit New Resume</Text>
-                      <Text for={"file-upload-" + index} class="custom-file-upload-squarish">Upload New</Text>
-                      {/*<input type="file" id={"file-upload-" + index} name={this.state.tasks[index].shorthand} onChange={this.formChangeHandler} accept="application/pdf" />*/}
+
+                      <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.formChangeHandler('resume',null)}>
+                        <Text style={[styles.descriptionText1,styles.whiteColor]}>Upload New</Text>
+                      </TouchableOpacity>
                     </View>
                     {(this.state.resumes && this.state.resumes.length > 0) && (
                       <View>
@@ -2910,8 +2981,10 @@ class Apply extends Component {
             <View style={[styles.width70,styles.rightText,styles.rightPadding]}>
               {(this.state.tasks[index].action === 'Upload') ? (
                 <View>
-                  <Text for={"file-upload-" + index} style={[styles.btnSquarish,styles.ctaBackgroundColor]}>{this.state.tasks[index].action}</Text>
-                  {/*<input type="file" id={"file-upload-" + index} name={this.state.tasks[index].shorthand} onChange={this.formChangeHandler} accept={(task.shorthand === 'identification') ? ".pdf,image/*" : "application/pdf"} />*/}
+
+                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.formChangeHandler(task.shorthand,null)}>
+                    <Text style={[styles.descriptionText1,styles.whiteColor]}>Upload New</Text>
+                  </TouchableOpacity>
                 </View>
               ) : (
                 <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor]} onPress={() => this.actionTapped(index)}><Text style={[styles.descriptionText1,styles.whiteColor]}>{this.state.tasks[index].action}</Text></TouchableOpacity>
