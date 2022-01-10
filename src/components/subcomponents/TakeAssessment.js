@@ -128,7 +128,7 @@ class TakeAssessment extends Component {
       const assessment = this.props.assessment
       let resultsData = this.props.resultsData
       const assessmentDescription = this.props.assessmentDescription
-
+      console.log('taggers type: ', type)
       const emailId = await AsyncStorage.getItem('email')
       let email = emailId
       const username = await AsyncStorage.getItem('username');
@@ -138,6 +138,7 @@ class TakeAssessment extends Component {
       const orgName = await AsyncStorage.getItem('orgName');
       const roleName = await AsyncStorage.getItem('roleName');
       const remoteAuth = await AsyncStorage.getItem('remoteAuth');
+      const pathway = await AsyncStorage.getItem('pathway');
 
       let activeOrg = await AsyncStorage.getItem('activeOrg')
       if (!activeOrg) {
@@ -1716,13 +1717,13 @@ class TakeAssessment extends Component {
         rows.push(
           <View key={this.state.questions[passedIndex] + passedIndex} style={[styles.row10]}>
             {(answerChoices) && (
-              <View style={[styles.rowDirection]}>
+              <View style={[styles.rowDirection,styles.flexWrap]}>
                 {answerChoices.map((value, optionIndex) =>
                   <View key={passedIndex}>
                     <View style={[styles.row5,styles.rightPadding]}>
                       {(testAnswers.includes(value)) ? (
                         <View>
-                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "multipleAnswer|" + passedIndex, value }}) }>
+                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler( "multipleAnswer|" + passedIndex, value) }>
                             <View>
                               <Text style={[styles.descriptionText2,styles.whiteColor,styles.row10]}>{value}</Text>
                             </View>
@@ -1730,7 +1731,7 @@ class TakeAssessment extends Component {
                         </View>
                       ) : (
                         <View>
-                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "multipleAnswer|" + passedIndex, value }}) }>
+                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("multipleAnswer|" + passedIndex, value) }>
                             <Text style={[styles.descriptionText2,styles.row10]}>{value}</Text>
                           </TouchableOpacity>
                         </View>
@@ -1869,13 +1870,13 @@ class TakeAssessment extends Component {
                         <View>
                           {(responses[passedIndex].includes(this.state.answerChoices[passedIndex][optionIndex])) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "multipleChoice|" + passedIndex, value: this.state.answerChoices[passedIndex][optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler( "multipleChoice|" + passedIndex, this.state.answerChoices[passedIndex][optionIndex]) }>
                                 <Text style={[styles.descriptionText2,styles.whiteColor,styles.row10]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "multipleChoice|" + passedIndex, value: this.state.answerChoices[passedIndex][optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("multipleChoice|" + passedIndex, this.state.answerChoices[passedIndex][optionIndex]) }>
                                 <Text style={[styles.descriptionText2,styles.row10]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
@@ -1885,13 +1886,13 @@ class TakeAssessment extends Component {
                         <View>
                           {(responses[passedIndex] === this.state.answerChoices[passedIndex][optionIndex]) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "multipleChoice|" + passedIndex, value: this.state.answerChoices[passedIndex][optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler("multipleChoice|" + passedIndex, this.state.answerChoices[passedIndex][optionIndex]) }>
                                 <Text style={[styles.descriptionText2,styles.whiteColor,styles.row10]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "multipleChoice|" + passedIndex, value: this.state.answerChoices[passedIndex][optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("multipleChoice|" + passedIndex, this.state.answerChoices[passedIndex][optionIndex]) }>
                                 <Text style={[styles.descriptionText2,styles.row10]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
@@ -1929,13 +1930,13 @@ class TakeAssessment extends Component {
                     <View style={[styles.row5,styles.rightPadding]}>
                       {(Array.isArray(responses[passedIndex]) && responses[passedIndex].includes(this.state.answerChoices[passedIndex][optionIndex])) ? (
                         <View>
-                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: eventName, value: this.state.answerChoices[passedIndex][optionIndex]}})}>
+                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler(eventName,this.state.answerChoices[passedIndex][optionIndex])}>
                             <Text style={[styles.descriptionText2,styles.whiteColor,styles.row10]}>{value}</Text>
                           </TouchableOpacity>
                         </View>
                       ) : (
                         <View>
-                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: eventName, value: this.state.answerChoices[passedIndex][optionIndex]}})}>
+                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler(eventName, this.state.answerChoices[passedIndex][optionIndex])}>
                             <Text style={[styles.descriptionText2,styles.row10]}>{value}</Text>
                           </TouchableOpacity>
                         </View>
@@ -1975,7 +1976,7 @@ class TakeAssessment extends Component {
         rows.push(
           <View key="ranking">
             <View>
-              <Text>Please drag & drop the below options to the order you prefer.</Text>
+              <Text style={[styles.standardText]}>Please drag & drop the below options to the order you prefer.</Text>
               <View style={styles.spacer} />
             </View>
 
@@ -2087,7 +2088,7 @@ class TakeAssessment extends Component {
             { (this.state.type === 'interests') && (
               <View>
                 <Text style={[styles.capitalizeText,styles.boldText,styles.headingText4,styles.row10]}>{i}. {this.state.questions[index]}</Text>
-                <Text style={[styles.row10]}>{this.state.descriptions[index]}</Text>
+                <Text style={[styles.standardText,styles.row10]}>{this.state.descriptions[index]}</Text>
               </View>
             )}
 
@@ -2307,8 +2308,8 @@ class TakeAssessment extends Component {
     return (
       <View key={0}>
         <View>
-          <View style={[styles.calcColumn60,styles.rowDirection]}>
-            <Text style={[styles.row10]}>Name of Skill</Text>
+          <View style={[styles.calcColumn60]}>
+            <Text style={[styles.standardText,styles.row10]}>Name of Skill</Text>
             <TextInput
               style={styles.textInput}
               onChangeText={(text) => this.formChangeHandler("skillName" , text)}
@@ -2317,11 +2318,11 @@ class TakeAssessment extends Component {
               placeholderTextColor="grey"
             />
           </View>
-          <View>
 
+          <View>
             <View style={[styles.calcColumn130,styles.topMargin5,styles.rowDirection]}>
               <View style={[styles.rightMargin]}>
-                <Text style={[styles.row10]}>Your Percentile</Text>
+                <Text style={[styles.standardText,styles.row10]}>Your Percentile</Text>
               </View>
               <View>
                 <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
@@ -2614,13 +2615,13 @@ class TakeAssessment extends Component {
 
                                       {(this.props.fromApply) ? (
                                         <View>
-                                          <Text>Your results have been saved and imported into your application.</Text>
+                                          <Text style={[styles.standardText]}>Your results have been saved and imported into your application.</Text>
                                           <View style={styles.spacer} />
                                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.closeModal()}><Text style={[styles.whiteColor]}>Close View</Text></TouchableOpacity>
                                         </View>
                                       ) : (
                                         <View>
-                                          <Text>View your results on the previous screen.</Text>
+                                          <Text style={[styles.standardText]}>View your results on the previous screen.</Text>
                                           <View style={styles.spacer} />
                                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.navigation.navigate(resultsPath, { assessment, resultsData: this.state.resultsData, assessments: this.state.assessments, index: this.state.index })}><Text style={[styles.whiteColor]}>View Results</Text></TouchableOpacity>
                                         </View>
@@ -2642,11 +2643,11 @@ class TakeAssessment extends Component {
                                       <View style={[styles.topPadding]}>
                                         {(this.props.fromApply) ? (
                                           <View>
-                                            <Text>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
+                                            <Text style={[styles.standardText]}>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
                                           </View>
                                         ) : (
                                           <View>
-                                            <Text>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
+                                            <Text style={[styles.standardText]}>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
                                           </View>
                                         )}
                                       </View>
@@ -2658,6 +2659,7 @@ class TakeAssessment extends Component {
 
                                 {(this.state.type === 'skills' && !this.props.fromApply) ? (
                                   <View>
+                                    {console.log('in it')}
                                     {this.renderTaggingAssessment()}
 
                                     <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
@@ -2692,24 +2694,25 @@ class TakeAssessment extends Component {
           </View>
 
           <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-           <View key="info" style={[styles.calcColumn60,styles.padding40]}>
+           <View key="info" style={[styles.flex1,styles.padding40]}>
 
             {(this.state.showPercentileInfo) && (
               <View>
-                <View style={[styles.rowDirection]}>
-                  <View style={[styles.calcColumn110]}>
-                    <Text style={[styles.headingText2,styles.row10]}>Percentile Info</Text>
+                <View style={[styles.rowDirection,styles.topMargin20]}>
+                  <View style={[styles.calcColumn130]}>
+                    <Text style={[styles.headingText6,styles.row10]}>Percentile Info</Text>
                   </View>
-                  <View style={[styles.width50]}>
+                  <View style={[styles.width50,styles.topMargin15]}>
                     <TouchableOpacity onPress={() => this.closeModal()}>
                       <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain,styles.pinRight]} />
                     </TouchableOpacity>
                   </View>
-
                 </View>
 
+                <View style={[styles.lightHorizontalLine]} />
+
                 <View style={styles.spacer} /><View style={styles.spacer} />
-                <Text>Choose what percentile you would rate yourself compared to your peers. For example, if you rate yourself in the top 20% in Microsoft Excel, you are saying that you are more skilled than four of five people, on average, in your age group.</Text>
+                <Text style={[styles.standardText]}>Choose what percentile you would rate yourself compared to your peers. For example, if you rate yourself in the top 20% in Microsoft Excel, you are saying that you are more skilled than four of five people, on average, in your age group.</Text>
               </View>
             )}
 
@@ -2729,7 +2732,7 @@ class TakeAssessment extends Component {
                 <View style={styles.spacer} /><View style={styles.spacer} />
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.row10]}>Select a Pathway</Text>
+                  <Text style={[styles.standardText,styles.row10]}>Select a Pathway</Text>
                   <Picker
                     selectedValue={this.state.selectedPathway}
                     onValueChange={(itemValue, itemIndex) =>
@@ -2743,7 +2746,6 @@ class TakeAssessment extends Component {
                   {(this.state.selectedPathway && this.state.selectedPathway !== '') && (
                     <View>
                       {this.renderQuestions()}
-
 
                       <View style={styles.spacer} /><View style={styles.spacer} />
 

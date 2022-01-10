@@ -3470,7 +3470,7 @@ class EditLog extends Component {
                     {(!this.props.fromWalkthrough) && (
                       <View style={[styles.row10]}>
                         {(this.state.logType === 'Goal') && (
-                          <Text style={[styles.descriptionText1]}>Set <TouchableOpacity style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}onPress={() => this.setState({ modalIsOpen: true, showSmartDefinition: true })}><Text>S.M.A.R.T.</Text></TouchableOpacity> career goals to get suggestions, get resources, and make use of accountability groups.</Text>
+                          <Text style={[styles.descriptionText1]}>Set <TouchableOpacity style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}onPress={() => this.setState({ modalIsOpen: true, showSmartDefinition: true })}><Text style={[styles.standardText]}>S.M.A.R.T.</Text></TouchableOpacity> career goals to get suggestions, get resources, and make use of accountability groups.</Text>
                         )}
                         {(this.state.logType === 'Meeting') && (
                           <Text style={[styles.descriptionText1]}>Add meetings and associated meeting minutes within accountability groups.</Text>
@@ -3511,11 +3511,11 @@ class EditLog extends Component {
                           <View style={[styles.rightPadding20]}>
                             {(this.state.subNavCategories[index] === this.state.currentPage) ? (
                               <View style={[styles.selectedCarouselItem]}>
-                                <Text key={value}>{value}</Text>
+                                <Text key={value} style={[styles.standardText]}>{value}</Text>
                               </View>
                             ) : (
                               <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
-                                <Text key={value}>{value}</Text>
+                                <Text key={value} style={[styles.standardText]}>{value}</Text>
                               </TouchableOpacity>
                             )}
                           </View>
@@ -3853,7 +3853,7 @@ class EditLog extends Component {
                                       }>
                                       {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
                                     </Picker>
-                                    <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text>here</Text></TouchableOpacity></Text>
+                                    <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                                   </View>
                                 )}
@@ -4199,7 +4199,7 @@ class EditLog extends Component {
                                       }>
                                       {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
                                     </Picker>
-                                    <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text>here</Text></TouchableOpacity></Text>
+                                    <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                                   </View>
                                 )}
@@ -4706,7 +4706,7 @@ class EditLog extends Component {
                                 }>
                                 {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
                               </Picker>
-                              <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text>here</Text></TouchableOpacity></Text>
+                              <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                             </View>
                             <View>
@@ -4916,7 +4916,7 @@ class EditLog extends Component {
                           <View>
                             <View>
                               <View style={[styles.row10]}>
-                                <Text>Decision</Text>
+                                <Text style={[styles.standardText]}>Decision</Text>
                                 {(this.state.pollConnections) && (
                                   <Text style={[styles.descriptionText2,styles.errorColor,styles.bottomPadding5]}>Participants of the poll will automatically be notified of your decision at the deadline</Text>
                                 )}
@@ -5039,7 +5039,7 @@ class EditLog extends Component {
                     ) : (
                       <View>
                         <Text style={[styles.errorColor]}>You have no suggestions yet.</Text>
-                        <Text style={[styles.topMargin20]}>People can provide suggestions for contacts, articles, videos, events, job opportunities and more if you share your goal with people: <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })} style={[styles.ctaColor]} >{'https://www.guidedcompass.com/app/profile/' + this.state.username}</TouchableOpacity>. Adjust your profile public settings according to what you want people to see by clicking on "Public Preferences" from your profile.</Text>
+                        <Text style={[styles.topMargin20]}>People can provide suggestions for contacts, articles, videos, events, job opportunities and more if you share your goal with people: <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })} ><Text style={[styles.standardText,styles.ctaColor]}>{'https://www.guidedcompass.com/app/profile/' + this.state.username}</Text></TouchableOpacity>. Adjust your profile public settings according to what you want people to see by clicking on "Public Preferences" from your profile.</Text>
                       </View>
                     )}
                   </View>
@@ -5065,19 +5065,19 @@ class EditLog extends Component {
 
                 {(this.state.currentPage === 'Events') && (
                   <View style={[styles.topPadding20]}>
-                    <SubOpportunities calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Events"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Events"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Projects') && (
                   <View style={[styles.topPadding20]}>
-                    <SubOpportunities calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Projects"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Projects"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Work') && (
                   <View style={[styles.topPadding20]}>
-                    <SubOpportunities calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Work"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Work"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
@@ -5478,9 +5478,9 @@ class EditLog extends Component {
                     <View>
                       <View style={[styles.row10]}>
                         {(this.state.remoteAuth) ? (
-                          <Text><Text style={[styles.errorColor,styles.boldText]}>Note:</Text> The advisor will be notified. Additionally, the teacher, work-based learning coordinator, or mentor will be able to view / edit this session from their portal.</Text>
+                          <Text style={[styles.standardText]}><Text style={[styles.errorColor,styles.boldText]}>Note:</Text> The advisor will be notified. Additionally, the teacher, work-based learning coordinator, or mentor will be able to view / edit this session from their portal.</Text>
                         ) : (
-                          <Text><Text style={[styles.errorColor,styles.boldText]}>Note:</Text> The advisor will be notified. Additionally, if the advisor signs up as a teacher, work-based learning coordinator, or mentor, they will be able to view / edit this session from their portal.</Text>
+                          <Text style={[styles.standardText]}><Text style={[styles.errorColor,styles.boldText]}>Note:</Text> The advisor will be notified. Additionally, if the advisor signs up as a teacher, work-based learning coordinator, or mentor, they will be able to view / edit this session from their portal.</Text>
                         )}
                       </View>
                       <View style={[styles.horizontalLine]} />

@@ -249,7 +249,7 @@ class Favorites extends Component {
 
               rows.push(
                 <View key={index} style={[styles.calcColumn60,styles.row20,styles.rowDirection]}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: item })} style={[styles.rowDirection,styles.calcColumn120]}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: item })} style={[styles.rowDirection,styles.calcColumn120]}>
                     <View style={[styles.width60]}>
                       <Image source={(item.imageURL) ? { uri: careerMatchesIconBlue} : { uri: careerMatchesIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
                     </View>
@@ -318,7 +318,7 @@ class Favorites extends Component {
 
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
-                  <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/' + item.username + '/profile')} style={[styles.rowDirection, styles.calcColumn120]}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username })} style={[styles.rowDirection, styles.calcColumn120]}>
                     <View style={[styles.width60]}>
                       <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: mentoringIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
                     </View>
@@ -548,7 +548,7 @@ class Favorites extends Component {
                         <Text style={[styles.headingText5]}>{item.employerName}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.headingText6]}>{item.employerIndustry}</Text>
+                        <Text style={[styles.standardText]}>{item.employerIndustry}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>

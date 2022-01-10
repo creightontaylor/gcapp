@@ -523,7 +523,7 @@ class AssessmentDetails extends Component {
             } else if (score === 4) {
               backgroundColorClass = styles.primaryBackgroundLight
             } else if (score === 5) {
-              backgroundColorClass = styles.sendaryBackgroundLight
+              backgroundColorClass = styles.senaryBackgroundLight
             }
 
             return backgroundColorClass
@@ -1045,7 +1045,7 @@ class AssessmentDetails extends Component {
                   ) : (
                     <View style={[styles.calcColumn60,styles.topMarginNegaative4]}>
                       <View style={[styles.calcColumn60,styles.ctaBackgroundColor]}>
-                        <View style={[styles.row15]}>
+                        <View style={[styles.padding15,styles.ctaBorder]}>
                           <Text style={[styles.whiteColor]}>Results</Text>
                         </View>
                       </View>

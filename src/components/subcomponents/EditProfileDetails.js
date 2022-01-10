@@ -3827,8 +3827,8 @@ class EditProfileDetails extends Component {
 
             </View>
 
-            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
-              <View>
+            <View style={[styles.row10,styles.flex1]}>
+              <View style={[styles.rowDirection]}>
                 <View>
                   <Text style={[styles.standardText,styles.row10]}>Skill Tags</Text>
                 </View>
@@ -4025,7 +4025,7 @@ class EditProfileDetails extends Component {
             </View>
 
             <View style={[styles.calcColumn60,styles.alignEnd,styles.justifyEnd]}>
-              <TouchableOpacity onPress={() => this.saveExperience(rowKey)} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Experience</TouchableOpacity>
+              <TouchableOpacity onPress={() => this.saveExperience(rowKey)} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor,styles.standardText]}>Save Experience</Text></TouchableOpacity>
             </View>
 
             {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
@@ -4189,7 +4189,7 @@ class EditProfileDetails extends Component {
               </View>
 
               <View style={[styles.calcColumn60,styles.alignEnd,styles.justifyEnd]}>
-                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Extracurricular</TouchableOpacity>
+                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor]}>Save Extracurricular</Text></TouchableOpacity>
               </View>
 
               {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
@@ -4299,7 +4299,7 @@ class EditProfileDetails extends Component {
               </View>
 
               <View style={[styles.calcColumn60,styles.alignEnd,styles.justifyEnd]}>
-                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")} style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]}>Save Award</TouchableOpacity>
+                <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor]}>Save Award</Text></TouchableOpacity>
               </View>
 
               {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}

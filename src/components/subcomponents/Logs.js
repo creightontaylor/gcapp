@@ -356,7 +356,7 @@ class Logs extends Component {
               <TouchableOpacity style={[styles.calcColumn60,styles.ctaColor,styles.rowDirection]} onPress={() => this.segueToLink('EditLog', index)}>
                 <View style={[styles.calcColumn110]}>
                   <View style={[styles.headingText6]}>
-                      <Text>{title}</Text>
+                      <Text style={[styles.standardText]}>{title}</Text>
                   </View>
 
                   <Text style={[styles.descriptionText2]}>{subtitle}</Text>
@@ -376,12 +376,12 @@ class Logs extends Component {
       if (!this.props.fromWalkthrough) {
         rows.push(
           <View key={1} style={[styles.flexCenter,styles.flex1,styles.centerText,styles.padding30]}>
-            <View className="padding-5-percent" >
-              <Image source={{ uri: logIconDark}} className="empty-state-icon"/>
+            <View style={[styles.padding30]} >
+              <Image source={{ uri: logIconDark}} style={[styles.square100,styles.contain]}/>
               <Text style={[styles.headingText3]}>No Logs Yet</Text>
-              <Text className="empty-state-text full-width">Log information (e.g. goals, advising sessions, work applications) so that mentors and {this.state.orgName} staff can better help.</Text>
+              <Text style={[styles.standardText,styles.descriptionTextColor]}>Log information (e.g. goals, advising sessions, work applications) so that mentors and {this.state.orgName} staff can better help.</Text>
 
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs })} className="btn btn-primary cta-background-color top-margin-30"><Text style={[styles.whiteColor]}>Add New Log</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.topMargin30]}><Text style={[styles.standardText,styles.whiteColor]}>Add New Log</Text></TouchableOpacity>
             </View>
           </View>
         )
@@ -445,11 +445,11 @@ class Logs extends Component {
                             <View style={[styles.row10,styles.rightPadding20]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
                                 <View style={[styles.selectedCarouselItem]}>
-                                  <Text key={value}>{value}</Text>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </View>
                               ) : (
                                 <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
-                                  <Text key={value}>{value}</Text>
+                                  <Text key={value} style={[styles.standardText]}>{value}</Text>
                                 </TouchableOpacity>
                               )}
                             </View>

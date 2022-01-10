@@ -57,7 +57,7 @@ class Completions extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
-          console.log('Org info query attempted', response.data);
+          console.log('Org info query attempted');
 
             if (response.data.success) {
               console.log('org info query worked')
@@ -79,7 +79,7 @@ class Completions extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('Rsvps query worked', response.data);
+              console.log('Rsvps query worked');
 
               let rsvps = response.data.rsvps
               let completions = this.state.completions
@@ -105,7 +105,7 @@ class Completions extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('Submissions query worked', response.data);
+              console.log('Submissions query worked');
 
               let postings = response.data.postings
               let completions = this.state.completions
@@ -131,7 +131,7 @@ class Completions extends Component {
         Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email, orgCode } })
         .then((response) => {
             if (response.data.success) {
-              console.log('Applications submitted query worked', response.data);
+              console.log('Applications submitted query worked');
 
               let applications = response.data.applications
               let completions = this.state.completions
@@ -157,7 +157,7 @@ class Completions extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('Offers received query worked', response.data);
+              console.log('Offers received query worked');
 
               let offers = response.data.offers
               let completions = this.state.completions
@@ -183,7 +183,7 @@ class Completions extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('Work received query worked', response.data);
+              console.log('Work received query worked');
 
               let workArray = response.data.workArray
               let completions = this.state.completions
@@ -207,7 +207,7 @@ class Completions extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/completions', { params: { emailId: email } })
        .then((response) => {
-         console.log('Completions query attempted', response.data);
+         console.log('Completions query attempted');
 
          if (response.data.success) {
            console.log('successfully retrieved completions')
@@ -217,10 +217,10 @@ class Completions extends Component {
            if (completions && completions.length > 0) {
              Axios.get('https://www.guidedcompass.com/api/completions/detail', { params: { completions, orgCode } })
              .then((response2) => {
-               console.log('Completions detail query attempted', response2.data);
+               console.log('Completions detail query attempted');
 
                if (response2.data.success) {
-                 console.log('successfully retrieved completions detail', response2.data.completions)
+                 console.log('successfully retrieved completions detail')
 
                  let newCompletions = []
                  for (let i = 1; i <= response2.data.completions.length; i++) {
@@ -319,20 +319,20 @@ class Completions extends Component {
           let title = this.state.completions[i - 1].postingTitle
           let subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].postingEmployerName + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
           let completionLink = 'OpportunityDetails'
-          let passedState = null
+          let passedState = { objectId: this.state.completions[i - 1].postingId }
           let disabledLink = false
 
           if (this.state.completions[i - 1].completionType === 'Offer') {
             title = this.state.completions[i - 1].title
             subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].employerName + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
             completionLink = 'EditLog'
-            passedState = { objectId: this.state.completions[i - 1]._id }
+            passedState = { objectId: this.state.completions[i - 1].postingId }
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'RSVP') {
             title = this.state.completions[i - 1].postingTitle
             subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
             completionLink = 'OpportunityDetails'
-            passedState = null
+            passedState = { objectId: this.state.completions[i - 1]._id}
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'Submission') {
             title = ''
@@ -344,13 +344,13 @@ class Completions extends Component {
             }
             subtitle = this.state.completions[i - 1].completionType + " | Submitted to: " + this.state.completions[i - 1].name + ' on ' + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
             completionLink = 'OpportunityDetails'
-            passedState = null
+            passedState = { objectId: this.state.completions[i - 1]._id}
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'Work') {
             title = this.state.completions[i - 1].title + ' @ ' + this.state.completions[i - 1].employerName
             subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
             completionLink = 'OpportunityDetails'
-            passedState = null
+            passedState = { objectId: this.state.completions[i - 1].postingId}
             disabledLink = true
           }
 

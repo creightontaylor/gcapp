@@ -1085,7 +1085,7 @@ class Careers extends Component {
                             style={[styles.descriptionText2]}
                             onChangeText={(text) => this.formChangeHandler('search',text)}
                             value={this.state.searchString}
-                            placeholder="Search 1,000+ careers..."
+                            placeholder="Search 1,000+ career paths..."
                             placeholderTextColor="grey"
                           />
                         </View>
