@@ -840,7 +840,7 @@ class Walkthrough extends Component {
                 <View style={[styles.topMargin30]}>
                   <Text style={[styles.headingText3]}>Skill Self-Assessment (Optional)</Text>
                   <Text style={[styles.topMargin5]}>Add some of the skills you're best at.</Text>
-                  <SubTakeAssessment navigation={this.props.navigation} type="skills" assessmentTitle="Skill Self-Assessment" assessments={this.state.assessments} index={3} assessment={this.state.assessment} resultsData={[null, null, null, this.state.skillsData, null]} assessmentDescription={this.state.assessmentDescription} fromWalkthrough={true}/>
+                  <SubTakeAssessment navigation={this.props.navigation} type="skills" assessmentTitle="Skill Self-Assessment" assessments={this.state.assessments} index={3} assessment={this.state.assessment} resultsData={[null, null, null, this.state.skillsData, null]} assessmentDescription={this.state.assessmentDescription} fromWalkthrough={true} />
                 </View>
 
                 <View style={[styles.row20]}>
@@ -850,7 +850,7 @@ class Walkthrough extends Component {
                 <View style={[styles.row10]}>
                   <Text style={[styles.headingText3]}>Request an Endorsement (Optional)</Text>
 
-                  <SubRequestEndorsements enableRequestEndorsement="" />
+                  <SubRequestEndorsements enableRequestEndorsement="" navigation={this.props.navigation} fromWalkthrough={true} />
                 </View>
 
                 <View style={[styles.calcColumn60,styles.topMargin50]}>

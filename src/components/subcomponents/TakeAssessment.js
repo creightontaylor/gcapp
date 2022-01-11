@@ -2529,7 +2529,7 @@ class TakeAssessment extends Component {
     }
 
     return (
-        <ScrollView style={styles.card}>
+        <ScrollView style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
           <View>
             {(this.state.animating) ? (
               <View style={[styles.flexCenter,styles.flex1]}>

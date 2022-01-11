@@ -5150,7 +5150,7 @@ class EditProfileDetails extends Component {
     } else {
 
       return (
-          <ScrollView style={[styles.card]}>
+          <ScrollView style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
               <View>
                   {(!this.props.fromApply) && (
                     <View style={[styles.rowDirection]}>

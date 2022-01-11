@@ -1787,7 +1787,7 @@ class RequestEndorsements extends Component {
 
       return (
           <ScrollView>
-              <View style={[styles.card]}>
+              <View style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
                   <View style={[styles.row20]}>
                     {(!this.props.fromWalkthrough) && (
                       <Text style={[styles.headingText2]}>Request an Endorsement</Text>
@@ -2093,7 +2093,7 @@ class RequestEndorsements extends Component {
                                   />
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
-                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder]} disabled={this.state.unready} onPress={() => this.addItem('competency')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('competency')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                                 </View>
                               </View>
                             </View>
@@ -2135,13 +2135,12 @@ class RequestEndorsements extends Component {
                       </View>
 
 
-
                       { (this.state.successMessage!== '') && <Text style={[styles.ctaColor]}>{this.state.successMessage}</Text> }
                       { (this.state.errorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.errorMessage}</Text> }
 
                       <View style={[styles.row30]}>
                         <View style={[styles.spacer]} />
-                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.handleSubmit()}><Text style={[styles.whiteColor]}>Request Endorsement</Text></TouchableOpacity>
+                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.handleSubmit()}><Text style={[styles.standardText,styles.whiteColor]}>Request Endorsement</Text></TouchableOpacity>
                         <View style={[styles.superSpacer]} />
                       </View>
                     </View>
