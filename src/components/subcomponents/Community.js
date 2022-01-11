@@ -1618,7 +1618,7 @@ class Community extends Component {
 
               {(this.state.showEditGroup) && (
                 <View key="showEditGroup" style={[styles.fullScreenWidth,styles.padding20]}>
-                   <SubEditGroup selectedGroup={this.state.groupToEdit} navigation={this.props.navigation} closeModal={this.closeModal} />
+                   <SubEditGroup selectedGroup={this.state.groupToEdit} navigation={this.props.navigation} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} />
                  </View>
               )}
 

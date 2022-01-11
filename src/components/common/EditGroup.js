@@ -8,7 +8,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png'
 const imageIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/image-icon.png'
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
-const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/deniedIcon.png'
+const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/denied-icon.png'
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
 
 import {convertDateToString} from '../functions/convertDateToString';
 
@@ -789,7 +790,7 @@ class EditGroup extends Component {
     render() {
 
       return (
-          <View>
+          <ScrollView>
             <View key="addOrgGroup" style={[styles.calcColumn80]}>
                 {(this.props.fromAdvisor) ? (
                   <View>
@@ -808,10 +809,21 @@ class EditGroup extends Component {
                     <View style={styles.spacer} /><View style={styles.spacer} />
                   </View>
                 ) : (
-                  <View>
-                    <Text style={[styles.headingText2,styles.bottomPadding]}>Create an Acccountability Group</Text>
-                    <Text style={[styles.topPadding]}>An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</Text>
-                    <View style={styles.spacer} /><View style={styles.spacer} />
+                  <View style={(this.props.modalIsOpen) ? [styles.rowDirection] : []}>
+                    <View style={(this.props.modalIsOpen) ? [styles.calcColumn110] : []}>
+                      <Text style={[styles.headingText2,styles.bottomPadding]}>Create an Acccountability Group</Text>
+                      <Text style={[styles.topPadding]}>An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</Text>
+                      <View style={styles.spacer} /><View style={styles.spacer} />
+                    </View>
+                    {(this.props.modalIsOpen) ? (
+                      <View style={[styles.topMargin]}>
+                        <TouchableOpacity onPress={() => this.props.closeModal()}>
+                          <Image source={{ uri: closeIcon }} style={[styles.square20,styles.leftMargin]} />
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
                   </View>
                 )}
 
@@ -1101,21 +1113,21 @@ class EditGroup extends Component {
                      <Text style={[styles.headingText6]}>Invite People</Text>
                      <Text style={[styles.descriptionText2,styles.bottomPadding,styles.topPadding5]}>Note: acountablity groups are limited to 6 people</Text>
                     <View style={[styles.spacer]} />
-                     <View>
-                      <View style={[styles.row10]}>
-                        <TextInput
-                          style={styles.textInput}
-                          onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
-                          value={this.state.searchString}
-                          placeholder="Search members..."
-                          placeholderTextColor="grey"
-                          multiline={true}
-                          numberOfLines={4}
-                        />
-                      </View>
-                      <View style={[styles.row10]}>
-                        <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]: [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready}  onPress={() => this.addItem('invite')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
-                      </View>
+                     <View style={[styles.rowDirection,styles.row10]}>
+                        <View style={[styles.calcColumn160]}>
+                          <TextInput
+                            style={[styles.textInput,styles.standardText]}
+                            onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
+                            value={this.state.searchString}
+                            placeholder="Search members..."
+                            placeholderTextColor="grey"
+                            multiline={true}
+                            numberOfLines={4}
+                          />
+                        </View>
+                        <View style={[styles.width80,styles.leftPadding]}>
+                          <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]: [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready}  onPress={() => this.addItem('invite')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                        </View>
 
                      </View>
 
@@ -1264,17 +1276,22 @@ class EditGroup extends Component {
                      {(this.state.confirmDelete) ? (
                        <View>
                         <Text style={[styles.bottomMargin,styles.errorColor]}>Are you sure you want to delete this group?</Text>
-                        <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.standardBorder,styles.rightMargin,styles.flexCenter]} onPress={() => this.deleteGroup()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Confirm & Delete</Text></TouchableOpacity>
-                        <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: false })}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+
+                        <View style={[styles.rowDirection]}>
+                          <TouchableOpacity style={[styles.btnSquarish,styles.errorBackgroundColor,styles.standardBorder,styles.rightMargin,styles.flexCenter]} onPress={() => this.deleteGroup()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Confirm & Delete</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: false })}><Text style={[styles.descriptionText1,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                        </View>
+
                        </View>
                      ) : (
                        <View>
-                         <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
-                         <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
-                         {(this.state._id) && (
-                           <TouchableOpacity style={[styles.btnPrimary, styles.errorBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.standardText,styles.whiteColor]}>Delete Group</Text></TouchableOpacity>
-                         )}
-
+                        <View style={[styles.rowDirection]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter,styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter,styles.topMargin]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                          {(this.state._id) && (
+                            <TouchableOpacity style={[styles.btnPrimary, styles.errorBackgroundColor,styles.flexCenter,styles.topMargin]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.descriptionText1,styles.whiteColor]}>Delete Group</Text></TouchableOpacity>
+                          )}
+                        </View>
                        </View>
                      )}
                    </View>
@@ -1283,7 +1300,7 @@ class EditGroup extends Component {
 
              </View>
 
-          </View>
+          </ScrollView>
 
       )
     }

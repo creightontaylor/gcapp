@@ -5173,8 +5173,6 @@ class EditProfileDetails extends Component {
                           </View>
                         )}
                       </View>
-
-
                     </View>
                   )}
               </View>
@@ -5185,8 +5183,8 @@ class EditProfileDetails extends Component {
                     <View>
                       <View style={styles.row10}>
                         <View>
-                          <View style={[styles.calcColumn60]}>
-                            <View style={styles.relativePosition}>
+                          <View style={[styles.flex1]}>
+                            <View style={[styles.relativePosition,styles.flexCenter]}>
                               <TouchableOpacity onPress={() => this.formChangeHandler("profilePic",null)} style={[styles.rowDirection,styles.centerHorizontally]}>
                                 <Image source={
                                   this.state.profilePicImage ? ( { uri: this.state.profilePicImage} )
@@ -5202,7 +5200,6 @@ class EditProfileDetails extends Component {
                                   </View>
                                 )}
                               </TouchableOpacity>
-                              {/*<input type="file" id="profilePic" name="profilePic" onChange={this.formChangeHandler} accept="image/*" />*/}
                             </View>
                           </View>
 
@@ -5871,7 +5868,7 @@ class EditProfileDetails extends Component {
                           <View style={[styles.row10]}>
                             <View style={styles.spacer}/><View style={styles.halfSpacer}/>
                             <Text style={[styles.headingText3]}>Self-Identification / Personal Info</Text>
-                            <Text style={[styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text style={[styles.standardText]}>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
+                            <Text style={[styles.standardText,styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
                           </View>
 
                           <View>

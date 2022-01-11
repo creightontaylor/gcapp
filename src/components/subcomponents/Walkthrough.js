@@ -900,11 +900,11 @@ class Walkthrough extends Component {
           <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
             <View key="showEditGroup" style={[styles.padding20]}>
               {(this.state.showEditGroup) && (
-                <SubEditGroup selectedGroup={this.state.selectedGroup} navigation={this.props.navigation} closeModal={this.closeModal} passGroup={this.passGroup} fromWalkthrough={true}/>
+                <SubEditGroup selectedGroup={this.state.selectedGroup} navigation={this.props.navigation} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} passGroup={this.passGroup} fromWalkthrough={true}/>
               )}
               {(this.state.showSearchGroups) && (
                 <View>
-                  <SubGroups navigation={this.props.navigation} category="Accountability" fromWalkthrough={true} />
+                  <SubGroups navigation={this.props.navigation} category="Accountability" fromWalkthrough={true} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} />
                 </View>
               )}
 

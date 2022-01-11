@@ -440,10 +440,10 @@ class OpportunityDetails extends Component {
                                   if (response.data.applications.length > 0) {
                                     console.log('the array is greater than 0')
                                     for (let i = 1; i <= response.data.applications.length; i++) {
-                                      console.log('compare the two: ', i, response.data.applications[i - 1].postingId, selectedOpportunity._id)
+                                      // console.log('compare the two: ', i, response.data.applications[i - 1].postingId, selectedOpportunity._id)
                                       if (response.data.applications[i - 1].postingId === selectedOpportunity._id) {
                                         const application = response.data.applications[i - 1]
-                                        console.log('application: ', application)
+                                        // console.log('application: ', application)
                                         if (application) {
 
                                           const resumeURL = application.resumeURL
@@ -2486,7 +2486,7 @@ class OpportunityDetails extends Component {
                               </View>
                             )}
 
-                            {(this.state.selectedOpportunity.payRange && this.state.selectedOpportunity.payRange !== '') && (
+                            {(this.state.selectedOpportunity.payRange && this.state.selectedOpportunity.payRange !== '') ? (
                               <View style={[styles.row10,styles.rowDirection]}>
                                 <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
@@ -2496,9 +2496,11 @@ class OpportunityDetails extends Component {
                                   <Text style={[styles.standardText]}>{this.state.selectedOpportunity.payRange}</Text>
                                 </View>
                               </View>
+                            ) : (
+                              <View />
                             )}
 
-                            {(this.state.selectedOpportunity.supplementalPayArray && this.state.selectedOpportunity.supplementalPayArray.length > 0) && (
+                            {(this.state.selectedOpportunity.supplementalPayArray && this.state.selectedOpportunity.supplementalPayArray.length > 0) ? (
                               <View style={[styles.row10,styles.rowDirection]}>
                                 <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
@@ -2508,9 +2510,11 @@ class OpportunityDetails extends Component {
                                   <Text style={[styles.standardText]}>{this.state.selectedOpportunity.supplementalPayArray.toString()}</Text>
                                 </View>
                               </View>
+                            ) : (
+                              <View />
                             )}
 
-                            {(this.state.selectedOpportunity.benefits && this.state.selectedOpportunity.benefits.length > 0) && (
+                            {(this.state.selectedOpportunity.benefits && this.state.selectedOpportunity.benefits.length > 0) ? (
                               <View style={[styles.row10,styles.rowDirection]}>
                                 <View style={[styles.width33,styles.rightPadding]}>
                                   <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
@@ -2520,12 +2524,14 @@ class OpportunityDetails extends Component {
                                   <Text style={[styles.standardText]}>{this.state.selectedOpportunity.benefits.toString()}</Text>
                                 </View>
                               </View>
+                            ) : (
+                              <View />
                             )}
                           </View>
 
                         </View>
 
-                        {(this.state.selectedOpportunity.postType !== 'Track' && this.state.selectedOpportunity.subPostType !== 'Track') && (
+                        {(this.state.selectedOpportunity.postType !== 'Track' && this.state.selectedOpportunity.subPostType !== 'Track') ? (
                           <View>
                             <View>
                               {(!this.state.selectedOpportunity.direct) && (
@@ -2662,6 +2668,8 @@ class OpportunityDetails extends Component {
                             </View>
 
                           </View>
+                        ) : (
+                          <View />
                         )}
                       </View>
 
@@ -2860,38 +2868,63 @@ class OpportunityDetails extends Component {
 
                 {(this.state.selectedOpportunity.postType === 'Assignment' || this.state.selectedOpportunity.postType === 'Problem' || this.state.selectedOpportunity.postType === 'Challenge') && (
                   <View>
-                    <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-
-                    <View style={[styles.rowDirection]}>
-                      <View style={[styles.calcColumn130]}>
-                        <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.name}</Text>
-
-                        <View style={[styles.spacer]} />
-
-                        <View style={[styles.rowDirection,styles.flexWrap]}>
-                          <View>
-                            <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</Text>
-                          </View>
-
-                          {(this.state.selectedOpportunity.employerName) && (
-                            <View style={[styles.leftPadding5]}>
-                              {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
-                                <Text style={[styles.descriptionText1]}>@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}>{this.state.selectedOpportunity.employerName}</TouchableOpacity></Text>
-                              ) : (
-                                <Text style={[styles.descriptionText1]}>@ {this.state.selectedOpportunity.employerName}</Text>
-                              )}
-                            </View>
-                          )}
+                    {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
+                      <View style={[styles.rowDirection,styles.row10]}>
+                        <View style={[styles.calcColumn130,styles.height40]}>
+                          <Text style={[styles.headingText2,styles.ctaColor]}>${this.state.selectedOpportunity.prizes[0]}</Text>
                         </View>
 
+                        <View>
+                          <TouchableOpacity style={[styles.pinRight]} onPress={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
+                            <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
+                              <View style={[styles.padding7]}>
+                                <Image source={(this.state.selectedOpportunity.upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]}/>
+                              </View>
+                              <View style={[styles.verticalSeparator30]} />
+                              <View style={[styles.horizontalPadding10]}>
+                                <View style={[styles.halfSpacer]} />
+                                <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.selectedOpportunity.upvotes.length}</Text>
+                              </View>
+
+                            </View>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                            {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
+                              <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+                                <View style={[styles.row7,styles.horizontalPadding10]}>
+                                  <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
+                                </View>
+                                <View style={[styles.row10,styles.rightPadding,styles.centerText]}>
+                                  <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
+                                </View>
+
+                              </View>
+                            ) : (
+                              <View style={[styles.standardBorder,styles.roundedCorners]}>
+                                {(this.state.emailId) && (
+                                  <View style={[styles.row5,styles.horizontalPadding]}>
+                                    <Text style={[styles.descriptionText3,styles.boldText,styles.centerText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+
+                    <View style={[styles.rowDirection]}>
+                      <View style={(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? [styles.calcColumn60] : [styles.calcColumn130]}>
+                        <Text style={[styles.headingText2]}>{this.state.selectedOpportunity.name}</Text>
                       </View>
 
-                      <View style={[styles.width70,styles.rightText]}>
-                        {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
-                          <View>
-                            <Text style={[styles.headingText2,styles.ctaColor]}>${this.state.selectedOpportunity.prizes[0]}</Text>
-                          </View>
-                        ) : (
+                      {(this.state.selectedOpportunity.postType === 'Challenge' && this.state.selectedOpportunity.prizes && this.state.selectedOpportunity.prizes[0]) ? (
+                        <View />
+                      ) : (
+                        <View style={[styles.rowDirection,styles.width70]}>
                           <View>
                             <TouchableOpacity style={[styles.pinRight]} onPress={() => this.voteOnItem(this.state.selectedOpportunity, 'up', 0) }>
                               <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
@@ -2906,34 +2939,51 @@ class OpportunityDetails extends Component {
 
                               </View>
                             </TouchableOpacity>
-                          </View>
-                        )}
 
-                        <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
-                          {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
-                            <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
-                              <View style={[styles.row7,styles.horizontalPadding10]}>
-                                <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
-                              </View>
-                              <View style={[styles.row10,styles.rightPadding,styles.centerText]}>
-                                <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
-                              </View>
+                            <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.selectedOpportunity) }>
+                              {(this.state.favorites.includes(this.state.selectedOpportunity._id)) ? (
+                                <View style={[styles.ctaBorder,styles.ctaBackgroundColor,styles.roundedCorners,styles.rowDirection]}>
+                                  <View style={[styles.row7,styles.horizontalPadding10]}>
+                                    <Image source={{ uri: checkmarkIconWhite}} style={[styles.square12,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.row10,styles.rightPadding,styles.centerText]}>
+                                    <Text style={[styles.descriptionText3,styles.boldText,styles.whiteColor]}>Followed</Text>
+                                  </View>
 
-                            </View>
-                          ) : (
-                            <View style={[styles.standardBorder,styles.roundedCorners]}>
-                              {(this.state.emailId) && (
-                                <View style={[styles.row5,styles.horizontalPadding]}>
-                                  <Text style={[styles.descriptionText3,styles.boldText,styles.centerText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
+                                </View>
+                              ) : (
+                                <View style={[styles.standardBorder,styles.roundedCorners]}>
+                                  {(this.state.emailId) && (
+                                    <View style={[styles.row5,styles.horizontalPadding]}>
+                                      <Text style={[styles.descriptionText3,styles.boldText,styles.centerText]}>{(this.state.emailId) ? "Follow" : "Register"}</Text>
+                                    </View>
+                                  )}
                                 </View>
                               )}
-                            </View>
-                          )}
-                        </TouchableOpacity>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      )}
+                    </View>
 
+                    <View>
+                      <View style={[styles.spacer]} />
+
+                      <View style={[styles.rowDirection,styles.flexWrap]}>
+                        <View>
+                          <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.contributorFirstName} {this.state.selectedOpportunity.contributorLastName}, {this.state.selectedOpportunity.contributorTitle}</Text>
+                        </View>
+
+                        {(this.state.selectedOpportunity.employerName) && (
+                          <View style={[styles.leftPadding5]}>
+                            {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
+                              <Text style={[styles.descriptionText1]}>@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.employerName}</Text></TouchableOpacity></Text>
+                            ) : (
+                              <Text style={[styles.descriptionText1]}>@ {this.state.selectedOpportunity.employerName}</Text>
+                            )}
+                          </View>
+                        )}
                       </View>
-
-
                     </View>
 
                     <View style={[styles.superSpacer]}/>
@@ -3133,7 +3183,7 @@ class OpportunityDetails extends Component {
                       {(this.state.viewIndex === 0) && (
                         <View>
 
-                          {(this.state.selectedOpportunity.videoLink && this.state.selectedOpportunity.videoLink !== '') && (
+                          {(this.state.selectedOpportunity.videoLink && this.state.selectedOpportunity.videoLink !== '') ? (
                             <View>
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
@@ -3148,9 +3198,11 @@ class OpportunityDetails extends Component {
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.summary) && (
+                          {(this.state.selectedOpportunity.summary) ? (
                             <View>
                               <View>
                                 <Text style={[styles.headingText4]}>Summary</Text>
@@ -3161,9 +3213,11 @@ class OpportunityDetails extends Component {
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.submissionDeadline) && (
+                          {(this.state.selectedOpportunity.submissionDeadline) ? (
                             <View>
                               <View>
                                 <Text style={[styles.headingText4]}>Submission Deadline</Text>
@@ -3180,9 +3234,11 @@ class OpportunityDetails extends Component {
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.duration) && (
+                          {(this.state.selectedOpportunity.duration) ? (
                             <View>
                               <View>
                                 <Text style={[styles.headingText4]}>Duration</Text>
@@ -3194,12 +3250,14 @@ class OpportunityDetails extends Component {
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           {(this.state.selectedOpportunity.isExternal && this.state.selectedOpportunity.source) ? (
                             <View>
                             <Text style={[styles.headingText4]}>External Source</Text>
-                            <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.source)}>{this.state.selectedOpportunity.source}</TouchableOpacity>
+                            <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.source)}><Text style={[styles.standardText]}>{this.state.selectedOpportunity.source}</Text></TouchableOpacity>
                             <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
                           ) : (
@@ -3219,7 +3277,7 @@ class OpportunityDetails extends Component {
                             </View>
                           )}
 
-                          {(this.state.selectedOpportunity.background) && (
+                          {(this.state.selectedOpportunity.background) ? (
                             <View>
                             <Text style={[styles.headingText4]}>Background</Text>
 
@@ -3229,9 +3287,11 @@ class OpportunityDetails extends Component {
 
                             <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.employerInfo) && (
+                          {(this.state.selectedOpportunity.employerInfo) ? (
                             <View>
                               <Text style={[styles.headingText4]}>Employer Info</Text>
 
@@ -3240,11 +3300,13 @@ class OpportunityDetails extends Component {
                               </View>
 
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                          {(this.state.selectedOpportunity.lessons) && (
+                          {(this.state.selectedOpportunity.lessons) ? (
                             <View>
                             <Text style={[styles.headingText4]}>Lessons</Text>
 
@@ -3254,9 +3316,11 @@ class OpportunityDetails extends Component {
 
                             <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.postType === 'Challenge') && (
+                          {(this.state.selectedOpportunity.postType === 'Challenge') ? (
                             <View>
                               <Text style={[styles.headingText4]}>Rules</Text>
 
@@ -3266,9 +3330,11 @@ class OpportunityDetails extends Component {
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
-                          {(this.state.selectedOpportunity.guidelines) && (
+                          {(this.state.selectedOpportunity.guidelines) ? (
                             <View>
                               <Text style={[styles.headingText4]}>Guidelines</Text>
 
@@ -3277,20 +3343,24 @@ class OpportunityDetails extends Component {
                               </View>
 
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                          {(this.state.selectedOpportunity.resources && this.state.selectedOpportunity.resources.length > 0) && (
+                          {(this.state.selectedOpportunity.resources && this.state.selectedOpportunity.resources.length > 0) ? (
                             <View>
                             <Text style={[styles.headingText4]}>Resources</Text>
 
                             <View style={[styles.row5]}>
-                              {this.state.selectedOpportunity.resources.map((value, index) => <View><Text style={[styles.descriptionText2]}>{index + 1}. </Text><TouchableOpacity onPress={() => Linking.openURL(value)}>{value}</TouchableOpacity></View>)}
+                              {this.state.selectedOpportunity.resources.map((value, index) => <View><Text style={[styles.descriptionText2]}>{index + 1}. </Text><TouchableOpacity onPress={() => Linking.openURL(value)}><Text style={[styles.ctaColor,styles.descriptionText2]}>{value}</Text></TouchableOpacity></View>)}
                             </View>
 
                             <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           {(this.state.selectedOpportunity.postType === 'Challenge') && (
@@ -3315,9 +3385,9 @@ class OpportunityDetails extends Component {
                               <View>
                                 <Text style={[styles.headingText4]}>Timeline</Text>
                                 <View style={[styles.row5]}>
-                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</View>
-                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</View>
-                                  <View><Text style={[styles.descriptionText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</View>
+                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</Text>
+                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</Text>
+                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</Text>
                                 </View>
                               </View>
 
@@ -3338,7 +3408,7 @@ class OpportunityDetails extends Component {
 
                           <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
-                          {(this.state.selectedOpportunity.postType === 'Challenge') && (
+                          {(this.state.selectedOpportunity.postType === 'Challenge') ? (
                             <View>
                               {(this.state.registrationPassed || this.state.hasRegistered) ? (
                                 <View>
@@ -3555,6 +3625,8 @@ class OpportunityDetails extends Component {
                                 </View>
                               )}
                             </View>
+                          ) : (
+                            <View />
                           )}
 
                           <View>

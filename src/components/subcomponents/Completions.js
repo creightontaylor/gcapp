@@ -332,7 +332,7 @@ class Completions extends Component {
             title = this.state.completions[i - 1].postingTitle
             subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
             completionLink = 'OpportunityDetails'
-            passedState = { objectId: this.state.completions[i - 1]._id}
+            passedState = { objectId: this.state.completions[i - 1].postingId}
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'Submission') {
             title = ''

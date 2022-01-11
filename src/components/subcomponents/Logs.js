@@ -352,17 +352,17 @@ class Logs extends Component {
 
         if (showLog) {
           rows.push(
-            <View key={this.state.logs[i - 1]._id} style={[styles.calcColumn60,styles.row10]}>
-              <TouchableOpacity style={[styles.calcColumn60,styles.ctaColor,styles.rowDirection]} onPress={() => this.segueToLink('EditLog', index)}>
-                <View style={[styles.calcColumn110]}>
+            <View key={this.state.logs[i - 1]._id} style={(this.props.fromWalkthrough) ? [styles.fullScreenWidth,styles.row10] : [styles.calcColumn60,styles.row10]}>
+              <TouchableOpacity style={(this.props.fromWalkthrough) ? [styles.fullScreenWidth,styles.ctaColor,styles.rowDirection] : [styles.calcColumn60,styles.ctaColor,styles.rowDirection]} onPress={() => this.segueToLink('EditLog', index)}>
+                <View style={(this.props.fromWalkthrough) ? [styles.calcColumn100] : [styles.calcColumn90]}>
                   <View style={[styles.headingText6]}>
                       <Text style={[styles.standardText]}>{title}</Text>
                   </View>
 
                   <Text style={[styles.descriptionText2]}>{subtitle}</Text>
                 </View>
-                <View style={[styles.width50]}>
-                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain,styles.pinRight]}/>
+                <View style={[styles.width30]}>
+                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.leftMargin]}/>
                 </View>
               </TouchableOpacity>
 
@@ -424,7 +424,7 @@ class Logs extends Component {
 
       return (
           <ScrollView>
-            <View style={[styles.card]}>
+            <View style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
                 {(!this.props.fromWalkthrough) && (
                   <View>
                     <View style={[styles.row20,styles.rowDirection]}>
@@ -442,7 +442,7 @@ class Logs extends Component {
                       <View>
                         <ScrollView style={[styles.carousel,styles.lightBackground,styles.rowDirection]} horizontal={true}>
                           {this.state.subNavCategories.map((value, index) =>
-                            <View style={[styles.row10,styles.rightPadding20]}>
+                            <View style={[styles.row15,styles.rightPadding20]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
                                 <View style={[styles.selectedCarouselItem]}>
                                   <Text key={value} style={[styles.standardText]}>{value}</Text>

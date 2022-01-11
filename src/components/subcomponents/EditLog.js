@@ -3428,7 +3428,7 @@ class EditLog extends Component {
         <View>
           <View>
             <View style={[styles.row10,styles.rowDirection]}>
-              <View style={[styles.calcCoumn100]}>
+              <View style={[styles.calcColumn100]}>
                 {this.state.editExisting ? (
                   <View>
                     <Text style={[styles.headingText2]}>Edit {this.state.logType}</Text>

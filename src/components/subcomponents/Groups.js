@@ -18,6 +18,7 @@ const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png';
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 
 import SubEditGroup from '../../components/common/EditGroup';
 
@@ -508,10 +509,10 @@ class Groups extends Component {
 
         rows.push(
           <View key={i}>
-            <View style={[styles.topMargin20,styles.horizontalPadding20]}>
+            <View style={[styles.topMargin20]}>
               <TouchableOpacity onPress={() => this.viewGroup(this.state.groups[i - 1])}>
                 <View style={[styles.elevatedBox,styles.whiteBackground]} >
-                  <View style={[styles.calcColumn40,styles.relativePosition]}>
+                  <View style={(this.props.modalIsOpen) ? [styles.calcColumn20,styles.relativePosition] : [styles.calcColumn40,styles.relativePosition]}>
                     <Image source={(this.state.groups[i - 1].pictureURL) ? { uri: this.state.groups[i - 1].pictureURL} :{ uri: "https://guidedcompass-bucket.s3-us-west-2.amazonaws.com/headerImages/1210x311.png"}} style={[styles.calcColumn40,styles.height150]}  />
                     <View style={[styles.darkTint]} />
                     <View style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteLeft5]}>
@@ -838,6 +839,25 @@ class Groups extends Component {
     return (
         <ScrollView>
           <View style={[styles.topMargin20]}>
+            {(this.props.modalIsOpen) && (
+              <View>
+                <View>
+                  <View style={[styles.bottomPadding,styles.calcColumn120,styles.rowDirection]}>
+                    <View style={[styles.calcColumn120]}>
+                      <Text style={[styles.headingText6]}>Groups</Text>
+                    </View>
+                    <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                      <TouchableOpacity onPress={() => this.props.closeModal()}>
+                        <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.spacer} />
+                <View style={[styles.lightHorizontalLine]} />
+              </View>
+            )}
             <View>
               {(this.state.matchingView) ? (
                 <View>
@@ -925,20 +945,23 @@ class Groups extends Component {
 
                     </View>*/}
 
-                    <View style={[styles.fullScreenWidth,styles.row5,styles.whiteBackground,styles.standardBorder,styles.mediumShadow,styles.rowDirection]}>
-                      <View style={(this.state.matchingView) ? [styles.fullScreenWidth] : [styles.width50,styles.flexCenter]}>
-                        <TouchableOpacity style={(this.state.matchingView) ? [] : [styles.flex1,styles.bottomPadding,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, false)}>
-                          <Image source={(this.state.matchingView) ? { uri: matchIconSelected} : { uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.topMargin]}/>
-                        </TouchableOpacity>
-                      </View>
-                      <View style={[styles.row3,styles.whiteBackground,styles.calcColumn100,styles.rowDirection]}>
-                        <View style={[styles.topMargin15,styles.rightPadding5]}>
+                    <View style={(this.props.modalIsOpen) ? [styles.flex1,styles.row5,styles.whiteBackground,styles.standardBorder,styles.mediumShadow,styles.rowDirection] : [styles.fullScreenWidth,styles.row5,styles.whiteBackground,styles.standardBorder,styles.mediumShadow,styles.rowDirection]}>
+                      {(!this.props.modalIsOpen) && (
+                        <View style={(this.state.matchingView) ? [styles.fullScreenWidth] : [styles.width50,styles.flexCenter]}>
+                          <TouchableOpacity style={(this.state.matchingView) ? [] : [styles.flex1,styles.bottomPadding,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, false)}>
+                            <Image source={(this.state.matchingView) ? { uri: matchIconSelected} : { uri: matchIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.topMargin]}/>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+
+                      <View style={(this.props.modalIsOpen) ? [styles.row3,styles.rowDirection] : [styles.row3,styles.whiteBackground,styles.calcColumn100,styles.rowDirection]}>
+                        <View style={(this.props.modalIsOpen) ? [styles.row5,styles.rightPadding5,styles.leftPadding5] : [styles.topMargin15,styles.rightPadding5]}>
                           <Image source={{ uri: searchIcon}} style={[styles.square18,styles.contain,styles.padding5]}/>
                         </View>
-                        <View style={[styles.calcColumn130]}>
+                        <View style={(this.props.modalIsOpen) ? [styles.calcColumn120] : [styles.calcColumn130]}>
                           <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                           <TextInput
-                            style={[styles.topMargin,styles.descriptionText2]}
+                            style={(this.props.modalIsOpen) ? [styles.descriptionText2] : [styles.topMargin,styles.descriptionText2]}
                             onChangeText={(text) => this.formChangeHandler("search", text)}
                             value={this.state.searchString}
                             placeholder={(this.state.userType === 'Peers') ? "Search peers and potential team members..." : "Search..."}
@@ -1062,7 +1085,7 @@ class Groups extends Component {
             ) : (
               <View style={[styles.topPadding20]}>
                 {(this.state.groups && this.state.groups.length > 0) ? (
-                  <View>
+                  <View style={(this.props.modalIsOpen) ? [] : [styles.horizontalPadding20]}>
                     {this.renderGroups()}
 
                   </View>
