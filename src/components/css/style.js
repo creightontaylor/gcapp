@@ -1423,6 +1423,9 @@ module.exports = StyleSheet.create({
   absoluteRight5: {
     right: '5%'
   },
+  pinBottom: {
+    justifyContent: 'space-between'
+  },
   nowrap: {
 
   },
@@ -1521,7 +1524,7 @@ module.exports = StyleSheet.create({
   textInput: {
     height: 40,
     backgroundColor: '#fff',
-    borderColor: 'gray',
+    borderColor: faintColor,
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,

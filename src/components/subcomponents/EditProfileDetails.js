@@ -25,6 +25,7 @@ const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const deleteIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/delete-icon-dark.png';
 const skillsIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon.png';
 const courseIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-dark.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import ProjectDetails from './ProjectDetails';
 import EditProject from './EditProject';
@@ -39,7 +40,6 @@ class EditProfileDetails extends Component {
     super(props)
     this.state = {
       allowMultipleFiles: true,
-      showEducationArray: true,
 
       profilePicFile: null,
       profilePicImage: null,
@@ -176,29 +176,6 @@ class EditProfileDetails extends Component {
     this.segueToApp = this.segueToApp.bind(this)
 
   }
-
-  // const [date, setDate] = useState(new Date(1598051730000));
-  // const [mode, setMode] = useState('date');
-  // const [show, setShow] = useState(false);
-  //
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   setShow(Platform.OS === 'ios');
-  //   setDate(currentDate);
-  // };
-  //
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-  //
-  // const showDatepicker = () => {
-  //   showMode('date');
-  // };
-  //
-  // const showTimepicker = () => {
-  //   showMode('time');
-  // };
 
   componentDidMount() {
     console.log('home component did mount');
@@ -1064,6 +1041,9 @@ class EditProfileDetails extends Component {
 
   formChangeHandler = (eventName,eventValue) => {
     console.log('formChangeHandler called: ', eventName, eventValue)
+
+    // for all pickers
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'profilePic') {
       console.log('profilePicSelectedHandler changed')
@@ -4556,7 +4536,10 @@ class EditProfileDetails extends Component {
 
   closeModal() {
 
-    this.setState({ modalIsOpen: false, showPublicProfileExtentInfo: false, showGrade: false, showJobFunction: false, showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false });
+    this.setState({ modalIsOpen: false, showPublicProfileExtentInfo: false, showGrade: false, showJobFunction: false,
+      showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false,
+      showPicker: false
+    });
 
     // remove object
     AsyncStorage.removeItem('objectId')
@@ -5466,100 +5449,112 @@ class EditProfileDetails extends Component {
                     </View>
                   </View>
 
-                  {(this.state.showEducationArray) ? (
-                    <View>
-                      {(this.state.education) ? (
-                        <View>
-                          {this.state.education.map((item, optionIndex) =>
-                            <View key={optionIndex}>
-                              <View style={styles.spacer} />
-                              <View style={[styles.row10,styles.rowDirection]}>
-                                <View style={[styles.calcColumn80]}>
-                                  <Text style={[styles.headingText6]}>Education #{optionIndex + 1}{(item.name) ? ": " + item.name : ""}</Text>
-                                </View>
-                                <View style={styles.width20}>
-                                  <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('education', optionIndex)}>
-                                    <Image source={{ uri: deleteIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
-                                  </TouchableOpacity>
-                                </View>
+                  <View>
+                    {(this.state.education) ? (
+                      <View>
+                        {this.state.education.map((item, optionIndex) =>
+                          <View key={optionIndex}>
+                            <View style={styles.spacer} />
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View style={[styles.calcColumn80]}>
+                                <Text style={[styles.headingText6]}>Education #{optionIndex + 1}{(item.name) ? ": " + item.name : ""}</Text>
                               </View>
+                              <View style={styles.width20}>
+                                <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('education', optionIndex)}>
+                                  <Image source={{ uri: deleteIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
 
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                  {(this.state.activeOrg === 'exp') ? (
-                                    <Picker
-                                      selectedValue={item.name}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("education|name|" + optionIndex,itemValue)
-                                      }>
-                                      {this.state.schoolOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
-                                  ) : (
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("education|name|" + optionIndex , text)}
-                                      value={item.name}
-                                      placeholder="e.g. Compass High School"
-                                      placeholderTextColor="grey"
-                                    />
-                                  )}
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(this.state.activeOrg === 'exp') ? (
+                                  <Picker
+                                    selectedValue={item.name}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("education|name|" + optionIndex,itemValue)
+                                    }>
+                                    {this.state.schoolOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                ) : (
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("education|name|" + optionIndex , text)}
+                                    value={item.name}
+                                    placeholder="e.g. Compass High School"
+                                    placeholderTextColor="grey"
+                                  />
+                                )}
 
-                                  {(this.state.schoolsAreLoading) ? (
-                                    <View style={[styles.flexCenter,styles.calcColumn60]}>
-                                      <View>
-                                        <View style={[styles.superSpacer]} />
-
-                                        <ActivityIndicator
-                                           animating = {this.state.schoolsAreLoading}
-                                           color = '#87CEFA'
-                                           size = "large"
-                                           style={[styles.square80, styles.centerHorizontally]}/>
-
-                                        <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
-                                        <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
-
-                                      </View>
-                                    </View>
-                                  ) : (
+                                {(this.state.schoolsAreLoading) ? (
+                                  <View style={[styles.flexCenter,styles.calcColumn60]}>
                                     <View>
+                                      <View style={[styles.superSpacer]} />
 
-                                      <View style={styles.spacer}/>
+                                      <ActivityIndicator
+                                         animating = {this.state.schoolsAreLoading}
+                                         color = '#87CEFA'
+                                         size = "large"
+                                         style={[styles.square80, styles.centerHorizontally]}/>
 
-                                      {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
-                                        <View style={styles.calcColumn60}>
-                                          <View style={styles.spacer}/>
-                                          {this.state.schoolOptions.map((value2, optionIndex2) =>
-                                            <View key={value2._id} style={[styles.bottomPadding]}>
-                                              {(value2 && value2 !== '') ? (
-                                                <View style={[styles.calcColumn60]}>
-                                                  <TouchableOpacity onPress={() => this.optionClicked(optionIndex2, "education|name|" + optionIndex)}>
-                                                    <View style={[styles.calcColumn60,styles.rowDirection]}>
-                                                      <View style={styles.rightPadding}>
-                                                        <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain]} />
-                                                      </View>
-                                                      <View>
-                                                        <Text style={[styles.ctaColor]}>{value2}</Text>
-                                                      </View>
+                                      <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                      <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                                    </View>
+                                  </View>
+                                ) : (
+                                  <View>
+
+                                    <View style={styles.spacer}/>
+
+                                    {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
+                                      <View style={styles.calcColumn60}>
+                                        <View style={styles.spacer}/>
+                                        {this.state.schoolOptions.map((value2, optionIndex2) =>
+                                          <View key={value2._id} style={[styles.bottomPadding]}>
+                                            {(value2 && value2 !== '') ? (
+                                              <View style={[styles.calcColumn60]}>
+                                                <TouchableOpacity onPress={() => this.optionClicked(optionIndex2, "education|name|" + optionIndex)}>
+                                                  <View style={[styles.calcColumn60,styles.rowDirection]}>
+                                                    <View style={styles.rightPadding}>
+                                                      <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain]} />
                                                     </View>
-                                                  </TouchableOpacity>
-                                                </View>
-                                              ) : (
-                                                <View />
-                                              )}
-                                            </View>
-                                          )}
+                                                    <View>
+                                                      <Text style={[styles.ctaColor]}>{value2}</Text>
+                                                    </View>
+                                                  </View>
+                                                </TouchableOpacity>
+                                              </View>
+                                            ) : (
+                                              <View />
+                                            )}
+                                          </View>
+                                        )}
+                                      </View>
+                                    ) : (
+                                      <View />
+                                    )}
+                                  </View>
+                                )}
+                              </View>
+                              <View style={[styles.row10]}>
+                                {(!this.state.orgDegree) ? (
+                                  <View>
+                                    <Text style={[styles.standardText,styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Degree', selectedIndex: optionIndex, selectedName: "education|degree|" + optionIndex, selectedValue: item.degree, selectedOptions: this.state.degreeOptions, selectedSubKey: null })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{item.degree}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
                                         </View>
-                                      ) : (
-                                        <View />
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
-                                <View style={[styles.row10]}>
-                                  {(!this.state.orgDegree) ? (
-                                    <View>
-                                      <Text style={[styles.standardText,styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                      </TouchableOpacity>
+                                    ) : (
                                       <Picker
                                         selectedValue={item.degree}
                                         onValueChange={(itemValue, itemIndex) =>
@@ -5567,19 +5562,34 @@ class EditProfileDetails extends Component {
                                         }>
                                         {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
                                       </Picker>
-                                    </View>
-                                  ) : (
-                                    <View />
-                                  )}
-                                </View>
+                                    )}
 
+                                  </View>
+                                ) : (
+                                  <View />
+                                )}
                               </View>
 
-                              <View>
-                                <View style={[styles.row10]}>
-                                  {(this.state.activeOrg === 'dpscd') ? (
-                                    <View>
-                                      <Text style={[styles.standardText,styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                            </View>
+
+                            <View>
+                              <View style={[styles.row10]}>
+                                {(this.state.activeOrg === 'dpscd') ? (
+                                  <View>
+                                    <Text style={[styles.standardText,styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pathway', selectedIndex: optionIndex, selectedName: "education|pathway|" + optionIndex, selectedValue: item.pathway, selectedOptions: this.state.pathwayOptions, selectedSubKey: 'name' })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{item.pathway}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
                                       <Picker
                                         selectedValue={item.pathway}
                                         onValueChange={(itemValue, itemIndex) =>
@@ -5587,54 +5597,83 @@ class EditProfileDetails extends Component {
                                         }>
                                         {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
                                       </Picker>
-                                    </View>
-                                  ) : (
-                                    <View>
-                                      <Text style={[styles.standardText,styles.row10]}>School Major / Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                      {(this.state.activeOrg === 'exp') ? (
-                                        <Picker
-                                          selectedValue={item.major}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("education|major|" + optionIndex,itemValue)
-                                          }>
-                                          {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                        </Picker>
-                                      ) : (
-                                        <TextInput
-                                          style={styles.textInput}
-                                          onChangeText={(text) => this.formChangeHandler("education|major|" + optionIndex , text)}
-                                          value={item.major}
-                                          placeholder="e.g. Business Management"
-                                          placeholderTextColor="grey"
-                                        />
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Location</Text>
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("education|location|" + optionIndex , text)}
-                                    value={item.location}
-                                    placeholder="(e.g., Los Angeles, CA)"
-                                    placeholderTextColor="grey"
-                                  />
-                                </View>
-
+                                    )}
+                                  </View>
+                                ) : (
+                                  <View>
+                                    <Text style={[styles.standardText,styles.row10]}>School Major / Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                    {(this.state.activeOrg === 'exp') ? (
+                                      <View>
+                                        {(Platform.OS === 'ios') ? (
+                                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Major', selectedIndex: optionIndex, selectedName: "education|major|" + optionIndex, selectedValue: item.major, selectedOptions: this.state.pathwayOptions, selectedSubKey: 'name' })}>
+                                            <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                              <View style={[styles.calcColumn115]}>
+                                                <Text style={[styles.descriptionText1]}>{item.major}</Text>
+                                              </View>
+                                              <View style={[styles.width20,styles.topMargin5]}>
+                                                <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                              </View>
+                                            </View>
+                                          </TouchableOpacity>
+                                        ) : (
+                                          <Picker
+                                            selectedValue={item.major}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("education|major|" + optionIndex,itemValue)
+                                            }>
+                                            {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                          </Picker>
+                                        )}
+                                      </View>
+                                    ) : (
+                                      <TextInput
+                                        style={styles.textInput}
+                                        onChangeText={(text) => this.formChangeHandler("education|major|" + optionIndex , text)}
+                                        value={item.major}
+                                        placeholder="e.g. Business Management"
+                                        placeholderTextColor="grey"
+                                      />
+                                    )}
+                                  </View>
+                                )}
                               </View>
-
                               <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Are you still at this school?</Text>
-                                <Switch
-                                   onValueChange = {(value) => this.changeContinual(optionIndex, value,'education')}
-                                   value = {this.state.isContinual}
+                                <Text style={[styles.standardText,styles.row10]}>Location</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("education|location|" + optionIndex , text)}
+                                  value={item.location}
+                                  placeholder="(e.g., Los Angeles, CA)"
+                                  placeholderTextColor="grey"
                                 />
                               </View>
 
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Are you still at this school?</Text>
+                              <Switch
+                                 onValueChange = {(value) => this.changeContinual(optionIndex, value,'education')}
+                                 value = {this.state.isContinual}
+                              />
+                            </View>
+
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Start Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Start Date', selectedIndex: optionIndex, selectedName: "education|startDate|" + optionIndex, selectedValue: item.startDate, selectedOptions: this.state.dateOptions, selectedSubKey: 'value' })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.startDate}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
                                   <Picker
                                     selectedValue={item.startDate}
                                     onValueChange={(itemValue, itemIndex) =>
@@ -5642,221 +5681,98 @@ class EditProfileDetails extends Component {
                                     }>
                                     {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
                                   </Picker>
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Grad Year / End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                  {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
-                                    <Picker
-                                      selectedValue={item.gradYear}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("education|gradYear|" + optionIndex,itemValue)
-                                      }>
-                                      {this.state.gradYearOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                    </Picker>
-                                  ) : (
-                                    <Picker
-                                      selectedValue={item.endDate}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("education|endDate|" + optionIndex,itemValue)
-                                      }>
-                                      {this.state.educationDateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                                    </Picker>
-                                  )}
-                                </View>
-
-
+                                )}
                               </View>
-
-                              <View style={styles.row30}>
-                                <Text style={[styles.standardText,styles.row10]}>Summary</Text>
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("education|summary|" + optionIndex, text)}
-                                  value={item.summary}
-                                  placeholder="Education summary"
-                                  placeholderTextColor="grey"
-                                  multiline={true}
-                                  numberOfLines={4}
-                                />
-                              </View>
-
-                              {(this.state.education[optionIndex + 1]) ? (
-                                <View style={[styles.row10,styles.horizontalPadding30]}>
-                                  <View style={styles.horizontalLine} />
-                                </View>
-                              ) : (
-                                <View />
-                              )}
-
-                            </View>
-                          )}
-                        </View>
-                      ) : (
-                        <View />
-                      )}
-
-                      {(this.props.fromApply) ? (
-                        <View style={[styles.topMargin20]}>
-                          <View style={styles.horizontalLine} />
-                        </View>
-                      ) : (
-                        <View />
-                      )}
-                    </View>
-                  ) : (
-                    <View>
-                      <View>
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.standardText,styles.row10]}>{(this.state.activeOrg === 'dpscd') ? "Current School Name" : "Current / Latest School Name"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                          {(this.state.activeOrg === 'exp') ? (
-                            <Picker
-                              selectedValue={this.state.schoolName}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("schoolName",itemValue)
-                              }>
-                              {this.state.schoolOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
-                          ) : (
-                            <TextInput
-                              style={styles.textInput}
-                              onChangeText={(text) => this.formChangeHandler('schoolName', text)}
-                              value={this.state.schoolName}
-                              placeholder="e.g. Compass High School"
-                              placeholderTextColor="grey"
-                            />
-                          )}
-
-                          {(this.state.schoolsAreLoading) ? (
-                            <View style={[styles.flexCenter,styles.calcColumn60]}>
-                              <View>
-                                <View style={[styles.superSpacer]} />
-
-                                <ActivityIndicator
-                                   animating = {this.state.animating}
-                                   color = '#87CEFA'
-                                   size = "large"
-                                   style={[styles.square80, styles.centerHorizontally]}/>
-
-                                <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
-                                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
-
-                              </View>
-                            </View>
-                          ) : (
-                            <View>
-
-                              <View style={styles.spacer}/>
-
-                              {(this.state.schoolOptions && this.state.schoolOptions.length > 0) ? (
-                                <View style={[styles.calcColumn60]}>
-                                  <View style={styles.spacer}/>
-                                  {this.state.schoolOptions.map((value, optionIndex) =>
-                                    <View key={value._id} style={[styles.bottomPadding]}>
-                                      {(value && value !== '') ? (
-                                        <View style={[styles.calcColumn60]}>
-                                          <TouchableOpacity onPress={() => this.optionClicked(optionIndex, 'school')}>
-                                            <View style={[styles.calcColumn60,styles.rowDirection]}>
-                                              <View style={styles.rightPadding}>
-                                                <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain]} />
-                                              </View>
-                                              <View>
-                                                <Text style={[styles.ctaColor]}>{value}</Text>
-                                              </View>
-                                            </View>
-                                          </TouchableOpacity>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Grad Year / End Date<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
+                                  <View>
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Grad Year', selectedIndex: optionIndex, selectedName: "education|gradYear|" + optionIndex, selectedValue: item.gradYear, selectedOptions: this.state.gradYearOptions, selectedSubKey: null })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{item.gradYear}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
                                         </View>
-                                      ) : (
-                                        <View />
-                                      )}
-                                    </View>
-                                  )}
-                                </View>
-                              ) : (
-                                <View />
-                              )}
-                            </View>
-                          )}
-                        </View>
-                        <View style={[styles.row10]}>
-                          {(!this.state.orgDegree) ? (
-                            <View>
-                              <Text style={[styles.standardText,styles.row10]}>Degree Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                              <Picker
-                                selectedValue={this.state.degree}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("degree",itemValue)
-                                }>
-                                {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-                            </View>
-                          ) : (
-                            <View />
-                          )}
-                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <Picker
+                                        selectedValue={item.gradYear}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("education|gradYear|" + optionIndex,itemValue)
+                                        }>
+                                        {this.state.gradYearOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                      </Picker>
+                                    )}
+                                  </View>
+                                ) : (
+                                  <View>
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'End Year', selectedIndex: optionIndex, selectedName: "education|endYear|" + optionIndex, selectedValue: item.endYear, selectedOptions: this.state.educationDateOptions, selectedSubKey: 'value' })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{item.endDate}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <Picker
+                                        selectedValue={item.endDate}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("education|endDate|" + optionIndex,itemValue)
+                                        }>
+                                        {this.state.educationDateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                      </Picker>
+                                    )}
+                                  </View>
+                                )}
+                              </View>
 
+
+                            </View>
+
+                            <View style={styles.row30}>
+                              <Text style={[styles.standardText,styles.row10]}>Summary</Text>
+                              <TextInput
+                                style={styles.textInput}
+                                onChangeText={(text) => this.formChangeHandler("education|summary|" + optionIndex, text)}
+                                value={item.summary}
+                                placeholder="Education summary"
+                                placeholderTextColor="grey"
+                                multiline={true}
+                                numberOfLines={4}
+                              />
+                            </View>
+
+                            {(this.state.education[optionIndex + 1]) ? (
+                              <View style={[styles.row10,styles.horizontalPadding30]}>
+                                <View style={styles.horizontalLine} />
+                              </View>
+                            ) : (
+                              <View />
+                            )}
+
+                          </View>
+                        )}
                       </View>
+                    ) : (
+                      <View />
+                    )}
 
-                      <View>
-                        <View style={[styles.row10]}>
-                          {(this.state.activeOrg === 'dpscd') ? (
-                            <View>
-                              <Text style={[styles.standardText,styles.row10]}>Career Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                              <Picker
-                                selectedValue={this.state.pathway}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("pathway",itemValue)
-                                }>
-                                {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                              </Picker>
-                            </View>
-                          ) : (
-                            <View>
-                              <Text style={[styles.standardText,styles.row10]}>School Major / Pathway<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                              {(this.state.activeOrg === 'exp') ? (
-                                <Picker
-                                  selectedValue={this.state.major}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("major",itemValue)
-                                  }>
-                                  {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                </Picker>
-                              ) : (
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler("major" , text)}
-                                  value={this.state.major}
-                                  placeholder="e.g. Business Management"
-                                  placeholderTextColor="grey"
-                                />
-                              )}
-                            </View>
-                          )}
-                        </View>
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.standardText,styles.row10]}>Grad Year<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                          {(this.state.activeOrg === 'exp' || this.state.orgFocus === 'School' || this.state.orgFocus === 'Academy') ? (
-                            <Picker
-                              selectedValue={this.state.gradYear}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("gradYear",itemValue)
-                              }>
-                              {this.state.gradYearOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
-                          ) : (
-                            <TextInput
-                              style={styles.textInput}
-                              keyboardType='numeric'
-                              onChangeText={(text) => this.formChangeHandler("gradYear" , text)}
-                              value={this.state.gradYear}
-                              placeholder="e.g. Grad Year"
-                              placeholderTextColor="grey"
-                            />
-                          )}
-                        </View>
-
+                    {(this.props.fromApply) ? (
+                      <View style={[styles.topMargin20]}>
+                        <View style={styles.horizontalLine} />
                       </View>
-                    </View>
-                  )}
+                    ) : (
+                      <View />
+                    )}
+                  </View>
 
                   {(!this.props.fromApply) ? (
                     <View>
@@ -6078,13 +5994,27 @@ class EditProfileDetails extends Component {
                           <View>
                             <View style={[styles.row10]}>
                               <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
-                              <Picker
-                                selectedValue={this.state.race}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("race",itemValue)
-                                }>
-                                {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
-                              </Picker>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Race', selectedIndex: null, selectedName: "race", selectedValue: this.state.race, selectedOptions: this.state.raceOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.race}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.race}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("race",itemValue)
+                                  }>
+                                  {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                </Picker>
+                              )}
                             </View>
                             <View style={[styles.row10]}>
                               <Text style={[styles.standardText,styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
@@ -7018,205 +6948,235 @@ class EditProfileDetails extends Component {
                   {console.log('showProjectDetail 3: ', this.state.showProjectDetail)}
                 </View>
               ) : (
-                <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+                <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
-                {(this.state.showGrade) && (
-                  <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
-                    {(this.state.projects) && (
-                      <View>
-                        <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
+                  {(this.state.showGrade) && (
+                    <View key="gradeProject" style={[styles.calcColumn60,styles.padding20]}>
+                      {(this.state.projects) && (
+                        <View>
+                          <Text style={[styles.headingText2]}>Feedback for {this.state.projects[this.state.selectedIndex].name}</Text>
 
-                        <View style={styles.spacer} /><View style={styles.spacer} />
+                          <View style={styles.spacer} /><View style={styles.spacer} />
 
-                        {this.state.projects[this.state.selectedIndex].grades.map((value, index) =>
-                          <View key={value}>
-                            <View style={[styles.row10]}>
-                              {(value.isTransparent) ? (
-                                <View>
+                          {this.state.projects[this.state.selectedIndex].grades.map((value, index) =>
+                            <View key={value}>
+                              <View style={[styles.row10]}>
+                                {(value.isTransparent) ? (
+                                  <View>
+                                    <View style={styles.rowDirection}>
+                                      <View style={[styles.width60,styles.headingText2,styles.ctaColor,styles.boldText]}>
+                                        {(value.grade) ? (
+                                          <Text style={[styles.standardText]}>{value.grade}</Text>
+                                        ) : (
+                                          <Text style={[styles.standardText]}>N/A</Text>
+                                        )}
+                                      </View>
+                                      <View style={styles.calcColumn120}>
+                                        <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName}</Text>
+                                        <Text style={[styles.headingText6]}>{value.feedback}</Text>
+                                      </View>
+
+                                    </View>
+                                  </View>
+                                ) : (
                                   <View style={styles.rowDirection}>
-                                    <View style={[styles.width60,styles.headingText2,styles.ctaColor,styles.boldText]}>
-                                      {(value.grade) ? (
-                                        <Text style={[styles.standardText]}>{value.grade}</Text>
-                                      ) : (
-                                        <Text style={[styles.standardText]}>N/A</Text>
-                                      )}
+                                    <View style={[styles.width60,styles.headingText2]}>
+                                      <View style={styles.halfSpacer} />
+                                      <Image source={{ uri: confidentialityIcon}} style={[styles.square40,styles.contain]} />
                                     </View>
                                     <View style={styles.calcColumn120}>
-                                      <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName}</Text>
-                                      <Text style={[styles.headingText6]}>{value.feedback}</Text>
+                                      <Text style={[styles.standardText]}>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
                                     </View>
 
                                   </View>
-                                </View>
-                              ) : (
-                                <View style={styles.rowDirection}>
-                                  <View style={[styles.width60,styles.headingText2]}>
-                                    <View style={styles.halfSpacer} />
-                                    <Image source={{ uri: confidentialityIcon}} style={[styles.square40,styles.contain]} />
-                                  </View>
-                                  <View style={styles.calcColumn120}>
-                                    <Text style={[styles.standardText]}>This feedback has been marked confidential by {value.contributorFirstName} {value.contributorLastName}. They need to unlock this feedback for you to view.</Text>
-                                  </View>
+                                )}
+                              </View>
 
-                                </View>
-                              )}
+                              <View style={styles.spacer}/><View style={styles.spacer}/>
+                              <View style={styles.horizontalLine} />
+
                             </View>
+                          )}
 
-                            <View style={styles.spacer}/><View style={styles.spacer}/>
-                            <View style={styles.horizontalLine} />
+                          <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
+                          <Text style={[styles.descriptionText3,styles.boldText,styles.ctaColor]}>Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
+                          <View style={styles.spacer}/><View style={styles.spacer}/>
+                        </View>
+                      )}
 
-                          </View>
-                        )}
-
-                        <View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/><View style={styles.spacer}/>
-                        <Text style={[styles.descriptionText3,styles.boldText,styles.ctaColor]}>Note: You may view feedback by clicking the feedback icon under each of your projects. The feedback icon will not be visible if you have not received feedback for that project.</Text>
-                        <View style={styles.spacer}/><View style={styles.spacer}/>
-                      </View>
-                    )}
-
-                    <View style={[styles.row20]}>
-                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-
-                {(this.state.showJobFunction) && (
-                  <View key="showJobFunction" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Job Function</Text>
-                    <View style={styles.spacer} />
-                    <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
-
-                    <View style={[styles.row20]}>
-                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-
-                {(this.state.showIndustry) && (
-                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Industry</Text>
-                    <View style={styles.spacer} />
-                    <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
-
-                    <View style={[styles.row20]}>
-                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-
-                {(this.state.skillTagsInfo) && (
-                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Skill Tags Info</Text>
-                    <View style={styles.spacer} />
-                    <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
-
-                    <View style={[styles.row20]}>
-                     <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
-                    </View>
-                  </View>
-                )}
-
-                {(this.state.showPublicProfileExtentInfo) && (
-                  <View key="showPublicProfileExtentInfo" style={[styles.flex1,styles.padding20]}>
-                    <View style={[styles.rowDirection,styles.calcColumn80,styles.row10]}>
-                      <View style={[styles.width30,styles.topPadding]}>
-                        <TouchableOpacity onPress={() => this.closeModal()}>
-                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-                        </TouchableOpacity>
-                      </View>
-
-                      <View style={styles.calcColumn140}>
-                        <Text style={[styles.headingText4,styles.centerText,styles.calcColumn140]}>Who Can See Your Profile?</Text>
-                      </View>
-                      <View style={[styles.width30,styles.height30]}>
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
                       </View>
                     </View>
+                  )}
 
-                    <View style={styles.lightHorizontalLine} />
+                  {(this.state.showJobFunction) && (
+                    <View key="showJobFunction" style={[styles.calcColumn60,styles.padding20]}>
+                      <Text style={[styles.headingText2]}>Job Function</Text>
+                      <View style={styles.spacer} />
+                      <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
 
-                    <View style={styles.spacer} /><View style={styles.spacer} />
-
-                    <View style={[styles.row10]}>
-                      <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Only Connections</Text> means that only those who you are connected with on Guided Compass can view the items you select as public.</Text>
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                      </View>
                     </View>
+                  )}
 
-                    <View style={[styles.row10]}>
-                      <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Only Connections and Members</Text> means that only those who you are either connected with on Guided Compass or those who are part of the {this.state.orgName} community can view the items you select as public.</Text>
+                  {(this.state.showIndustry) && (
+                    <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
+                      <Text style={[styles.headingText2]}>Industry</Text>
+                      <View style={styles.spacer} />
+                      <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                      </View>
                     </View>
+                  )}
 
-                    <View style={[styles.row10]}>
-                      <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Public</Text> means that not only connections and the {this.state.orgName} community can view the items you select as public, others can view as well. Just share your public profile link with whomever you like. This also means that the Guided Compass team can share your public profile with employers.</Text>
+                  {(this.state.skillTagsInfo) && (
+                    <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
+                      <Text style={[styles.headingText2]}>Skill Tags Info</Text>
+                      <View style={styles.spacer} />
+                      <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Skill Tags</Text> allow you to list the skills related to your experience separated by commas. For example, for design experience, you may want to tag wireframing, Adobe Photoshop, and flow chart. This allows the reviewer to better understand your skills and allows you to receive better recommendations.</Text>
+
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                      </View>
                     </View>
+                  )}
 
-                  </View>
-                )}
+                  {(this.state.showPublicProfileExtentInfo) && (
+                    <View key="showPublicProfileExtentInfo" style={[styles.flex1,styles.padding20]}>
+                      <View style={[styles.rowDirection,styles.calcColumn80,styles.row10]}>
+                        <View style={[styles.width30,styles.topPadding]}>
+                          <TouchableOpacity onPress={() => this.closeModal()}>
+                            <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
 
-                {(this.state.showSettings) && (
-                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Settings</Text>
-                    <View style={styles.spacer} />
+                        <View style={styles.calcColumn140}>
+                          <Text style={[styles.headingText4,styles.centerText,styles.calcColumn140]}>Who Can See Your Profile?</Text>
+                        </View>
+                        <View style={[styles.width30,styles.height30]}>
+                        </View>
+                      </View>
 
-                    <View>
-                      <EditSubscription />
-                    </View>
+                      <View style={styles.lightHorizontalLine} />
 
-                    <View>
-                      <SwitchOrgs
-                        emailId={this.state.emailId} activeOrg={this.state.activeOrg} myOrgs={this.state.myOrgs}
-                        sharePartners={this.state.sharePartners} roleName={this.state.roleName}
-                        academies={this.state.academies} academyCodes={this.state.academyCodes}
-                        accountCode={this.state.accountCode}
-                      />
-                    </View>
+                      <View style={styles.spacer} /><View style={styles.spacer} />
 
-                    <View style={[styles.row10]}>
-                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
-                        this.state.email, this.state.activeOrg, this.state.orgFocus,
-                        this.state.accountCode, this.state.roleName, this.props.navigatioin
-                      )}>Sign Out</TouchableOpacity>
-                    </View>
-
-
-                  </View>
-                )}
-
-                {(this.state.showBirthdate) && (
-                  <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
-                    <Text style={[styles.headingText2]}>Are you over 18?</Text>
-                    <View style={styles.spacer} />
-                    <Text style={[styles.standardText]}>Currently, you must be over 18 to set your profile to public.</Text>
-
-                    <View style={[styles.row10]}>
                       <View style={[styles.row10]}>
-                        <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
-                        <DateTimePicker
-                          testID="dateOfBirth"
-                          value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                          mode={'date'}
-                          is24Hour={true}
-                          display="default"
-                          onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                          minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                          maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                        <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Only Connections</Text> means that only those who you are connected with on Guided Compass can view the items you select as public.</Text>
+                      </View>
+
+                      <View style={[styles.row10]}>
+                        <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Only Connections and Members</Text> means that only those who you are either connected with on Guided Compass or those who are part of the {this.state.orgName} community can view the items you select as public.</Text>
+                      </View>
+
+                      <View style={[styles.row10]}>
+                        <Text style={[styles.standardText]}><Text style={[styles.boldText,styles.ctaColor]}>Public</Text> means that not only connections and the {this.state.orgName} community can view the items you select as public, others can view as well. Just share your public profile link with whomever you like. This also means that the Guided Compass team can share your public profile with employers.</Text>
+                      </View>
+
+                    </View>
+                  )}
+
+                  {(this.state.showSettings) && (
+                    <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
+                      <Text style={[styles.headingText2]}>Settings</Text>
+                      <View style={styles.spacer} />
+
+                      <View>
+                        <EditSubscription />
+                      </View>
+
+                      <View>
+                        <SwitchOrgs
+                          emailId={this.state.emailId} activeOrg={this.state.activeOrg} myOrgs={this.state.myOrgs}
+                          sharePartners={this.state.sharePartners} roleName={this.state.roleName}
+                          academies={this.state.academies} academyCodes={this.state.academyCodes}
+                          accountCode={this.state.accountCode}
                         />
                       </View>
 
-                    </View>
-
-                    {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
-
-                    <View style={[styles.row20,styles.rowDirection]}>
-                      <View style={styles.rightPadding}>
-                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.verifyLegalAge()}>Make Profile Public</TouchableOpacity>
-                      </View>
-                      <View>
-                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                      <View style={[styles.row10]}>
+                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => signOut(
+                          this.state.email, this.state.activeOrg, this.state.orgFocus,
+                          this.state.accountCode, this.state.roleName, this.props.navigatioin
+                        )}>Sign Out</TouchableOpacity>
                       </View>
 
 
                     </View>
-                  </View>
-                )}
+                  )}
+
+                  {(this.state.showBirthdate) && (
+                    <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
+                      <Text style={[styles.headingText2]}>Are you over 18?</Text>
+                      <View style={styles.spacer} />
+                      <Text style={[styles.standardText]}>Currently, you must be over 18 to set your profile to public.</Text>
+
+                      <View style={[styles.row10]}>
+                        <View style={[styles.row10]}>
+                          <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
+                          <DateTimePicker
+                            testID="dateOfBirth"
+                            value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                            mode={'date'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                            minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                            maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                          />
+                        </View>
+
+                      </View>
+
+                      {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
+
+                      <View style={[styles.row20,styles.rowDirection]}>
+                        <View style={styles.rightPadding}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.verifyLegalAge()}>Make Profile Public</TouchableOpacity>
+                        </View>
+                        <View>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                        </View>
+
+
+                      </View>
+                    </View>
+                  )}
+
+                  {(this.state.showPicker) && (
+                    <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <View style={[styles.card,styles.absoluteBottom0,styles.absoluteLeft0,styles.absoluteRight0]}>
+                        <View style={[styles.rowDirection,styles.bottomMargin]}>
+                          <View style={[styles.calcColumn120]}>
+                            <Text style={[styles.descriptionText2]}>Pick {this.state.pickerName}</Text>
+                          </View>
+                          <View style={[styles.width30]}>
+                            <TouchableOpacity onPress={() => this.closeModal()}>
+                              <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+
+                        <View style={[styles.lightHorizontalLine]} />
+
+                        <Picker
+                          selectedValue={this.state.selectedValue}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler(this.state.selectedName,itemValue)
+                          }>
+                            {this.state.selectedOptions.map(value =>
+                              <Picker.Item key={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} label={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} value={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} />
+                            )}
+                        </Picker>
+
+                      </View>
+                    </View>
+                  )}
 
                </Modal>
               )}
