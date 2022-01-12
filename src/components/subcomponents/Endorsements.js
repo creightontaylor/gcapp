@@ -614,15 +614,15 @@ class Endorsements extends Component {
                   </View>
                 ) : (
                   <View style={[styles.card]}>
-                      <Text>Guided Compass Endorsements!</Text>
-                      <Text style={[styles.topMargin20]}>Use Guided Compass to receive endorsements from employers, teachers, counselors, and advisors on competencies relevant to your preferred career pathway.</Text>
+                      <Text style={[styles.headingText5]}>Guided Compass Endorsements!</Text>
+                      <Text style={[styles.topMargin20,styles.descriptionText1]}>Use Guided Compass to receive endorsements from employers, teachers, counselors, and advisors on competencies relevant to your preferred career pathway.</Text>
 
-                      <Text style={[styles.topMargin20]}>Use these endorsements as a pick me up, for advisors to reference, or to import into work applications.</Text>
+                      <Text style={[styles.topMargin20,styles.descriptionText1]}>Use these endorsements as a pick me up, for advisors to reference, or to import into work applications.</Text>
 
                       <View style={[styles.topMargin30]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RequestEndorsements')} style={[styles.btnPrimary,styles.ctaBackgroundColor]}><Text style={[styles.whiteColor]}>Get Endorsements</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('RequestEndorsements')} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor,styles.standardText]}>Get Endorsements</Text></TouchableOpacity>
                         {(this.state.showOutgoing) && (
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement')} style={[styles.btnPrimary]}><Text style={[styles.ctaColor]}>Send Endorsement</Text></TouchableOpacity>
+                          <TouchableOpacity onPress={() => this.props.navigation.navigate('SendEndorsement')} style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}><Text style={[styles.ctaColor,styles.standardText]}>Send Endorsement</Text></TouchableOpacity>
                         )}
                       </View>
 
@@ -696,7 +696,7 @@ class Endorsements extends Component {
 
                                    </View>
                                    <View style={[styles.width200,styles.rightText]}>
-                                     <Text>{this.state.endorsements[this.state.detailIndex].pathway} Pathway</Text>
+                                     <Text style={[styles.standardText]}>{this.state.endorsements[this.state.detailIndex].pathway} Pathway</Text>
                                      <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
                                      <Text style={[styles.descriptionText2]}>{this.state.endorsements[this.state.detailIndex].createdAt}</Text>
                                    </View>

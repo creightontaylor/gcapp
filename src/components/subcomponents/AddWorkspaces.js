@@ -713,11 +713,20 @@ class AddWorkspaces extends Component {
 
     return (
         <ScrollView>
-          <View style={[styles.card,styles.topMargin20]}>
+          <View style={(this.props.fromWalkthrough) ? [styles.cardClearPadding,styles.topMargin20] : [styles.card,styles.topMargin20]}>
             <View style={[styles.row10]}>
               <View style={[styles.rowDirection]}>
-                <View style={[styles.square40]} />
-                <View style={[styles.calcColumn140]}>
+                {(this.state.modalIsOpen) ? (
+                  <View style={[styles.square40]}>
+                    <TouchableOpacity onPress={() => this.props.closeModal()}>
+                      <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={[styles.square40]} />
+                )}
+
+                <View style={(this.props.fromWalkthrough) ? [styles.calcColumn180] : [styles.calcColumn140]}>
                   <Text style={[styles.headingText3,styles.centerText]}>Add Workspaces</Text>
                 </View>
                 <View style={[styles.width40,styles.alignEnd]}>
@@ -769,7 +778,7 @@ class AddWorkspaces extends Component {
             </View>
           )}*/}
 
-          <View style={[styles.fullScreenWidth,styles.row20]}>
+          <View style={(this.props.fromWalkthrough) ? [styles.calcColumn80,styles.topMargin20] : [styles.fullScreenWidth,styles.row20]}>
             <View>
               {(this.state.isAnimating) ? (
                 <View style={[styles.flexCenter,styles.flex1]}>
@@ -793,7 +802,10 @@ class AddWorkspaces extends Component {
                       <View style={[styles.bottomMargin20]}>
                         <View style={[styles.cardClearPadding]}>
 
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('OrgDetails', { selectedOrg: value })}>
+                          <TouchableOpacity onPress={() => {
+                            this.props.closeModal();
+                            this.props.navigation.navigate('OrgDetails', { selectedOrg: value });
+                          }}>
                             <View style={[styles.padding15]}>
                               <View style={[styles.bottomPadding,styles.flexCenter]}>
                                 <Image source={(value.webLogoURIColor) ? { uri: value.webLogoURIColor} : { uri: industryIconDark}} style={[styles.square90,styles.contain]}/>
@@ -803,7 +815,7 @@ class AddWorkspaces extends Component {
                               <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.region}</Text>
                               <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.thirdTitle}</Text>
 
-                              <View style={[styles.bottomMargin20,styles.calcColumn30]}>
+                              <View style={[styles.bottomMargin20,styles.flex1]}>
                                 <View style={[styles.rowDirection,styles.flexCenter]}>
                                   <View><Image source={(value.careerSeekerRating && value.careerSeekerRating.avgRating >= 0.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
                                   <View><Image source={(value.careerSeekerRating && value.careerSeekerRating.avgRating >= 1.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>

@@ -5,6 +5,7 @@ import Axios from 'axios';
 
 const careerMatchesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-blue.png';
 const mentoringIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/mentoring-icon-blue.png';
+const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
 const projectsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-blue.png';
 const employerIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/employer-icon.png';
@@ -187,7 +188,7 @@ class Favorites extends Component {
     console.log('renderFavorites called')
 
     let rows = [];
-    if (this.state.favorites) {
+    if (this.state.favorites && this.state.favorites.length > 0) {
       for (let i = 1; i <= this.state.favorites.length; i++) {
 
         const index = i - 1
@@ -606,6 +607,19 @@ class Favorites extends Component {
           }
         }
       }
+    } else {
+      rows.push(
+        <View key={1} style={[styles.flexCenter,styles.padding30,styles.flex1]}>
+          <View>
+            <View style={[styles.flex1,styles.flexCenter]}>
+              <Image source={{ uri: favoritesIconDark}} style={[styles.square120,styles.contain,styles.centerHorizontally]}/>
+            </View>
+
+            <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Favorited Items Yet</Text>
+            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This are contains all things you have favorited.</Text>
+          </View>
+        </View>
+      )
     }
 
     return rows

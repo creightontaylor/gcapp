@@ -2353,7 +2353,7 @@ class TakeAssessment extends Component {
               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Score', selectedIndex: null, selectedName: 'score', selectedValue: this.state.score, selectedOptions: this.state.scoreOptions, selectedSubKey: null, differentLabels: true })}>
                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                   <View style={[styles.calcColumn115]}>
-                    <Text style={[styles.descriptionText1]}>{(this.state.score) ? this.convertRating("workInterest",this.state.score) : ""}</Text>
+                    <Text style={[styles.descriptionText1]}>{(this.state.score) ? this.convertRating("score",this.state.score) : ""}</Text>
                   </View>
                   <View style={[styles.width20,styles.topMargin5]}>
                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -2543,20 +2543,7 @@ class TakeAssessment extends Component {
   convertRating(type,rawRating) {
     console.log('convertRating called', type,rawRating)
 
-    let options = []
-    if (type === 'workInterest') {
-      options = this.state.workInterestOptions
-    } else if (type === 'workSkill') {
-      options = this.state.workSkillOptions
-    } else if (type === 'teamInterest') {
-      options = this.state.teamInterestOptions
-    } else if (type === 'employerInterest') {
-      options = this.state.employerInterestOptions
-    } else if (type === 'payInterest') {
-      options = this.state.payInterestOptions
-    } else if (type === 'overallFit') {
-      options = this.state.overallFitOptions
-    }
+    let options = this.state.scoreOptions
 
     return options[6 - Number(rawRating)].label
 
@@ -2720,7 +2707,7 @@ class TakeAssessment extends Component {
 
                                 {(!this.props.fromWalkthrough && (this.props.fromApply || this.state.type !== 'skills')) && (
                                   <View style={[styles.flexCenter, styles.flex1]}>
-                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerText]}>Submit</Text></TouchableOpacity>
+                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerText,styles.standardText]}>Submit</Text></TouchableOpacity>
                                   </View>
                                 )}
 

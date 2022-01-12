@@ -441,11 +441,14 @@ class Completions extends Component {
     } else {
 
       rows.push(
-        <View key={1} style={[styles.flexCenter,styles.centerText,styles.padding30]}>
-          <View style={[styles.horizontalPadding30]} >
-            <Image source={{ uri: checkmarkDarkGreyIcon}} style={[styles.square120,styles.contain,styles.centerHorizontally]}/>
-            <Text style={[styles.headingText3]}>No Completed Items Yet</Text>
-            <Text style={[styles.topMargin20,styles.centerText]}>This are contains all things you have completed, including RSVPs to events, submissions to projects, applications for work, offers, work experience, and other things you can accomplish through the platform.</Text>
+        <View key={1} style={[styles.flexCenter,styles.padding30,styles.flex1]}>
+          <View>
+            <View style={[styles.flex1,styles.flexCenter]}>
+              <Image source={{ uri: checkmarkDarkGreyIcon}} style={[styles.square120,styles.contain,styles.centerHorizontally]}/>
+            </View>
+
+            <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Completed Items Yet</Text>
+            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This are contains all things you have completed, including RSVPs to events, submissions to projects, applications for work, offers, work experience, and other things you can accomplish through the platform.</Text>
           </View>
         </View>
       )

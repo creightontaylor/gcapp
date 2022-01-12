@@ -83,7 +83,11 @@ class Messages extends Component {
 
         const groupPost = this.props.groupPost
         const generalPost = this.props.generalPost
-        let passedNewMessage = this.props.newMessage
+        let passedNewMessage = true
+        if (this.props.newMessage) {
+          passedNewMessage = this.props.newMessage
+        }
+
         const passedRecipient = this.props.recipient
 
         let messageDraft = null
@@ -620,7 +624,7 @@ class Messages extends Component {
                     )}
                   </View>
                 ) : (
-                  <View style={[styles.flex1,styles.flexCenter]}>
+                  <View style={[styles.flex1,styles.flexCenter, styles.padding40]}>
                     <Image source={{ uri: commentIconGrey}} style={[styles.square40,styles.contain]}/>
                     <View>
                       <Text style={[styles.topPadding20,styles.descriptionText1,styles.descriptionTextColor,styles.horizontalPadding30,styles.centerText]}>No Conversations Yet</Text>

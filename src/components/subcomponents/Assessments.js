@@ -498,7 +498,7 @@ class Assessments extends Component {
             {(this.props.fromApply) ? (
               <View>
                 <TouchableOpacity style={[styles.calcColumn60,styles.row10,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, type, assessmentTitle, assessments, index, assessment, resultsData, assessmentDescription })}>
-                  <View style={[styles.calcColumn130]}>
+                  <View style={(this.state.assessments[i - 1].status === 'Complete') ? [styles.calcColumn130] : [styles.calcColumn100]}>
                     <View>
                       <Text style={[styles.headingText5,styles.ctaColor]}>{this.state.assessments[i - 1].title}{(this.state.assessments[i - 1].disclaimer) && <Text style={styles.errorColor}> ({this.state.assessments[i - 1].disclaimer})</Text>}<Text style={styles.errorColor}> *</Text></Text>
                     </View>
@@ -520,7 +520,7 @@ class Assessments extends Component {
             ) : (
               <View style={[styles.row10]}>
                 <TouchableOpacity style={[styles.calcColumn60,styles.rowDirection]} onPress={() => this.props.navigation.navigate('AssessmentDetails', { assessments: this.state.assessments, index: i - 1, assessment: this.state.assessments[i - 1], resultsData })} >
-                  <View style={[styles.calcColumn130]}>
+                  <View style={(this.state.assessments[i - 1].status === 'Complete') ? [styles.calcColumn130] : [styles.calcColumn100]}>
                     <View>
                       <Text style={styles.headingText5}>{this.state.assessments[i - 1].title}{(this.state.assessments[i - 1].required) && <Text style={styles.errorColor}> *</Text>}</Text>
                     </View>

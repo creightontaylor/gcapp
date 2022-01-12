@@ -460,10 +460,10 @@ class EditProfile extends Component {
                           </View>
                         </View>
                       ) : (
-                        <View>
+                        <View style={[styles.bottomMargin]}>
                           {(!this.state.remoteAuth) && (
-                            <View style={[styles.topPadding20,styles.descriptionText2]}>
-                              <Text>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text>click here</Text></TouchableOpacity></Text>
+                            <View>
+                              <Text style={[styles.descriptionText2]}>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text style={[styles.ctaColor,styles.boldText,styles.descriptionText2,styles.topMargin3]}>click here</Text></TouchableOpacity></Text>
                             </View>
                           )}
                         </View>

@@ -375,11 +375,14 @@ class Logs extends Component {
 
       if (!this.props.fromWalkthrough) {
         rows.push(
-          <View key={1} style={[styles.flexCenter,styles.flex1,styles.centerText,styles.padding30]}>
-            <View style={[styles.padding30]} >
-              <Image source={{ uri: logIconDark}} style={[styles.square100,styles.contain]}/>
-              <Text style={[styles.headingText3]}>No Logs Yet</Text>
-              <Text style={[styles.standardText,styles.descriptionTextColor]}>Log information (e.g. goals, advising sessions, work applications) so that mentors and {this.state.orgName} staff can better help.</Text>
+          <View key={1} style={[styles.flexCenter,styles.flex1,styles.padding30,styles.flexCenter]}>
+            <View>
+              <View style={[styles.flex1,styles.flexCenter]}>
+                <Image source={{ uri: logIconDark}} style={[styles.square100,styles.contain]}/>
+              </View>
+
+              <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Logs Yet</Text>
+              <Text style={[styles.standardText,styles.descriptionTextColor,styles.centerText,styles.topMargin]}>Log information (e.g. goals, advising sessions, work applications) so that mentors and {this.state.orgName} staff can better help.</Text>
 
               <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.topMargin30]}><Text style={[styles.standardText,styles.whiteColor]}>Add New Log</Text></TouchableOpacity>
             </View>

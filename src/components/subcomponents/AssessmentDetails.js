@@ -357,7 +357,7 @@ class AssessmentDetails extends Component {
             console.log('there is no data')
             rows.push(
               <View key={0}>
-                <Text style={[styles.centerText]}>View your results here after you take the assessment</Text>
+                <Text style={[styles.centerText,styles.topMargin20,styles.standardText]}>View your results here after you take the assessment</Text>
               </View>
             )
           }
@@ -389,7 +389,7 @@ class AssessmentDetails extends Component {
           console.log('there is no data')
           rows.push(
             <View key={0}>
-              <Text style={[styles.centerText]}>View your results here after you take the assessment</Text>
+              <Text style={[styles.centerText,styles.topMargin20,styles.standardText]}>View your results here after you take the assessment</Text>
             </View>
           )
         }
@@ -419,7 +419,7 @@ class AssessmentDetails extends Component {
           console.log('there is no data')
           rows.push(
             <View key={0}>
-              <Text style={[styles.centerText]}>View your results here after you take the assessment</Text>
+              <Text style={[styles.centerText,styles.topMargin20,styles.standardText]}>View your results here after you take the assessment</Text>
             </View>
           )
         }
@@ -502,7 +502,7 @@ class AssessmentDetails extends Component {
           console.log('there is no data')
           rows.push(
             <View key={0}>
-              <Text style={[styles.centerText]}>View your results here after you take the assessment</Text>
+              <Text style={[styles.centerText,styles.topMargin20,styles.standardText]}>View your results here after you take the assessment</Text>
             </View>
           )
         }
@@ -554,7 +554,7 @@ class AssessmentDetails extends Component {
           console.log('there is no data')
           rows.push(
             <View key={0}>
-              <Text style={[styles.centerText]}>View your results here after you take the assessment</Text>
+              <Text style={[styles.centerText,styles.topMargin20,styles.standardText]}>View your results here after you take the assessment</Text>
             </View>
           )
         }

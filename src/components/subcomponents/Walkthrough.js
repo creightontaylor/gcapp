@@ -909,7 +909,7 @@ class Walkthrough extends Component {
               )}
 
               {(this.state.showAddWorkspaces) && (
-                <SubAddWorkspaces selectedGroup={null} navigation={this.props.navigation} closeModal={this.closeModal}
+                <SubAddWorkspaces selectedGroup={null} navigation={this.props.navigation} closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen}
                   accountCode={this.state.accountCode} employerLogoURI={this.state.employerLogoURI}
                   employerName={this.state.employerName} jobFunction={this.state.jobFunction}
                   pathway={this.state.pathway} passOrgs={this.state.passOrgs} fromWalkthrough={true}

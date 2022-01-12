@@ -2767,7 +2767,10 @@ class EditProfileDetails extends Component {
 
               AsyncStorage.setItem('firstName', firstNameValue)
               AsyncStorage.setItem('lastName', lastNameValue)
-              AsyncStorage.setItem('pictureURL', pictureURL)
+              if (pictureURL) {
+                AsyncStorage.setItem('pictureURL', pictureURL)
+              }
+
               // console.log('saved lastName: ', lastNameValue)
 
               if (this.props.fromWalkthrough) {
@@ -4206,7 +4209,7 @@ class EditProfileDetails extends Component {
               <TouchableOpacity onPress={() => this.saveExperience(rowKey)} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor,styles.standardText]}>Save Experience</Text></TouchableOpacity>
             </View>
 
-            {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+            {this.state.clientErrorMessage !== '' && <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
             <View style={styles.spacer} />
           </View>
         )
@@ -4415,7 +4418,7 @@ class EditProfileDetails extends Component {
                 <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor]}>Save Extracurricular</Text></TouchableOpacity>
               </View>
 
-              {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+              {this.state.clientErrorMessage !== '' && <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
               <View style={styles.spacer} />
             </View>
           )
@@ -4525,7 +4528,7 @@ class EditProfileDetails extends Component {
                 <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")} style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]}><Text style={[styles.ctaColor]}>Save Award</Text></TouchableOpacity>
               </View>
 
-              {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+              {this.state.clientErrorMessage !== '' && <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
               <View style={styles.spacer} />
             </View>
           )
@@ -5058,7 +5061,7 @@ class EditProfileDetails extends Component {
                 { (this.state.serverSuccessProfilePic) ? (
                   <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                 ) : (
-                  <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                  <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                 )}
               </View>
 
@@ -5086,7 +5089,7 @@ class EditProfileDetails extends Component {
                 <input className="text-field" type="text" placeholder="LinkedIn Profile URL" name="linkedInURL" value={this.state.linkedInURL} onChange={this.formChangeHandler} />
                 {(this.state.linkedInURL && this.state.linkedInURL !== '' && !this.state.linkedInURL.startsWith('http')) && (
                   <View>
-                    <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                   </View>
                 )}
               </View>
@@ -5099,7 +5102,7 @@ class EditProfileDetails extends Component {
                   <input className="text-field" type="text" placeholder="Google Drive Link? Website Link?" name="resumeURL" value={this.state.resumeURLValue} onChange={this.formChangeHandler}/>
                   {(this.state.resumeURLValue && this.state.resumeURLValue !== '' && !this.state.resumeURLValue.startsWith('http')) && (
                     <View>
-                      <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                      <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                     </View>
                   )}
                 </View>
@@ -5108,7 +5111,7 @@ class EditProfileDetails extends Component {
                   <input className="text-field" type="text" placeholder="Custom Website URL" name="customWebsiteURL" value={this.state.customWebsiteURL} onChange={this.formChangeHandler}/>
                   {(this.state.customWebsiteURL && this.state.customWebsiteURL !== '' && !this.state.customWebsiteURL.startsWith('http')) && (
                     <View>
-                      <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                      <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                     </View>
                   )}
                 </View>
@@ -5265,17 +5268,17 @@ class EditProfileDetails extends Component {
             { (this.state.serverSuccessText) ? (
               <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
             ) : (
-              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
+              <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
             )}
             { (this.state.serverSuccessProfilePic) ? (
               <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
             ) : (
-              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+              <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
             )}
             { (this.state.serverSuccessCoverPic) ? (
               <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
             ) : (
-              <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
+              <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
             )}*/}
             {/*
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
@@ -5542,7 +5545,7 @@ class EditProfileDetails extends Component {
                       />
                       {(this.state.linkedInURL && this.state.linkedInURL !== '' && !this.state.linkedInURL.startsWith('http')) ? (
                         <View>
-                          <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                          <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                         </View>
                       ) : (
                         <View />
@@ -5564,7 +5567,7 @@ class EditProfileDetails extends Component {
 
                       {(this.state.customWebsiteURL && this.state.customWebsiteURL !== '' && !this.state.customWebsiteURL.startsWith('http')) ? (
                         <View>
-                          <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                          <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                         </View>
                       ) : (
                         <View />
@@ -5682,7 +5685,7 @@ class EditProfileDetails extends Component {
                           />
                           {(this.state.videoResumeURL && this.state.videoResumeURL !== '' && !this.state.videoResumeURL.startsWith('http')) ? (
                             <View>
-                              <Text style={[styles.errorColor]}>Please start your link with http</Text>
+                              <Text style={[styles.standardText,styles.errorColor]}>Please start your link with http</Text>
                             </View>
                           ) : (
                             <View />
@@ -6702,22 +6705,22 @@ class EditProfileDetails extends Component {
                     <View>
                       <View style={styles.spacer} /><View style={styles.spacer} />
 
-                      {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+                      {this.state.clientErrorMessage !== '' && <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
 
                       { (this.state.serverSuccessText) ? (
                         <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                       ) : (
-                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
+                        <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                       )}
                       { (this.state.serverSuccessProfilePic) ? (
                         <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                       ) : (
-                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                        <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                       )}
                       { (this.state.serverSuccessCoverPic) ? (
                         <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                       ) : (
-                        <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
+                        <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                       )}
 
                       {(this.props.fromWalkthrough) ? (
@@ -6770,22 +6773,22 @@ class EditProfileDetails extends Component {
 
                   </View>
 
-                  {this.state.clientErrorMessage !== '' ? <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text> : <View />}
+                  {this.state.clientErrorMessage !== '' ? <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text> : <View />}
 
                   { (this.state.serverSuccessText) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                   )}
                   { (this.state.serverSuccessProfilePic) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                   )}
                   { (this.state.serverSuccessCoverPic) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                   )}
 
                   {(this.state.projects.length > 0) && (
@@ -6874,22 +6877,22 @@ class EditProfileDetails extends Component {
                     <View />
                   )}
 
-                  {this.state.clientErrorMessage !== '' && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
+                  {this.state.clientErrorMessage !== '' && <Text style={[styles.standardText,styles.errorColor]}>{this.state.clientErrorMessage}</Text>}
 
                   { (this.state.serverSuccessText) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageText}</Text>
                   )}
                   { (this.state.serverSuccessProfilePic) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageProfilePic}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageProfilePic}</Text>
                   )}
                   { (this.state.serverSuccessCoverPic) ? (
                     <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessageCoverPic}</Text>
                   ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
+                    <Text style={[styles.standardText,styles.errorColor]}>{this.state.serverErrorMessageCoverPic}</Text>
                   )}
                 </View>
               )}
@@ -7013,7 +7016,7 @@ class EditProfileDetails extends Component {
                               <View style={[styles.row10]}>
                                 <View style={[styles.row5,styles.rowDirection]}>
                                   <View style={styles.calcColumn160}>
-                                    <Text style={[styles.topPadding]}>1. Posts</Text>
+                                    <Text style={[styles.standardText,styles.topPadding]}>1. Posts</Text>
                                   </View>
                                   <View style={styles.width100}>
                                     {(Platform.OS === 'ios') ? (
@@ -7043,7 +7046,7 @@ class EditProfileDetails extends Component {
                                     <View style={styles.rowDirection}>
                                       {(!this.state.postOptions || this.state.postOptions.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no posts to publicize. Add a post to the news feed.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no posts to publicize. Add a post to the news feed.</Text>
                                         </View>
                                       ) : (
                                         <View style={[styles.calcColumn60]}>
@@ -7083,39 +7086,43 @@ class EditProfileDetails extends Component {
                                   )}
                                 </View>
 
-                                <View style={[styles.row5,styles.rowDirection]}>
-                                  <View style={styles.calcColumn160}>
-                                    <Text style={[styles.topPadding]}>2. Projects</Text>
-                                  </View>
-                                  <View style={styles.width100}>
-                                    {(Platform.OS === 'ios') ? (
-                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Project Preference', selectedIndex: null, selectedName: "projectPublicPreference", selectedValue: this.state.projectPublicPreference, selectedOptions: this.state.publicPreferenceOptions, selectedSubKey: null })}>
-                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                          <View style={[styles.calcColumn115]}>
-                                            <Text style={[styles.descriptionText1]}>{this.state.projectPublicPreference}</Text>
-                                          </View>
-                                          <View style={[styles.width20,styles.topMargin5]}>
-                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                          </View>
-                                        </View>
-                                      </TouchableOpacity>
-                                    ) : (
-                                      <Picker
-                                        selectedValue={this.state.projectPublicPreference}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("projectPublicPreference",itemValue)
-                                        }>
-                                        {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                      </Picker>
-                                    )}
+                                <View style={[styles.row5]}>
 
+                                  <View style={[styles.row5,styles.rowDirection]}>
+                                    <View style={styles.calcColumn160}>
+                                      <Text style={[styles.standardText,styles.topPadding]}>2. Projects</Text>
+                                    </View>
+                                    <View style={styles.width100}>
+                                      {(Platform.OS === 'ios') ? (
+                                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Project Preference', selectedIndex: null, selectedName: "projectPublicPreference", selectedValue: this.state.projectPublicPreference, selectedOptions: this.state.publicPreferenceOptions, selectedSubKey: null })}>
+                                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                            <View style={[styles.calcColumn115]}>
+                                              <Text style={[styles.descriptionText1]}>{this.state.projectPublicPreference}</Text>
+                                            </View>
+                                            <View style={[styles.width20,styles.topMargin5]}>
+                                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                            </View>
+                                          </View>
+                                        </TouchableOpacity>
+                                      ) : (
+                                        <Picker
+                                          selectedValue={this.state.projectPublicPreference}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("projectPublicPreference",itemValue)
+                                          }>
+                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                        </Picker>
+                                      )}
+
+                                    </View>
                                   </View>
+
 
 
                                   {(this.state.projectPublicPreference !== 'None') && (
                                     <View style={[styles.row10,styles.descriptionText2,styles.boldText]}>
-                                      <Text style={[styles.rightPadding]}>Portfolio Link:</Text>
-                                      <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text style={[styles.standardText]}>https://www.guidedcompass.com/ + {this.state.username} + /projects</Text></TouchableOpacity>
+                                      <Text style={[styles.rightPadding,styles.standardText]}>Portfolio Link:</Text>
+                                      <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>https://www.guidedcompass.com/ + {this.state.username} + /projects</Text></TouchableOpacity>
                                     </View>
                                   )}
 
@@ -7123,7 +7130,7 @@ class EditProfileDetails extends Component {
                                     <View style={styles.rowDirection}>
                                       {(!this.state.projects || this.state.projects.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no projects to publicize. Add projects below.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no projects to publicize. Add projects below.</Text>
                                         </View>
                                       ) : (
                                         <View style={styles.calcColumn60}>
@@ -7168,7 +7175,7 @@ class EditProfileDetails extends Component {
                                 <View style={[styles.row5]}>
                                   <View style={[styles.rowDirection]}>
                                     <View style={styles.calcColumn160}>
-                                      <Text style={[styles.topPadding]}>3. Goals</Text>
+                                      <Text style={[styles.standardText,styles.topPadding]}>3. Goals</Text>
                                     </View>
                                     <View style={styles.width100}>
                                       {(Platform.OS === 'ios') ? (
@@ -7199,7 +7206,7 @@ class EditProfileDetails extends Component {
                                     <View>
                                       {(!this.state.goalOptions || this.state.goalOptions.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no goals to publicize. Add goals in the career goals tab.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no goals to publicize. Add goals in the career goals tab.</Text>
                                         </View>
                                       ) : (
                                         <View style={styles.calcColumn60}>
@@ -7244,7 +7251,7 @@ class EditProfileDetails extends Component {
                                 <View style={[styles.row5]}>
                                   <View style={styles.rowDirection}>
                                     <View style={styles.calcColumn160}>
-                                      <Text style={[styles.topPadding]}>4. Passions</Text>
+                                      <Text style={[styles.standardText,styles.topPadding]}>4. Passions</Text>
                                     </View>
                                     <View style={styles.width100}>
                                       {(Platform.OS === 'ios') ? (
@@ -7276,7 +7283,7 @@ class EditProfileDetails extends Component {
                                     <View>
                                       {(!this.state.passionOptions || this.state.passionOptions.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no passions to publicize. Add passions in the career goals tab.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no passions to publicize. Add passions in the career goals tab.</Text>
                                         </View>
                                       ) : (
                                         <View style={styles.calcColumn60}>
@@ -7320,7 +7327,7 @@ class EditProfileDetails extends Component {
                                 <View style={[styles.row5]}>
                                   <View style={styles.rowDirection}>
                                     <View style={styles.calcColumn160}>
-                                      <Text style={[styles.topPadding]}>5. Career Assessments</Text>
+                                      <Text style={[styles.standardText,styles.topPadding]}>5. Career Assessments</Text>
                                     </View>
                                     <View style={styles.width100}>
                                       {(Platform.OS === 'ios') ? (
@@ -7352,7 +7359,7 @@ class EditProfileDetails extends Component {
                                     <View>
                                       {(!this.state.assessmentOptions || this.state.assessmentOptions.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no assessment results to publicize. Take assessments in the assessments tab.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no assessment results to publicize. Take assessments in the assessments tab.</Text>
                                         </View>
                                       ) : (
                                         <View style={styles.calcColumn60}>
@@ -7396,7 +7403,7 @@ class EditProfileDetails extends Component {
                                 <View style={[styles.row5]}>
                                   <View style={styles.rowDirection}>
                                     <View style={styles.calcColumn160}>
-                                      <Text style={[styles.topPadding]}>6. Skill & Knowledge Endorsements</Text>
+                                      <Text style={[styles.standardText,styles.topPadding]}>6. Skill & Knowledge Endorsements</Text>
                                     </View>
                                     <View style={styles.width100}>
                                       {(Platform.OS === 'ios') ? (
@@ -7428,7 +7435,7 @@ class EditProfileDetails extends Component {
                                     <View>
                                       {(!this.state.endorsementOptions || this.state.endorsementOptions.length === 0) ? (
                                         <View>
-                                          <Text style={[styles.errorColor]}>You have no skill endorsements to publicize. Request endorsements in the endorsements tab.</Text>
+                                          <Text style={[styles.standardText,styles.errorColor]}>You have no skill endorsements to publicize. Request endorsements in the endorsements tab.</Text>
                                         </View>
                                       ) : (
                                         <View style={styles.calcColumn60}>
@@ -7474,7 +7481,7 @@ class EditProfileDetails extends Component {
                                   <View style={[styles.row5]}>
                                     <View style={styles.rowDirection}>
                                       <View style={[styles.calcColumn160]}>
-                                        <Text style={[styles.topPadding]}>7. Primary Resume</Text>
+                                        <Text style={[styles.standardText,styles.topPadding]}>7. Primary Resume</Text>
                                       </View>
                                       <View style={styles.width100}>
                                         {(Platform.OS === 'ios') ? (
@@ -7506,7 +7513,7 @@ class EditProfileDetails extends Component {
                                       <View>
                                         {(!this.state.resumes || this.state.resumes.length === 0) ? (
                                           <View>
-                                            <Text style={[styles.errorColor]}>You have no resumes to publicize. Add resumes in the "Basic Info" section of your profile or by using the Resume Builder.</Text>
+                                            <Text style={[styles.standardText,styles.errorColor]}>You have no resumes to publicize. Add resumes in the "Basic Info" section of your profile or by using the Resume Builder.</Text>
                                           </View>
                                         ) : (
                                           <View style={styles.calcColumn60}>
@@ -7568,7 +7575,7 @@ class EditProfileDetails extends Component {
 
                               {(!this.props.fromWalkthrough) && (
                                 <View style={[styles.row10]}>
-                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false)}><Text style={[styles.ctaColor]}>Save Profile Visibility Preferences</Text></TouchableOpacity>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false)}><Text style={[styles.ctaColor,styles.standardText]}>Save Profile Visibility Preferences</Text></TouchableOpacity>
                                 </View>
                               )}
 
@@ -7587,7 +7594,7 @@ class EditProfileDetails extends Component {
                                 </View>
 
                                 <View style={[styles.flex50,styles.leftPadding5]}>
-                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text style={[styles.standardText,styles.whiteColor]}>Submit & Get Started</Text></TouchableOpacity>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.savePreferences(false, false, true)}><Text style={[styles.standardText,styles.whiteColor]}>Get Started</Text></TouchableOpacity>
                                 </View>
 
                               </View>

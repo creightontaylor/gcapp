@@ -585,7 +585,9 @@ class LogInForm extends Component {
                       AsyncStorage.setItem('orgName', orgName)
                       AsyncStorage.setItem('roleName', roleName)
                       AsyncStorage.setItem('pathway', pathway)
-                      AsyncStorage.setItem('publicOrg', publicOrg)
+                      if (publicOrg) {
+                        AsyncStorage.setItem('publicOrg', publicOrg)
+                      }
 
                       if (self.state.roleName.toLowerCase() === 'worker') {
                         AsyncStorage.setItem('workMode', 'true')
