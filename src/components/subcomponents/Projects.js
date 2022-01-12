@@ -12,6 +12,8 @@ const hideIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appIma
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 const defaultProfileBackgroundImage = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/default-profile-background-image.png';
 
+import SubPicker from '../common/SubPicker';
+
 import ProjectDetails from './ProjectDetails';
 
 class Projects extends Component {
@@ -535,27 +537,28 @@ class Projects extends Component {
         for (let i = 1; i <= filters.length; i++) {
           rows.push(
             <View key={filters[i - 1] + i.toString()}>
-              <View>
-                <View style={[styles.row10,styles.rightPadding20]}>
-                  <View style={[styles.lightBorder,styles.rowDirection]}>
-                    <View style={[styles.rightPadding5,styles.leftPadding,styles.topMarginNegative2]}>
-                      <View style={[styles.spacer]} />
-                      <Text style={[styles.descriptionTextColor]}>{filters[i - 1].name}</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{filters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: filters[i - 1].name, selectedIndex: i - 1, selectedName: "filter|" + filters[i - 1].name, selectedValue: filters[i - 1].value, selectedOptions: filters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{filters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
                     </View>
-                    <View>
-                      <Picker
-                        selectedValue={filters[i - 1].value}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-                        }>
-                        {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                      </Picker>
-                    </View>
-                    <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                      <Image source={{ uri: dropdownArrow}}/>
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={filters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                    }>
+                    {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -574,27 +577,28 @@ class Projects extends Component {
         for (let i = 1; i <= sorters.length; i++) {
           rows.push(
             <View key={sorters[i - 1] + i.toString()}>
-              <View>
-                <View style={[styles.row10,styles.rightPadding20]}>
-                  <View style={[styles.lightBorder,styles.rowDirection]}>
-                    <View style={[styles.rightPadding5,styles.leftPadding,styles.topMarginNegative2]}>
-                      <View style={[styles.spacer]} />
-                      <Text style={[styles.descriptionTextColor]}>{sorters[i - 1].name}</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{sorters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: sorters[i - 1].name, selectedIndex: i - 1, selectedName: "sort|" + sorters[i - 1].name, selectedValue: sorters[i - 1].value, selectedOptions: sorters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{sorters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
                     </View>
-                    <View>
-                      <Picker
-                        selectedValue={sorters[i - 1].value}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                        }>
-                        {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                      </Picker>
-                    </View>
-                    <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                      <Image source={{ uri: dropdownArrow}}/>
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={sorters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                    }>
+                    {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -1063,106 +1067,121 @@ class Projects extends Component {
                 <ProjectDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.projects[this.state.selectedIndex1]} orgCode={this.state.org} />
               </View>
             ) : (
-                <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+                <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
-                {(this.state.showGrade) && (
-                  <View key="gradeProject" style={[styles.calcColumn80,styles.padding20]}>
-                    {(this.state.projects[this.state.selectedIndex1]) && (
-                      <View>
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.headingText4]}>{this.state.projects[this.state.selectedIndex1].name} - Add Grade & Feedback</Text>
-                          <View style={[styles.halfSpacer]} />
-                          <Text style={[styles.descriptionText2,styles.boldText]}>Add a grade and feedback here. Browse previous feedback below.</Text>
-                        </View>
-
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.row10]}>Grade The Project (You Can Edit Later)</Text>
-                          <Picker
-                            selectedValue={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].grade}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("grade",itemValue)
-                            }>
-                            {this.state.gradeOptions.map(value => <Picker.Item label={value} value={value} />)}
-                          </Picker>
-                        </View>
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.row10]}>Provide Constructive Feedback</Text>
-                          <TextInput
-                            style={styles.textInput}
-                            onChangeText={(text) => this.formChangeHandler("feedback", text)}
-                            value={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].feedback}
-                            placeholder="Project feedback..."
-                            placeholderTextColor="grey"
-                            multiline={true}
-                            numberOfLines={4}
-                          />
-                        </View>
-
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.row10]}>Transparency to Student</Text>
-                          <Picker
-                            selectedValue={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].isTransparent}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("isTransparent",itemValue)
-                            }>
-                            <Picker.Item label={"Students can see the feedback [Keep transparent]"} value={true} />
-                            <Picker.Item label={"Students cannot see the feedback [Keep confidential]"} value={false} />
-                          </Picker>
-                          <Text style={[styles.descriptionText2]}>Note: this feedback is viewable by teachers, counselors, mentors, and work placement organizations.</Text>
-                        </View>
-
+                  {(this.state.showGrade) && (
+                    <View key="gradeProject" style={[styles.calcColumn80,styles.padding20]}>
+                      {(this.state.projects[this.state.selectedIndex1]) && (
                         <View>
-                          { (this.state.clientErrorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text> }
-                          { (this.state.serverPostSuccess) ? (
-                            <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
-                          ) : (
-                            <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.headingText4]}>{this.state.projects[this.state.selectedIndex1].name} - Add Grade & Feedback</Text>
+                            <View style={[styles.halfSpacer]} />
+                            <Text style={[styles.descriptionText2,styles.boldText]}>Add a grade and feedback here. Browse previous feedback below.</Text>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.row10]}>Grade The Project (You Can Edit Later)</Text>
+                            <Picker
+                              selectedValue={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].grade}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("grade",itemValue)
+                              }>
+                              {this.state.gradeOptions.map(value => <Picker.Item label={value} value={value} />)}
+                            </Picker>
+                          </View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.row10]}>Provide Constructive Feedback</Text>
+                            <TextInput
+                              style={styles.textArea}
+                              onChangeText={(text) => this.formChangeHandler("feedback", text)}
+                              value={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].feedback}
+                              placeholder="Project feedback..."
+                              placeholderTextColor="grey"
+                              multiline={true}
+                              numberOfLines={4}
+                            />
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.row10]}>Transparency to Student</Text>
+                            <Picker
+                              selectedValue={this.state.projects[this.state.selectedIndex1].grades[this.state.selectedIndex2].isTransparent}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("isTransparent",itemValue)
+                              }>
+                              <Picker.Item label={"Students can see the feedback [Keep transparent]"} value={true} />
+                              <Picker.Item label={"Students cannot see the feedback [Keep confidential]"} value={false} />
+                            </Picker>
+                            <Text style={[styles.descriptionText2]}>Note: this feedback is viewable by teachers, counselors, mentors, and work placement organizations.</Text>
+                          </View>
+
+                          <View>
+                            { (this.state.clientErrorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text> }
+                            { (this.state.serverPostSuccess) ? (
+                              <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
+                            ) : (
+                              <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
+                            )}
+
+                            <View style={[styles.rowDirection]}>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin]} onPress={() => this.saveFeedback()}><Text style={[styles.standardText,styles.whiteColor]}>Save Feedback</Text></TouchableOpacity>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: false })}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                            </View>
+
+                          </View>
+
+                          <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+                          <View style={[styles.horizontalLine]} />
+                          <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+
+                          <Text style={[styles.headingText6]}>Other Feedback on {this.state.projects[this.state.selectedIndex1].name}</Text>
+                          <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+
+                          {this.state.projects[this.state.selectedIndex1].grades.map((value, index) =>
+                            <View key={value}>
+                              {(index !== this.state.selectedIndex2) && (
+                                <View>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.width60]}>
+                                      <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>{value.grade}</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName} ({value.contributorRoleName}) {(value.contributorTitle) && " - " + value.contributorTitle + " @ " + value.contributorEmployerName}</Text>
+                                      <Text style={[styles.headingText6]}>{value.feedback}</Text>
+                                    </View>
+
+                                  </View>
+
+                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                </View>
+                              )}
+                            </View>
                           )}
 
-                          <View style={[styles.rowDirection]}>
-                            <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin]} onPress={() => this.saveFeedback()}><Text style={[styles.standardText,styles.whiteColor]}>Save Feedback</Text></TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: false })}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
-                          </View>
-
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                         </View>
+                      )}
 
-                        <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                        <View style={[styles.horizontalLine]} />
-                        <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-
-                        <Text style={[styles.headingText6]}>Other Feedback on {this.state.projects[this.state.selectedIndex1].name}</Text>
-                        <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-
-                        {this.state.projects[this.state.selectedIndex1].grades.map((value, index) =>
-                          <View key={value}>
-                            {(index !== this.state.selectedIndex2) && (
-                              <View>
-                                <View style={[styles.rowDirection]}>
-                                  <View style={[styles.width60]}>
-                                    <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>{value.grade}</Text>
-                                  </View>
-                                  <View style={[styles.calcColumn180]}>
-                                    <Text style={[styles.descriptionText2]}>{value.contributorFirstName} {value.contributorLastName} ({value.contributorRoleName}) {(value.contributorTitle) && " - " + value.contributorTitle + " @ " + value.contributorEmployerName}</Text>
-                                    <Text style={[styles.headingText6]}>{value.feedback}</Text>
-                                  </View>
-
-                                </View>
-
-                                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                              </View>
-                            )}
-                          </View>
-                        )}
-
-                        <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                       </View>
-                    )}
-                  </View>
-                )}
+                    </View>
+                  )}
 
-                <View style={[styles.row20]}>
-                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
-                </View>
+                  {(this.state.showPicker) && (
+                    <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <SubPicker
+                        selectedSubKey={this.state.selectedSubKey}
+                        selectedName={this.state.selectedName}
+                        selectedOptions={this.state.selectedOptions}
+                        selectedValue={this.state.selectedValue}
+                        differentLabels={this.state.differentLabels}
+                        pickerName={this.state.pickerName}
+                        formChangeHandler={this.formChangeHandler}
+                        closeModal={this.closeModal}
+                      />
+                    </View>
+                  )}
                </Modal>
             )}
 

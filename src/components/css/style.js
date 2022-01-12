@@ -1528,7 +1528,18 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontSize: (0.9 * baseFontSize)
+  },
+  textArea: {
+    height: 100,
+    backgroundColor: '#fff',
+    borderColor: faintColor,
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontSize: (0.9 * baseFontSize)
   },
   contrastingContainer1: {
     backgroundColor: 'rgba(135,206,250,0.2)',

@@ -172,7 +172,7 @@ class InviteMembers extends Component {
 
             <Text style={[styles.descriptionText2,styles.boldText,styles.bottomPadding5]}>To:</Text>
             <TextInput
-              style={styles.textInput}
+              style={styles.textArea}
               onChangeText={(text) => this.formChangeHandler("recipientEmail", text)}
               value={this.state.recipientEmail}
               placeholder="name@gmail.com"

@@ -36,11 +36,13 @@ const calendarIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.co
 const subsidyIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/subsidy-icon-dark.png';
 const moneyIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-dark.png';
 const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import ProjectDetails from '../subcomponents/ProjectDetails';
 import EditProject from './EditProject';
 import SubSubmissions from '../common/Submissions';
 import SubComments from '../common/Comments';
+import SubPicker from '../common/SubPicker';
 
 import {convertDateToString} from '../functions/convertDateToString';
 
@@ -1532,6 +1534,8 @@ class OpportunityDetails extends Component {
   formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called')
 
+    this.setState({ selectedValue: eventValue })
+    
     if (eventName === 'selectProject') {
       let selectedProject = {}
       let projectOptions = this.state.projectOptions
@@ -3691,13 +3695,26 @@ class OpportunityDetails extends Component {
 
                                       <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                                      <Picker
-                                        selectedValue={this.state.selectedProject.name}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("selectProject",itemValue)
-                                        }>
-                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                      </Picker>
+                                      {(Platform.OS === 'ios') ? (
+                                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Select a Project", selectedIndex: null, selectedName: "selectProject", selectedValue: this.state.selectedProject.name, selectedOptions: this.state.projectOptions, selectedSubKey: 'name' })}>
+                                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                            <View style={[styles.calcColumn115]}>
+                                              <Text style={[styles.descriptionText1]}>{this.state.selectedProject.name}</Text>
+                                            </View>
+                                            <View style={[styles.width20,styles.topMargin5]}>
+                                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                            </View>
+                                          </View>
+                                        </TouchableOpacity>
+                                      ) : (
+                                        <Picker
+                                          selectedValue={this.state.selectedProject.name}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("selectProject",itemValue)
+                                          }>
+                                          {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                        </Picker>
+                                      )}
                                     </View>
                                   ) : (
                                     <View>
@@ -3988,13 +4005,17 @@ class OpportunityDetails extends Component {
                     {console.log('showProjectDetail 3: ', this.state.showProjectDetail)}
                   </View>
                 ) : (
-                  <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+                  <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
                   {(this.state.showJobFunction) && (
                     <View key="showJobFunction" style={[styles.fullScreenWidth,styles.padding20]}>
                       <Text style={[styles.headingText2]}>Job Function</Text>
                       <View style={[styles.spacer]}/>
                       <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>job functions</Text> as a category of work that requires similar skills. It can be thought of as synonymous with "departments" within a company. Functions can be the same across different industries. Examples of functions include sales, marketing, finance, engineering, and design.</Text>
+
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.flexCenter,styles.ctaBorder]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                      </View>
                     </View>
                   )}
 
@@ -4003,12 +4024,27 @@ class OpportunityDetails extends Component {
                       <Text style={[styles.headingText2]}>Industry</Text>
                       <View style={[styles.spacer]}/>
                       <Text style={[styles.standardText]}>We define <Text style={[styles.boldText,styles.ctaColor]}>industry</Text> as a category of companies that are related based on their primary business activitiees. Companies are generally grouped by their sources of revenue. For example, Nike would fall under "Fashion & Apparel" and Netflix would fall under "Other Entertainment".</Text>
+
+                      <View style={[styles.row20]}>
+                       <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.flexCenter,styles.ctaBorder]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                      </View>
                     </View>
                   )}
 
-                  <View style={[styles.row20]}>
-                   <TouchableOpacity style={[styles.btnPrimary,styles.whiteBackground,styles.flexCenter,styles.ctaBorder]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
-                  </View>
+                  {(this.state.showPicker) && (
+                    <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <SubPicker
+                        selectedSubKey={this.state.selectedSubKey}
+                        selectedName={this.state.selectedName}
+                        selectedOptions={this.state.selectedOptions}
+                        selectedValue={this.state.selectedValue}
+                        differentLabels={this.state.differentLabels}
+                        pickerName={this.state.pickerName}
+                        formChangeHandler={this.formChangeHandler}
+                        closeModal={this.closeModal}
+                      />
+                    </View>
+                  )}
 
                  </Modal>
                 )}

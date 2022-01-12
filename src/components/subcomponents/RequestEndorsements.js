@@ -1142,7 +1142,7 @@ class RequestEndorsements extends Component {
             {skillOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
           </Picker>
           <TextInput
-            style={styles.textInput}
+            style={styles.textArea}
             onChangeText={(text) => this.formChangeHandler(exampleExample, text)}
             value={this.state.examples[i - 1].example}
             placeholder="Share an example where the endorsee exceptionally demonstrated this skill…."

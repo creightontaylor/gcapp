@@ -17,6 +17,8 @@ const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png';
 
+import SubPicker from '../common/SubPicker';
+
 class PeopleMatching extends Component {
   constructor(props) {
     super(props)
@@ -275,6 +277,8 @@ class PeopleMatching extends Component {
 
   formChangeHandler = (eventName,eventValue) => {
     console.log('formChangeHandler called')
+
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'search') {
       console.log('in search')
@@ -830,55 +834,58 @@ class PeopleMatching extends Component {
             )}
 
             {(this.state.showingSearchBar) && (
-              <View style={[styles.padding20,styles.standardBorder,styles.topMargin20]}>
+              <View style={[styles.card,styles.standardBorder,styles.topMargin20]}>
                 <View>
                   <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Filter Options</Text>
 
-                    <View style={[styles.rowDirection,styles.flexWrap]}>
-                      <View style={[styles.row10,styles.rightPadding20]}>
-                        <View style={[styles.lightBorder,styles.rowDirection]}>
-                          <View style={[styles.rightPadding,styles.leftPadding,styles.topMarginNegative2]}>
-                            <View style={[styles.spacer]} />
-                            <Text style={[styles.descriptionTextColor]}>Age Range</Text>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>Age Range</Text>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Age Range", selectedIndex: null, selectedName: "filter|ageRange", selectedValue: this.state.ageRange, selectedOptions: this.state.ageRangeOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn115]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.ageRange}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
                           </View>
-                          <View>
-                            <Picker
-                              selectedValue={this.state.ageRange}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("filter|ageRange",itemValue)
-                              }>
-                              {this.state.ageRangeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
-                          </View>
-                          <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                            <Image source={{ uri: dropdownArrow}}/>
-                          </View>
-                        </View>
-                      </View>
-
-                      <View style={[styles.row10,styles.rightPadding20]}>
-                        <View style={[styles.lightBorder,styles.rowDirection]}>
-                          <View style={[styles.rightPadding,styles.leftPadding,styles.topMarginNegative2]}>
-                            <View style={[styles.spacer]} />
-                            <Text style={[styles.descriptionTextColor]}>Maximum Distance</Text>
-                          </View>
-                          <View>
-                            <Picker
-                              selectedValue={this.state.proximity}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("filter|proximity",itemValue)
-                              }>
-                              {this.state.proximityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
-                          </View>
-                          <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                            <Image source={{ uri: dropdownArrow}}/>
-                          </View>
-                        </View>
-                      </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.ageRange}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("filter|ageRange",itemValue)
+                          }>
+                          {this.state.ageRangeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
                     </View>
 
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>Maximum Distance</Text>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Maximum Distance", selectedIndex: null, selectedName: "filter|proximity", selectedValue: this.state.proximity, selectedOptions: this.state.proximityOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn115]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.proximity}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.proximity}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("filter|proximity",itemValue)
+                          }>
+                          {this.state.proximityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+                    </View>
                   </View>
                 </View>
               </View>
@@ -943,7 +950,7 @@ class PeopleMatching extends Component {
           </View>
         )}
 
-        <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+        <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
           {(this.state.showMatchingCriteria) && (
             <ScrollView key="showMatchingCriteria" style={[styles.calcColumn80,styles.padding20]}>
@@ -1078,6 +1085,21 @@ class PeopleMatching extends Component {
                 </View>
               </View>
             </ScrollView>
+          )}
+
+          {(this.state.showPicker) && (
+            <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+              <SubPicker
+                selectedSubKey={this.state.selectedSubKey}
+                selectedName={this.state.selectedName}
+                selectedOptions={this.state.selectedOptions}
+                selectedValue={this.state.selectedValue}
+                differentLabels={this.state.differentLabels}
+                pickerName={this.state.pickerName}
+                formChangeHandler={this.formChangeHandler}
+                closeModal={this.closeModal}
+              />
+            </View>
           )}
        </Modal>
 

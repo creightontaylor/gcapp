@@ -1406,7 +1406,7 @@ class CreatePost extends Component {
 
                <View style={[styles.row10]}>
                  <TextInput
-                   style={styles.textInput}
+                   style={styles.textArea}
                    onChangeText={(text) => this.formChangeHandler("postMessage", text)}
                    value={this.state.postMessage}
                    placeholder="Start a conversation..."
@@ -1444,7 +1444,7 @@ class CreatePost extends Component {
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onPress={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })}>
+                       <TouchableOpacity onPress={(this.state.showProfileItems) ? () => this.setState({ showProfileItems: false }) : () => this.setState({ showProfileItems: true })} style={[styles.rowDirection]}>
                          <Image source={(this.state.showProfileItems) ? { uri: profileIconBlue} : { uri: profileIconDark}} style={[styles.square20,styles.contain]}/>
                          <Image source={(this.state.showProfileItems) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.contain]}/>
                        </TouchableOpacity>
@@ -1466,7 +1466,7 @@ class CreatePost extends Component {
                        </TouchableOpacity>
                      </View>
                      <View style={[styles.rightPadding20]}>
-                       <TouchableOpacity onPress={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })}>
+                       <TouchableOpacity onPress={(this.state.showTrends) ? () => this.setState({ showTrends: false }) : () => this.setState({ showTrends: true })} style={[styles.rowDirection]}>
                          <Image source={(this.state.showTrends) ? { uri: trendsIconBlue} : { uri: trendsIconDark}} style={[styles.square20,styles.contain]}/>
                          <Image source={(this.state.showTrends) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.contain]} />
 

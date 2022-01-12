@@ -3883,7 +3883,7 @@ class EditLog extends Component {
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>The Case for Option A</Text>
                                   <TextInput
-                                    style={styles.textInput}
+                                    style={styles.textArea}
                                     onChangeText={(text) => this.formChangeHandler("aCase", text)}
                                     value={this.state.aCase}
                                     placeholder="Make the case for this option..."
@@ -4229,7 +4229,7 @@ class EditLog extends Component {
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.row10]}>The Case for Option B</Text>
                                   <TextInput
-                                    style={styles.textInput}
+                                    style={styles.textArea}
                                     onChangeText={(text) => this.formChangeHandler("bCase", text)}
                                     value={this.state.bCase}
                                     placeholder="Make the case for this option..."
@@ -4883,7 +4883,7 @@ class EditLog extends Component {
                             <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Description<Text style={[styles.errorColor]}>*</Text></Text>
                               <TextInput
-                                style={styles.textInput}
+                                style={styles.textArea}
                                 onChangeText={(text) => this.formChangeHandler("goalDescription", text)}
                                 value={this.state.goalDescription}
                                 placeholder="describe the goal"
@@ -4896,7 +4896,7 @@ class EditLog extends Component {
                             <View style={[styles.row10]}>
                               <Text style={[styles.row10]}>Define Success<Text style={[styles.errorColor]}>*</Text></Text>
                               <TextInput
-                                style={styles.textInput}
+                                style={styles.textArea}
                                 onChangeText={(text) => this.formChangeHandler("successDefined", text)}
                                 value={this.state.successDefined}
                                 placeholder="How do you define success?"
@@ -5235,7 +5235,7 @@ class EditLog extends Component {
                   <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Description<Text style={[styles.errorColor]}>*</Text></Text>
                     <TextInput
-                      style={styles.textInput}
+                      style={styles.textArea}
                       onChangeText={(text) => this.formChangeHandler("description", text)}
                       value={this.state.description}
                       placeholder="Why are we having this meeting? What will we discuss?"
@@ -5300,7 +5300,7 @@ class EditLog extends Component {
                       <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Minutes</Text>
                         <TextInput
-                          style={styles.textInput}
+                          style={styles.textArea}
                           onChangeText={(text) => this.formChangeHandler("notes", text)}
                           value={this.state.notes}
                           placeholder="What did we did we discuss in this meeting? What are the action items?"
@@ -5541,7 +5541,7 @@ class EditLog extends Component {
                   <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Notes<Text style={[styles.errorColor]}>*</Text></Text>
                     <TextInput
-                      style={styles.textInput}
+                      style={styles.textArea}
                       onChangeText={(text) => this.formChangeHandler("notes", text)}
                       value={this.state.notes}
                       placeholder="Add notes"
@@ -5810,7 +5810,7 @@ class EditLog extends Component {
                       </Picker>
                       <View style={[styles.halfSpacer]}/>
                       <TextInput
-                        style={styles.textInput}
+                        style={styles.textArea}
                         onChangeText={(text) => this.formChangeHandler("thoughtsOnPosition", text)}
                         value={this.state.thoughtsOnPosition}
                         placeholder="Write thoughts on the position..."
@@ -5831,7 +5831,7 @@ class EditLog extends Component {
                       </Picker>
                       <View style={[styles.halfSpacer]}/>
                       <TextInput
-                        style={styles.textInput}
+                        style={styles.textArea}
                         onChangeText={(text) => this.formChangeHandler("thoughtsOnCompany", text)}
                         value={this.state.thoughtsOnCompany}
                         placeholder="Write thoughts on the company..."
@@ -5853,7 +5853,7 @@ class EditLog extends Component {
                       <View style={[styles.halfSpacer]}/>
 
                       <TextInput
-                        style={styles.textInput}
+                        style={styles.textArea}
                         onChangeText={(text) => this.formChangeHandler("thoughtsOnFit", text)}
                         value={this.state.thoughtsOnFit}
                         placeholder="Write thoughts on fit..."
@@ -5866,7 +5866,7 @@ class EditLog extends Component {
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Employer Feedback</Text>
                       <TextInput
-                        style={styles.textInput}
+                        style={styles.textArea}
                         onChangeText={(text) => this.formChangeHandler("employerFeedback", text)}
                         value={this.state.employerFeedback}
                         placeholder="Add any feedback from employer..."
@@ -5953,7 +5953,7 @@ class EditLog extends Component {
                       <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Bonus Description</Text>
                         <TextInput
-                          style={styles.textInput}
+                          style={styles.textArea}
                           onChangeText={(text) => this.formChangeHandler("bonusDescription", text)}
                           value={this.state.bonusDescription}
                           placeholder="Describe your bonus and the estimated amount..."
@@ -6025,7 +6025,7 @@ class EditLog extends Component {
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Reason for Decision<Text style={[styles.errorColor]}>*</Text></Text>
                       <TextInput
-                        style={styles.textInput}
+                        style={styles.textArea}
                         onChangeText={(text) => this.formChangeHandler("decisionReason", text)}
                         value={this.state.decisionReason}
                         placeholder="Why you did you make this decision..."
@@ -6055,7 +6055,7 @@ class EditLog extends Component {
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Passion Reason<Text style={[styles.errorColor]}>*</Text></Text>
                   <TextInput
-                    style={styles.textInput}
+                    style={styles.textArea}
                     onChangeText={(text) => this.formChangeHandler("passionReason", text)}
                     value={this.state.passionReason}
                     placeholder="Why are you passionate about this..."

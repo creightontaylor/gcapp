@@ -888,7 +888,7 @@ class EditGroup extends Component {
                        <Text style={[styles.headingText6]}>Group Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                        <View style={styles.spacer} />
                        <TextInput
-                         style={styles.textInput}
+                         style={styles.textArea}
                          onChangeText={(text) => this.formChangeHandler("groupName", text)}
                          value={this.state.groupName}
                          placeholder="Add group name..."
@@ -918,7 +918,7 @@ class EditGroup extends Component {
                      <Text style={[styles.headingText6]}>Group Description<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                      <View style={styles.spacer} />
                      <TextInput
-                       style={styles.textInput}
+                       style={styles.textArea}
                        onChangeText={(text) => this.formChangeHandler("groupDescription", text)}
                        value={this.state.groupDescription}
                        placeholder="Add description..."
@@ -992,7 +992,7 @@ class EditGroup extends Component {
                            <View style={[styles.row10]}>
                              <Text style={[styles.row10]}>{(this.state.meetingMethod === "In Person") ? "Location" : "Meeting Link"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                              <TextInput
-                               style={styles.textInput}
+                               style={styles.textArea}
                                onChangeText={(text) => this.formChangeHandler("meetingLocation", text)}
                                value={this.state.meetingLocation}
                                placeholder={(this.state.meetingMethod === "In Person") ? "Address..." : "Http..."}
@@ -1116,7 +1116,7 @@ class EditGroup extends Component {
                      <View style={[styles.rowDirection,styles.row10]}>
                         <View style={[styles.calcColumn160]}>
                           <TextInput
-                            style={[styles.textInput,styles.standardText]}
+                            style={styles.textArea}
                             onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
                             value={this.state.searchString}
                             placeholder="Search members..."
@@ -1196,7 +1196,7 @@ class EditGroup extends Component {
                              <View>
                               <View style={[styles.row10]}>
                                 <TextInput
-                                  style={styles.textInput}
+                                  style={styles.textArea}
                                   onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
                                   value={this.state.searchString}
                                   placeholder="Search members..."

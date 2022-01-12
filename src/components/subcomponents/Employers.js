@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
 
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
@@ -12,6 +13,8 @@ const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/a
 const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
 const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png';
 const favoriteIconSelected  = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorite-icon-selected.png';
+
+import SubPicker from '../common/SubPicker';
 
 class Employers extends Component {
   constructor(props) {
@@ -465,29 +468,28 @@ class Employers extends Component {
         for (let i = 1; i <= filters.length; i++) {
           rows.push(
             <View key={filters[i - 1] + i.toString()}>
-              <View>
-                <View style={[styles.row10]}>
-                  <View style={[styles.lightBorder,styles.rowDirection,styles.calcColumn60]}>
-                    <View style={[styles.leftPadding,styles.topMarginNegative2,styles.calcColumn85]}>
-                      <View style={[styles.spacer]} />
-                      <Text style={[styles.descriptionTextColor]}>{filters[i - 1].name}</Text>
-
-                      <View style={[styles.topPadding5]}>
-                        <Picker
-                          selectedValue={filters[i - 1].value}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-                          }>
-                          {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                        </Picker>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{filters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: filters[i - 1].name, selectedIndex: i - 1, selectedName: "filter|" + filters[i - 1].name, selectedValue: filters[i - 1].value, selectedOptions: filters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{filters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
                       </View>
                     </View>
-
-                    <View style={[styles.topPadding17,styles.leftPadding]}>
-                      <Image source={{ uri: dropdownArrow}} style={[styles.square15,styles.contain]}/>
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={filters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                    }>
+                    {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -505,27 +507,28 @@ class Employers extends Component {
         for (let i = 1; i <= sorters.length; i++) {
           rows.push(
             <View key={sorters[i - 1] + i.toString()}>
-              <View>
-                <View style={[styles.row10]}>
-                  <View style={[styles.lightBorder,styles.rowDirection,styles.calcColumn60]}>
-                    <View style={[styles.leftPadding,styles.topMarginNegative2]}>
-                      <View style={[styles.spacer]} />
-                      <Text style={[styles.descriptionTextColor]}>{sorters[i - 1].name}</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{sorters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: sorters[i - 1].name, selectedIndex: i - 1, selectedName: "sort|" + sorters[i - 1].name, selectedValue: sorters[i - 1].value, selectedOptions: sorters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{sorters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
                     </View>
-                    <View>
-                      <Picker
-                        selectedValue={sorters[i - 1].value}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                        }>
-                        {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                      </Picker>
-                    </View>
-                    <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                      <Image source={{ uri: dropdownArrow}}/>
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={sorters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                    }>
+                    {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -829,6 +832,23 @@ class Employers extends Component {
               )}
 
             </View>
+
+            <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+              {(this.state.showPicker) && (
+                <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                  <SubPicker
+                    selectedSubKey={this.state.selectedSubKey}
+                    selectedName={this.state.selectedName}
+                    selectedOptions={this.state.selectedOptions}
+                    selectedValue={this.state.selectedValue}
+                    differentLabels={this.state.differentLabels}
+                    pickerName={this.state.pickerName}
+                    formChangeHandler={this.formChangeHandler}
+                    closeModal={this.closeModal}
+                  />
+                </View>
+              )}
+            </Modal>
         </ScrollView>
     )
   }

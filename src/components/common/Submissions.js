@@ -1088,7 +1088,7 @@ class Submissions extends Component {
               <ProjectDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.selectedOpportunity.submissions[this.state.selectedIndex]} orgCode={this.state.activeOrg} navigation={this.props.navigation} />
             </View>
           ) : (
-            <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+            <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
             {(this.state.showComments) && (
               <View key="submissionDetail">
                {(this.state.selectedOpportunity && this.state.selectedOpportunity.submissions && this.state.selectedOpportunity.submissions.length > 0) && (
@@ -1199,7 +1199,7 @@ class Submissions extends Component {
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10,styles.standardText]}>Provide Constructive Feedback</Text>
                   <TextInput
-                    style={styles.textInput}
+                    style={styles.textArea}
                     onChangeText={(text) => this.formChangeHandler("feedback", text)}
                     value={this.state.selectedOpportunity.submissions[this.state.selectedIndex1].grades[this.state.selectedIndex2].feedback}
                     placeholder="Project feedback"

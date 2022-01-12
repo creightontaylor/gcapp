@@ -2182,7 +2182,7 @@ class CareerDetails extends Component {
 
                   <View style={[styles.row10]}>
                     <TextInput
-                      style={styles.textInput}
+                      style={styles.textArea}
                       onChangeText={(text) => this.formChangeHandler("postMessage", text)}
                       value={this.state.postMessage}
                       placeholder="Start a conversation in this group..."

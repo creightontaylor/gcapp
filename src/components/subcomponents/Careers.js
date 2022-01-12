@@ -20,6 +20,8 @@ const matchIconSelected = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.c
 const filterIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/filter-icon.png";
 const filterIconSelected = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/filter-icon-selected.png";
 
+import SubPicker from '../common/SubPicker';
+
 class Careers extends Component {
   constructor(props) {
     super(props)
@@ -346,6 +348,8 @@ class Careers extends Component {
   formChangeHandler(eventName, eventValue) {
     console.log('formChangeHandler called')
 
+    this.setState({ selectedValue: eventValue })
+
     if (eventName === 'search') {
       this.setState({ searchString: eventValue, animating: true })
       this.filterResults(eventValue, null, null, null, true)
@@ -638,27 +642,28 @@ class Careers extends Component {
         for (let i = 1; i <= filters.length; i++) {
           rows.push(
             <View key={filters[i - 1] + i.toString()}>
-              <View>
-                <View style={[styles.row10,styles.rightPadding20]}>
-                  <View style={styles.lightBorder}>
-                    <View style={[styles.rightPadding5,styles.leftPadding,styles.nowrap,styles.topMarginNegative2]}>
-                      <View style={styles.spacer} />
-                      <Text style={[styles.descriptionTextColor]}>{filters[i - 1].name}</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{filters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: filters[i - 1].name, selectedIndex: i - 1, selectedName: "filter|" + filters[i - 1].name, selectedValue: filters[i - 1].value, selectedOptions: filters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{filters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
                     </View>
-                    <View>
-                      <Picker
-                        selectedValue={filters[i - 1].value}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-                        }>
-                        {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                      </Picker>
-                    </View>
-                    <View style={[styles.dropdownArrowContainer,styles.paddingTop15]}>
-                      <Image source={{ uri: dropdownArrow}} style={[styles.square20,styles.contain]} />
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={filters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                    }>
+                    {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -676,27 +681,28 @@ class Careers extends Component {
         for (let i = 1; i <= sorters.length; i++) {
           rows.push(
             <View key={sorters[i - 1] + i.toString()}>
-              <View style={styles.rowDirection}>
-                <View style={[styles.row10,styles.rightPadding20]}>
-                  <View style={styles.lightBorder}>
-                    <View style={[styles.rightPadding5,styles.leftPadding,styles.nowrap,styles.topMarginNegative2]}>
-                      <View style={styles.spacer} />
-                      <Text style={[styles.descriptionTextColor]}>{sorters[i - 1].name}</Text>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{sorters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: sorters[i - 1].name, selectedIndex: i - 1, selectedName: "sort|" + sorters[i - 1].name, selectedValue: sorters[i - 1].value, selectedOptions: sorters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{sorters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
                     </View>
-                    <View>
-                      <Picker
-                        selectedValue={sorters[i - 1].value}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                        }>
-                        {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                      </Picker>
-                    </View>
-                    <View style={[styles.dropdownArrowContainer,styles.topPadding15]}>
-                      <Image source={{ uri: dropdownArrow}} />
-                    </View>
-                  </View>
-                </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={sorters[i - 1].value}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                    }>
+                    {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                  </Picker>
+                )}
               </View>
             </View>
           )
@@ -1107,18 +1113,15 @@ class Careers extends Component {
             {(this.state.showingSearchBar) && (
               <View style={[styles.card,styles.topMargin20]}>
                 <View>
-                  <View style={styles.spacer} /><View style={styles.spacer} />
-                  <View style={styles.horizontalLine} />
-                  <View style={styles.spacer} /><View style={styles.spacer} />
 
-                  <Text>Filter</Text>
+                  <Text style={[styles.standardText]}>Filters</Text>
                   <View style={styles.halfSpacer} />
                   {(this.renderManipulators('filter'))}
 
                   <View style={styles.spacer} />
                   <View style={styles.horizontalLine} />
                   <View style={styles.spacer} /><View style={styles.spacer} />
-                  <Text>Sort</Text>
+                  <Text style={[styles.standardText]}>Sort</Text>
                   <View style={styles.halfSpacer} />
                   {(this.renderManipulators('sort'))}
 
@@ -1276,135 +1279,150 @@ class Careers extends Component {
 
             </View>
           )}
-          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+          <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
-          {(this.state.showMatchingCriteria) && (
-            <ScrollView key="showMatchingCriteria" style={[styles.calcColumn80,styles.padding20]}>
-              <Text style={[styles.headingText2]}>Adjust Matching Criteria</Text>
-              <View style={styles.spacer} />
-
-              <View style={[styles.row10]}>
-
-                <View style={[styles.flex1,styles.rowDirection,styles.calcColumn80]}>
-                  <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: false })}>
-                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor]}>
-                      <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.centerText] : [styles.descriptionText1,styles.whiteColor,styles.centerText]}>Adjust by Needs</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: true })}>
-                    <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20]}>
-                      <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.whiteColor,styles.centerText] : [styles.descriptionText1,styles.centerText]}>Custom Adjust</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
+            {(this.state.showMatchingCriteria) && (
+              <ScrollView key="showMatchingCriteria" style={[styles.calcColumn80,styles.padding20]}>
+                <Text style={[styles.headingText2]}>Adjust Matching Criteria</Text>
                 <View style={styles.spacer} />
-              </View>
 
-              {(this.state.customAdjustment) ? (
-                <View>
+                <View style={[styles.row10]}>
 
-                  {(this.state.matchingCriteria) && (
-                    <View>
-                      {this.state.matchingCriteria.map((value ,index) =>
-                        <View key={"c" + index} className={(value.name === 'Location') && [styles.washOut2]}>
-                          <View style={[styles.rowDirection]}>
-                            <View style={[styles.calcColumn140]}>
-                              <Text style={[styles.boldText]}>{index + 1}. {value.name}</Text>
-                              <View style={styles.halfSpacer} />
-                              <Text style={[styles.descriptionText3]}>{value.description}</Text>
-                            </View>
-                            <View style={[styles.width100,styles.rightText,styles.rowDirection]}>
-                              <View style={[styles.width70]}>
-                                <TextInput
-                                  style={[styles.textInput,styles.headingText2,styles.ctaColor,styles.boldText,styles.rightText,styles.standardBorder]}
-                                  onChangeText={(text) => this.formChangeHandler("custom|" + index,text)}
-                                  value={value.value}
-                                  placeholder="Search 1,000+ careers..."
-                                  placeholderTextColor="grey"
-                                  disabled={(value.name === 'Location') ? true : false}
-                                  keyboardType="numeric"
-                                  min="0"
-                                  max="100"
-                                />
-                              </View>
-                              <View style={[styles.width30]}>
-                                <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>%</Text>
-                              </View>
-                            </View>
-                          </View>
+                  <View style={[styles.flex1,styles.rowDirection,styles.calcColumn80]}>
+                    <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: false })}>
+                      <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor]}>
+                        <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.centerText] : [styles.descriptionText1,styles.whiteColor,styles.centerText]}>Adjust by Needs</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.flex50]} onPress={() => this.setState({ customAdjustment: true })}>
+                      <View style={(this.state.customAdjustment) ? [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.ctaBorder,styles.flexCenter,styles.row10,styles.horizontalPadding20]}>
+                        <Text style={(this.state.customAdjustment) ? [styles.descriptionText1,styles.whiteColor,styles.centerText] : [styles.descriptionText1,styles.centerText]}>Custom Adjust</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.spacer} />
+                </View>
 
-                          <View style={styles.spacer} /><View style={styles.halfSpacer} />
+                {(this.state.customAdjustment) ? (
+                  <View>
 
-                        </View>
-                      )}
-
+                    {(this.state.matchingCriteria) && (
                       <View>
-                        <View style={[styles.ctaHorizontalLine]} />
-                        <View style={styles.spacer} />
-                        <View style={[styles.calcColumn60,styles.rightText]}>
-                          <Text style={[styles.headingText2,styles.ctaColor,styles.boldText,styles.calcColumn60,styles.rightText]}>{this.state.totalPercent}%</Text>
-                        </View>
+                        {this.state.matchingCriteria.map((value ,index) =>
+                          <View key={"c" + index} className={(value.name === 'Location') && [styles.washOut2]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.calcColumn140]}>
+                                <Text style={[styles.boldText]}>{index + 1}. {value.name}</Text>
+                                <View style={styles.halfSpacer} />
+                                <Text style={[styles.descriptionText3]}>{value.description}</Text>
+                              </View>
+                              <View style={[styles.width100,styles.rightText,styles.rowDirection]}>
+                                <View style={[styles.width70]}>
+                                  <TextInput
+                                    style={[styles.textInput,styles.headingText2,styles.ctaColor,styles.boldText,styles.rightText,styles.standardBorder]}
+                                    onChangeText={(text) => this.formChangeHandler("custom|" + index,text)}
+                                    value={value.value}
+                                    placeholder="Search 1,000+ careers..."
+                                    placeholderTextColor="grey"
+                                    disabled={(value.name === 'Location') ? true : false}
+                                    keyboardType="numeric"
+                                    min="0"
+                                    max="100"
+                                  />
+                                </View>
+                                <View style={[styles.width30]}>
+                                  <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                                  <Text style={[styles.headingText2,styles.ctaColor,styles.boldText]}>%</Text>
+                                </View>
+                              </View>
+                            </View>
 
-                        {(this.state.totalPercent !== 100) && (
-                          <View style={[styles.calcColumn60]}>
-                            <Text style={[styles.errorColor,styles.rightText]}>Please adjust percentages to equal 100%</Text>
+                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
+
                           </View>
                         )}
-                      </View>
-                    </View>
-                  )}
-                </View>
-              ) : (
-                <View>
 
-                  {(this.state.useCases) && (
-                    <View>
-                      {this.state.useCases.map((value ,index) =>
-                        <View key={"u" + index} style={(value.name === 'Purpose') && [styles.washOut2]}>
-                          <View style={[styles.rowDirection]}>
-                            <View style={[styles.calcColumn90]}>
-                              <Text style={[styles.boldText]}>{index + 1}. {value.name}</Text>
-                              <View style={styles.halfSpacer} />
-                              <Text style={[styles.descriptionText3]}>{value.description}</Text>
-                            </View>
-                            <View style={[styles.width50,styles.centerHorizontally,styles.centerText,styles.topPadding5]}>
-
-                              <TouchableOpacity disabled={(value.name === 'Purpose') ? true : false} onPress={() => this.itemClicked('useCase|' + index, true)}>
-                                {(value.selected) ? (
-                                  <View style={[styles.square22,styles.ctaBorder,styles.flexCenter, { borderRadius: 11 }]}>
-                                    <View style={[styles.square10,styles.ctaBackgroundColor, { borderRadius: 5 }]}/>
-                                  </View>
-                                ) : (
-                                  <View style={[styles.square22,styles.standardBorder,styles.flexCenter, { borderRadius: 11 }]} />
-                                )}
-                              </TouchableOpacity>
-                            </View>
+                        <View>
+                          <View style={[styles.ctaHorizontalLine]} />
+                          <View style={styles.spacer} />
+                          <View style={[styles.calcColumn60,styles.rightText]}>
+                            <Text style={[styles.headingText2,styles.ctaColor,styles.boldText,styles.calcColumn60,styles.rightText]}>{this.state.totalPercent}%</Text>
                           </View>
 
-                          <View style={styles.spacer} /><View style={styles.halfSpacer} />
-
+                          {(this.state.totalPercent !== 100) && (
+                            <View style={[styles.calcColumn60]}>
+                              <Text style={[styles.errorColor,styles.rightText]}>Please adjust percentages to equal 100%</Text>
+                            </View>
+                          )}
                         </View>
-                      )}
+                      </View>
+                    )}
+                  </View>
+                ) : (
+                  <View>
 
-                    </View>
-                  )}
+                    {(this.state.useCases) && (
+                      <View>
+                        {this.state.useCases.map((value ,index) =>
+                          <View key={"u" + index} style={(value.name === 'Purpose') && [styles.washOut2]}>
+                            <View style={[styles.rowDirection]}>
+                              <View style={[styles.calcColumn90]}>
+                                <Text style={[styles.boldText]}>{index + 1}. {value.name}</Text>
+                                <View style={styles.halfSpacer} />
+                                <Text style={[styles.descriptionText3]}>{value.description}</Text>
+                              </View>
+                              <View style={[styles.width50,styles.centerHorizontally,styles.centerText,styles.topPadding5]}>
+
+                                <TouchableOpacity disabled={(value.name === 'Purpose') ? true : false} onPress={() => this.itemClicked('useCase|' + index, true)}>
+                                  {(value.selected) ? (
+                                    <View style={[styles.square22,styles.ctaBorder,styles.flexCenter, { borderRadius: 11 }]}>
+                                      <View style={[styles.square10,styles.ctaBackgroundColor, { borderRadius: 5 }]}/>
+                                    </View>
+                                  ) : (
+                                    <View style={[styles.square22,styles.standardBorder,styles.flexCenter, { borderRadius: 11 }]} />
+                                  )}
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+
+                            <View style={styles.spacer} /><View style={styles.halfSpacer} />
+
+                          </View>
+                        )}
+
+                      </View>
+                    )}
+                  </View>
+                )}
+
+                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
+
+                <View style={[styles.row20,styles.rowDirection,styles.flexCenter,styles.flex1]}>
+                  <View style={[styles.flex50,styles.rightPadding5]}>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
+                  </View>
+                  <View style={[styles.flex50,styles.leftPadding5]}>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                  </View>
                 </View>
-              )}
 
-              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
+              </ScrollView>
+            )}
 
-            </ScrollView>
-          )}
-
-          <View style={[styles.row20,styles.rowDirection,styles.flexCenter,styles.flex1]}>
-            <View style={[styles.flex50,styles.rightPadding5]}>
-              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
-            </View>
-            <View style={[styles.flex50,styles.leftPadding5]}>
-              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
-            </View>
-          </View>
+            {(this.state.showPicker) && (
+              <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                <SubPicker
+                  selectedSubKey={this.state.selectedSubKey}
+                  selectedName={this.state.selectedName}
+                  selectedOptions={this.state.selectedOptions}
+                  selectedValue={this.state.selectedValue}
+                  differentLabels={this.state.differentLabels}
+                  pickerName={this.state.pickerName}
+                  formChangeHandler={this.formChangeHandler}
+                  closeModal={this.closeModal}
+                />
+              </View>
+            )}
          </Modal>
 
         </View>

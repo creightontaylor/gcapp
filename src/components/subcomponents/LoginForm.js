@@ -1312,7 +1312,7 @@ class LogInForm extends Component {
 
         </ImageBackground>
 
-        <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+        <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
           {(this.state.showRoleDefinitions) && (
             <ScrollView key="showRoleDefinitions" style={[styles.flex1,styles.padding20]}>

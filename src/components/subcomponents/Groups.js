@@ -20,6 +20,8 @@ const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImag
 const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 
+import SubPicker from '../common/SubPicker';
+
 import SubEditGroup from '../../components/common/EditGroup';
 
 class Groups extends Component {
@@ -1107,7 +1109,7 @@ class Groups extends Component {
               </View>
             )}
 
-            <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+            <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
               {(this.state.showMatchingCriteria) && (
                 <ScrollView key="showMatchingCriteria" style={[styles.calcColumn80,styles.padding20]}>
@@ -1389,6 +1391,21 @@ class Groups extends Component {
                     pathway={this.state.pathway}
                   />
                 </View>
+             )}
+
+             {(this.state.showPicker) && (
+               <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                 <SubPicker
+                   selectedSubKey={this.state.selectedSubKey}
+                   selectedName={this.state.selectedName}
+                   selectedOptions={this.state.selectedOptions}
+                   selectedValue={this.state.selectedValue}
+                   differentLabels={this.state.differentLabels}
+                   pickerName={this.state.pickerName}
+                   formChangeHandler={this.formChangeHandler}
+                   closeModal={this.closeModal}
+                 />
+               </View>
              )}
 
            </Modal>

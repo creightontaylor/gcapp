@@ -803,7 +803,7 @@ class Messages extends Component {
 
                 <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height120]}>
                   <TextInput
-                    style={styles.textInput,styles.descriptionText3}
+                    style={[styles.textArea,styles.descriptionText3]}
                     onChangeText={(text) => this.formChangeHandler("messageDraft", text)}
                     value={this.state.messageDraft}
                     placeholder="Write a message..."

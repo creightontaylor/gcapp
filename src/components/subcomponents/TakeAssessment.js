@@ -1840,7 +1840,7 @@ class TakeAssessment extends Component {
         rows.push(
           <View key={"lr" + this.state.questionIndex.toString()}>
             <TextInput
-              style={styles.textInput}
+              style={styles.textArea}
               onChangeText={(text) => this.formChangeHandler(eventName, text)}
               value={this.state.wpResponses[passedIndex]}
               placeholder="Write your answer..."
@@ -2693,7 +2693,7 @@ class TakeAssessment extends Component {
             )}
           </View>
 
-          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+          <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
            <View key="info" style={[styles.flex1,styles.padding40]}>
 
             {(this.state.showPercentileInfo) && (

@@ -3081,7 +3081,7 @@ class Apply extends Component {
             {(question.questionType === 'Long Answer') && (
               <View>
                 <TextInput
-                  style={styles.textInput}
+                  style={styles.textArea}
                   onChangeText={(text) => this.formChangeHandler("listedAnswer|longAnswer|" + index, text)}
                   value={response}
                   placeholder="Write your answer..."

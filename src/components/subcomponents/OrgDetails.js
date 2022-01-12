@@ -614,7 +614,7 @@ class OrgDetails extends Component {
                         <View style={[styles.row10]}>
                           <Text style={[styles.standardText,styles.row10]}>Your Review</Text>
                           <TextInput
-                            style={styles.textInput}
+                            style={styles.textArea}
                             onChangeText={(text) => this.formChangeHandler("reviewSelected", text)}
                             value={this.state.reviewSelected}
                             placeholder="What do you think of them..."

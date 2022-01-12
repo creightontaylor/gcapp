@@ -847,7 +847,7 @@ class AddWorkspaces extends Component {
 
           </View>
 
-          <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+          <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
            <View key="skillAssessment" style={[styles.calcColumn80,styles.padding20]}>
             {(this.state.showSignUpFields && this.state.orgSelected) && (
