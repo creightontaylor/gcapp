@@ -3,12 +3,16 @@ import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Ima
 import {Picker} from '@react-native-picker/picker';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 
  const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png';
  const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/denied-icon.png';
  const skillsIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon.png';
  const experienceIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/experience-icon.png';
  const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+ const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
+
+ import SubPicker from '../common/SubPicker';
 
  import SubEndorsementDetails from '../common/EndorsementDetails';
 
@@ -34,6 +38,7 @@ class RequestEndorsements extends Component {
       yesOrNoOptions: ['Yes or No','Yes','No'],
       hoursOptions: ['0 - 20 Hours','20 - 100 Hours','100 - 1,000 Hours','1,000 - 5,000 Hours',
       '5,000 - 10,000 Hours','10,000 Hours+'],
+      relationshipOptions: ['','Friend','Relative','Classmate','Work Colleague','Project Teammate','Teacher','Direct Supervisor','Counselor','Mentor','Other','Anonymous'],
 
       selectedPathway: 'Custom',
       skillTraits: [],
@@ -72,17 +77,6 @@ class RequestEndorsements extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
     this.sendInvite = this.sendInvite.bind(this)
 
-    this.renderSkills = this.renderSkills.bind(this)
-    this.renderTraits = this.renderTraits.bind(this)
-    this.renderExamples = this.renderExamples.bind(this)
-
-    this.addSkillTrait = this.addSkillTrait.bind(this)
-
-    this.addExample = this.addExample.bind(this)
-    this.removeSkillTraits = this.removeSkillTraits.bind(this)
-    this.removeExample = this.removeExample.bind(this)
-
-    this.skillTraitClicked = this.skillTraitClicked.bind(this)
     this.searchItemClicked = this.searchItemClicked.bind(this)
     this.searchSkillTraits = this.searchSkillTraits.bind(this)
 
@@ -436,6 +430,8 @@ class RequestEndorsements extends Component {
   }
 
   formChangeHandler(eventName,eventValue) {
+
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'anonymousCheckmark') {
       const value = event.target.type === 'checkbox' ? event.target.checked : eventValue;
@@ -954,235 +950,6 @@ class RequestEndorsements extends Component {
     }).catch((error) => {
         console.log('endorsement send did not work', error);
     });
-  }
-
-  removeSkillTraits(index, skillTrait) {
-    console.log('removeSkillTraits called')
-
-    let skillTraits = this.state.skillTraits
-    if (skillTraits[index]) {
-      skillTraits.splice(index, 1)
-    }
-
-    this.setState({ skillTraits })
-
-  }
-
-  renderSkills() {
-    console.log('renderSkills called')
-
-    let rows = []
-
-    for (let i = 1; i <= this.state.skillTraits.length; i++) {
-
-      if (this.state.skillTraits[i - 1].skillType.includes('Skill')) {
-        const index = i - 1
-
-        let nameName = "skillName|" + i.toString()
-        let typeName = "skillType|" + i.toString()
-        // let ratingName = "skillRating|" + i.toString()
-
-        rows.push(
-          <View key={i}>
-            <View style={[styles.rowDirection]}>
-              <View style={[styles.width40]}>
-                  <TouchableOpacity onPress={() => this.removeSkillTraits(index,'skill')}>
-                    <Image source={{ uri: deniedIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.padding3,styles.topMargin5]}/>
-                  </TouchableOpacity>
-               </View>
-               <View style={[styles.calcColumn100]}>
-                 <TextInput
-                   style={[styles.textInput,styles.capitalizeText]}
-                   onChangeText={(text) => this.formChangeHandler(nameName , text)}
-                   value={this.state.skillTraits[i - 1].name}
-                   placeholder="Skill Name"
-                   placeholderTextColor="grey"
-                 />
-               </View>
-            </View>
-            <View>
-              <Picker
-                selectedValue={this.state.skillTraits[i - 1].skillType}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.formChangeHandler(typeName,itemValue)
-                }>
-                {this.state.skillTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-              </Picker>
-            </View>
-            <View style={[styles.spacer]}/>
-            {(this.state.selectedIndex === index && this.state.skillOptions.length > 0) && (
-              <View style={[styles.calcColumn60]}>
-                <View style={[styles.spacer]}/>
-                {this.state.skillOptions.map((value, optionIndex) =>
-                  <View key={value._id} style={[styles.bottomMargin5,styles.calcColumn60]}>
-                    <TouchableOpacity onPress={() => this.skillTraitClicked(index, optionIndex, 'skill')}>
-                      <View style={[styles.horizontalPadding50,styles.rowDirection]}>
-                        <View style={[styles.rightPadding,styles.topMargin]}>
-                          <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
-                        </View>
-                        <View>
-                          <Text style={[styles.ctaColor]}>{value.name}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            )}
-
-          </View>
-        )
-      }
-    }
-
-    return rows
-  }
-
-  renderTraits() {
-    console.log('renderTraits called')
-
-    let rows = []
-
-    for (let i = 1; i <= this.state.skillTraits.length; i++) {
-
-      const index = i - 1
-
-      if (this.state.skillTraits[i - 1].skillType === 'Trait') {
-        // const index = i - 1
-
-        let nameName = "skillName|" + i.toString()
-        // let ratingName = "skillRating|" + i.toString()
-
-        rows.push(
-          <View key={i}>
-            <View style={[styles.rowDirection]}>
-              <View style={[styles.width40]}>
-                  <TouchableOpacity onPress={() => this.removeSkillTraits(index,'skill')}>
-                    <Image source={{ uri: deniedIcon}} style={[styles.square30,styles.contain,styles.rightMargin,styles.padding3,styles.topMargin5]}/>
-                  </TouchableOpacity>
-               </View>
-               <View style={[styles.calcColumn100]}>
-                 <Picker
-                   selectedValue={this.state.skillTraits[i - 1].name}
-                   onValueChange={(itemValue, itemIndex) =>
-                     this.formChangeHandler(nameName,itemValue)
-                   }>
-                   style={[styles.capitalizeText]}
-                   {this.state.traitOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                 </Picker>
-               </View>
-
-               <View style={[styles.spacer]}/>
-
-            </View>
-          </View>
-        )
-      }
-    }
-
-    return rows
-  }
-
-  addSkillTrait(type) {
-    console.log('add SkillTrait called')
-
-    let skillTraits = this.state.skillTraits
-    if (type === 'Trait') {
-      skillTraits.push({ name: '', skillType: 'Trait', rating: '1'})
-    } else {
-      skillTraits.push({ name: '', skillType: 'Hard Skill', rating: '1'})
-    }
-
-    let checked = this.state.checked
-    checked.push(false)
-    this.setState({ skillTraits, checked })
-  }
-
-  skillTraitClicked(index, optionIndex, type) {
-    console.log('skillTraitClicked', index, optionIndex, type, this.state.skillOptions)
-
-    if (type === 'trait') {
-      console.log('this is an error. This is now a dropdown.')
-    } else {
-      const name = this.state.skillOptions[optionIndex].name
-      const skillType = this.state.skillOptions[optionIndex].type
-      const rating = ''
-      const skillOptions = []
-      let skillTraits = this.state.skillTraits
-      skillTraits[index] = { name, skillType, rating }
-      this.setState({ skillTraits, skillOptions })
-    }
-  }
-
-  renderExamples() {
-    console.log('renderExamples called')
-
-    let rows = []
-
-    let skillOptions = []
-    skillOptions.push("Select a Skill")
-    for (let i = 1; i <= this.state.skillTraits.length; i++) {
-      skillOptions.push(this.state.skillTraits[i - 1].name)
-    }
-
-    for (let i = 1; i <= this.state.examples.length; i++) {
-
-      // const index = i - 1
-
-      const exampleSkillTrait = "exampleSkillTrait|" + i.toString()
-      const exampleExample = "exampleExample|" + i.toString()
-
-      rows.push(
-        <View key={i}>
-          <Picker
-            selectedValue={this.state.examples[i - 1].skillTrait}
-            onValueChange={(itemValue, itemIndex) =>
-              this.formChangeHandler(exampleSkillTrait,itemValue)
-            }>
-            {skillOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-          </Picker>
-          <TextInput
-            style={styles.textArea}
-            onChangeText={(text) => this.formChangeHandler(exampleExample, text)}
-            value={this.state.examples[i - 1].example}
-            placeholder="Share an example where the endorsee exceptionally demonstrated this skill…."
-            placeholderTextColor="grey"
-            multiline={true}
-            numberOfLines={4}
-          />
-        </View>
-      )
-    }
-
-    return rows
-  }
-
-  addExample() {
-    console.log('addExample called')
-
-    let examples = this.state.examples
-    examples.push({ skillTrait: 'Select a Skill', example: '' })
-
-    let checked = this.state.checked
-    checked.push(false)
-    this.setState({ examples, checked })
-  }
-
-  removeExample() {
-    console.log('removeExample called')
-
-    let examples = this.state.examples
-    let exampleChecked = this.state.exampleChecked
-    for (let i = 1; i <= examples.length; i++) {
-      if (this.state.exampleChecked[ i - 1]) {
-        console.log('we got in here')
-        examples.splice(i - 1, 1)
-        exampleChecked.splice(i - 1, 1)
-        console.log('what happened to values', examples, exampleChecked)
-      }
-    }
-
-    this.setState({ examples, exampleChecked, showExampleDelete: false })
   }
 
   searchItemClicked(passedItem, type) {
@@ -1780,7 +1547,7 @@ class RequestEndorsements extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showEndorsementDetails: false })
+    this.setState({ modalIsOpen: false, showEndorsementDetails: false, showPicker: false })
   }
 
   render() {
@@ -1800,13 +1567,27 @@ class RequestEndorsements extends Component {
                     <View style={[styles.row10]}>
                       <View style={[styles.row10]}>
                         <Text style={[styles.row10]}>Would you like to request an endorsement?<Text style={[styles.errorColor]}>*</Text></Text>
-                        <Picker
-                          selectedValue={this.state.enableRequestEndorsement}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("enableRequestEndorsement",itemValue)
-                          }>
-                          {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        {(Platform.OS === 'ios') ? (
+                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Enable', selectedIndex: null, selectedName: 'enableRequestEndorsement', selectedValue: this.state.enableRequestEndorsement, selectedOptions: ['','Yes','No'], selectedSubKey: null })}>
+                            <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                              <View style={[styles.calcColumn115]}>
+                                <Text style={[styles.descriptionText1]}>{this.state.enableRequestEndorsement}</Text>
+                              </View>
+                              <View style={[styles.width20,styles.topMargin5]}>
+                                <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        ) : (
+                          <Picker
+                            selectedValue={this.state.enableRequestEndorsement}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("enableRequestEndorsement",itemValue)
+                            }>
+                            {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        )}
+
                       </View>
                     </View>
                   )}
@@ -1877,24 +1658,27 @@ class RequestEndorsements extends Component {
                               </View>
                               <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
-                                <Picker
-                                  selectedValue={this.state.relationship}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("relationship",itemValue)
-                                  }>
-                                  <Picker.Item label="" value="" />
-                                  <Picker.Item label="Friend" value="Friend" />
-                                  <Picker.Item label="Relative" value="Relative" />
-                                  <Picker.Item label="Classmate" value="Classmate" />
-                                  <Picker.Item label="Work Colleague" value="Work Colleague" />
-                                  <Picker.Item label="Project Teammate" value="Project Teammate" />
-                                  <Picker.Item label="Teacher" value="Teacher" />
-                                  <Picker.Item label="Direct Supervisor" value="Direct Supervisor" />
-                                  <Picker.Item label="Counselor" value="Counselor" />
-                                  <Picker.Item label="Mentor" value="Mentor" />
-                                  <Picker.Item label="Other" value="Other" />
-                                  <Picker.Item label="Anonymous" value="Anonymous" />
-                                </Picker>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Relationship', selectedIndex: null, selectedName: 'relationship', selectedValue: this.state.relationship, selectedOptions: this.state.relationshipOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.relationship}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.relationship}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("relationship",itemValue)
+                                    }>
+                                      {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
+
                               </View>
 
                             </View>
@@ -1940,24 +1724,28 @@ class RequestEndorsements extends Component {
                               </View>
                               <View style={[styles.row10]}>
                                 <Text style={[styles.row10]}>Relationship<Text style={[styles.errorColor]}>*</Text></Text>
-                                <Picker
-                                  selectedValue={this.state.relationship}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("relationship",itemValue)
-                                  }>
-                                  <Picker.Item label="" value="" />
-                                  <Picker.Item label="Friend" value="Friend" />
-                                  <Picker.Item label="Relative" value="Relative" />
-                                  <Picker.Item label="Classmate" value="Classmate" />
-                                  <Picker.Item label="Work Colleague" value="Work Colleague" />
-                                  <Picker.Item label="Project Teammate" value="Project Teammate" />
-                                  <Picker.Item label="Teacher" value="Teacher" />
-                                  <Picker.Item label="Direct Supervisor" value="Direct Supervisor" />
-                                  <Picker.Item label="Counselor" value="Counselor" />
-                                  <Picker.Item label="Mentor" value="Mentor" />
-                                  <Picker.Item label="Other" value="Other" />
-                                  <Picker.Item label="Anonymous" value="Anonymous" />
-                                </Picker>
+
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Relationship', selectedIndex: null, selectedName: 'relationship', selectedValue: this.state.relationship, selectedOptions: this.state.relationshipOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.relationship}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.relationship}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("relationship",itemValue)
+                                    }>
+                                    {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
+
                               </View>
 
                             </View>
@@ -1968,14 +1756,27 @@ class RequestEndorsements extends Component {
                       <View style={[styles.row10]}>
                         <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Select a Goal Type<Text style={[styles.errorColor]}>*</Text></Text>
-                          <Picker
-                            selectedValue={this.state.goalType.description}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("goalType",itemValue)
-                            }>
-                            {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
-                          </Picker>
 
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Goal Type', selectedIndex: null, selectedName: 'goalType', selectedValue: this.state.goalType.description, selectedOptions: this.state.goalTypeOptions, selectedSubKey: 'description' })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.goalType.description}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <Picker
+                              selectedValue={this.state.goalType.description}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("goalType",itemValue)
+                              }>
+                              {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
+                            </Picker>
+                          )}
                         </View>
                         <View style={[styles.row10]}>
                           {(this.state.goalType.name === 'Career') && (
@@ -1987,13 +1788,27 @@ class RequestEndorsements extends Component {
                                 </View>
                               ) : (
                                 <View>
-                                  <Picker
-                                    selectedValue={this.state.selectedPathway}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("pathway",itemValue)
-                                    }>
-                                    {this.state.pathwayOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                                  </Picker>
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pathway', selectedIndex: null, selectedName: 'pathway', selectedValue: this.state.selectedPathway, selectedOptions: this.state.pathwayOptions, selectedSubKey: 'value' })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn115]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.selectedPathway}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.selectedPathway}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("pathway",itemValue)
+                                      }>
+                                      {this.state.pathwayOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                    </Picker>
+                                  )}
+
                                 </View>
                               )}
                             </View>
@@ -2003,7 +1818,7 @@ class RequestEndorsements extends Component {
                               <Text style={[styles.row10]}>Select an Opportunity</Text>
 
                               <View style={[styles.rowDirection]}>
-                                <View style={[styles.calcColumn130]}>
+                                <View style={[styles.calcColumn140]}>
                                   <TextInput
                                     style={styles.textInput}
                                     onChangeText={(text) => this.formChangeHandler("searchOpportunities" , text)}
@@ -2012,8 +1827,8 @@ class RequestEndorsements extends Component {
                                     placeholderTextColor="grey"
                                   />
                                 </View>
-                                <View style={[styles.width70,styles.leftPadding]}>
-                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder]} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                <View style={[styles.width80,styles.leftPadding]}>
+                                  <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.ctaBorder,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('opportunity')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
                                 </View>
                               </View>
 
@@ -2153,6 +1968,23 @@ class RequestEndorsements extends Component {
                   )}
 
               </View>
+
+              <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+                {(this.state.showPicker) && (
+                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                    <SubPicker
+                      selectedSubKey={this.state.selectedSubKey}
+                      selectedName={this.state.selectedName}
+                      selectedOptions={this.state.selectedOptions}
+                      selectedValue={this.state.selectedValue}
+                      differentLabels={this.state.differentLabels}
+                      pickerName={this.state.pickerName}
+                      formChangeHandler={this.formChangeHandler}
+                      closeModal={this.closeModal}
+                    />
+                  </View>
+                )}
+             </Modal>
           </ScrollView>
 
       )

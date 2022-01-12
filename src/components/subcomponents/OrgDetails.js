@@ -537,7 +537,7 @@ class OrgDetails extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false })
+    this.setState({ modalIsOpen: false, showPicker: false })
   }
 
   render() {

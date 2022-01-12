@@ -12,6 +12,9 @@ const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
 const questionMarkBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/question-mark-blue.png';
 const skillsIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
+
+import SubPicker from '../common/SubPicker';
 
 class TakeAssessment extends Component {
   constructor(props) {
@@ -19,6 +22,14 @@ class TakeAssessment extends Component {
     this.state = {
       excludeRankingQuestions: true,
 
+      scoreOptions: [
+        { label: "", value: ""},
+        { label: "Top 20%", value: "5"},
+        { label: "Top 40%", value: "4"},
+        { label: "Top 60%", value: "3"},
+        { label: "Bottom 40%", value: "2"},
+        { label: "Bottom 20%", value: "1"},
+      ],
       questions: [' '],
       descriptions: [],
       categories: [' '],
@@ -92,6 +103,7 @@ class TakeAssessment extends Component {
     this.competencyClicked = this.competencyClicked.bind(this)
     this.pullRecommendationOptions = this.pullRecommendationOptions.bind(this)
     this.addToSkills = this.addToSkills.bind(this)
+    this.convertRating = this.convertRating.bind(this)
 
   }
 
@@ -905,6 +917,8 @@ class TakeAssessment extends Component {
   formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called' )
 
+    this.setState({ selectedValue: eventValue })
+
     let wpResponses = this.state.wpResponses
     if (eventName === 'shortResponse') {
 
@@ -1075,6 +1089,7 @@ class TakeAssessment extends Component {
       wpResponses[this.state.questionIndex] = eventValue
       this.setState({ boolean: eventValue, wpResponses })
     } else if (eventName === 'pathway') {
+
       let selectedPathway = eventValue
 
       let skills = []
@@ -2334,18 +2349,27 @@ class TakeAssessment extends Component {
               </View>
             </View>
 
-            <Picker
-              selectedValue={this.state.score}
-              onValueChange={(itemValue, itemIndex) =>
-                this.formChangeHandler("score",itemValue)
-              }>
-                <Picker.Item label={""} value={""} />
-                <Picker.Item label="Top 20%" value="5" />
-                <Picker.Item label="Top 40%" value="4" />
-                <Picker.Item label="Top 60%" value="3" />
-                <Picker.Item label="Bottom 40%" value="2" />
-                <Picker.Item label="Bottom 20%" value="1" />
-            </Picker>
+            {(Platform.OS === 'ios') ? (
+              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Score', selectedIndex: null, selectedName: 'score', selectedValue: this.state.score, selectedOptions: this.state.scoreOptions, selectedSubKey: null, differentLabels: true })}>
+                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                  <View style={[styles.calcColumn115]}>
+                    <Text style={[styles.descriptionText1]}>{(this.state.score) ? this.convertRating("workInterest",this.state.score) : ""}</Text>
+                  </View>
+                  <View style={[styles.width20,styles.topMargin5]}>
+                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Picker
+                selectedValue={this.state.score}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.formChangeHandler("score",itemValue)
+                }>
+                  {this.state.scoreOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+              </Picker>
+            )}
+
           </View>
           <View style={[styles.topMargin40]}>
             <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.addItem()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -2484,7 +2508,7 @@ class TakeAssessment extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showRateByPathway: false, showPercentileInfo: false })
+    this.setState({ modalIsOpen: false, showRateByPathway: false, showPercentileInfo: false, showPicker: false })
   }
 
   addToSkills() {
@@ -2514,6 +2538,28 @@ class TakeAssessment extends Component {
 
       this.setState({ errorMessage: 'Something went wrong' })
     }
+  }
+
+  convertRating(type,rawRating) {
+    console.log('convertRating called', type,rawRating)
+
+    let options = []
+    if (type === 'workInterest') {
+      options = this.state.workInterestOptions
+    } else if (type === 'workSkill') {
+      options = this.state.workSkillOptions
+    } else if (type === 'teamInterest') {
+      options = this.state.teamInterestOptions
+    } else if (type === 'employerInterest') {
+      options = this.state.employerInterestOptions
+    } else if (type === 'payInterest') {
+      options = this.state.payInterestOptions
+    } else if (type === 'overallFit') {
+      options = this.state.overallFitOptions
+    }
+
+    return options[6 - Number(rawRating)].label
+
   }
 
   render() {
@@ -2694,10 +2740,8 @@ class TakeAssessment extends Component {
           </View>
 
           <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
-           <View key="info" style={[styles.flex1,styles.padding40]}>
-
             {(this.state.showPercentileInfo) && (
-              <View>
+              <View key="info" style={[styles.flex1,styles.padding40]}>
                 <View style={[styles.rowDirection,styles.topMargin20]}>
                   <View style={[styles.calcColumn130]}>
                     <Text style={[styles.headingText6,styles.row10]}>Percentile Info</Text>
@@ -2717,7 +2761,7 @@ class TakeAssessment extends Component {
             )}
 
             {(this.state.showRateByPathway) && (
-              <View>
+              <ScrollView key="showRateByPathway" style={[styles.flex1]}>
                 <View style={[styles.rowDirection]}>
                   <View style={[styles.calcColumn110]}>
                     <Text style={[styles.headingText2,styles.row10]}>Rate Yourself By Pathway</Text>
@@ -2752,14 +2796,37 @@ class TakeAssessment extends Component {
                       {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.row5,styles.errorColor]}>{this.state.errorMessage}</Text>}
                       {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.row5,styles.ctaColor]}>{this.state.successMessage}</Text>}
 
-                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin]} onPress={() => this.addToSkills()}><Text style={[styles.whiteColor]}>Bulk Add to Skills Bank</Text></TouchableOpacity>
-                      <TouchableOpacity style={[styles.btnPrimary]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                      <View style={[styles.flex1,styles.rowDirection]}>
+                        <View style={[styles.flex50]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.addToSkills()}><Text style={[styles.whiteColor,styles.standardText]}>Add to Skills Bank</Text></TouchableOpacity>
+                        </View>
+                        <View style={[styles.flex50]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor,styles.standardText]}>Cancel</Text></TouchableOpacity>
+                        </View>
+                      </View>
+
                     </View>
                   )}
                 </View>
-              </View>
+
+                <View style={[styles.spacer]} />
+              </ScrollView>
             )}
-           </View>
+
+           {(this.state.showPicker) && (
+             <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+               <SubPicker
+                 selectedSubKey={this.state.selectedSubKey}
+                 selectedName={this.state.selectedName}
+                 selectedOptions={this.state.selectedOptions}
+                 selectedValue={this.state.selectedValue}
+                 differentLabels={this.state.differentLabels}
+                 pickerName={this.state.pickerName}
+                 formChangeHandler={this.formChangeHandler}
+                 closeModal={this.closeModal}
+               />
+             </View>
+           )}
          </Modal>
         </ScrollView>
 
