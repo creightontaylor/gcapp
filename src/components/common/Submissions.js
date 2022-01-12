@@ -18,8 +18,10 @@ const editIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/ap
 const feedbackIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/feedback-icon-grey.png';
 const feedbackIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/feedback-icon-blue.png';
 const detailsIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/details-icon-grey.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import ProjectDetails from '../subcomponents/ProjectDetails';
+import SubPicker from '../common/SubPicker';
 
 class Submissions extends Component {
     constructor(props) {
@@ -44,7 +46,6 @@ class Submissions extends Component {
         this.editComment = this.editComment.bind(this)
         this.showReplies = this.showReplies.bind(this)
         this.showComments = this.showComments.bind(this)
-        this.showGrade = this.showGrade.bind(this)
         this.closeModal = this.closeModal.bind(this)
         this.formChangeHandler = this.formChangeHandler.bind(this)
         this.postComment = this.postComment.bind(this)
@@ -572,70 +573,6 @@ class Submissions extends Component {
       });
     }
 
-    showGrade(index) {
-      console.log('showGrade ', index)
-      //for the submissions section
-
-      const modalIsOpen = true
-      const selectedIndex1 = index
-      let selectedIndex2 = 0
-      let selectedOpportunity = this.state.selectedOpportunity
-      const showComments = false
-      const showGrade = true
-      const showProjectDetail = false
-
-      const contributorFirstName = this.state.cuFirstName
-      const contributorLastName = this.state.cuLastName
-      const contributorEmail = this.state.emailId
-      const contributorTitle = this.state.jobTitle
-      const contributorEmployerName = this.state.employerName
-      let orgCode = ''
-      if (this.state.selectedOpportunity.orgCode) {
-        orgCode = this.state.selectedOpportunity.orgCode
-      }
-      let accountCode = ''
-      if (this.state.selectedOpportunity.accountCode) {
-        accountCode = this.state.selectedOpportunity.accountCode
-      }
-      console.log('show titles 1: ', contributorTitle, this.state.jobTitle)
-
-      const isApproved = false
-      const updatedAt = new Date()
-
-      if (this.state.selectedOpportunity.submissions[index].grades && this.state.selectedOpportunity.submissions[index].grades.length > 0) {
-        //find the case where provideEmail matches this email, otherwise add to grades array
-        console.log('show grades 1: ', selectedOpportunity.submissions[index])
-
-        //determine selectedIndex2
-        let existingGrade = false
-        for (let i = 1; i <= selectedOpportunity.submissions[index].grades.length; i++) {
-          if (selectedOpportunity.submissions[index].grades[i - 1].contributorEmail === this.state.emailId) {
-            selectedIndex2 = i - 1
-            existingGrade = true
-          }
-        }
-
-        if (existingGrade === false) {
-          selectedIndex2 = selectedOpportunity.submissions[index].grades.length
-          selectedOpportunity.submissions[index]['grades'][selectedIndex2] =
-            { contributorFirstName, contributorLastName, contributorEmail, contributorTitle, contributorEmployerName,
-              isTransparent: true, orgCode, accountCode, isApproved, updatedAt }
-        }
-        console.log('show update: ', selectedIndex2, selectedOpportunity.submissions[index].grades)
-
-      } else {
-
-        selectedOpportunity.submissions[index]['grades'] = [
-          { contributorFirstName, contributorLastName, contributorEmail, contributorTitle, contributorEmployerName,
-            isTransparent: true, orgCode, accountCode, isApproved, updatedAt }
-        ]
-        console.log('show grades: ', selectedOpportunity.submissions[index])
-      }
-
-      this.setState({ modalIsOpen, selectedIndex1, selectedIndex2, selectedOpportunity, showComments, showGrade, showProjectDetail });
-
-    }
-
     showComments(index) {
       console.log('showComments ', index)
       //for the submissions section
@@ -1089,163 +1026,109 @@ class Submissions extends Component {
             </View>
           ) : (
             <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
-            {(this.state.showComments) && (
-              <View key="submissionDetail">
-               {(this.state.selectedOpportunity && this.state.selectedOpportunity.submissions && this.state.selectedOpportunity.submissions.length > 0) && (
-                 <View style={[styles.rowDirection]}>
-                   <View style={[styles.width50]}>
-                     <View style={[styles.halfSpacer]} />
-                     <View>
-                       <TouchableOpacity disabled={(this.state.disabledVoting || this.state.savingVote) ? true : false} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'up', this.state.selectedIndex) }>
-                         <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]} />
-                       </TouchableOpacity>
-                     </View>
-                     <View>
-                       <Text style={[styles.standardText,styles.centerText]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.length - this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.length}</Text>
-
-                     </View>
-                     <View>
-                       <TouchableOpacity disabled={this.state.disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'down', this.state.selectedIndex) }>
-                         <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.selectedOpportunity.disableDownvoting === true) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]} />
-                       </TouchableOpacity>
-                     </View>
-                   </View>
-
-                   <TouchableOpacity onPress={(this.state.disableLinks) ? console.log('disabled') : () => Linking.openURL(this.state.selectedOpportunity.submissions[this.state.selectedIndex].url)} style={(this.state.disableLinks) ? [styles.calcColumn110,styles.leftPadding,styles.rowDirection] : [styles.calcColumn110,styles.leftPadding,styles.rowDirection]}>
-                     <View style={[styles.calcColumn140]}>
-                       <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].name}</Text>
-
-                       <Text style={[styles.descriptionText1]}>{(this.state.selectedOpportunity.submissions[this.state.selectedIndex].anonymizeSubmissions) ? "Anonymous Submitter" : this.state.selectedOpportunity.submissions[this.state.selectedIndex].userFirstName + " " + this.state.selectedOpportunity.submissions[this.state.selectedIndex].userLastName}</Text>
-
-                       <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].category} | {this.state.selectedOpportunity.submissions[this.state.selectedIndex].hours} Hours</Text>
-                     </View>
-                     <View style={[styles.width30]}>
-                      <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+              {(this.state.showComments) && (
+                <View key="submissionDetail">
+                 {(this.state.selectedOpportunity && this.state.selectedOpportunity.submissions && this.state.selectedOpportunity.submissions.length > 0) && (
+                   <View style={[styles.rowDirection]}>
+                     <View style={[styles.width50]}>
+                       <View style={[styles.halfSpacer]} />
                        <View>
-                         <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
+                         <TouchableOpacity disabled={(this.state.disabledVoting || this.state.savingVote) ? true : false} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'up', this.state.selectedIndex) }>
+                           <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.includes(this.state.emailId)) ? { uri: upvoteIconBlue} : { uri: upvoteIconGrey}} style={[styles.square15,styles.contain]} />
+                         </TouchableOpacity>
+                       </View>
+                       <View>
+                         <Text style={[styles.standardText,styles.centerText]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].upvotes.length - this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.length}</Text>
+
+                       </View>
+                       <View>
+                         <TouchableOpacity disabled={this.state.disabled} onPress={() => this.voteOnItem(this.state.selectedOpportunity.submissions[this.state.selectedIndex], 'down', this.state.selectedIndex) }>
+                           <Image source={(this.state.selectedOpportunity.submissions[this.state.selectedIndex].downvotes.includes(this.state.emailId)) ? { uri: downvoteIconBlue} : { uri: downvoteIconGrey}} style={(this.state.selectedOpportunity.disableDownvoting === true) ? [styles.square15,styles.contain,styles.washOut] : [styles.square15,styles.contain]} />
+                         </TouchableOpacity>
                        </View>
                      </View>
-                   </TouchableOpacity>
 
-                   <View style={[styles.calcColumn110,styles.leftMargin50]}>
-                    <View style={[styles.spacer]} />
+                     <TouchableOpacity onPress={(this.state.disableLinks) ? console.log('disabled') : () => Linking.openURL(this.state.selectedOpportunity.submissions[this.state.selectedIndex].url)} style={(this.state.disableLinks) ? [styles.calcColumn110,styles.leftPadding,styles.rowDirection] : [styles.calcColumn110,styles.leftPadding,styles.rowDirection]}>
+                       <View style={[styles.calcColumn140]}>
+                         <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].name}</Text>
 
-                    <View style={[styles.rowDirection]}>
-                      <View style={[styles.rightMargin]}>
-                        <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
-                      </View>
-                      <View style={[styles.topMarginNegative5]}>
-                        {(this.state.submissionCommentCount) ? (
-                          <Text style={[styles.descriptionText2]}>{this.state.submissionCommentCount} Comments</Text>
-                        ) : (
-                          <Text style={[styles.descriptionText2]}>0 Comments</Text>
-                        )}
-                      </View>
-                    </View>
+                         <Text style={[styles.descriptionText1]}>{(this.state.selectedOpportunity.submissions[this.state.selectedIndex].anonymizeSubmissions) ? "Anonymous Submitter" : this.state.selectedOpportunity.submissions[this.state.selectedIndex].userFirstName + " " + this.state.selectedOpportunity.submissions[this.state.selectedIndex].userLastName}</Text>
 
-                   </View>
-                   <View style={[styles.topMargin20,styles.rightMargin20,styles.bottomMargin20,styles.leftMargin50]} />
-
-                   <View style={[styles.leftPadding50,styles.rightMargin20]}>
-                    <View style={[styles.rowDirection]}>
-                      <View>
-                        <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
-                      </View>
-                      <View style={[styles.roundedCorners,styles.transparentBorder,styles.padding10,styles.topMarginNegative10, styles.calcColumn170]}>
-                        <TextInput
-                          style={styles.textInput}
-                          onChangeText={(text) => this.formChangeHandler("submissionComment|" + this.state.selectedIndex, text)}
-                          value={this.state.mySubmissionComments[this.state.selectedIndex]}
-                          placeholder="Add a comment..."
-                          placeholderTextColor="grey"
-                        />
-                      </View>
-                    </View>
-
-                     {(this.state.mySubmissionComments[this.state.selectedIndex] !== '') && (
-                       <View style={[styles.leftMargin57]}>
-                         <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.postComment(this.state.selectedIndex, 'submission')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
+                         <Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex].category} | {this.state.selectedOpportunity.submissions[this.state.selectedIndex].hours} Hours</Text>
                        </View>
-                     )}
-                     <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                       <View style={[styles.width30]}>
+                        <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                         <View>
+                           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]} />
+                         </View>
+                       </View>
+                     </TouchableOpacity>
 
-                     <View>
-                      {this.renderSubmissionComments(this.state.selectedIndex)}
+                     <View style={[styles.calcColumn110,styles.leftMargin50]}>
+                      <View style={[styles.spacer]} />
+
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.rightMargin]}>
+                          <Image source={{ uri: commentIconGrey}} style={[styles.square18,styles.contain]} />
+                        </View>
+                        <View style={[styles.topMarginNegative5]}>
+                          {(this.state.submissionCommentCount) ? (
+                            <Text style={[styles.descriptionText2]}>{this.state.submissionCommentCount} Comments</Text>
+                          ) : (
+                            <Text style={[styles.descriptionText2]}>0 Comments</Text>
+                          )}
+                        </View>
+                      </View>
+
+                     </View>
+                     <View style={[styles.topMargin20,styles.rightMargin20,styles.bottomMargin20,styles.leftMargin50]} />
+
+                     <View style={[styles.leftPadding50,styles.rightMargin20]}>
+                      <View style={[styles.rowDirection]}>
+                        <View>
+                          <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square40,styles.contain, { borderRadius: 20 }]} />
+                        </View>
+                        <View style={[styles.roundedCorners,styles.transparentBorder,styles.padding10,styles.topMarginNegative10, styles.calcColumn170]}>
+                          <TextInput
+                            style={styles.textInput}
+                            onChangeText={(text) => this.formChangeHandler("submissionComment|" + this.state.selectedIndex, text)}
+                            value={this.state.mySubmissionComments[this.state.selectedIndex]}
+                            placeholder="Add a comment..."
+                            placeholderTextColor="grey"
+                          />
+                        </View>
+                      </View>
+
+                       {(this.state.mySubmissionComments[this.state.selectedIndex] !== '') && (
+                         <View style={[styles.leftMargin57]}>
+                           <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.postComment(this.state.selectedIndex, 'submission')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Post</Text></TouchableOpacity>
+                         </View>
+                       )}
+                       <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                       <View>
+                        {this.renderSubmissionComments(this.state.selectedIndex)}
+                       </View>
                      </View>
                    </View>
-                 </View>
-               )}
-              </View>
-            )}
-
-            {(this.state.showGrade) && (
-              <View key="gradeProject" style={[styles.calcColumn80]}>
-                <View style={[styles.row10]}>
-                  <Text style={[styles.headingText4]}>{this.state.selectedOpportunity.submissions[this.state.selectedIndex1].name}</Text>
-                  <View style={[styles.halfSpacer]} />
-                  <Text style={[styles.descriptionText2]}>You may grade this project, provide feedback, or both!</Text>
+                 )}
                 </View>
+              )}
 
-                <View style={[styles.row10]}>
-                  <Text style={[styles.row10,styles.standardText]}>Grade The Project (You Can Edit Later)</Text>
-                  <Picker
-                    selectedValue={this.state.selectedOpportunity.submissions[this.state.selectedIndex1].grades[this.state.selectedIndex2].grade}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("grade",itemValue)
-                    }>
-                    {this.state.gradeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
-                </View>
-                <View style={[styles.row10]}>
-                  <Text style={[styles.row10,styles.standardText]}>Provide Constructive Feedback</Text>
-                  <TextInput
-                    style={styles.textArea}
-                    onChangeText={(text) => this.formChangeHandler("feedback", text)}
-                    value={this.state.selectedOpportunity.submissions[this.state.selectedIndex1].grades[this.state.selectedIndex2].feedback}
-                    placeholder="Project feedback"
-                    placeholderTextColor="grey"
-                    multiline={true}
-                    numberOfLines={4}
+              {(this.state.showPicker) && (
+                <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                  <SubPicker
+                    selectedSubKey={this.state.selectedSubKey}
+                    selectedName={this.state.selectedName}
+                    selectedOptions={this.state.selectedOptions}
+                    selectedValue={this.state.selectedValue}
+                    differentLabels={this.state.differentLabels}
+                    pickerName={this.state.pickerName}
+                    formChangeHandler={this.formChangeHandler}
+                    closeModal={this.closeModal}
                   />
                 </View>
-
-                <View style={[styles.row10]}>
-                  <Text style={[styles.row10,styles.standardText]}>Transparency to Student</Text>
-                  <Picker
-                    selectedValue={this.state.selectedOpportunity.submissions[this.state.selectedIndex1].grades[this.state.selectedIndex2].isTransparent}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("isTransparent",itemValue)
-                    }>
-                      <Picker.Item key={"t1"} label={"Students can see endorsement details [Keep transparent]"} value={true} />
-                      <Picker.Item key={"t2"} label={"Students cannot see endorsement details [Keep confidential]"} value={false} />
-                  </Picker>
-                  <Text style={[styles.descriptionText2]}>Note: this feedback is viewable by teachers, counselors, mentors, and work placement organizations.</Text>
-                </View>
-
-                <View>
-                  { (this.state.clientErrorMessage!== '') && <Text style={[styles.errorColor]}>{this.state.clientErrorMessage}</Text> }
-                  { (this.state.serverPostSuccess) ? (
-                    <Text style={[styles.ctaColor]}>{this.state.serverSuccessMessage}</Text>
-                  ) : (
-                    <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>
-                  )}
-
-                  <View style={[styles.rowDirection]}>
-                    <View>
-                      <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.saveFeedback()}><Text style={[styles.standardText,styles.whiteColor]}>Save Feedback</Text></TouchableOpacity>
-                    </View>
-
-                    <View style={[styles.leftPadding]}>
-                      <TouchableOpacity style={[styles.btnPrimary,styels.ctaBorder,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: false })}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
-                    </View>
-                  </View>
-
-                </View>
-
-                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-
-              </View>
-            )}
+              )}
 
            </Modal>
          )}

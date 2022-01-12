@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, ActivityIndicator, Image, TextInput } from 'react-native';
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 const styles = require('../css/style');
 import { WebView } from 'react-native-webview';
 import {Picker} from '@react-native-picker/picker';
@@ -34,8 +35,10 @@ const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const opportunitiesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-blue.png'
 const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png'
 const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png'
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import {convertDateToString} from '../functions/convertDateToString';
+import SubPicker from '../common/SubPicker';
 
 class CreatePost extends Component {
     constructor(props) {
@@ -65,6 +68,7 @@ class CreatePost extends Component {
         this.searchItems = this.searchItems.bind(this)
         this.pullItems = this.pullItems.bind(this)
         this.saveFile = this.saveFile.bind(this)
+        this.closeModal = this.closeModal.bind(this)
 
     }
 
@@ -77,7 +81,7 @@ class CreatePost extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in SubExternalProfile', this.props, prevProps)
+      console.log('componentDidUpdate called in createPost')
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode || this.props.posts !== prevProps.posts) {
         this.retrieveData()
@@ -168,6 +172,8 @@ class CreatePost extends Component {
 
     formChangeHandler = (eventName,eventValue) => {
       console.log('formChangeHandler called')
+
+      this.setState({ selectedValue: eventValue })
 
       if (eventName === 'profileItemType') {
         let profileItemOptions = []
@@ -1155,7 +1161,7 @@ class CreatePost extends Component {
               <View style={[styles.ctaBorder]}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { objectId: value.originalPost.careerTags[0].name})} style={[styles.padding20,styles.calcColumn80]}>
                   <View style={[styles.padding20,styles.rowDirection,styles.flexWrap]}>
-                    <View style={[styles.width60]}>
+                    <View style={[styles.width60,styles.bottomMargin20]}>
                       <Image source={(value.originalPost.careerTags[0].imageURL) ? { uri: value.originalPost.careerTags[0].imageURL} : { uri: careerMatchesIconDark}} style={[styles.square50,styles.contain]} />
                     </View>
                     <View style={[styles.calcColumn180]}>
@@ -1332,6 +1338,12 @@ class CreatePost extends Component {
       }.bind(this));
     }
 
+    closeModal() {
+      console.log('closeModal called')
+
+      this.setState({ modalIsOpen: false })
+    }
+
     render() {
 
       return (
@@ -1481,7 +1493,7 @@ class CreatePost extends Component {
                        <View style={[styles.halfSpacer]} />
 
                        <View style={styles.rowDirection}>
-                         <View style={styles.calcColumn150}>
+                         <View style={styles.calcColumn190}>
                            <TextInput
                              style={styles.textInput}
                              onChangeText={(text) => this.formChangeHandler("searchEntities", text)}
@@ -1638,25 +1650,53 @@ class CreatePost extends Component {
 
                        <View>
                          <View style={[styles.row10]}>
-                           <Picker
-                             selectedValue={this.state.profileItemType}
-                             onValueChange={(itemValue, itemIndex) =>
-                               this.formChangeHandler("profileItemType",itemValue)
-                             }>
-                             {this.state.profileItemTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                           </Picker>
+                           {(Platform.OS === 'ios') ? (
+                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: this.state.profileItemType, selectedIndex: null, selectedName: "profileItemType", selectedValue: this.state.profileItemType, selectedOptions: this.state.profileItemTypeOptions, selectedSubKey: null })}>
+                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                 <View style={[styles.calcColumn170]}>
+                                   <Text style={[styles.descriptionText1]}>{this.state.profileItemType}</Text>
+                                 </View>
+                                 <View style={[styles.width20,styles.topMargin5]}>
+                                   <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                 </View>
+                               </View>
+                             </TouchableOpacity>
+                           ) : (
+                             <Picker
+                               selectedValue={this.state.profileItemType}
+                               onValueChange={(itemValue, itemIndex) =>
+                                 this.formChangeHandler("profileItemType",itemValue)
+                               }>
+                               {this.state.profileItemTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                             </Picker>
+                           )}
                          </View>
+
                          {(this.state.profileItemType && this.state.profileItemType !== '') && (
                            <View>
                              {(this.state.profileItemOptions.length > 0) ? (
                                <View style={[styles.row10]}>
-                                 <Picker
-                                   selectedValue={this.state.profileItem}
-                                   onValueChange={(itemValue, itemIndex) =>
-                                     this.formChangeHandler("profileItem",itemValue)
-                                   }>
-                                   {this.state.profileItemTypeOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                 </Picker>
+                                 {(Platform.OS === 'ios') ? (
+                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: this.state.profileItem, selectedIndex: null, selectedName: "profileItem", selectedValue: this.state.profileItem, selectedOptions: this.state.profileItemOptions, selectedSubKey: 'name' })}>
+                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                       <View style={[styles.calcColumn170]}>
+                                         <Text style={[styles.descriptionText1]}>{this.state.profileItem}</Text>
+                                       </View>
+                                       <View style={[styles.width20,styles.topMargin5]}>
+                                         <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                       </View>
+                                     </View>
+                                   </TouchableOpacity>
+                                 ) : (
+                                   <Picker
+                                     selectedValue={this.state.profileItem}
+                                     onValueChange={(itemValue, itemIndex) =>
+                                       this.formChangeHandler("profileItem",itemValue)
+                                     }>
+                                     {this.state.profileItemOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                   </Picker>
+                                 )}
+
                                </View>
                              ) : (
                                <View style={[styles.row10]}>
@@ -1665,8 +1705,6 @@ class CreatePost extends Component {
                              )}
                            </View>
                          )}
-
-
                        </View>
                      </View>
                    )}
@@ -1676,8 +1714,8 @@ class CreatePost extends Component {
                        <Text style={[styles.descriptionText3]}>Tag an Opportunity (Optional)</Text>
                        <View style={[styles.halfSpacer]} />
 
-                       <View style={[styles.flexDirection]}>
-                         <View style={[styles.calcColumn150]}>
+                       <View style={[styles.rowDirection]}>
+                         <View style={[styles.calcColumn190]}>
                            <TextInput
                              style={styles.textInput}
                              onChangeText={(text) => this.formChangeHandler("searchOpportunities", text)}
@@ -1752,7 +1790,7 @@ class CreatePost extends Component {
                        <View style={[styles.halfSpacer]} />
 
                        <View style={[styles.rowDirection]}>
-                         <View style={[styles.calcColumn150]}>
+                         <View style={[styles.calcColumn190]}>
                            <TextInput
                              style={styles.textInput}
                              onChangeText={(text) => this.formChangeHandler("searchCareers", text)}
@@ -1829,7 +1867,7 @@ class CreatePost extends Component {
                        <View style={[styles.halfSpacer]} />
 
                        <View style={styles.rowDirection}>
-                         <View style={styles.calcColumn150}>
+                         <View style={styles.calcColumn190}>
                            <TextInput
                              style={styles.textInput}
                              onChangeText={(text) => this.formChangeHandler("searchTrends", text)}
@@ -1919,6 +1957,25 @@ class CreatePost extends Component {
 
              </View>
           </View>
+
+          <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+
+           {(this.state.showPicker) && (
+             <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+               <SubPicker
+                 selectedSubKey={this.state.selectedSubKey}
+                 selectedName={this.state.selectedName}
+                 selectedOptions={this.state.selectedOptions}
+                 selectedValue={this.state.selectedValue}
+                 differentLabels={this.state.differentLabels}
+                 pickerName={this.state.pickerName}
+                 formChangeHandler={this.formChangeHandler}
+                 closeModal={this.closeModal}
+               />
+             </View>
+           )}
+
+         </Modal>
         </View>
       )
     }

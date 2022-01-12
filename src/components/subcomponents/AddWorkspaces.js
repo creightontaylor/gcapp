@@ -21,6 +21,7 @@ const askQuestionIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws
 import {requestAccessToWorkspace} from '../services/ProfileRoutes';
 // import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
+import SubPicker from '../common/SubPicker';
 
 class AddWorkspaces extends Component {
   constructor(props) {
@@ -376,6 +377,8 @@ class AddWorkspaces extends Component {
   formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called')
 
+    this.setState({ selectedValue: eventValue })
+
     if (eventName === 'searchString') {
       this.setState({ [eventName]: eventValue, isAnimating: true })
       this.searchOrgs(eventValue)
@@ -518,13 +521,29 @@ class AddWorkspaces extends Component {
           />
         )}
         {(value.questionType === 'Multiple Choice') && (
-          <Picker
-            selectedValue={this.state[value.shorthand]}
-            onValueChange={(itemValue, itemIndex) =>
-              this.formChangeHandler(value.shorthand,itemValue)
-            }>
-            {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
-          </Picker>
+          <View>
+            {(Platform.OS === 'ios') ? (
+              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: item.name, selectedIndex: index, selectedName: value.shorthand, selectedValue: this.state[value.shorthand], selectedOptions: [''].concat(value.answerChoices), selectedSubKey: null })}>
+                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                  <View style={[styles.calcColumn115]}>
+                    <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
+                  </View>
+                  <View style={[styles.width20,styles.topMargin5]}>
+                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Picker
+                selectedValue={this.state[value.shorthand]}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.formChangeHandler(value.shorthand,itemValue)
+                }>
+                {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
+              </Picker>
+            )}
+
+          </View>
         )}
         {(value.questionType === 'Multiple Answer') && (
           <View>
@@ -882,6 +901,21 @@ class AddWorkspaces extends Component {
               <View>
                 <Text style={[styles.headingText2]}>Request to Work With Training Provider</Text>
                 <SubContact reason={"Guided Compass to Work with My Org / School"} reasonOptions={null} navigation={this.props.navigation} inModal={true} closeModal={this.closeModal} />
+              </View>
+            )}
+
+            {(this.state.showPicker) && (
+              <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                <SubPicker
+                  selectedSubKey={this.state.selectedSubKey}
+                  selectedName={this.state.selectedName}
+                  selectedOptions={this.state.selectedOptions}
+                  selectedValue={this.state.selectedValue}
+                  differentLabels={this.state.differentLabels}
+                  pickerName={this.state.pickerName}
+                  formChangeHandler={this.formChangeHandler}
+                  closeModal={this.closeModal}
+                />
               </View>
             )}
            </View>

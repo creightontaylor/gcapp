@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -14,6 +15,9 @@ const fullStar = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appIma
 const emptyStar = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/empty-star.png';
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
 const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
+
+import SubPicker from '../common/SubPicker';
 
 import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
@@ -33,6 +37,7 @@ class OrgDetails extends Component {
     this.renderSignUpField = this.renderSignUpField.bind(this)
     this.submitSignUpFields = this.submitSignUpFields.bind(this)
     this.optionClicked = this.optionClicked.bind(this)
+    this.closeModal = this.closeModal.bind(this)
 
   }
 
@@ -203,6 +208,7 @@ class OrgDetails extends Component {
   formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called')
 
+    this.setState({ selectedValue: eventValue })
     this.setState({ [eventName]: eventValue })
 
   }
@@ -452,13 +458,28 @@ class OrgDetails extends Component {
           />
         )}
         {(value.questionType === 'Multiple Choice') && (
-          <Picker
-            selectedValue={this.state[value.shorthand]}
-            onValueChange={(itemValue, itemIndex) =>
-              this.formChangeHandler(value.shorthand,itemValue)
-            }>
-            {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
-          </Picker>
+          <View>
+            {(Platform.OS === 'ios') ? (
+              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: value.shorthand, selectedIndex: null, selectedName: value.shorthand, selectedValue: this.state[value.shorthand], selectedOptions: [''].concat(value.answerChoices), selectedSubKey: null })}>
+                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                  <View style={[styles.calcColumn115]}>
+                    <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
+                  </View>
+                  <View style={[styles.width20,styles.topMargin5]}>
+                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <Picker
+                selectedValue={this.state[value.shorthand]}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.formChangeHandler(value.shorthand,itemValue)
+                }>
+                {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
+              </Picker>
+            )}
+          </View>
         )}
         {(value.questionType === 'Multiple Answer') && (
           <View>
@@ -511,6 +532,12 @@ class OrgDetails extends Component {
 
     this.setState({ [value.shorthand]: items })
 
+  }
+
+  closeModal() {
+    console.log('closeModal called')
+
+    this.setState({ modalIsOpen: false })
   }
 
   render() {
@@ -600,13 +627,27 @@ class OrgDetails extends Component {
                         <View style={[styles.row10]}>
                           <View style={[styles.row10]}>
                             <Text style={[styles.standardText,styles.row10]}>Your Rating (5 is best) <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                            <Picker
-                              selectedValue={this.state.ratingSelected}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler('ratingSelected',itemValue)
-                              }>
-                              {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Rating", selectedIndex: null, selectedName: "ratingSelected", selectedValue: this.state.ratingSelected, selectedOptions: ['','1','2','3','4','5'], selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn150]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.ratingSelected}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <Picker
+                                selectedValue={this.state.ratingSelected}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler('ratingSelected',itemValue)
+                                }>
+                                {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            )}
+
                           </View>
 
                         </View>
@@ -628,7 +669,7 @@ class OrgDetails extends Component {
                         {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
 
                         <View style={[styles.row10]}>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitReview()}><Text style={[styles.standardColor,styles.whiteColor]}>Submit</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitReview()}><Text style={[styles.standardText,styles.whiteColor]}>Submit</Text></TouchableOpacity>
                         </View>
                       </View>
                     </View>
@@ -756,6 +797,23 @@ class OrgDetails extends Component {
 
               </View>
             )}
+
+            <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+              {(this.state.showPicker) && (
+                <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                  <SubPicker
+                    selectedSubKey={this.state.selectedSubKey}
+                    selectedName={this.state.selectedName}
+                    selectedOptions={this.state.selectedOptions}
+                    selectedValue={this.state.selectedValue}
+                    differentLabels={this.state.differentLabels}
+                    pickerName={this.state.pickerName}
+                    formChangeHandler={this.formChangeHandler}
+                    closeModal={this.closeModal}
+                  />
+                </View>
+              )}
+           </Modal>
 
           </ScrollView>
 

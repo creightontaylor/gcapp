@@ -26,7 +26,7 @@ class SubPicker extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in SubExternalProfile', this.props, prevProps)
+      console.log('componentDidUpdate called in SubPicker')
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode || this.props.posts !== prevProps.posts) {
         this.retrieveData()

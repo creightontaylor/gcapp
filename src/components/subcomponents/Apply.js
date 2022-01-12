@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
@@ -19,10 +20,12 @@ const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const abilitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/abilities-icon-dark.png';
 const endorsementIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/endorsement-icon-dark.png';
 const assessmentsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assessments-icon-dark.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import SubEditProfileDetails from './EditProfileDetails';
 import SubAssessments from './Assessments';
 import SubEndorsements from './Endorsements';
+import SubPicker from '../common/SubPicker';
 
 class Apply extends Component {
   constructor(props) {
@@ -71,6 +74,7 @@ class Apply extends Component {
     this.passData = this.passData.bind(this)
 
     this.checkSectionCompleteness = this.checkSectionCompleteness.bind(this)
+    this.closeModal = this.closeModal.bind(this)
 
   }
 
@@ -1258,6 +1262,8 @@ class Apply extends Component {
 
   formChangeHandler = (eventName, eventValue) => {
     console.log('show data: ')
+
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'resumeURL') {
       this.setState({ resumeURL: eventValue })
@@ -2667,7 +2673,7 @@ class Apply extends Component {
                     <Image source={{ uri: arrowIndicatorIcon}} style={(this.state.tasks[index].isExpanded) ? [styles.square15,styles.contain,styles.rotate90] : [styles.square15,styles.contain]} />
                   </View>
                   <View style={[styles.width33]}>
-                    <Image source={{ uri: this.state.tasks[i - 1].icon}} style={[styles.square20,styles.topMargin]} />
+                    <Image source={{ uri: this.state.tasks[i - 1].icon}} style={[styles.square20,styles.contain,styles.topMargin]} />
                   </View>
                   <View style={(this.state.tasks[i - 1].isCompleted) ? completedClass : incompletedClass} >
                     <View style={[styles.calcColumn148]}>
@@ -2949,13 +2955,27 @@ class Apply extends Component {
                         <View style={[styles.bottomPadding]}>
                           <Text style={[styles.row10]}>Submit Existing Resume from Profile</Text>
                           <View style={[styles.calcColumn60]}>
-                            <Picker
-                              selectedValue={this.state.resumeName}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("resumeName",itemValue)
-                              }>
-                              {this.state.resumeNames.map(value2 => <Picker.Item key={value2} label={value2} value={value2} />)}
-                            </Picker>
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Resume", selectedIndex: null, selectedName: "resumeName", selectedValue: this.state.resumeName, selectedOptions: this.state.resumeNames, selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.resumeName}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <Picker
+                                selectedValue={this.state.resumeName}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("resumeName",itemValue)
+                                }>
+                                {this.state.resumeNames.map(value2 => <Picker.Item key={value2} label={value2} value={value2} />)}
+                              </Picker>
+                            )}
+
                           </View>
 
                         </View>
@@ -3441,6 +3461,12 @@ class Apply extends Component {
 
   }
 
+  closeModal() {
+    console.log('closeModal called')
+
+    this.setState({ modalIsOpen: false })
+  }
+
   render() {
 
       return (
@@ -3532,6 +3558,23 @@ class Apply extends Component {
 
                 </View>
               )}
+
+              <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+                {(this.state.showPicker) && (
+                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                    <SubPicker
+                      selectedSubKey={this.state.selectedSubKey}
+                      selectedName={this.state.selectedName}
+                      selectedOptions={this.state.selectedOptions}
+                      selectedValue={this.state.selectedValue}
+                      differentLabels={this.state.differentLabels}
+                      pickerName={this.state.pickerName}
+                      formChangeHandler={this.formChangeHandler}
+                      closeModal={this.closeModal}
+                    />
+                  </View>
+                )}
+             </Modal>
           </ScrollView>
       )
   }

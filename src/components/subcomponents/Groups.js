@@ -28,6 +28,7 @@ class Groups extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      hideFilters: true,
       groups: [],
       favorites: [],
 
@@ -68,7 +69,7 @@ class Groups extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+    console.log('componentDidUpdate called ')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       console.log('t0 will update')
@@ -216,7 +217,9 @@ class Groups extends Component {
   }
 
   formChangeHandler = (eventName, eventValue) => {
-    console.log('formChangeHandler called')
+    console.log('formChangeHandler called', eventName, eventValue)
+
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'search') {
       console.log('in search')
@@ -225,9 +228,9 @@ class Groups extends Component {
       this.filterResults(eventValue, null, null, true)
 
     } else if (eventName.includes('filter|')) {
-
+      console.log('in filter 1', eventName)
       const nameArray = eventName.split("|")
-
+      console.log('in filter 2')
       let itemFilters = this.state.itemFilters
       const eventName = nameArray[1]
       const index = Number(nameArray[2])
@@ -988,81 +991,73 @@ class Groups extends Component {
 
             {(this.state.showingSearchBar) && (
               <View style={[styles.card,styles.topMargin20]}>
-                <Text style={[styles.row10]}>Filter Options</Text>
 
-                <View style={[styles.rowDirection,styles.flexWrap]}>
-                  {this.state.itemFilters.map((item, index) =>
-                    <View key={index}>
-                      <View style={[styles.row10,styles.rightPadding20]}>
-                        <View style={[styles.lightBorder,styles.rowDirection]}>
-                          <View style={[styles.rightPadding5,styles.leftPadding,styles.topMarginNegative2]}>
-                            <View style={[styles.spacer]} />
-                            <Text style={[styles.descriptionTextColor]}>{item.name}</Text>
-                          </View>
-                          <View>
+                {(!this.state.hideFilters) && (
+                  <View>
+                    <Text style={[styles.row10,styles.standardText]}>Filter Options</Text>
+
+                    <View style={[styles.row10]}>
+                      {this.state.itemFilters.map((item, index) =>
+                        <View key={index}>
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{item.name}</Text>
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: item.name, selectedIndex: index, selectedName: "filter|" + item.name, selectedValue: item.value, selectedOptions: item.options, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{item.value}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
                             <Picker
                               selectedValue={item.value}
                               onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("filter|" + item.name + '|' + index,itemValue)
+                                this.formChangeHandler("filter|" + item.name,itemValue)
                               }>
-                              {item.options.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
                             </Picker>
-                          </View>
-                          <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                            <Image source={{ uri: dropdownArrow}}/>
-                          </View>
-                        </View>
-                      </View>
-
-                      {(index % 3 === 2) && (
-                        <View>
-                          <View style={[styles.spacer]} />
+                          )}
                         </View>
                       )}
                     </View>
-                  )}
-
-                </View>
 
 
-                <View style={[styles.spacer]} />
+                    <View style={[styles.spacer]} />
 
-                <Text style={[styles.row10]}>Sort Options</Text>
+                    <Text style={[styles.row10,styles.standardText]}>Sort Options</Text>
 
-                <View style={[styles.rowDirection,styles.flexWrap]}>
-                  {this.state.itemSorters.map((item, index) =>
-                    <View>
-                      <View style={[styles.row10,styles.rightPadding20]}>
-                        <View style={[styles.lightBorder,styles.rowDirection]}>
-                          <View style={[styles.rightPadding5,styles.leftPadding,styles.topMarginNegative2]}>
-                            <View style={[styles.spacer]} />
-                            <Text style={[styles.descriptionTextColor]}>{item.name}</Text>
-                          </View>
-                          <View>
+                    <View style={[styles.row10]}>
+                      {this.state.itemSorters.map((item, index) =>
+                        <View key={index}>
+                          <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{item.name}</Text>
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: item.name, selectedIndex: index, selectedName: "sort|" + item.name + '|' + index, selectedValue: item.value, selectedOptions: item.options, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{item.value}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
                             <Picker
                               selectedValue={item.value}
                               onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("sort|" + item.name + '|' + index,itemValue)
+                                this.formChangeHandler("sort|" + filters[i - 1].name,itemValue)
                               }>
-                              {item.options.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
                             </Picker>
-                          </View>
-                          <View style={[styles.topPadding17,styles.horizontalPadding3,styles.rightMargin5]}>
-                            <Image source={{ uri: dropdownArrow}}/>
-                          </View>
-                        </View>
-                      </View>
-
-                      {(index % 3 === 2) && (
-                        <View>
-
-                          <View style={[styles.spacer]} />
+                          )}
                         </View>
                       )}
                     </View>
-                  )}
-
-                </View>
+                  </View>
+                )}
 
               </View>
             )}

@@ -897,6 +897,7 @@ class EditGroup extends Component {
                          numberOfLines={4}
                        />
                      </View>
+                     {/*
                      {(this.props.fromAdvisor) && (
                        <View>
                          <View style={[styles.row10]}>
@@ -911,7 +912,7 @@ class EditGroup extends Component {
                            </Picker>
                          </View>
                        </View>
-                     )}
+                     )}*/}
                    </View>
 
                    <View style={[styles.row15]}>
