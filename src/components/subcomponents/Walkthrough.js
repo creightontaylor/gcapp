@@ -523,7 +523,7 @@ class Walkthrough extends Component {
 
     return (
       <ScrollView>
-        <View style={[styles.fullScreenWidth,styles.lightBackground,styles.padding20]}>
+        <View style={[styles.flex1,styles.lightBackground,styles.padding20]}>
           <View style={[styles.topMargin20,styles.fullScreenWidth,styles.alignCenter]}>
             <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
           </View>
@@ -532,9 +532,9 @@ class Walkthrough extends Component {
             <Text style={[styles.fullScreenWidth,styles.centerText,styles.headingText3]}>Build your profile</Text>
           </View>
 
-          <View style={[styles.topMargin20]}>
-            <Text>Step {this.state.pageIndex} of {this.state.pages.length}</Text>
-            <View style={[styles.progressBarThin,styles.topMargin]} >
+          <View style={[styles.topMargin20,styles.flex1]}>
+            <Text style={[styles.standardText]}>Step {this.state.pageIndex} of {this.state.pages.length}</Text>
+            <View style={[styles.progressBarThin,styles.topMargin,styles.flex1]} >
               {(this.state.pages.length > 0) ? (
                 <View>
                   <View style={[styles.ctaBackgroundColor, styles.height6, styles.borderRadius50,{ width: Math.round((this.state.pageIndex / this.state.pages.length) * 100).toString() + '%' }]} />
@@ -695,8 +695,8 @@ class Walkthrough extends Component {
                     </View>
                   </View>
 
-                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.bottomPadding,styles.calcColumn60,styles.rightText]}>{this.state.errorMessage}</Text>}
-                  {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.bottomPadding,styles.calcColumn60,styles.rightText]}>{this.state.successMessage}</Text>}
+                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.bottomPadding,styles.calcColumn60,styles.rightText,styles.standardText,styles.row5]}>{this.state.errorMessage}</Text>}
+                  {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.bottomPadding,styles.calcColumn60,styles.rightText,styles.standardText,styles.row5]}>{this.state.successMessage}</Text>}
                 </View>
               </View>
             )}
@@ -732,7 +732,7 @@ class Walkthrough extends Component {
 
                       </View>
 
-                      <Text>Set goals to get resources and hold yourself accountable.</Text>
+                      <Text style={[styles.standardText]}>Set goals to get resources and hold yourself accountable.</Text>
                       <SubLogs logType="Goal" navigation={this.props.navigation} passedGoal={this.state.passedGoal} modalView={true} fromWalkthrough={true} />
                     </View>
 
@@ -757,7 +757,7 @@ class Walkthrough extends Component {
                         </View>
 
                       </View>
-                      <Text>Would you like to create or join accountability groups to help you accomplish your goals?</Text>
+                      <Text style={[styles.standardText]}>Would you like to create or join accountability groups to help you accomplish your goals?</Text>
                     </View>
 
                     <SubRenderMyGroups navigation={this.props.navigation} groups={this.state.groupsJoined} passedCategory="Accountability" fromWalkthrough={true} />
@@ -779,7 +779,7 @@ class Walkthrough extends Component {
                           </View>
 
                           <View style={[styles.row10]}>
-                            <Text>Cornerstone OnDemand has created WorkforceReady Modules to help you develop the soft skills necessary for the future of work. These are free lessons that must be completed before UNITE-LA staff refers you to internship / work opportunities.</Text>
+                            <Text style={[styles.standardText]}>Cornerstone OnDemand has created WorkforceReady Modules to help you develop the soft skills necessary for the future of work. These are free lessons that must be completed before UNITE-LA staff refers you to internship / work opportunities.</Text>
                           </View>
 
                           <View style={[styles.row10,styles.rowDirection]}>
@@ -789,7 +789,7 @@ class Walkthrough extends Component {
                               </TouchableOpacity>
                             </View>
                             <View style={[styles.calcColumn90]}>
-                              <Text>Click the box to enroll/un-enroll in the next WorkforceReady Cohort</Text>
+                              <Text style={[styles.standardText]}>Click the box to enroll/un-enroll in the next WorkforceReady Cohort</Text>
                             </View>
 
                           </View>
@@ -800,7 +800,7 @@ class Walkthrough extends Component {
                     {/*
                     <View style={[styles.row10]}>
                       <Text style={[styles.headingText3]}>Partner Workspaces</Text>
-                      <Text>Would you like to join training partner workspaces to help you accomplish your goals?</Text>
+                      <Text style={[styles.standardText]}>Would you like to join training partner workspaces to help you accomplish your goals?</Text>
                     </View>*/}
                   </View>
 
@@ -834,7 +834,7 @@ class Walkthrough extends Component {
                 <Text style={[styles.headingText2]}>What you're great at</Text>
 
                 <View style={[styles.topMargin30]}>
-                  <Text>We're here to help. If you need help defining what you're great at, select a pathway for recommendations. These recommendations come from <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/help/what-are-benchmarks')}><Text style={[styles.ctaColor,styles.boldText]}>Guided Compass Benchmarks</Text></TouchableOpacity>, which are the ideal candidates defined by programs and employers for career pathways and opportunities. Benchmarks help us recommend opportunities to you and help us help you build a career development roadmap based on your goals.</Text>
+                  <Text style={[styles.standardText]}>We're here to help. If you need help defining what you're great at, select a pathway for recommendations. These recommendations come from <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/help/what-are-benchmarks')}><Text style={[styles.ctaColor,styles.boldText,styles.standardText]}>Guided Compass Benchmarks</Text></TouchableOpacity>, which are the ideal candidates defined by programs and employers for career pathways and opportunities. Benchmarks help us recommend opportunities to you and help us help you build a career development roadmap based on your goals.</Text>
                 </View>
 
                 <View style={[styles.topMargin30]}>

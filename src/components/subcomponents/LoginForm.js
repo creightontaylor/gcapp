@@ -9,12 +9,18 @@ const employersIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.c
 const questionMarkBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/question-mark-blue.png';
 const logoImg = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/Compass-logo-words.png';
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon-white.png';
+const dropdownArrow = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png";
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
+
+import SubPicker from '../common/SubPicker';
 
 class LogInForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
       roleName: 'Student / Career Seeker',
+      rolesSupported: ['Student','Student / Career Seeker','Admin'],
+      unsupportedRoleErrorMessage: 'The mobile app currently only supports students / career seekers. You can sign up for the web portal here: https://www.guidedcompass.com/join',
       firstName: '',
       lastName: '',
       username: '',
@@ -272,7 +278,9 @@ class LogInForm extends Component {
   }
 
   formChangeHandler(eventName,eventValue) {
-    //validate strings
+
+    this.setState({ selectedValue: eventValue })
+
     if (eventName === 'firstName') {
       let capitalizedFirstName = eventValue.charAt(0).toUpperCase() + eventValue.slice(1);
       this.setState({ firstName: capitalizedFirstName })
@@ -368,7 +376,19 @@ class LogInForm extends Component {
       let updatedAt = new Date();
       let platform = 'web'
 
-      if (firstName === '') {
+      if (!this.state.rolesSupported.includes(this.state.roleName)) {
+
+        let errorMessage = this.state.unsupportedRoleErrorMessage
+        // if (this.state.roleName === 'Teacher' || this.state.roleName === 'School Staff' || this.state.roleName === 'Counselor' || this.state.roleName === 'School Support') {
+        //   errorMessage = errorMessage + ' You can sign up for the educator web portal here: https://www.guidedcompass.com/join'
+        // } else if (this.state.roleName === 'WBLC' || this.state.roleName === "Work-Based Learning Coordinator") {
+        // } else if (this.state.roleName === "Mentor") {
+        // } else if (this.state.roleName === "Employer" || this.state.roleName === "Employer Representative") {
+        //
+        // }
+
+        this.setState({ error: { message: errorMessage, isSaving: false }})
+      } else if (firstName === '') {
         this.setState({ error: { message: 'please enter your first name', isSaving: false }})
       } else if (lastName === '') {
         this.setState({ error: { message: 'please enter your last name', isSaving: false }})
@@ -586,7 +606,7 @@ class LogInForm extends Component {
                       AsyncStorage.setItem('roleName', roleName)
                       AsyncStorage.setItem('pathway', pathway)
                       if (publicOrg) {
-                        AsyncStorage.setItem('publicOrg', publicOrg)
+                        AsyncStorage.setItem('publicOrg', publicOrg.toString())
                       }
 
                       if (self.state.roleName.toLowerCase() === 'worker') {
@@ -684,7 +704,7 @@ class LogInForm extends Component {
               } else {
                 console.log('org info query did not work', response.data.message)
                 //don't allow signups without an org affiliation
-                this.setState({ error: { message: 'There was an error finding the partner organization' }, isWaiting: false, isSaving: false })
+                this.setState({ error: { message: 'There was an error: we could not find a partner organization with that org code' }, isWaiting: false, isSaving: false })
 
               }
 
@@ -716,57 +736,71 @@ class LogInForm extends Component {
           console.log('successfully logged in')
 
           const userResponseData = response.data
+          if (!this.state.rolesSupported.includes(this.state.roleName)) {
 
-          if (!this.state.orgFocus || this.state.orgFocus === '' || !this.state.orgCode || this.state.orgCode === '') {
-
-            const orgCode = response.data.user.activeOrg
-            Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode} })
-            .then((response) => {
-              console.log('Org info query attempted for orgFocus on login');
-
-                if (response.data.success) {
-                  console.log('org info query worked for after sign in')
-
-                  const orgFocus = response.data.orgInfo.orgFocus
-                  const publicOrg = response.data.orgInfo.isPublic
-                  const orgName = response.data.orgInfo.orgName
-                  const placementPartners = response.data.orgInfo.placementPartners
-
-                  this.completeSignIn(email, userResponseData, orgCode, orgFocus, publicOrg, placementPartners, orgName)
-
-                } else {
-                  console.log('org info query did not work', response.data.message)
-                }
-
-            }).catch((error) => {
-                console.log('Org info query did not work for some reason', error);
-            });
-
+            let errorMessage = 'The mobile app currently only supports students / career seekers.'
+            if (userResponseData.roleName === 'Teacher' || userResponseData.roleName === 'School Staff' || userResponseData.roleName === 'Counselor' || userResponseData.roleName === 'School Support') {
+              errorMessage = errorMessage + ' You can sign into the educator web portal here: https://www.guidedcompass.com/advisor/signin'
+            } else if (userResponseData.roleName === 'WBLC' || userResponseData.roleName === "Work-Based Learning Coordinator") {
+              errorMessage = errorMessage + ' You can sign into the admin web portal here: https://www.guidedcompass.com/organizations/' + userResponseData.activeOrg + '/signin'
+            } else if (userResponseData.roleName === "Mentor") {
+              errorMessage = errorMessage + ' You can sign into the mentor web portal here: https://www.guidedcompass.com/advisor/signin'
+            } else if (userResponseData.roleName === "Employer" || userResponseData.roleName === "Employer Representative") {
+              errorMessage = errorMessage + ' You can sign into the admin web portal here: https://www.guidedcompass.com/employers/signin'
+            }
+            this.setState({ error: { message: errorMessage, isSaving: false }})
           } else {
+            if (!this.state.orgFocus || this.state.orgFocus === '' || !this.state.orgCode || this.state.orgCode === '') {
 
-            const orgCode = response.data.user.activeOrg
-            Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode} })
-            .then((response) => {
-              console.log('Org info query attempted for orgFocus on login');
+              const orgCode = response.data.user.activeOrg
+              Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode} })
+              .then((response) => {
+                console.log('Org info query attempted for orgFocus on login');
 
-                if (response.data.success) {
-                  console.log('org info query worked for after sign in')
+                  if (response.data.success) {
+                    console.log('org info query worked for after sign in')
 
-                  const orgFocus = response.data.orgInfo.orgFocus
-                  const publicOrg = response.data.orgInfo.isPublic
-                  const orgName = response.data.orgInfo.orgName
-                  const placementPartners = response.data.orgInfo.placementPartners
+                    const orgFocus = response.data.orgInfo.orgFocus
+                    const publicOrg = response.data.orgInfo.isPublic
+                    const orgName = response.data.orgInfo.orgName
+                    const placementPartners = response.data.orgInfo.placementPartners
 
-                  this.completeSignIn(email, userResponseData, orgCode, orgFocus, publicOrg, placementPartners, orgName)
-                  // this.completeSignIn(email, response.data, this.state.orgCode, this.state.orgFocus, this.state.publicOrg, this.state.placementPartners)
+                    this.completeSignIn(email, userResponseData, orgCode, orgFocus, publicOrg, placementPartners, orgName)
 
-                } else {
-                  console.log('org info query did not work', response.data.message)
-                }
+                  } else {
+                    console.log('org info query did not work', response.data.message)
+                  }
 
-            }).catch((error) => {
-                console.log('Org info query did not work for some reason', error);
-            });
+              }).catch((error) => {
+                  console.log('Org info query did not work for some reason', error);
+              });
+
+            } else {
+
+              const orgCode = response.data.user.activeOrg
+              Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode} })
+              .then((response) => {
+                console.log('Org info query attempted for orgFocus on login');
+
+                  if (response.data.success) {
+                    console.log('org info query worked for after sign in')
+
+                    const orgFocus = response.data.orgInfo.orgFocus
+                    const publicOrg = response.data.orgInfo.isPublic
+                    const orgName = response.data.orgInfo.orgName
+                    const placementPartners = response.data.orgInfo.placementPartners
+
+                    this.completeSignIn(email, userResponseData, orgCode, orgFocus, publicOrg, placementPartners, orgName)
+                    // this.completeSignIn(email, response.data, this.state.orgCode, this.state.orgFocus, this.state.publicOrg, this.state.placementPartners)
+
+                  } else {
+                    console.log('org info query did not work', response.data.message)
+                  }
+
+              }).catch((error) => {
+                  console.log('Org info query did not work for some reason', error);
+              });
+            }
           }
 
         } else {
@@ -797,7 +831,9 @@ class LogInForm extends Component {
     AsyncStorage.setItem('username', responseData.user.username)
     AsyncStorage.setItem('firstName', responseData.user.firstName)
     AsyncStorage.setItem('lastName', responseData.user.lastName)
-    AsyncStorage.setItem('pathway', responseData.user.pathway)
+    if (responseData.user.pathway) {
+      AsyncStorage.setItem('pathway', responseData.user.pathway)
+    }
 
     if (responseData.user.workMode === true) {
       AsyncStorage.setItem('workMode', 'true')
@@ -914,7 +950,7 @@ class LogInForm extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false })
+    this.setState({ modalIsOpen: false, showRoleDefinitions: false, showOrgCodeDefinition: false })
 
   }
 
@@ -1011,6 +1047,27 @@ class LogInForm extends Component {
                                 </View>
                               </View>
 
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Role Name", selectedIndex: null, selectedName: "roleName", selectedValue: this.state.roleName, selectedOptions: this.state.roleNameOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20,styles.whiteBackground]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1,styles.white]}>{this.state.roleName}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.roleName}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("roleName",itemValue)
+                                  }>
+                                  {this.state.roleNameOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                </Picker>
+                              )}
+                              {/*
                               <View style={[styles.rowDirection,styles.flexWrap]}>
                                 {this.state.roleNameOptions.map((value, index) =>
                                   <View key={value}>
@@ -1029,177 +1086,194 @@ class LogInForm extends Component {
                                     </View>
                                   </View>
                                 )}
-                              </View>
+                              </View>*/}
                             </View>
-
-                            {(this.state.roleName === 'Other') && (
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10,styles.whiteColor,styles.centerText]}>You selected "other". Please write your role:<Text style={[styles.errorColor]}>*</Text></Text>
-                                <TextInput
-                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                  onChangeText={(text) => this.formChangeHandler("otherRoleName", text)}
-                                  value={this.state.otherRoleName}
-                                  placeholder="Other role name..."
-                                  placeholderTextColor={styles.faintColor.color}
-                                />
-                              </View>
-                            )}
                           </View>
                         )}
 
-                        <KeyboardAvoidingView behavior="padding">
-                          <View style={[styles.topPadding]}>
-                            <View style={[styles.row10]}>
-                              <TextInput
-                                style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                onChangeText={(text) => this.formChangeHandler("firstName", text)}
-                                value={this.state.firstName}
-                                placeholder="First name..."
-                                placeholderTextColor={styles.faintColor.color}
-                              />
-                            </View>
-                            <View style={[styles.row10]}>
-                            <TextInput
-                                style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                onChangeText={(text) => this.formChangeHandler("lastName", text)}
-                                value={this.state.lastName}
-                                placeholder="Last name..."
-                                placeholderTextColor={styles.faintColor.color}
-                              />
-                            </View>
-
-                            <View style={[styles.row10]}>
-                              <TextInput
-                                style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                onChangeText={(text) => this.formChangeHandler("email", text)}
-                                value={this.state.email}
-                                placeholder="Email..."
-                                placeholderTextColor={styles.faintColor.color}
-                                autoCapitalize='none'
-                              />
-                            </View>
-
-                            <View style={[styles.row10]}>
-                              <TextInput
-                                style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                onChangeText={(text) => this.formChangeHandler("password", text)}
-                                value={this.state.password}
-                                placeholder="Password..."
-                                placeholderTextColor={styles.faintColor.color}
-                                autoCapitalize='none'
-                                secureTextEntry={true}
-                              />
-                            </View>
-
-                            {(this.state.roleName && this.state.roleName.toLowerCase() === 'student') && (
-                              <View>
-                                {(this.state.includePathway) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Pathway</Text>
-                                    <Picker
-                                      selectedValue={this.state.pathway}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("pathway",itemValue)
-                                      }>
-                                      {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                    </Picker>
-                                  </View>
-                                )}
-
-                              </View>
-                            )}
-
-                            {((this.state.roleName && this.state.roleName.toLowerCase() === 'mentor') || (this.state.roleName && this.state.roleName.toLowerCase() === 'employer representative')) && (
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <TextInput
-                                    style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                    onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
-                                    value={this.state.jobTitle}
-                                    placeholder="Job Title..."
-                                    placeholderTextColor={styles.faintColor.color}
-                                  />
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <TextInput
-                                    style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                    onChangeText={(text) => this.formChangeHandler("employerName", text)}
-                                    value={this.state.employerName}
-                                    placeholder="Employer name..."
-                                    placeholderTextColor={styles.faintColor.color}
-                                  />
-                                  {(this.state.employers.length > 0) && (
-                                    <View>
-                                      <View style={[styles.spacer]} />
-
-                                      {this.state.employers.map(value =>
-                                        <View key={value._id} style={[styles.row5]}>
-                                          <TouchableOpacity onPress={() => this.employerClicked(value)}>
-                                            <View style={[styles.rowDirection]}>
-                                              <View style={[styles.rightPadding]}>
-                                                <Image source={{ uri: employersIconBlue}} style={[styles.square22,styles.contain]} />
-                                              </View>
-                                              <View>
-                                                <Text style={[styles.ctaColor]}>{value.employerName}</Text>
-                                              </View>
-                                            </View>
-                                          </TouchableOpacity>
-                                        </View>)}
-                                    </View>
-                                  )}
-                                </View>
-                              </View>
-                            )}
-
-                            {(this.state.roleName === 'Teacher' || this.state.roleName === 'Counselor' || this.state.roleName === 'Work-Based Learning Coordinator') && (
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <TextInput
-                                    style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                    onChangeText={(text) => this.formChangeHandler("school", text)}
-                                    value={this.state.school}
-                                    placeholder={(this.state.roleName === 'Work-Based Learning Coordinator') ? "Program Name" : "School Name"}
-                                    placeholderTextColor={styles.faintColor.color}
-                                  />
-                                </View>
-                              </View>
-                            )}
+                        {(!this.state.rolesSupported.includes(this.state.roleName)) ? (
+                          <View style={[styles.topMargin20]}>
+                            <Text style={[styles.standardText,styles.whiteColor]}>{this.state.unsupportedRoleErrorMessage}</Text>
                           </View>
-
-                          {(this.state.roleName === 'Student / Career Seeker') && (
-                            <View style={[styles.topPadding,styles.rowDirection]}>
-                              <View style={[styles.width80]}>
-                                <Switch
-                                   onValueChange = {(value) => this.formChangeHandler("subscribed", value)}
-                                   value = {this.state.subscribed}
+                        ) : (
+                          <KeyboardAvoidingView behavior="padding">
+                            <View style={[styles.topPadding]}>
+                              <View style={[styles.row10]}>
+                                <TextInput
+                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                  onChangeText={(text) => this.formChangeHandler("firstName", text)}
+                                  value={this.state.firstName}
+                                  placeholder="First name..."
+                                  placeholderTextColor={styles.faintColor.color}
                                 />
                               </View>
-                              <View style={[styles.calcColumn140]}>
-                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                <Text style={[styles.descriptionText3,styles.whiteColor]}>Receive weekly emails of event, project, and work opportunities based on your interests.</Text>
+                              <View style={[styles.row10]}>
+                              <TextInput
+                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                  onChangeText={(text) => this.formChangeHandler("lastName", text)}
+                                  value={this.state.lastName}
+                                  placeholder="Last name..."
+                                  placeholderTextColor={styles.faintColor.color}
+                                />
                               </View>
 
-                            </View>
-                          )}
+                              <View style={[styles.row10]}>
+                                <TextInput
+                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                  onChangeText={(text) => this.formChangeHandler("email", text)}
+                                  value={this.state.email}
+                                  placeholder="Email..."
+                                  placeholderTextColor={styles.faintColor.color}
+                                  autoCapitalize='none'
+                                />
+                              </View>
 
-                          <View style={[styles.row10]}>
-                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.signUp()}>
-                                  <Text style={[styles.standardText,styles.whiteColor]}>Sign Up</Text>
-                              </TouchableOpacity>
+                              <View style={[styles.row10]}>
+                                <TextInput
+                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                  onChangeText={(text) => this.formChangeHandler("password", text)}
+                                  value={this.state.password}
+                                  placeholder="Password..."
+                                  placeholderTextColor={styles.faintColor.color}
+                                  autoCapitalize='none'
+                                  secureTextEntry={true}
+                                />
+                              </View>
 
-                              <Text style={[styles.errorColor,styles.centerText]}>{this.state.error.message}</Text>
-
-                              <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2]}>Already have an account? <TouchableOpacity onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId, opportunityOrg: this.props.opportunityOrg })}><Text style={[styles.descriptionText2,styles.ctaColor]}>Sign in instead</Text></TouchableOpacity></Text>
-
-                              {(!this.state.orgCode || this.state.orgCode === '') ? (
-                                <View>
-                                  <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2]}>Joining the portal of a partner organization but don't know their org code? You can request it <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}><Text style={[styles.ctaColor,styles.boldText]}>here</Text></TouchableOpacity>.</Text>
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.calcColumn105]}>
+                                  <TextInput
+                                    style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.descriptionText1,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}
+                                    onChangeText={(text) => this.formChangeHandler("orgCode", text)}
+                                    value={this.state.orgCode}
+                                    placeholder="Org code (optional)"
+                                    placeholderTextColor={styles.faintColor.color}
+                                    autoCapitalize='none'
+                                  />
                                 </View>
-                              ) : (
-                                <View />
+                                <View style={[styles.width45,styles.leftPadding,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}>
+                                  <View style={[styles.topMargin5,styles.notiBubbleInfo7of9, { borderRadius: 15 }]}>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showOrgCodeDefinition: true })}>
+                                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+
+                              </View>
+
+                              {(this.state.roleName && this.state.roleName.toLowerCase() === 'student') && (
+                                <View>
+                                  {(this.state.includePathway) && (
+                                    <View style={[styles.row10]}>
+                                      <Text style={[styles.standardText,styles.row10]}>Pathway</Text>
+                                      <Picker
+                                        selectedValue={this.state.pathway}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("pathway",itemValue)
+                                        }>
+                                        {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                      </Picker>
+                                    </View>
+                                  )}
+
+                                </View>
                               )}
-                          </View>
-                        </KeyboardAvoidingView>
+
+                              {((this.state.roleName && this.state.roleName.toLowerCase() === 'mentor') || (this.state.roleName && this.state.roleName.toLowerCase() === 'employer representative')) && (
+                                <View>
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
+                                      value={this.state.jobTitle}
+                                      placeholder="Job Title..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                    />
+                                  </View>
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("employerName", text)}
+                                      value={this.state.employerName}
+                                      placeholder="Employer name..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                    />
+                                    {(this.state.employers.length > 0) && (
+                                      <View>
+                                        <View style={[styles.spacer]} />
+
+                                        {this.state.employers.map(value =>
+                                          <View key={value._id} style={[styles.row5]}>
+                                            <TouchableOpacity onPress={() => this.employerClicked(value)}>
+                                              <View style={[styles.rowDirection]}>
+                                                <View style={[styles.rightPadding]}>
+                                                  <Image source={{ uri: employersIconBlue}} style={[styles.square22,styles.contain]} />
+                                                </View>
+                                                <View>
+                                                  <Text style={[styles.ctaColor]}>{value.employerName}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          </View>)}
+                                      </View>
+                                    )}
+                                  </View>
+                                </View>
+                              )}
+
+                              {(this.state.roleName === 'Teacher' || this.state.roleName === 'Counselor' || this.state.roleName === 'Work-Based Learning Coordinator') && (
+                                <View>
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("school", text)}
+                                      value={this.state.school}
+                                      placeholder={(this.state.roleName === 'Work-Based Learning Coordinator') ? "Program Name" : "School Name"}
+                                      placeholderTextColor={styles.faintColor.color}
+                                    />
+                                  </View>
+                                </View>
+                              )}
+                            </View>
+
+                            {(this.state.roleName === 'Student / Career Seeker') && (
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <View style={[styles.width80]}>
+                                  <Switch
+                                     onValueChange = {(value) => this.formChangeHandler("subscribed", value)}
+                                     value = {this.state.subscribed}
+                                  />
+                                </View>
+                                <View style={[styles.calcColumn140]}>
+                                  <Text style={[styles.descriptionText3,styles.whiteColor]}>Receive weekly opportunities email based on interests.</Text>
+                                </View>
+
+                              </View>
+                            )}
+
+                            <View style={[styles.row10]}>
+                                <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.signUp()}>
+                                    <Text style={[styles.standardText,styles.whiteColor]}>Sign Up</Text>
+                                </TouchableOpacity>
+
+                                {(this.state.error && this.state.error.message) ? (
+                                  <Text style={[styles.errorColor,styles.centerText,styles.standardText,styles.row5]}>{this.state.error.message}</Text>
+                                ) : (
+                                  <View />
+                                )}
+
+                                <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Already have an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId, opportunityOrg: this.props.opportunityOrg })} style={[styles.descriptionText2,styles.ctaColor]}>Sign in instead</Text></Text>
+
+                                {(!this.state.orgCode || this.state.orgCode === '') ? (
+                                  <View>
+                                    <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Don't know your org's org code? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')} style={[styles.ctaColor,styles.boldText,styles.descriptionText2]}>Click Here</Text> to request.</Text>
+                                  </View>
+                                ) : (
+                                  <View />
+                                )}
+                            </View>
+                          </KeyboardAvoidingView>
+                        )}
 
                       </View>
                     )}
@@ -1296,9 +1370,9 @@ class LogInForm extends Component {
 
                             <View style={[styles.topMargin30]}>
                               <Text style={[styles.standardText,styles.errorColor]}>{this.state.error.message}</Text>
-                              <Text style={[styles.standardText,styles.whiteColor]}>Haven't created an account? <TouchableOpacity onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId })}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Sign up instead</Text></TouchableOpacity></Text>
+                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Haven't created an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId })} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Sign up instead</Text></Text>
 
-                              <Text style={[styles.standardText,styles.whiteColor]}>Forgot your password? <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/reset-password')}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Reset password</Text></TouchableOpacity></Text>
+                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Forgot your password? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/reset-password')} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Reset password</Text></Text>
                             </View>
 
 
@@ -1318,35 +1392,45 @@ class LogInForm extends Component {
 
           {(this.state.showRoleDefinitions) && (
             <ScrollView key="showRoleDefinitions" style={[styles.flex1,styles.padding20]}>
-              <Text style={[styles.headingText2]}>Role Definitions for Guided Compass (GC)</Text>
+              <View style={[styles.rowDirection,styles.topMargin20]}>
+                <View style={[styles.calcColumn120]}>
+                  <Text style={[styles.headingText5]}>Role Definitions for Guided Compass (GC)</Text>
+                </View>
+                <View style={[styles.width30,styles.topMargin,styles.leftMargin,styles.alignEnd]}>
+                  <TouchableOpacity onPress={() => this.closeModal()}>
+                    <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
-              <View style={[styles.row10,styles.descriptionText1]}>
+
+              <View style={[styles.row10]}>
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>1) <Text style={[styles.boldText,styles.ctaColor]}>Student / Career Seeker</Text> refers to people in school to learn career-related skills, people seeking to start their careers, or people seeking to switch their careers. Use GC to explore careers, manage courses, RSVP to events, submit projects, and apply to work opportunities.</Text>
+                  <Text style={[styles.descriptionText1]}>1) <Text style={[styles.boldText,styles.ctaColor]}>Student / Career Seeker</Text> refers to people in school to learn career-related skills, people seeking to start their careers, or people seeking to switch their careers. Use GC to explore careers, manage courses, RSVP to events, submit projects, and apply to work opportunities.</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>2) <Text style={[styles.boldText,styles.ctaColor]}>Teacher</Text> refers to a teachers, instructors, professors, and trainers that teach career-releated skills. Use GC to track student progress, endorse student competencies, and oversee student projects.</Text>
+                  <Text style={[styles.descriptionText1]}>2) <Text style={[styles.boldText,styles.ctaColor]}>Teacher</Text> refers to a teachers, instructors, professors, and trainers that teach career-releated skills. Use GC to track student progress, endorse student competencies, and oversee student projects.</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>3) <Text style={[styles.boldText,styles.ctaColor]}>Work-Based Learning Coordinator</Text> refers to coordinators and administrators of work-based learning programs. These people act as intermediaries between career-seekers and employers / employment. Use GC to manage work-based learning postings, refer students, track placements, manage all members, and export reports.</Text>
+                  <Text style={[styles.descriptionText1]}>3) <Text style={[styles.boldText,styles.ctaColor]}>Work-Based Learning Coordinator</Text> refers to coordinators and administrators of work-based learning programs. These people act as intermediaries between career-seekers and employers / employment. Use GC to manage work-based learning postings, refer students, track placements, manage all members, and export reports.</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>4) <Text style={[styles.boldText,styles.ctaColor]}>Counselor</Text> refers to people who coach or counsel career-seekers on career paths. Use GC to explore career paths, guide students, and oversee progress.</Text>
+                  <Text style={[styles.descriptionText1]}>4) <Text style={[styles.boldText,styles.ctaColor]}>Counselor</Text> refers to people who coach or counsel career-seekers on career paths. Use GC to explore career paths, guide students, and oversee progress.</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>5) <Text style={[styles.boldText,styles.ctaColor]}>Mentor</Text> refers to professionals that would like to be more active in helping career-seekers, including hosting events, providing project feedback, and conducting mock interviews.</Text>
+                  <Text style={[styles.descriptionText1]}>5) <Text style={[styles.boldText,styles.ctaColor]}>Mentor</Text> refers to professionals that would like to be more active in helping career-seekers, including hosting events, providing project feedback, and conducting mock interviews.</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>6) <Text style={[styles.boldText,styles.ctaColor]}>Employer Representative</Text> refers to HR or hiring managers interested in hands-off activities that directly benefit the employer (e.g., hiring  talent for project or full-time work).</Text>
+                  <Text style={[styles.descriptionText1]}>6) <Text style={[styles.boldText,styles.ctaColor]}>Employer Representative</Text> refers to HR or hiring managers interested in hands-off activities that directly benefit the employer (e.g., hiring  talent for project or full-time work).</Text>
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText]}>7) <Text style={[styles.boldText,styles.ctaColor]}>Other</Text> refers to anyone that does not fit neatly into the aforementioned categories.</Text>
+                  <Text style={[styles.descriptionText1]}>7) <Text style={[styles.boldText,styles.ctaColor]}>Other</Text> refers to anyone that does not fit neatly into the aforementioned categories.</Text>
                 </View>
               </View>
 
@@ -1354,6 +1438,53 @@ class LogInForm extends Component {
 
               <View style={[styles.spacer]} /><View style={[styles.spacer]} />
             </ScrollView>
+          )}
+
+          {(this.state.showOrgCodeDefinition) && (
+            <ScrollView key="showOrgCodeDefinition" style={[styles.flex1,styles.padding20]}>
+              <View style={[styles.rowDirection,styles.topMargin20]}>
+                <View style={[styles.calcColumn120]}>
+                  <Text style={[styles.headingText5]}>What is an Org Code?</Text>
+                </View>
+                <View style={[styles.width30,styles.topMargin,styles.leftMargin,styles.alignEnd]}>
+                  <TouchableOpacity onPress={() => this.closeModal()}>
+                    <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionText1]}>Org Codes are the unique words that represent our education / workforce partners. By entering an org code, you will be able to enter the dedicated community / workspace for that organization.</Text>
+              </View>
+
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionText1]}>Don't know your org code? Askthe staff of the school / organization or request an org code here:</Text>
+                <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}><Text style={[styles.ctaColor,styles.boldText,styles.descriptionText1]}>https://www.guidedcompass.com/contact</Text></TouchableOpacity>
+              </View>
+
+              <View style={[styles.superSpacer]}/>
+
+              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close Modal</Text></TouchableOpacity>
+
+              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+            </ScrollView>
+          )}
+
+          {(this.state.showPicker) && (
+            <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+              <SubPicker
+                selectedSubKey={this.state.selectedSubKey}
+                selectedName={this.state.selectedName}
+                selectedOptions={this.state.selectedOptions}
+                selectedValue={this.state.selectedValue}
+                differentLabels={this.state.differentLabels}
+                pickerName={this.state.pickerName}
+                formChangeHandler={this.formChangeHandler}
+                closeModal={this.closeModal}
+              />
+            </View>
           )}
 
        </Modal>

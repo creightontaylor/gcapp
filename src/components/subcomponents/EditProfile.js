@@ -463,7 +463,7 @@ class EditProfile extends Component {
                         <View style={[styles.bottomMargin]}>
                           {(!this.state.remoteAuth) && (
                             <View>
-                              <Text style={[styles.descriptionText2]}>Your profile is currently private. To change your preferences, <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text style={[styles.ctaColor,styles.boldText,styles.descriptionText2,styles.topMargin3]}>click here</Text></TouchableOpacity></Text>
+                              <Text style={[styles.descriptionText2]}>Your profile is currently private. To change your preferences, <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})} style={[styles.ctaColor,styles.boldText,styles.descriptionText2,styles.topMargin3]}>click here</Text></Text>
                             </View>
                           )}
                         </View>
@@ -478,14 +478,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Basics'})}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: profileIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Basic Info <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
                           </View>
@@ -493,14 +493,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: opportunitiesIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Projects, Experience, & Other Details <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -509,14 +509,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Assessments')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: abilitiesIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>{(this.state.assessmentCount + this.state.assessmentCount > 0) && this.state.assessmentCount + ' '}Career Assessments <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -525,14 +525,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Endorsements', { category: 'Visibility Preferences'})}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: endorsementIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>{(this.state.endorsements && this.state.endorsements.length > 0) && this.state.endorsements.length + ' '}Competency Endorsements</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
                           </View>
@@ -546,15 +546,15 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: publicIcon}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Profile Visibility Preferences</Text>
                             </View>
 
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -567,14 +567,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Logs')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: logIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>{(this.state.logs && this.state.logs.length > 0) && this.state.logs.length + ' '}Career Goals & Other Logs</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -583,14 +583,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Favorites')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                               <Image source={{ uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>{(this.state.favorites && this.state.favorites.length) && this.state.favorites.length + ' '}Favorites</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -599,14 +599,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Completions')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: checkmarkDarkGreyIcon}} style={[styles.square22,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Completed Items</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -615,14 +615,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('MySocialPosts')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: socialIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>My Social Posts</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -631,14 +631,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('Matches')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: benchmarksIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>My Top Matches</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -654,14 +654,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('ResumeBuilder')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: resumeIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Resume Builder</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -670,14 +670,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('FinancialPlanner')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: moneyIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Financial Planner</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 
@@ -686,14 +686,14 @@ class EditProfile extends Component {
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerPlanBuilder')}>
                           <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width50}>
+                            <View style={styles.width40}>
                               <View style={[styles.miniSpacer]} />
                               <Image source={{ uri: targetIcon}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
-                            <View style={styles.calcColumn160}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.headingText5]}>Career Plan Builder</Text>
                             </View>
-                            <View style={styles.width50}>
+                            <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
 

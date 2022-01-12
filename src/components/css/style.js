@@ -1112,7 +1112,6 @@ module.exports = StyleSheet.create({
   progressBarThin: {
     position: 'relative',
     height: 6,
-    width: Dimensions.get('window').width,
     borderRadius: 50,
     borderWidth: 1,
     borderColor: primaryColor,

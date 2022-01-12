@@ -6724,7 +6724,7 @@ class EditProfileDetails extends Component {
                       )}
 
                       {(this.props.fromWalkthrough) ? (
-                        <View style={[styles.calcColumn100,styles.topMargin50]}>
+                        <View style={[styles.flex1,styles.topMargin50]}>
                           <View style={styles.horizontalLine} />
 
                           <View style={[styles.rowDirection,styles.flex1,styles.topMargin]}>

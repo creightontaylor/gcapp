@@ -616,7 +616,7 @@ class Favorites extends Component {
             </View>
 
             <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Favorited Items Yet</Text>
-            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This are contains all things you have favorited.</Text>
+            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This section contains all things you have favorited.</Text>
           </View>
         </View>
       )

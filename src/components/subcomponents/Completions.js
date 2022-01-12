@@ -448,7 +448,7 @@ class Completions extends Component {
             </View>
 
             <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Completed Items Yet</Text>
-            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This are contains all things you have completed, including RSVPs to events, submissions to projects, applications for work, offers, work experience, and other things you can accomplish through the platform.</Text>
+            <Text style={[styles.topMargin20,styles.centerText,styles.topMargin]}>This section contains all things you have completed, including RSVPs to events, submissions to projects, applications for work, offers, work experience, and other things you can accomplish through the platform.</Text>
           </View>
         </View>
       )
