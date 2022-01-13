@@ -5811,15 +5811,21 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                     <View>
-                      <Text style={[styles.row10,styles.standardText]}>Check In / Session Date<Text style={[styles.errorColor]}>*</Text></Text>
-                      <DateTimePicker
-                        testID="sessionDate"
-                        value={(this.state.sessionDate) ? convertStringToDate(this.state.sessionDate,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("sessionDate",d)}
-                      />
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn260]}>
+                          <Text style={[styles.row10,styles.standardText]}>Session Date<Text style={[styles.errorColor]}>*</Text></Text>
+                        </View>
+                        <View style={[styles.width200,styles.topPadding5]}>
+                          <DateTimePicker
+                            testID="sessionDate"
+                            value={(this.state.sessionDate) ? convertStringToDate(this.state.sessionDate,'toLocal') : new Date()}
+                            mode={'datetime'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("sessionDate",d)}
+                          />
+                        </View>
+                      </View>
                     </View>
 
                     <View>
@@ -5828,7 +5834,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "sessionMethod", selectedValue: this.state.sessionMethod, selectedOptions: this.state.sessionMethodOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.sessionMethod}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -5857,7 +5863,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Category', selectedIndex: null, selectedName: "category", selectedValue: this.state.category, selectedOptions: this.state.categoryOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.category}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
