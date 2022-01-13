@@ -380,7 +380,7 @@ class AssessmentDetails extends Component {
                   <Text style={[styles.headingText5,styles.bottomPadding]}>{this.state.resultsData[1][i].name}</Text>
 
                   <Text style={[styles.headingText2,styles.ctaColor,styles.bottomPadding]}>{relativeScore}</Text>
-                  <Text>{this.state.resultsData[1][i].description}</Text>
+                  <Text style={[styles.standardText]}>{this.state.resultsData[1][i].description}</Text>
                 </View>
               )
             }
@@ -401,13 +401,13 @@ class AssessmentDetails extends Component {
             <View key={0} style={[styles.row20]}>
               <View style={[styles.spacer]} /><View style={[styles.spacer]} />
               <Text style={[styles.headingText4,styles.bottomPadding]}>16 Personalities</Text>
-              <Text>Learn about your type here: <TouchableOpacity onPress={() => Linking.openURL("https://www.16personalities.com/" + this.state.resultsData[2].myersBriggs + "-personality")}><Text style={[styles.ctaColor,styles.boldText]}>https://www.16personalities.com/{this.state.resultsData[2].myersBriggs}-personality</Text></TouchableOpacity></Text>
+              <Text style={[styles.standardText]}>Learn about your type here: <Text onPress={() => Linking.openURL("https://www.16personalities.com/" + this.state.resultsData[2].myersBriggs + "-personality")} style={[styles.ctaColor,styles.boldText]}>https://www.16personalities.com/{this.state.resultsData[2].myersBriggs}-personality</Text></Text>
               <Text style={[styles.headingText2,styles.ctaColor]}>{this.state.resultsData[2].myersBriggs}</Text>
 
               <View style={[styles.spacer]} />
 
               <Text style={[styles.headingText4,styles.row10]}>Five Factors</Text>
-              <Text>Learn about the big five personality traits: <TouchableOpacity onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}><Text style={[styles.ctaColor,styles.boldText]}>https://en.wikipedia.org/wiki/Big_Five_personality_traits</Text></TouchableOpacity></Text>
+              <Text style={[styles.standardText]}>Learn about the big five personality traits: <Text onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")} style={[styles.ctaColor,styles.boldText,styles.standardText]}>https://en.wikipedia.org/wiki/Big_Five_personality_traits</Text></Text>
               <Text style={[styles.headingText6,styles.row10]}>Extraversion Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.extraversionScore / 16)*100).toString() + '%'}</Text></Text>
               <Text style={[styles.headingText6,styles.row10]}>Openness Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.opennessScore / 16)*100).toString() + '%'}</Text></Text>
               <Text style={[styles.headingText6,styles.row10]}>Conscientiousness Score: <Text style={[styles.ctaColor]}>{((this.state.resultsData[2].fiveFactors.conscientiousnessScore / 16)*100).toString() + '%'}</Text></Text>
@@ -448,7 +448,7 @@ class AssessmentDetails extends Component {
                 if (passedData.valueType === 'gravitate') {
                   rows.push(
                     <View key={"gravitateValues" + index} style={[styles.row5,styles.headingText6]}>
-                      <Text>{gravitateCounter}. {passedData.value}</Text>
+                      <Text style={[styles.standardText]}>{gravitateCounter}. {passedData.value}</Text>
                     </View>
                   )
                   gravitateCounter = gravitateCounter + 1
@@ -480,7 +480,7 @@ class AssessmentDetails extends Component {
                 if (passedData.valueType === 'employer') {
                   rows.push(
                     <View key={"employerValues" + index} style={[styles.row5,styles.headingText6]}>
-                      <Text>{employerCounter}. {passedData.value}</Text>
+                      <Text style={[styles.standardText]}>{employerCounter}. {passedData.value}</Text>
                     </View>
                   )
                   employerCounter = employerCounter + 1
@@ -594,7 +594,7 @@ class AssessmentDetails extends Component {
                 <Text style={styles.descriptionText2}>{this.state.assessmentQuestions[i]}</Text>
 
                 <View style={[styles.halfSpacer]} />
-                <Text>{answer}</Text>
+                <Text style={[styles.standardText]}>{answer}</Text>
                 <View style={[styles.spacer]} /><View style={[styles.spacer]} />
               </View>
             )}
@@ -708,7 +708,7 @@ class AssessmentDetails extends Component {
                       </View>
                       <View style={[styles.curtailText,styles.calcColumn200]}>
                         <View style={[styles.curtailText,styles.headingText5]}>
-                          <Text>{item.career.name}</Text>
+                          <Text style={[styles.standardText]}>{item.career.name}</Text>
                         </View>
                         <View>
                           <Text style={[styles.descriptionText1,styles.curtailText]}>{item.career.jobFamily}</Text>
@@ -764,7 +764,7 @@ class AssessmentDetails extends Component {
                         </View>
                         <View style={[styles.curtailText,styles.calcColumn200]}>
                           <View style={[styles.curtailText,styles.headingText5]}>
-                            <Text>{item.employer.name}</Text>
+                            <Text style={[styles.standardText]}>{item.employer.name}</Text>
                           </View>
                           <View>
                             <Text style={[styles.descriptionText1,styles.curtailText]}>{item.employer.url}</Text>
@@ -802,7 +802,7 @@ class AssessmentDetails extends Component {
                         </View>
                         <View style={[styles.curtailText,styles.calcColumn200]}>
                           <View style={[styles.curtailText,styles.headingText5]}>
-                            <Text>{item.employer.name}</Text>
+                            <Text style={[styles.standardText]}>{item.employer.name}</Text>
                           </View>
 
 
@@ -860,7 +860,7 @@ class AssessmentDetails extends Component {
                         </View>
                         <View style={[styles.curtailText,styles.calcColumn190]}>
                           <View style={[styles.curtailText,styles.headingText5]}>
-                            <Text>{item.work.title}</Text>
+                            <Text style={[styles.standardText]}>{item.work.title}</Text>
                           </View>
                           <View>
                             <Text style={[styles.descriptionText1,styles.curtailText]}>{item.work.employerName}</Text>
@@ -897,7 +897,7 @@ class AssessmentDetails extends Component {
                         </View>
                         <View style={[styles.curtailText,styles.calcColumn200]}>
                           <View style={[styles.curtailText,styles.headingText5]}>
-                            <Text>{item.work.title}</Text>
+                            <Text style={[styles.standardText]}>{item.work.title}</Text>
                           </View>
                           <View>
                             <Text style={[styles.descriptionText1,styles.curtailText]}>{item.work.employerName}</Text>
@@ -1065,21 +1065,21 @@ class AssessmentDetails extends Component {
                         <View style={(this.state.subIndex === 1) ? [styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.horizontalPadding20]}>
                           <TouchableOpacity onPress={() => this.setState({ subIndex: 1})} style={styles.flex1}>
                             <View style={[styles.flex1,styles.flexCenter]}>
-                              <Text>Careers</Text>
+                              <Text style={[styles.standardText]}>Careers</Text>
                             </View>
                           </TouchableOpacity>
                         </View>
                         <View style={(this.state.subIndex === 2) ? [styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.horizontalPadding20]}>
                           <TouchableOpacity onPress={() => this.setState({ subIndex: 2})}  style={styles.flex1}>
                             <View style={[styles.flex1,styles.flexCenter]}>
-                              <Text>Employers</Text>
+                              <Text style={[styles.standardText]}>Employers</Text>
                             </View>
                           </TouchableOpacity>
                         </View>
                         <View style={(this.state.subIndex === 3) ? [styles.horizontalPadding20,styles.ctaBackgroundColor] : [styles.horizontalPadding20]}>
                           <TouchableOpacity onPress={() => this.setState({ subIndex: 3})} style={styles.flex1}>
                             <View style={[styles.flex1,styles.flexCenter]}>
-                              <Text>Internships</Text>
+                              <Text style={[styles.standardText]}>Internships</Text>
                             </View>
                           </TouchableOpacity>
                         </View>

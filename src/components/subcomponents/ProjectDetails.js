@@ -197,7 +197,7 @@ class ProjectDetails extends Component {
             </View>
             <View style={[styles.calcColumn120]}>
               <Text style={[styles.headingText5]}>{this.props.selectedProject.name}</Text>
-              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedProjectUsername})}><Text style={[styles.ctaColor,styles.boldText,styles.topPadding5]}>{this.props.selectedProject.userFirstName} {this.props.selectedProject.userLastName}</Text></TouchableOpacity></Text>
+              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <Text onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedProjectUsername})} style={[styles.ctaColor,styles.boldText,styles.topPadding5,styles.descriptionText3]}>{this.props.selectedProject.userFirstName} {this.props.selectedProject.userLastName}</Text></Text>
             </View>
           </View>
 
@@ -323,7 +323,7 @@ class ProjectDetails extends Component {
 
           <View style={[styles.row10]}>
             <View>
-              <Text>{this.props.selectedProject.description}</Text>
+              <Text style={[styles.standardText]}>{this.props.selectedProject.description}</Text>
             </View>
 
             {(this.props.private && this.props.selectedProject.grades && this.props.selectedProject.grades.length > 0) && (

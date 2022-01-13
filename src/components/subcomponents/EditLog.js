@@ -5068,32 +5068,41 @@ class EditLog extends Component {
                         <View>
                           <View style={[styles.row10]}>
                             <View>
-                              <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
-                              <View>
-                                <DateTimePicker
-                                  testID="goalStartDate"
-                                  value={(this.state.goalStartDate) ? convertStringToDate(this.state.goalStartDate,'dateOnly') : new Date()}
-                                  mode={'date'}
-                                  is24Hour={true}
-                                  display="default"
-                                  onChange={(e, d) => this.formChangeHandler("goalStartDate",d)}
-                                />
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                                </View>
+                                <View style={[styles.width120,styles.topPadding5]}>
+                                  <DateTimePicker
+                                    testID="goalStartDate"
+                                    value={(this.state.goalStartDate) ? convertStringToDate(this.state.goalStartDate,'dateOnly') : new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(e, d) => this.formChangeHandler("goalStartDate",d)}
+                                  />
+                                </View>
                               </View>
                             </View>
                             <View>
                               <Text style={[styles.row10,styles.standardText]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>
-                              <View>
-                                <DateTimePicker
-                                  testID="goalDeadline"
-                                  value={(this.state.goalDeadline) ? convertStringToDate(this.state.goalDeadline,'dateOnly') : new Date()}
-                                  mode={'date'}
-                                  is24Hour={true}
-                                  display="default"
-                                  onChange={(e, d) => this.formChangeHandler("goalDeadline",d)}
-                                  minimumDate={new Date()}
-                                />
-                              </View>
 
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                                </View>
+                                <View style={[styles.width120,styles.topPadding5]}>
+                                  <DateTimePicker
+                                    testID="goalDeadline"
+                                    value={(this.state.goalDeadline) ? convertStringToDate(this.state.goalDeadline,'dateOnly') : new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(e, d) => this.formChangeHandler("goalDeadline",d)}
+                                    minimumDate={new Date()}
+                                  />
+                                </View>
+                              </View>
 
                             </View>
 

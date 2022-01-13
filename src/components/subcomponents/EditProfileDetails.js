@@ -3376,9 +3376,9 @@ class EditProfileDetails extends Component {
     if (type === 'projects') {
       let projects = this.state.projects
       if (this.state.dateOptions[this.state.dateOptions.length - 1]) {
-        projects.push({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
+        projects.unshift({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
       } else {
-        projects.push([])
+        projects.unshift([])
       }
 
       let isEditingProjectsArray = this.state.isEditingProjectsArray
@@ -3387,73 +3387,73 @@ class EditProfileDetails extends Component {
         isEditingProjectsArray[i - 1] = false
       }
 
-      isEditingProjectsArray.push(true)
+      isEditingProjectsArray.unshift(true)
 
       let projectHasChangedArray = this.state.projectHasChangedArray
-      projectHasChangedArray.push(false)
+      projectHasChangedArray.unshift(false)
 
       this.setState({ projects, isEditingProjectsArray, projectHasChangedArray })
 
     } else if (type === 'experience') {
       let experience = this.state.experience
       if (this.state.dateOptions[this.state.dateOptions.length - 1]) {
-        experience.push({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
+        experience.unshift({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
       } else {
-        experience.push([])
+        experience.unshift([])
       }
 
       let isEditingExperienceArray = this.state.isEditingExperienceArray
       for (let i = 1; i <= isEditingExperienceArray.length; i++) {
         isEditingExperienceArray[i - 1] = false
       }
-      isEditingExperienceArray.push(true)
+      isEditingExperienceArray.unshift(true)
 
       let experienceHasChangedArray = this.state.experienceHasChangedArray
-      experienceHasChangedArray.push(false)
+      experienceHasChangedArray.unshift(false)
 
       this.setState({ experience, isEditingExperienceArray, experienceHasChangedArray })
 
     } else if (type === 'extracurricular') {
       let extracurriculars = this.state.extracurriculars
       if (this.state.dateOptions[this.state.dateOptions.length - 1]) {
-        extracurriculars.push({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
+        extracurriculars.unshift({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
       } else {
-        extracurriculars.push([])
+        extracurriculars.unshift([])
       }
 
       let isEditingExtracurricularArray = this.state.isEditingExtracurricularArray
       for (let i = 1; i <= isEditingExtracurricularArray.length; i++) {
         isEditingExtracurricularArray[i - 1] = false
       }
-      isEditingExtracurricularArray.push(true)
+      isEditingExtracurricularArray.unshift(true)
 
       let extracurricularHasChangedArray = this.state.extracurricularHasChangedArray
-      extracurricularHasChangedArray.push(false)
+      extracurricularHasChangedArray.unshift(false)
 
       this.setState({ extracurriculars, isEditingExtracurricularArray, extracurricularHasChangedArray })
     } else if (type === 'award') {
       let awards = this.state.awards
       if (this.state.dateOptions[this.state.dateOptions.length - 1]) {
-        awards.push({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
+        awards.unshift({ startDate: this.state.dateOptions[this.state.dateOptions.length - 1].value, endDate: this.state.dateOptions[this.state.dateOptions.length - 1].value})
       } else {
-        awards.push([])
+        awards.unshift([])
       }
 
       let isEditingAwardArray = this.state.isEditingAwardArray
       for (let i = 1; i <= isEditingAwardArray.length; i++) {
         isEditingAwardArray[i - 1] = false
       }
-      isEditingAwardArray.push(true)
+      isEditingAwardArray.unshift(true)
 
       let awardHasChangedArray = this.state.awardHasChangedArray
-      awardHasChangedArray.push(false)
+      awardHasChangedArray.unshift(false)
 
       this.setState({ awards, isEditingAwardArray, awardHasChangedArray })
     } else if (type === 'education') {
 
       let education = this.state.education
       if (education) {
-        education.push({ name: '' })
+        education.unshift({ name: '' })
       } else {
         education = [{ name: '' }]
       }
@@ -6761,7 +6761,7 @@ class EditProfileDetails extends Component {
 
                       {(this.state.projects.length > 0 && this.state.publicProfile) && (
                         <View style={styles.row5}>
-                          <Text style={styles.descriptionText2}>Your portfolio: <TouchableOpacity onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>https://www.guidedcompass.com/{this.state.username}/projects</Text></TouchableOpacity></Text>
+                          <Text style={styles.descriptionText2}>Your portfolio: <Text onPress={() => Linking.openURL("https://www.guidedcompass.com/" + this.state.username + "/projects")} style={[styles.standardText,styles.ctaColor,styles.boldText]}>https://www.guidedcompass.com/{this.state.username}/projects</Text></Text>
                         </View>
                       )}
                     </View>

@@ -1535,7 +1535,7 @@ class OpportunityDetails extends Component {
     console.log('formChangeHandler called')
 
     this.setState({ selectedValue: eventValue })
-    
+
     if (eventName === 'selectProject') {
       let selectedProject = {}
       let projectOptions = this.state.projectOptions
@@ -2658,7 +2658,7 @@ class OpportunityDetails extends Component {
                                             {(this.props.fromAdvisor) ? (
                                               <Text style={[styles.standardText]}>After students apply for this position, they may request a referral from {this.state.selectedOpportunity.orgName} through their portal.</Text>
                                             ) : (
-                                              <Text style={[styles.standardText]}>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })}><Text style={[styles.standardText,styles.ctaColor]}>here.</Text></TouchableOpacity></Text>
+                                              <Text style={[styles.standardText]}>After you apply for this position, request a referral from {this.state.selectedOpportunity.orgName} <Text onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.standardText,styles.ctaColor]}>here.</Text></Text>
                                             )}
                                           </View>
                                         )}
@@ -2981,7 +2981,7 @@ class OpportunityDetails extends Component {
                         {(this.state.selectedOpportunity.employerName) && (
                           <View style={[styles.leftPadding5]}>
                             {(this.state.selectedOpportunity.employerURL && this.state.selectedOpportunity.employerURL.includes('http')) ? (
-                              <Text style={[styles.descriptionText1]}>@ <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)}><Text style={[styles.descriptionText1]}>{this.state.selectedOpportunity.employerName}</Text></TouchableOpacity></Text>
+                              <Text style={[styles.descriptionText1]}>@ <Text onPress={() => Linking.openURL(this.state.selectedOpportunity.employerURL)} style={[styles.descriptionText1]}>{this.state.selectedOpportunity.employerName}</Text></Text>
                             ) : (
                               <Text style={[styles.descriptionText1]}>@ {this.state.selectedOpportunity.employerName}</Text>
                             )}
@@ -3389,9 +3389,9 @@ class OpportunityDetails extends Component {
                               <View>
                                 <Text style={[styles.headingText4]}>Timeline</Text>
                                 <View style={[styles.row5]}>
-                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</Text>
-                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</Text>
-                                  <Text><Text style={[styles.descriptionText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</Text>
                                 </View>
                               </View>
 
@@ -3884,7 +3884,7 @@ class OpportunityDetails extends Component {
                                   <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                   {this.state.selectedOpportunity.links.map((value, index) =>
                                     <View key={index}>
-                                      <Text style={[styles.standardText]}><TouchableOpacity onPress={() => Linking.openURL(value.url)}><Text style={[styles.standardText]}>{value.name}</Text></TouchableOpacity></Text>
+                                      <Text style={[styles.standardText]}><Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text></Text>
                                       <View style={[styles.spacer]}/>
                                     </View>
                                   )}
