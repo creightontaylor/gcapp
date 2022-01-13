@@ -1021,9 +1021,9 @@ class EditProject extends Component {
           <View style={[styles.row10]}>
             <Text style={[styles.row10,styles.standardText]}>Are you still working on this project?</Text>
             <Switch
-              onChange={(change) => this.changeContinual(this.state.selectedIndex, change,'project')}
-              checked={this.state.selectedProject.isContinual}
-              id="normal-switch"
+              onValueChange={(change) => this.changeContinual(this.state.selectedIndex, change,'project')}
+              value={this.state.selectedProject.isContinual}
+              id="isContinual"
             />
           </View>
 
