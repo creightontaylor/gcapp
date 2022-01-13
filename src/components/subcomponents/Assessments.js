@@ -13,6 +13,8 @@ class Assessments extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      excludeValuesAssessment: true,
+      
       matchCriteria: 'Overall Match',
       sortDirection: 'Descending',
 
@@ -129,7 +131,7 @@ class Assessments extends Component {
         {title: 'Interest Assessment', status: 'Incomplete', questionCount: 6, required: true},
         {title: 'Personality Assessment', status: 'Incomplete', questionCount: 48, required: true},
       ]
-      if (!this.props.fromApply) {
+      if (!this.props.fromApply && !this.state.excludeValuesAssessment) {
         assessments.push({title: 'Values Assessment', status: 'Incomplete', questionCount: 4 })
       }
       if (!this.props.fromApply) {
@@ -204,7 +206,7 @@ class Assessments extends Component {
         }
       }
 
-      console.log('show valuesData: ', valuesData)
+      // console.log('show valuesData: ', valuesData)
 
       this.setState({
         isInterestsData, isSkillsData, isPersonalityData, isValuesData,
@@ -216,7 +218,7 @@ class Assessments extends Component {
         {title: 'Interest Assessment', status: interestsStatus, questionCount: 6},
         {title: 'Personality Assessment', status: personalityStatus, questionCount: 48},
       ]
-      if (!this.props.fromApply) {
+      if (!this.props.fromApply && !this.state.excludeValuesAssessment) {
         assessments.push({title: 'Values Assessment', status: valuesStatus, questionCount: 4 })
       }
       if (!this.props.fromApply) {

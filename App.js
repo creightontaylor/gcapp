@@ -57,7 +57,9 @@ import OrgDetails from './src/components/OrgDetails';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 Icon.loadFont()
+
 const orgLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"
+const chatbubblesIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/chatbubbles-icon.png"
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -155,7 +157,7 @@ export default class App extends Component<Props> {
     //         headerLeft: () => (
     //           <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
     //             <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-    //               <Icon name="person" size={25} color='black' />
+    //               <Icon name="person" size={25} color='#5A5A5A' />
     //             </View>
     //           </TouchableOpacity>
     //         ),
@@ -248,12 +250,13 @@ export default class App extends Component<Props> {
                 <View style={{ flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
                     <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="notifications" size={25} color='black' />
+                      <Icon name="notifications" size={25} color='#5A5A5A' />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
                     <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="chatbubbles" size={25} color='black' />
+                      <Icon name="chatbubbles" size={25} color='#5A5A5A' />
+                      <Image source={{ uri: chatbubblesIcon }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -262,12 +265,12 @@ export default class App extends Component<Props> {
                 <View style={{ flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="search" size={25} color='black' />
+                      <Icon name="search" size={25} color='#5A5A5A' />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="add-circle-outline" size={25} color='black' />
+                      <Icon name="add-circle-outline" size={25} color='#5A5A5A' />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -300,7 +303,7 @@ export default class App extends Component<Props> {
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="settings" size={25} color='black' />
+                    <Icon name="settings" size={25} color='#5A5A5A' />
                   </View>
                 </TouchableOpacity>
               ),

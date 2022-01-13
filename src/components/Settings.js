@@ -5,7 +5,6 @@ import Modal from 'react-native-modal';
 const styles = require('./css/style');
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
 
-
 import SwitchOrgs from './common/SwitchOrgs';
 // import {signOut} from '../services/AuthRoutes';
 

@@ -5,6 +5,35 @@ import Axios from 'axios';
 import Modal from 'react-native-modal';
 // import DraggableFlatList from 'react-native-draggable-flatlist'
 import {Picker} from '@react-native-picker/picker';
+// import DraggableFlatList, {
+//   ScaleDecorator,
+// } from "react-native-draggable-flatlist";
+
+// const NUM_ITEMS = 10;
+// function getColor(i: number) {
+//   const multiplier = 255 / (NUM_ITEMS - 1);
+//   const colorVal = i * multiplier;
+//   return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
+// }
+//
+// type Item = {
+//   key: string;
+//   label: string;
+//   height: number;
+//   width: number;
+//   backgroundColor: string;
+// };
+//
+// const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
+//   const backgroundColor = getColor(index);
+//   return {
+//     key: `item-${index}`,
+//     label: String(index) + "",
+//     height: 100,
+//     width: 60 + Math.random() * 40,
+//     backgroundColor,
+//   };
+// });
 
 const dragIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/drag-icon.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
@@ -1786,6 +1815,7 @@ class TakeAssessment extends Component {
 
         rows.push(
           <View>
+
             {/*
             <DragDropContext onDragEnd={this.onDragEnd}>
               <Droppable droppableId={droppableId}>
@@ -2169,14 +2199,10 @@ class TakeAssessment extends Component {
                     {(index === 1) ? (
                       <View>
                         <Text style={[styles.capitalizeText]}>(according to who you gravitate towards)</Text>
-
-                        <Text style={[styles.descriptionText2,styles.errorColor,styles.row10]}>[Drag and drop may not work effectively on some mobile and modal views. Adjust on web, non-modal view (i.e., from profile) if you face this issue.]</Text>
                       </View>
                     ) : (
                       <View>
                         <Text style={[styles.capitalizeText]}>(according to who you value in employers)</Text>
-
-                        <Text style={[styles.descriptionText2,styles.errorColor,styles.row10]}>[Drag and drop may not work effectively on some mobile and modal views. Adjust on web, non-modal view (i.e., from profile) if you face this issue.]</Text>
                       </View>
                     )}
 

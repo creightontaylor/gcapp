@@ -6,6 +6,8 @@ import NewsFeed from './subcomponents/NewsFeed';
 //import { configurePushNotifications } from '../services/PushNotifications';
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
 
+import RefreshNotifications from './common/RefreshNotifications';
+
 class Home extends Component {
   constructor(props) {
     super(props)
@@ -67,6 +69,7 @@ class Home extends Component {
     // console.log('show style: ', Style.styles)
     return (
       <ScrollView>
+        <RefreshNotifications navigation={this.props.navigation} fromHome={true} />
         <NewsFeed navigation={this.props.navigation} />
       </ScrollView>
     );

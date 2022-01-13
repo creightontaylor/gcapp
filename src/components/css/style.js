@@ -134,6 +134,10 @@ module.exports = StyleSheet.create({
     height: 23,
     width: 23
   },
+  square24: {
+    height: 24,
+    width: 24
+  },
   square25: {
     height: 25,
     width: 25
@@ -305,6 +309,9 @@ module.exports = StyleSheet.create({
   topMargin: {
     marginTop: 10
   },
+  topMargin12: {
+    marginTop: 12
+  },
   topMargin15: {
     marginTop: 15
   },
@@ -353,6 +360,9 @@ module.exports = StyleSheet.create({
   topMarginNegative36: {
     marginTop: -36
   },
+  rightMarginNegative28: {
+    marginRight: -28
+  },
   rightMarginNegative12: {
     marginRight: -12
   },
@@ -382,6 +392,9 @@ module.exports = StyleSheet.create({
   },
   leftMargin12: {
     marginLeft: 12
+  },
+  leftMargin15: {
+    marginLeft: 15
   },
   leftMargin18: {
     marginLeft: 18
