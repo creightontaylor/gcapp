@@ -755,7 +755,7 @@ class GroupDetails extends Component {
     this.setState({ modalIsOpen: false, showDescription: false, showMembers: false, showShareButtons: false,
       showInvite: false, showPost: false, sharePosting: false,
       showAddMeeting: false, showEditGroup: false, showGoalDetails: false, showHelpOutWidget: false,
-      groupToEdit: false, showAllMeetings: false, showViewMeeting: false
+      groupToEdit: false, showAllMeetings: false, showViewMeeting: false, showPicker: false
     })
   }
 
@@ -968,7 +968,6 @@ class GroupDetails extends Component {
 
   renderMeetings(all) {
     console.log('renderMeetings called', all)
-
 
     return (
       <View>

@@ -841,7 +841,6 @@ class LogInForm extends Component {
       AsyncStorage.setItem('workMode', 'false')
     }
 
-
     if (responseData.user.isAdvisor) {
       AsyncStorage.setItem('isAdvisor', 'true')
     } else {

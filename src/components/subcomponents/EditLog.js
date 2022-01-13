@@ -14,11 +14,13 @@ const experienceIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 const skillsIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon.png'
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import SubPeopleMatching from '../subcomponents/PeopleMatching';
 import SubCourses from '../subcomponents/Courses';
 import SubCareers from '../subcomponents/Careers';
 import SubOpportunities from '../subcomponents/Opportunities';
+import SubPicker from '../common/SubPicker';
 
 import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
@@ -148,6 +150,10 @@ class EditLog extends Component {
       comparisonTypeOptions: ['','Careers','Competencies','Projects','Jobs'],
       repeatOptions: ['Never','Every Day','Every Week','Every 2 Weeks','Every Month','Every Year'],
       reminderOptions: ['None','At time of event','5 minutes before','10 minutes before','15 minutes before','30 minutes before','1 hour before','2 hous before','1 day before','2 days before','1 week before'],
+      goalStatusOptions: [],
+      methodOptions: [],
+      sessionMethodOptions: [],
+      categoryOptions: [],
 
       repeat: 'Never',
       reminder: 'None',
@@ -350,15 +356,18 @@ class EditLog extends Component {
 
         const intensityOptions =  ['','Aggressive (> 40 hrs / week)','Moderately Aggressive (20 - 40 hrs / week)','Moderate (10 - 20 hrs / week)','Moderately Passive (4 - 10 hrs / week)','Passive (1 - 4 hrs / week)']
 
-        // const goalStartDate = convertDateToString(new Date(),"rawDateForInput")
-        // console.log('show goalStartDate: ', goalStartDate)
+        const goalStatusOptions = ["","Have Not Begun","Partially Complete","Complete"]
+        const methodOptions = ["","In Person","Remote"]
+        const sessionMethodOptions = ["","In Person","Video Call","Phone Call","Text Message / Chat","Email"]
+        const categoryOptions = ["","General","Career Exploration","Goal Specification","Achievement Strategy","Resume Review","Mock Interview","Other"]
 
         this.setState({
             emailId: email, cuFirstName, cuLastName, username, roleName, remoteAuth, modalIsOpen, selectedGroup,
             sessionDate: formattedToday, activeOrg, logType, logTypeOptions,
             applicationOptions, payTypeOptions, equityPercentageOptions, valuationOptions,
             editExisting, log, logs, recipients: tempRecipients, pathNameVariable,
-            goalTypeOptions, entrepreneurshipGoalOptions, intensityOptions, skillPreferenceOptions
+            goalTypeOptions, entrepreneurshipGoalOptions, intensityOptions, skillPreferenceOptions,
+            goalStatusOptions,methodOptions,sessionMethodOptions,categoryOptions
         });
 
         Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: email } })
@@ -901,6 +910,8 @@ class EditLog extends Component {
 
   formChangeHandler(eventName, eventValue) {
     console.log('formChangeHandler clicked');
+
+    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'associatedApplication') {
 
@@ -3414,7 +3425,7 @@ class EditLog extends Component {
   closeModal() {
     console.log('closeModal called in SubEditLog')
 
-    this.setState({ modalIsOpen: false, showSmartDefinition: false })
+    this.setState({ modalIsOpen: false, showSmartDefinition: false, showPicker: false })
     if (this.props.closeModal) {
       this.props.closeModal()
     }
@@ -3459,13 +3470,26 @@ class EditLog extends Component {
                 {(!this.state.editExisting && !this.props.fromGoals  && !this.props.fromGroups) && (
                   <View style={[styles.row10]}>
                     <Text style={[styles.row10]}>Log Type<Text style={[styles.errorColor]}>*</Text></Text>
-                    <Picker
-                      selectedValue={this.state.logType}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("logType",itemValue)
-                      }>
-                      {this.state.logTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    {(Platform.OS === 'ios') ? (
+                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Log Type', selectedIndex: null, selectedName: "logType", selectedValue: this.state.logType, selectedOptions: this.state.logTypeOptions, selectedSubKey: null })}>
+                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                          <View style={[styles.calcColumn115]}>
+                            <Text style={[styles.descriptionText1]}>{this.state.logType}</Text>
+                          </View>
+                          <View style={[styles.width20,styles.topMargin5]}>
+                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                          </View>
+                        </View>
+                      </TouchableOpacity>
+                    ) : (
+                      <Picker
+                        selectedValue={this.state.logType}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("logType",itemValue)
+                        }>
+                        {this.state.logTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    )}
 
                     {(!this.props.fromWalkthrough) && (
                       <View style={[styles.row10]}>
@@ -3543,16 +3567,28 @@ class EditLog extends Component {
                     <View style={[styles.row10]}>
                       <View>
                         <Text style={[styles.row10]}>Select a Goal Type<Text style={[styles.errorColor]}>*</Text></Text>
-                        <Picker
-                          selectedValue={this.state.goalType.description}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("goalType",itemValue)
-                          }>
-                          {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
-                        </Picker>
+                        {(Platform.OS === 'ios') ? (
+                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Goal Type', selectedIndex: null, selectedName: "goalType", selectedValue: this.state.goalType.description, selectedOptions: this.state.goalTypeOptions, selectedSubKey: 'description' })}>
+                            <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                              <View style={[styles.calcColumn115]}>
+                                <Text style={[styles.descriptionText1]}>{this.state.goalType.description}</Text>
+                              </View>
+                              <View style={[styles.width20,styles.topMargin5]}>
+                                <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        ) : (
+                          <Picker
+                            selectedValue={this.state.goalType.description}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("goalType",itemValue)
+                            }>
+                            {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
+                          </Picker>
+                        )}
+
                       </View>
-
-
 
                       {(this.state.goalType.name === 'Alternatives') ? (
                         <View>
@@ -3560,13 +3596,28 @@ class EditLog extends Component {
                           <View style={[styles.topPadding20]}>
                             <View>
                               <Text style={[styles.row10]}>What type of comparison?</Text>
-                              <Picker
-                                selectedValue={this.state.comparisonType}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("comparisonType",itemValue)
-                                }>
-                                {this.state.comparisonTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Comparison Type', selectedIndex: null, selectedName: "comparisonType", selectedValue: this.state.comparisonType, selectedOptions: this.state.comparisonTypeOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.comparisonType}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.comparisonType}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("comparisonType",itemValue)
+                                  }>
+                                  {this.state.comparisonTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
+
                             </View>
                             <View>
                               <View>
@@ -3846,13 +3897,28 @@ class EditLog extends Component {
                                 {(this.state.comparisonType === 'Projects') && (
                                   <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Select one of your projects</Text>
-                                    <Picker
-                                      selectedValue={(this.state.aItem) && this.state.aItem.name}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("aItemProject",itemValue)
-                                      }>
-                                      {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                    </Picker>
+
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Project A Name', selectedIndex: null, selectedName: "aItemProject", selectedValue: (this.state.aItem) ? this.state.aItem.name : null, selectedOptions: this.state.projectOptions, selectedSubKey: 'name' })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{(this.state.aItem) && this.state.aItem.name}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <Picker
+                                        selectedValue={(this.state.aItem) && this.state.aItem.name}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("aItemProject",itemValue)
+                                        }>
+                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                      </Picker>
+                                    )}
+
                                     <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                                   </View>
@@ -4192,13 +4258,27 @@ class EditLog extends Component {
                                 {(this.state.comparisonType === 'Projects') && (
                                   <View style={[styles.row10]}>
                                     <Text style={[styles.row10]}>Select one of your projects</Text>
-                                    <Picker
-                                      selectedValue={(this.state.bItem) && this.state.bItem.name}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("bItemProject",itemValue)
-                                      }>
-                                      {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                    </Picker>
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Project B Name', selectedIndex: null, selectedName: "bItemProject", selectedValue: (this.state.bItem) ? this.state.bItem.name : null, selectedOptions: this.state.projectOptions, selectedSubKey: 'name' })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{(this.state.bItem) && this.state.bItem.name}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <Picker
+                                        selectedValue={(this.state.bItem) && this.state.bItem.name}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("bItemProject",itemValue)
+                                        }>
+                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                      </Picker>
+                                    )}
+
                                     <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                                   </View>
@@ -4210,7 +4290,7 @@ class EditLog extends Component {
                                   <View style={[styles.rowDirection]}>
                                     <View style={[styles.standardBorder,styles.lightBackground,styles.width22,styles.centerText,styles.height40]}>
                                       <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles,flex1,styles.centerText]}>$</Text>
+                                      <Text style={[styles.headingText4,styles.ctaColor,styles.boldText,styles.flex1,styles.centerText]}>$</Text>
                                     </View>
                                     <View style={[styles.width85]}>
                                       <TextInput
@@ -4298,13 +4378,28 @@ class EditLog extends Component {
                           <View style={[styles.row10]}>
                             <View>
                               <Text style={[styles.row10]}>Degree Type</Text>
-                              <Picker
-                                selectedValue={this.state.degreeType}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("degreeType",itemValue)
-                                }>
-                                {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Degree Type', selectedIndex: null, selectedName: "degreeType", selectedValue: this.state.degreeType, selectedOptions: this.state.degreeOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.degreeType}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.degreeType}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("degreeType",itemValue)
+                                  }>
+                                  {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
+
                             </View>
 
                           </View>
@@ -4375,13 +4470,27 @@ class EditLog extends Component {
                           <View style={[styles.row10]}>
                             <View>
                               <Text style={[styles.row10]}>Problem Type</Text>
-                              <Picker
-                                selectedValue={this.state.societalProblem}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("societalProblem",itemValue)
-                                }>
-                                {this.state.societalProblemOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Societal Problem', selectedIndex: null, selectedName: "societalProblem", selectedValue: this.state.societalProblem, selectedOptions: this.state.societalProblemOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.societalProblem}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.societalProblem}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("societalProblem",itemValue)
+                                  }>
+                                  {this.state.societalProblemOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
+
                             </View>
                           </View>
                         </View>
@@ -4548,13 +4657,27 @@ class EditLog extends Component {
 
                               <View style={[styles.rowDirection]}>
                                 <View style={[styles.calcColumn130]}>
-                                  <Picker
-                                    selectedValue={this.state.selectedFunction}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("selectedFunction",itemValue)
-                                    }>
-                                    {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Job Function', selectedIndex: null, selectedName: "selectedFunction", selectedValue: this.state.selectedFunction, selectedOptions: this.state.functionOptions, selectedSubKey: null })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn180]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.selectedFunction}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.selectedFunction}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("selectedFunction",itemValue)
+                                      }>
+                                      {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  )}
+
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
                                   <TouchableOpacity style={(!this.state.selectedFunction || this.state.selectedFunction === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedFunction || this.state.selectedFunction === '') ? true : false} onPress={() => this.addItem('function')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -4571,13 +4694,27 @@ class EditLog extends Component {
 
                               <View style={[styles.rowDirection]}>
                                 <View style={[styles.calcColumn130]}>
-                                  <Picker
-                                    selectedValue={this.state.selectedIndustry}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("selectedIndustry",itemValue)
-                                    }>
-                                    {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: null, selectedName: "selectedIndustry", selectedValue: this.state.selectedIndustry, selectedOptions: this.state.industryOptions, selectedSubKey: null })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn180]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.selectedIndustry}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.selectedIndustry}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("selectedIndustry",itemValue)
+                                      }>
+                                      {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  )}
+
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
                                   <TouchableOpacity style={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedIndustry || this.state.selectedIndustry === '') ? true : false} onPress={() => this.addItem('industry')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -4598,13 +4735,27 @@ class EditLog extends Component {
 
                               <View style={[styles.rowDirection]}>
                                 <View style={[styles.calcColumn130]}>
-                                  <Picker
-                                    selectedValue={this.state.selectedHoursPerWeek}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("selectedHoursPerWeek",itemValue)
-                                    }>
-                                    {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Hours Per Week', selectedIndex: null, selectedName: "selectedHoursPerWeek", selectedValue: this.state.selectedHoursPerWeek, selectedOptions: this.state.hoursPerWeekOptions, selectedSubKey: null })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn180]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.selectedHoursPerWeek}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.selectedHoursPerWeek}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("selectedHoursPerWeek",itemValue)
+                                      }>
+                                      {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  )}
+
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
                                   <TouchableOpacity style={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedHoursPerWeek || this.state.selectedHoursPerWeek === '') ? true : false} onPress={() => this.addItem('hoursPerWeek')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -4621,13 +4772,26 @@ class EditLog extends Component {
 
                               <View style={[styles.rowDirection]}>
                                 <View style={[styles.calcColumn130]}>
-                                  <Picker
-                                    selectedValue={this.state.selectedPayRange}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("selectedPayRange",itemValue)
-                                    }>
-                                    {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pay Range', selectedIndex: null, selectedName: "selectedPayRange", selectedValue: this.state.selectedPayRange, selectedOptions: this.state.annualPayOptions, selectedSubKey: null })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn180]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.selectedPayRange}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.selectedPayRange}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("selectedPayRange",itemValue)
+                                      }>
+                                      {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  )}
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
                                   <TouchableOpacity style={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedPayRange || this.state.selectedPayRange === '') ? true : false} onPress={() => this.addItem('payRange')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -4646,13 +4810,27 @@ class EditLog extends Component {
 
                             <View style={[styles.rowDirection]}>
                               <View style={[styles.calcColumn130]}>
-                                <Picker
-                                  selectedValue={this.state.selectedOptimize}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("selectedOptimize",itemValue)
-                                  }>
-                                  {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Optimize', selectedIndex: null, selectedName: "selectedOptimize", selectedValue: this.state.selectedOptimize, selectedOptions: this.state.optimizeOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn180]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.selectedOptimize}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.selectedOptimize}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("selectedOptimize",itemValue)
+                                    }>
+                                    {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
+
                               </View>
                               <View style={[styles.width70,styles.leftPadding]}>
                                 <TouchableOpacity style={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.selectedOptimize || this.state.selectedOptimize === '') ? true : false} onPress={() => this.addItem('optimize')}><Text style={[styles.whiteColor]}>Add</Text></TouchableOpacity>
@@ -4672,25 +4850,50 @@ class EditLog extends Component {
                           <View style={[styles.row10]}>
                             <View>
                               <Text style={[styles.row10]}>What stage is your business in?<Text style={[styles.errorColor]}>*</Text></Text>
-                              <Picker
-                                selectedValue={this.state.entrepreneurshipStage}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("entrepreneurshipStage",itemValue)
-                                }>
-                                {this.state.entrepreneurshipStageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Entrepreneurship Stage', selectedIndex: null, selectedName: "entrepreneurshipStage", selectedValue: this.state.entrepreneurshipStage, selectedOptions: this.state.entrepreneurshipStageOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.entrepreneurshipStage}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.entrepreneurshipStage}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("entrepreneurshipStage",itemValue)
+                                  }>
+                                  {this.state.entrepreneurshipStageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
                             </View>
 
                             <View>
                               <Text style={[styles.row10]}>Is this organization for profit or nonprofit?</Text>
-                              <Picker
-                                selectedValue={this.state.entrepreneurshipType}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("entrepreneurshipType",itemValue)
-                                }>
-                                {['','For-Profit','Non-Profit'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Entrepreneurship Type', selectedIndex: null, selectedName: "entrepreneurshipType", selectedValue: this.state.entrepreneurshipType, selectedOptions: ['','For-Profit','Non-Profit'], selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.entrepreneurshipType}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.entrepreneurshipType}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("entrepreneurshipType",itemValue)
+                                  }>
+                                  {['','For-Profit','Non-Profit'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
 
                             </View>
 
@@ -4699,25 +4902,52 @@ class EditLog extends Component {
                           <View style={[styles.row10,]}>
                             <View>
                               <Text style={[styles.row10]}>Add your business as a project (Optional)</Text>
-                              <Picker
-                                selectedValue={this.state.entrepreneurshipProject}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("entrepreneurshipProject",itemValue)
-                                }>
-                                {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                              </Picker>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Entrepreneurship Project', selectedIndex: null, selectedName: "entrepreneurshipProject", selectedValue: this.state.entrepreneurshipProject, selectedOptions: this.state.projectOptions, selectedSubKey: 'name' })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.entrepreneurshipProject}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.entrepreneurshipProject}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("entrepreneurshipProject",itemValue)
+                                  }>
+                                  {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                </Picker>
+                              )}
+
                               <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})}><Text style={[styles.standardText]}>here</Text></TouchableOpacity></Text>
 
                             </View>
                             <View>
                               <Text style={[styles.row10]}>What area do you need help with?</Text>
-                              <Picker
-                                selectedValue={this.state.entrepreneurshipGoal}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("entrepreneurshipGoal",itemValue)
-                                }>
-                                {this.state.entrepreneurshipGoalOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Entrepreneurship Goal', selectedIndex: null, selectedName: "entrepreneurshipGoal", selectedValue: this.state.entrepreneurshipGoal, selectedOptions: this.state.entrepreneurshipGoalOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.entrepreneurshipGoal}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.entrepreneurshipGoal}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("entrepreneurshipGoal",itemValue)
+                                  }>
+                                  {this.state.entrepreneurshipGoalOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              )}
 
                             </View>
 
@@ -4750,13 +4980,27 @@ class EditLog extends Component {
                             {(this.state.goalType.name === 'Learn New Skills') && (
                               <View>
                                 <Text style={[styles.row10]}>Competencies to Prioritize</Text>
-                                <Picker
-                                  selectedValue={this.state.skillPreference}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("skillPreference",itemValue)
-                                  }>
-                                  {this.state.skillPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Skill Preference', selectedIndex: null, selectedName: "skillPreference", selectedValue: this.state.skillPreference, selectedOptions: this.state.skillPreferenceOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn180]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.skillPreference}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.skillPreference}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("skillPreference",itemValue)
+                                    }>
+                                    {this.state.skillPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
+
                               </View>
                             )}
 
@@ -4857,13 +5101,26 @@ class EditLog extends Component {
                               <View>
                                 <Text style={[styles.row10]}>Intensity</Text>
 
-                                <Picker
-                                  selectedValue={this.state.intensity}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("intensity",itemValue)
-                                  }>
-                                  {this.state.intensityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Intensity', selectedIndex: null, selectedName: "intensity", selectedValue: this.state.intensity, selectedOptions: this.state.intensityOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn120]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.intensity}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.intensity}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("intensity",itemValue)
+                                    }>
+                                    {this.state.intensityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
 
                               </View>
 
@@ -4921,30 +5178,56 @@ class EditLog extends Component {
                                   <Text style={[styles.descriptionText2,styles.errorColor,styles.bottomPadding5]}>Participants of the poll will automatically be notified of your decision at the deadline</Text>
                                 )}
                               </View>
-                              <Picker
-                                selectedValue={this.state.goalDecision}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("goalDecision",itemValue)
-                                }>
-                                <Picker.Item label={""} value={""} />
-                                <Picker.Item label={"Option A: " + this.state.aName} value={"Option A: " + this.state.aName} />
-                                <Picker.Item label={"Option B: " + this.state.bName} value={"Option B: " + this.state.bName} />
-                              </Picker>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Goal Decision', selectedIndex: null, selectedName: "goalDecision", selectedValue: this.state.goalDecision, selectedOptions: ["","Option A: " + this.state.aName,"Option B: " + this.state.bName], selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn180]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.goalDecision}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <Picker
+                                  selectedValue={this.state.goalDecision}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("goalDecision",itemValue)
+                                  }>
+                                  <Picker.Item label={""} value={""} />
+                                  <Picker.Item label={"Option A: " + this.state.aName} value={"Option A: " + this.state.aName} />
+                                  <Picker.Item label={"Option B: " + this.state.bName} value={"Option B: " + this.state.bName} />
+                                </Picker>
+                              )}
+
                             </View>
                           </View>
                         ) : (
                           <View>
                             <Text style={[styles.row10]}>Status</Text>
-                            <Picker
-                              selectedValue={this.state.goalStatus}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("goalStatus",itemValue)
-                              }>
-                              <Picker.Item label={""} value={""} />
-                              <Picker.Item label={"Have Not Begun"} value={"Have Not Begun"} />
-                              <Picker.Item label={"Partially Complete"} value={"Partially Complete"} />
-                              <Picker.Item label={"Complete"} value={"Complete"} />
-                            </Picker>
+
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Goal Status', selectedIndex: null, selectedName: "goalStatus", selectedValue: this.state.goalStatus, selectedOptions: this.state.goalStatusOptions, selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn120]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.goalStatus}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <Picker
+                                selectedValue={this.state.goalStatus}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("goalStatus",itemValue)
+                                }>
+                                  {this.state.goalStatusOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            )}
                           </View>
                         )}
                       </View>
@@ -5118,15 +5401,27 @@ class EditLog extends Component {
                   <View style={[styles.row10]}>
                     <View>
                       <Text style={[styles.row10]}>Meeting Method<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.method}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("method",itemValue)
-                        }>
-                        <Picker.Item label={""} value={""} />
-                        <Picker.Item label={"In Person"} value={"In Person"} />
-                        <Picker.Item label={"Remote"} value={"Remote"} />
-                      </Picker>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "method", selectedValue: this.state.method, selectedOptions: this.state.methodOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.method}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.method}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("method",itemValue)
+                          }>
+                          {this.state.methodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
                     <View>
                       <Text style={[styles.row10]}>{(this.state.method === "In Person") ? "Location" : "Meeting Link"}<Text style={[styles.errorColor]}>*</Text></Text>
@@ -5150,13 +5445,28 @@ class EditLog extends Component {
                   <View style={[styles.row10]}>
                     <View>
                       <Text style={[styles.row10]}>Repeats</Text>
-                      <Picker
-                        selectedValue={this.state.repeats}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("repeats",itemValue)
-                        }>
-                        {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "repeats", selectedValue: this.state.repeats, selectedOptions: this.state.repeatOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.repeats}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.repeats}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("repeats",itemValue)
+                          }>
+                          {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
                   </View>
@@ -5503,18 +5813,27 @@ class EditLog extends Component {
                     <View>
                       <Text style={[styles.row10]}>Meeting Method<Text style={[styles.errorColor]}>*</Text></Text>
 
-                      <Picker
-                        selectedValue={this.state.sessionMethod}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("sessionMethod",itemValue)
-                        }>
-                        <Picker.Item label={""} value={""} />
-                        <Picker.Item label={"In Person"} value={"In Person"} />
-                        <Picker.Item label={"Video Call"} value={"Video Call"} />
-                        <Picker.Item label={"Phone Call"} value={"Phone Call"} />
-                        <Picker.Item label={"Text Message / Chat"} value={"Text Message / Chat"} />
-                        <Picker.Item label={"Email"} value={"Email"} />
-                      </Picker>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "sessionMethod", selectedValue: this.state.sessionMethod, selectedOptions: this.state.sessionMethodOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.sessionMethod}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.sessionMethod}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("sessionMethod",itemValue)
+                          }>
+                          {this.state.sessionMethodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
 
@@ -5522,20 +5841,28 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>What category does this fall into?<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.category}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("category",itemValue)
-                        }>
-                        <Picker.Item label={""} value={""} />
-                        <Picker.Item label={"General"} value={"General"} />
-                        <Picker.Item label={"Career Exploration"} value={"Career Exploration"} />
-                        <Picker.Item label={"Goal Specification"} value={"Goal Specification"} />
-                        <Picker.Item label={"Achievement Strategy"} value={"Achievement Strategy"} />
-                        <Picker.Item label={"Resume Review"} value={"Resume Review"} />
-                        <Picker.Item label={"Mock Interview"} value={"Mock Interview"} />
-                        <Picker.Item label={"Other"} value={"Other"} />
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Category', selectedIndex: null, selectedName: "category", selectedValue: this.state.category, selectedOptions: this.state.categoryOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.category}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.category}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("category",itemValue)
+                          }>
+                          {this.state.categoryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                   </View>
 
                   <View style={[styles.row10]}>
@@ -5580,35 +5907,79 @@ class EditLog extends Component {
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Employer Type<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.employerType}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("employerType",itemValue)
-                    }>
-                    {this.state.employerTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Employer Type', selectedIndex: null, selectedName: "employerType", selectedValue: this.state.employerType, selectedOptions: this.state.employerTypeOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.employerType}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.employerType}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("employerType",itemValue)
+                      }>
+                      {this.state.employerTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Employer Industry<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.industry}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("industry",itemValue)
-                    }>
-                    {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: null, selectedName: "industry", selectedValue: this.state.industry, selectedOptions: this.state.industryOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.industry}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.industry}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("industry",itemValue)
+                      }>
+                      {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Employer Size<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.employeeCount}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("employeeCount",itemValue)
-                    }>
-                    {this.state.employeeCountOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Employee Count', selectedIndex: null, selectedName: "employeeCount", selectedValue: this.state.employeeCount, selectedOptions: this.state.employeeCountOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.employeeCount}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.employeeCount}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("employeeCount",itemValue)
+                      }>
+                      {this.state.employeeCountOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
@@ -5635,35 +6006,77 @@ class EditLog extends Component {
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Position Function<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.jobFunction}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("jobFunction",itemValue)
-                    }>
-                    {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Function', selectedIndex: null, selectedName: "jobFunction", selectedValue: this.state.jobFunction, selectedOptions: this.state.functionOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.jobFunction}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.jobFunction}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("jobFunction",itemValue)
+                      }>
+                      {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Work Type<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.workType}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("workType",itemValue)
-                    }>
-                    {this.state.workTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Type', selectedIndex: null, selectedName: "workType", selectedValue: this.state.workType, selectedOptions: this.state.workTypeOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.workType}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.workType}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("workType",itemValue)
+                      }>
+                      {this.state.workTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Timeframe<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.timeframe}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("timeframe",itemValue)
-                    }>
-                    {this.state.timeframeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Time Frame', selectedIndex: null, selectedName: "timeframe", selectedValue: this.state.timeframe, selectedOptions: this.state.timeframeOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.timeframe}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.timeframe}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("timeframe",itemValue)
+                      }>
+                      {this.state.timeframeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 <View style={[styles.row10]}>
@@ -5680,13 +6093,26 @@ class EditLog extends Component {
 
                 <Text style={[styles.row10]}>Mentor Reviewed Materials?<Text style={[styles.errorColor]}>*</Text></Text>
 
-                <Picker
-                  selectedValue={this.state.reviewedMaterials}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("reviewedMaterials",itemValue)
-                  }>
-                  {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                </Picker>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Reviewed Materials', selectedIndex: null, selectedName: "reviewedMaterials", selectedValue: this.state.reviewedMaterials, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn180]}>
+                        <Text style={[styles.descriptionText1]}>{this.state.reviewedMaterials}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <Picker
+                    selectedValue={this.state.reviewedMaterials}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("reviewedMaterials",itemValue)
+                    }>
+                    {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                  </Picker>
+                )}
 
               </View>
             )}
@@ -5695,13 +6121,28 @@ class EditLog extends Component {
               <View>
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Associated External Work Application<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.associatedApplication.name}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("associatedApplication",itemValue)
-                    }>
-                    {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Associated Application', selectedIndex: null, selectedName: "associatedApplication", selectedValue: this.state.associatedApplication.name, selectedOptions: this.state.applicationOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.associatedApplication.name}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.associatedApplication.name}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("associatedApplication",itemValue)
+                      }>
+                      {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 {(this.state.associatedApplication.name !== 'Attach a Saved Application') && (
@@ -5721,24 +6162,53 @@ class EditLog extends Component {
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Interview Round<Text style={[styles.errorColor]}>*</Text></Text>
 
-                      <Picker
-                        selectedValue={this.state.interviewRound}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("interviewRound",itemValue)
-                        }>
-                        {this.state.interviewRoundOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Interview Round', selectedIndex: null, selectedName: "interviewRound", selectedValue: this.state.interviewRound, selectedOptions: this.state.interviewRoundOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.interviewRound}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.interviewRound}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("interviewRound",itemValue)
+                          }>
+                          {this.state.interviewRoundOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>{(Number(this.state.numberOfInterviews) === 1) ? 'Interview Length' : 'Interview Length'}<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.interviewLength}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("interviewLength",itemValue)
-                        }>
-                        {this.state.interviewLengthOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Interview Length', selectedIndex: null, selectedName: "interviewLength", selectedValue: this.state.interviewLength, selectedOptions: this.state.interviewLengthOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.interviewLength}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.interviewLength}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("interviewLength",itemValue)
+                          }>
+                          {this.state.interviewLengthOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
                     { (Number(this.state.numberOfInterviews) > 0 ) && (
@@ -5801,13 +6271,28 @@ class EditLog extends Component {
                     </View>
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Rate your interest in the position, and share your thoughts.</Text>
-                      <Picker
-                        selectedValue={this.state.positionRating}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("positionRating",itemValue)
-                        }>
-                        {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Position Rating', selectedIndex: null, selectedName: "positionRating", selectedValue: this.state.positionRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.positionRating}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.positionRating}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("positionRating",itemValue)
+                          }>
+                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                       <View style={[styles.halfSpacer]}/>
                       <TextInput
                         style={styles.textArea}
@@ -5822,13 +6307,28 @@ class EditLog extends Component {
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Rate your interest in the company, and share your thoughts.</Text>
-                      <Picker
-                        selectedValue={this.state.companyRating}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("companyRating",itemValue)
-                        }>
-                        {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Company Rating', selectedIndex: null, selectedName: "companyRating", selectedValue: this.state.companyRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.companyRating}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.companyRating}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("companyRating",itemValue)
+                          }>
+                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                       <View style={[styles.halfSpacer]}/>
                       <TextInput
                         style={styles.textArea}
@@ -5843,13 +6343,28 @@ class EditLog extends Component {
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Rate your overall fit for the position, and share your thoughts.<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.fitRating}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("fitRating",itemValue)
-                        }>
-                        {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Fit Rating', selectedIndex: null, selectedName: "fitRating", selectedValue: this.state.fitRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.fitRating}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.fitRating}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("fitRating",itemValue)
+                          }>
+                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                       <View style={[styles.halfSpacer]}/>
 
                       <TextInput
@@ -5897,46 +6412,106 @@ class EditLog extends Component {
 
                 <View style={[styles.row10]}>
                   <Text style={[styles.row10]}>Associated External Work Application<Text style={[styles.errorColor]}>*</Text></Text>
-                  <Picker
-                    selectedValue={this.state.offerAssociatedApplication.name}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("offerAssociatedApplication",itemValue)
-                    }>
-                    {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+
+                  {(Platform.OS === 'ios') ? (
+                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer', selectedIndex: null, selectedName: "offerAssociatedApplication", selectedValue: this.state.offerAssociatedApplication.name, selectedOptions: this.state.applicationOptions, selectedSubKey: null })}>
+                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                        <View style={[styles.calcColumn180]}>
+                          <Text style={[styles.descriptionText1]}>{this.state.offerAssociatedApplication.name}</Text>
+                        </View>
+                        <View style={[styles.width20,styles.topMargin5]}>
+                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <Picker
+                      selectedValue={this.state.offerAssociatedApplication.name}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("offerAssociatedApplication",itemValue)
+                      }>
+                      {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  )}
+
                 </View>
 
                 {(this.state.offerAssociatedApplication.name !== 'Attach a Saved Application') && (
                   <View>
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Pay Type<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.offerPayType}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("offerPayType",itemValue)
-                        }>
-                        {this.state.payTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay Type', selectedIndex: null, selectedName: "offerPayType", selectedValue: this.state.offerPayType, selectedOptions: this.state.payTypeOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.offerPayType}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.offerPayType}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("offerPayType",itemValue)
+                          }>
+                          {this.state.payTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Pay<Text style={[styles.errorColor]}>*</Text></Text>
                       {(this.state.offerPayType === 'Hourly') ? (
-                        <Picker
-                          selectedValue={this.state.offerPay}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("offerPay",itemValue)
-                          }>
-                          {this.state.hourlyPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View>
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay', selectedIndex: null, selectedName: "offerPay", selectedValue: this.state.offerPay, selectedOptions: this.state.hourlyPayOptions, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.offerPay}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <Picker
+                              selectedValue={this.state.offerPay}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("offerPay",itemValue)
+                              }>
+                              {this.state.hourlyPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                            </Picker>
+                          )}
+                        </View>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.offerPay}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("offerPay",itemValue)
-                          }>
-                          {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View>
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay', selectedIndex: null, selectedName: "offerPay", selectedValue: this.state.offerPay, selectedOptions: this.state.annualPayOptions, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.offerPay}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <Picker
+                              selectedValue={this.state.offerPay}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("offerPay",itemValue)
+                              }>
+                              {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                            </Picker>
+                          )}
+                        </View>
                       )}
                     </View>
 
@@ -5977,24 +6552,53 @@ class EditLog extends Component {
                       <View>
                         <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Equity Percentage</Text>
-                          <Picker
-                            selectedValue={this.state.equityPercentage}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("equityPercentage",itemValue)
-                            }>
-                            {this.state.equityPercentageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                          </Picker>
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Equity Percentage', selectedIndex: null, selectedName: "equityPercentage", selectedValue: this.state.equityPercentage, selectedOptions: this.state.equityPercentageOptions, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.equityPercentage}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <Picker
+                              selectedValue={this.state.equityPercentage}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("equityPercentage",itemValue)
+                              }>
+                              {this.state.equityPercentageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                            </Picker>
+                          )}
+
                         </View>
 
                         <View style={[styles.row10]}>
                           <Text style={[styles.row10]}>Company Valuation</Text>
-                          <Picker
-                            selectedValue={this.state.companyValuation}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("companyValuation",itemValue)
-                            }>
-                            {this.state.valuationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                          </Picker>
+
+                          {(Platform.OS === 'ios') ? (
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Company Valuation', selectedIndex: null, selectedName: "companyValuation", selectedValue: this.state.companyValuation, selectedOptions: this.state.valuationOptions, selectedSubKey: null })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.companyValuation}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          ) : (
+                            <Picker
+                              selectedValue={this.state.companyValuation}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("companyValuation",itemValue)
+                              }>
+                              {this.state.valuationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                            </Picker>
+                          )}
+
                         </View>
                       </View>
                     )}
@@ -6013,13 +6617,27 @@ class EditLog extends Component {
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10]}>Have you accepted?<Text style={[styles.errorColor]}>*</Text></Text>
-                      <Picker
-                        selectedValue={this.state.offerDecision}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("offerDecision",itemValue)
-                        }>
-                        {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Decision', selectedIndex: null, selectedName: "offerDecision", selectedValue: this.state.offerDecision, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.offerDecision}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <Picker
+                          selectedValue={this.state.offerDecision}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("offerDecision",itemValue)
+                          }>
+                          {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      )}
+
                     </View>
 
                     <View style={[styles.row10]}>
@@ -6108,10 +6726,26 @@ class EditLog extends Component {
     return (
         <View>
           {(this.state.modalIsOpen && this.props.modalView) ? (
-              <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-               <ScrollView key="info" style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
-                {this.renderDetails()}
-               </ScrollView>
+              <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+                {(this.state.showPicker) ? (
+                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                    <SubPicker
+                      selectedSubKey={this.state.selectedSubKey}
+                      selectedName={this.state.selectedName}
+                      selectedOptions={this.state.selectedOptions}
+                      selectedValue={this.state.selectedValue}
+                      differentLabels={this.state.differentLabels}
+                      pickerName={this.state.pickerName}
+                      formChangeHandler={this.formChangeHandler}
+                      closeModal={this.closeModal}
+                    />
+                  </View>
+                ) : (
+                  <ScrollView key="info" style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
+                   {this.renderDetails()}
+                  </ScrollView>
+                )}
+
             </Modal>
           ) : (
             <ScrollView style={[styles.fullScreenWidth,styles.card]}>
@@ -6120,32 +6754,47 @@ class EditLog extends Component {
           )}
 
           {(!this.props.modalView) && (
-            <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-              <ScrollView key="info" style={[styles.card,styles.fullScreenWidth]}>
-                <View style={[styles.rowDirection]}>
-                  <View style={[styles.calcColumn100]}>
-                    <Text style={[styles.headingText2]}>S.M.A.R.T. Goals Defined</Text>
-                  </View>
-                  <View style={[styles.width40]}>
-                    <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
-                      <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
-                    </TouchableOpacity>
-                  </View>
+            <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+              {(this.state.showPicker) ? (
+                <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                  <SubPicker
+                    selectedSubKey={this.state.selectedSubKey}
+                    selectedName={this.state.selectedName}
+                    selectedOptions={this.state.selectedOptions}
+                    selectedValue={this.state.selectedValue}
+                    differentLabels={this.state.differentLabels}
+                    pickerName={this.state.pickerName}
+                    formChangeHandler={this.formChangeHandler}
+                    closeModal={this.closeModal}
+                  />
                 </View>
+              ) : (
+                <ScrollView key="info" style={[styles.card,styles.fullScreenWidth]}>
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.calcColumn100]}>
+                      <Text style={[styles.headingText2]}>S.M.A.R.T. Goals Defined</Text>
+                    </View>
+                    <View style={[styles.width40]}>
+                      <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
+                        <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
 
-                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                <Text style={[styles.headingText6]}>All goals should be:</Text>
+                  <Text style={[styles.headingText6]}>All goals should be:</Text>
 
-                <View style={[styles.row10]}>
-                  <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>S</Text>pecific</Text>
-                  <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>M</Text>easurable</Text>
-                  <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>A</Text>chievable</Text>
-                  <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>R</Text>elevant</Text>
-                  <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>T</Text>ime-Bound</Text>
-                </View>
+                  <View style={[styles.row10]}>
+                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>S</Text>pecific</Text>
+                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>M</Text>easurable</Text>
+                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>A</Text>chievable</Text>
+                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>R</Text>elevant</Text>
+                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>T</Text>ime-Bound</Text>
+                  </View>
 
-              </ScrollView>
+                </ScrollView>
+              )}
             </Modal>
           )}
         </View>

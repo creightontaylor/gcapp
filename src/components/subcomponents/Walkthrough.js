@@ -467,7 +467,7 @@ class Walkthrough extends Component {
     this.setState({ modalIsOpen: false, showGoal: false, showEditGroup: false, showSearchGroups: false,
       showAddWorkspaces: false, enlargeImage: false, showCreateBenchmark: false, showSocialPost: false, showATS: false,
       showCreateEvent: false, showCreateProject: false, showCreatePipeline: false, showCreateCommunity: false, showCreateWork: false,
-      showAddWorkspaces: false
+      showAddWorkspaces: false, showPicker: false
     })
   }
 

@@ -413,7 +413,7 @@ class Logs extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showGoal: false })
+    this.setState({ modalIsOpen: false, showGoal: false, showPicker: false })
 
   }
 
