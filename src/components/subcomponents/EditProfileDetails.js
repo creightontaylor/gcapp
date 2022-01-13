@@ -4497,16 +4497,21 @@ class EditProfileDetails extends Component {
                   />
                 </View>
                 <View style={[styles.row10]}>
-                  <Text style={[styles.standardText,styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                  <DateTimePicker
-                    testID="dateOfBirth"
-                    value={(this.state.awards[i - 1].awardDate) ? convertStringToDate(this.state.awards[i - 1].awardDate,'dateOnly') : new Date()}
-                    mode={'date'}
-                    is24Hour={true}
-                    display="default"
-                    onChange={(e, d) => this.formChangeHandler("awardDate|" + index,d)}
-                  />
-
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.calcColumn180]}>
+                      <Text style={[styles.standardText,styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                    </View>
+                    <View style={[styles.width120,styles.topPadding5]}>
+                      <DateTimePicker
+                        testID="dateOfBirth"
+                        value={(this.state.awards[i - 1].awardDate) ? convertStringToDate(this.state.awards[i - 1].awardDate,'dateOnly') : new Date()}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(e, d) => this.formChangeHandler("awardDate|" + index,d)}
+                      />
+                    </View>
+                  </View>
                 </View>
 
               </View>
@@ -6120,17 +6125,23 @@ class EditProfileDetails extends Component {
 
                           <View>
                             <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              <DateTimePicker
-                                testID="DateTimePicker"
-                                value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                                mode={'date'}
-                                is24Hour={true}
-                                display="default"
-                                onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                                minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                                maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                              />
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                </View>
+                                <View style={[styles.width120,styles.topPadding5]}>
+                                  <DateTimePicker
+                                    testID="DateTimePicker"
+                                    value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                                    minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                                    maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                                  />
+                                </View>
+                              </View>
                             </View>
 
                           </View>
@@ -7785,20 +7796,23 @@ class EditProfileDetails extends Component {
                       <Text style={[styles.standardText]}>Currently, you must be over 18 to set your profile to public.</Text>
 
                       <View style={[styles.row10]}>
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
-                          <DateTimePicker
-                            testID="dateOfBirth"
-                            value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                            mode={'date'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                            minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                            maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                          />
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn180]}>
+                            <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
+                          </View>
+                          <View style={[styles.width120,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="dateOfBirth"
+                              value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                              mode={'date'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                              minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                              maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                            />
+                          </View>
                         </View>
-
                       </View>
 
                       {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}

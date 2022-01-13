@@ -4,7 +4,6 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import DocumentPicker from 'react-native-document-picker';
 
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';

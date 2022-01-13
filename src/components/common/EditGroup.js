@@ -1013,26 +1013,38 @@ class EditGroup extends Component {
 
                          <View style={[styles.row5]}>
                            <View style={[styles.row10]}>
-                             <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                             <DateTimePicker
-                               testID={"1"}
-                               value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
-                               mode={'datetime'}
-                               is24Hour={true}
-                               display="default"
-                               onChange={(e, d) => this.formChangeHandler("meetingStartTime",d)}
-                             />
+                             <View style={[styles.rowDirection]}>
+                               <View style={[styles.calcColumn260]}>
+                                 <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                               </View>
+                               <View style={[styles.width200,styles.topPadding5]}>
+                                 <DateTimePicker
+                                   testID={"1"}
+                                   value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
+                                   mode={'datetime'}
+                                   is24Hour={true}
+                                   display="default"
+                                   onChange={(e, d) => this.formChangeHandler("meetingStartTime",d)}
+                                 />
+                               </View>
+                             </View>
                            </View>
                            <View style={[styles.row10]}>
-                             <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                             <DateTimePicker
-                               testID={"2"}
-                               value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
-                               mode={'datetime'}
-                               is24Hour={true}
-                               display="default"
-                               onChange={(e, d) => this.formChangeHandler("meetingEndTime",d)}
-                             />
+                             <View style={[styles.rowDirection]}>
+                               <View style={[styles.calcColumn260]}>
+                                 <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                               </View>
+                               <View style={[styles.width200,styles.topPadding5]}>
+                                 <DateTimePicker
+                                   testID={"2"}
+                                   value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
+                                   mode={'datetime'}
+                                   is24Hour={true}
+                                   display="default"
+                                   onChange={(e, d) => this.formChangeHandler("meetingEndTime",d)}
+                                 />
+                               </View>
+                             </View>
                            </View>
 
                          </View>
