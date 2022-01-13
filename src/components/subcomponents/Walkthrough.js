@@ -905,6 +905,8 @@ class Walkthrough extends Component {
 
               </View>
             )}
+
+            <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
           </View>
 
         </View>

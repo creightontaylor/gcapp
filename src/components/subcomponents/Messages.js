@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput, Keyboard, KeyboardAvoidingView,TouchableWithoutFeedback } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 
@@ -555,280 +555,283 @@ class Messages extends Component {
 
     return (
       <ScrollView>
-        <View style={[styles.whiteBackground,styles.standardBorder,styles.topMargin20,styles.flex1]}>
-          <View style={[styles.rowDirection,styles.flex1,styles.ctaBorder]}>
-            <View style={[styles.flex50]}>
-              <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 0 })}>
-                <View style={(this.state.viewIndex === 0) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
-                  <Text style={(this.state.viewIndex === 0) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Inbox</Text>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={(Platform.OS === 'ios') ? 100 : 100}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={[styles.whiteBackground,styles.standardBorder,styles.topMargin20,styles.flex1]}>
+              <View style={[styles.rowDirection,styles.flex1,styles.ctaBorder]}>
+                <View style={[styles.flex50]}>
+                  <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 0 })}>
+                    <View style={(this.state.viewIndex === 0) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
+                      <Text style={(this.state.viewIndex === 0) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Inbox</Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.flex50]}>
-              <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 1 })}>
-                <View style={(this.state.viewIndex === 1) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
-                  <Text style={(this.state.viewIndex === 1) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Messages</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {(this.state.viewIndex === 0) && (
-            <View style={[styles.fullScreenWidth]}>
-              <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding20,styles.rowDirection]}>
-                <View style={[styles.calcColumn65]}>
-                  <Text style={[styles.descriptionText1,styles.boldText]}>Create New Message</Text>
-                </View>
-                <View style={[styles.width25]}>
-                  <TouchableOpacity onPress={() => this.setState({ newMessage: true, recipient: null, inboxSelected: null, messages: null, searchString: '', viewIndex: 1 })}>
-                    <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                    <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain]}/>
+                <View style={[styles.flex50]}>
+                  <TouchableOpacity style={[styles.flex1]} onPress={() => this.setState({ viewIndex: 1 })}>
+                    <View style={(this.state.viewIndex === 1) ? [styles.row10,styles.horizontalPadding10,styles.ctaBackgroundColor,styles.flexCenter] : [styles.row10,styles.horizontalPadding10,styles.flexCenter]}>
+                      <Text style={(this.state.viewIndex === 1) ? [styles.standardText,styles.whiteColor] : [styles.standardText,styles.ctaColor]}>Messages</Text>
+                    </View>
                   </TouchableOpacity>
                 </View>
               </View>
 
-              <View>
-                {(this.state.inboxes && this.state.inboxes.length > 0) ? (
+              {(this.state.viewIndex === 0) && (
+                <View style={[styles.fullScreenWidth]}>
+                  <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding20,styles.rowDirection]}>
+                    <View style={[styles.calcColumn65]}>
+                      <Text style={[styles.descriptionText1,styles.boldText]}>Create New Message</Text>
+                    </View>
+                    <View style={[styles.width25]}>
+                      <TouchableOpacity onPress={() => this.setState({ newMessage: true, recipient: null, inboxSelected: null, messages: null, searchString: '', viewIndex: 1 })}>
+                        <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                        <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain]}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
                   <View>
-                    {this.state.inboxes.map((value, optionIndex) =>
-                      <View key={value._id} style={(this.state.inboxSelected === optionIndex) ? [styles.fullScreenWidth,styles.primaryBackgroundSuperLight] : [styles.fullScreenWidth]}>
-                        <TouchableOpacity style={[styles.topPadding,styles.bottomPadding20,styles.horizontalPadding10]} disabled={this.state.isLoading} onPress={() => this.selectInbox(value, optionIndex)}>
-                          {(value.members.length === 2) && (
-                            <View>
-                              {value.members.map((value2, optionIndex2) =>
-                                <View key={value._id}>
-                                  {(value2.email !== this.state.emailId) && (
-                                    <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
-                                      <View style={[styles.width50]}>
-                                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                        <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
-                                      </View>
-                                      <View style={[styles.calcColumn140]}>
-                                        <Text>{value2.firstName} {value2.lastName}</Text>
-                                        <Text style={[styles.descriptionText4,styles.height20,styles.descriptionTextColor]}>{(value.senderEmail === this.state.emailId) ? "You: " + value.lastMessage : value2.firstName + ': ' + value.lastMessage}</Text>
-                                      </View>
-                                      <View style={[styles.width50]}>
-                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.rightText]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
-                                      </View>
+                    {(this.state.inboxes && this.state.inboxes.length > 0) ? (
+                      <View>
+                        {this.state.inboxes.map((value, optionIndex) =>
+                          <View key={value._id} style={(this.state.inboxSelected === optionIndex) ? [styles.fullScreenWidth,styles.primaryBackgroundSuperLight] : [styles.fullScreenWidth]}>
+                            <TouchableOpacity style={[styles.topPadding,styles.bottomPadding20,styles.horizontalPadding10]} disabled={this.state.isLoading} onPress={() => this.selectInbox(value, optionIndex)}>
+                              {(value.members.length === 2) && (
+                                <View>
+                                  {value.members.map((value2, optionIndex2) =>
+                                    <View key={value._id}>
+                                      {(value2.email !== this.state.emailId) && (
+                                        <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
+                                          <View style={[styles.width50]}>
+                                            <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                            <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
+                                          </View>
+                                          <View style={[styles.calcColumn140]}>
+                                            <Text>{value2.firstName} {value2.lastName}</Text>
+                                            <Text style={[styles.descriptionText4,styles.height20,styles.descriptionTextColor]}>{(value.senderEmail === this.state.emailId) ? "You: " + value.lastMessage : value2.firstName + ': ' + value.lastMessage}</Text>
+                                          </View>
+                                          <View style={[styles.width50]}>
+                                            <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.rightText]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                          </View>
+                                        </View>
+                                      )}
+
                                     </View>
                                   )}
-
                                 </View>
                               )}
-                            </View>
-                          )}
-                        </TouchableOpacity>
+                            </TouchableOpacity>
 
-                        <View style={[styles.horizontalLine]} />
+                            <View style={[styles.horizontalLine]} />
+                          </View>
+                        )}
+                      </View>
+                    ) : (
+                      <View style={[styles.flex1,styles.flexCenter, styles.padding40]}>
+                        <Image source={{ uri: commentIconGrey}} style={[styles.square40,styles.contain]}/>
+                        <View>
+                          <Text style={[styles.topPadding20,styles.descriptionText1,styles.descriptionTextColor,styles.horizontalPadding30,styles.centerText]}>No Conversations Yet</Text>
+                        </View>
                       </View>
                     )}
                   </View>
-                ) : (
-                  <View style={[styles.flex1,styles.flexCenter, styles.padding40]}>
-                    <Image source={{ uri: commentIconGrey}} style={[styles.square40,styles.contain]}/>
-                    <View>
-                      <Text style={[styles.topPadding20,styles.descriptionText1,styles.descriptionTextColor,styles.horizontalPadding30,styles.centerText]}>No Conversations Yet</Text>
-                    </View>
-                  </View>
-                )}
-              </View>
-            </View>
-          )}
-          {(this.state.viewIndex === 1) && (
-            <View>
-              <View style={[styles.fullScreenWidth]}>
-                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
-                  {(this.state.newMessage) ? (
-                    <Text style={[styles.descriptionText1,styles.centerText]}>New Message</Text>
-                  ) : (
-                    <View>
-                      {(this.state.recipient) && (
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })} style={[styles.rowDirection]}>
-                          <View style={[styles.width30]}>
-                            <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
-                          </View>
-                          <View style={[styles.calcColumn50]}>
-                            <Text style={[styles.descriptionText2,styles.height20,styles.boldText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
-                          </View>
-                        </TouchableOpacity>
+                </View>
+              )}
+              {(this.state.viewIndex === 1) && (
+                <View>
+                  <View style={[styles.fullScreenWidth]}>
+                    <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
+                      {(this.state.newMessage) ? (
+                        <Text style={[styles.descriptionText1,styles.centerText]}>New Message</Text>
+                      ) : (
+                        <View>
+                          {(this.state.recipient) && (
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })} style={[styles.rowDirection]}>
+                              <View style={[styles.width30]}>
+                                <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
+                              </View>
+                              <View style={[styles.calcColumn50]}>
+                                <Text style={[styles.descriptionText2,styles.height20,styles.boldText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
+                              </View>
+                            </TouchableOpacity>
+                          )}
+                        </View>
                       )}
                     </View>
-                  )}
-                </View>
 
-                {(this.state.newMessage) && (
-                  <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
-                    {(this.state.recipient) ? (
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.width25]}>
-                          <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
-                        </View>
-                        <View style={[styles.calcColumn45]}>
-                          <TextInput
-                            style={styles.height20,styles.descriptionText3,styles.boldText}
-                            onChangeText={(text) => this.formChangeHandler('search', text)}
-                            value={this.state.searchString}
-                            placeholder={"Type a name"}
-                            placeholderTextColor="grey"
-                          />
-                        </View>
+                    {(this.state.newMessage) && (
+                      <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10]}>
+                        {(this.state.recipient) ? (
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.width25]}>
+                              <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square20,styles.contain, {borderRadius: 10}]} />
+                            </View>
+                            <View style={[styles.calcColumn45]}>
+                              <TextInput
+                                style={styles.height20,styles.descriptionText3,styles.boldText}
+                                onChangeText={(text) => this.formChangeHandler('search', text)}
+                                value={this.state.searchString}
+                                placeholder={"Type a name"}
+                                placeholderTextColor="grey"
+                              />
+                            </View>
 
-                      </View>
-                    ) : (
-                      <View>
-                        <TextInput
-                          style={styles.height20,styles.descriptionText3,styles.boldText}
-                          onChangeText={(text) => this.formChangeHandler('search', text)}
-                          value={this.state.searchString}
-                          placeholder={"Type a name"}
-                          placeholderTextColor="grey"
-                        />
-                      </View>
-                    )}
-
-                    {(this.state.animating) ? (
-                      <View style={[styles.flex1,styles.flexCenter]}>
-                        <View>
-                          <View style={[styles.superSpacer]} />
-
-                          <ActivityIndicator
-                             animating = {this.state.animating}
-                             color = '#87CEFA'
-                             size = "large"
-                             style={[styles.square80, styles.centerHorizontally]}/>
-
-                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                          <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
-
-                        </View>
-                      </View>
-                    ) : (
-                      <View>
-                        {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
+                          </View>
+                        ) : (
                           <View>
-                            {this.state.memberOptions.map((value, optionIndex) =>
-                              <View key={value._id} style={[styles.calcColumn80,styles.bottomMargin]}>
-                                <TouchableOpacity onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
-                                  <View style={[styles.leftPadding,styles.calcColumn80,styles.rowDirection]}>
-                                    <View style={[styles.rightPadding]}>
-                                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                      <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square25,styles.contain,{ borderRadius: 12.5 }]} />
-                                    </View>
-                                    <View>
-                                      <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
-                                      <Text style={[styles.descriptionText3]}>{value.roleName}</Text>
-                                    </View>
+                            <TextInput
+                              style={styles.height20,styles.descriptionText3,styles.boldText}
+                              onChangeText={(text) => this.formChangeHandler('search', text)}
+                              value={this.state.searchString}
+                              placeholder={"Type a name"}
+                              placeholderTextColor="grey"
+                            />
+                          </View>
+                        )}
+
+                        {(this.state.animating) ? (
+                          <View style={[styles.flex1,styles.flexCenter]}>
+                            <View>
+                              <View style={[styles.superSpacer]} />
+
+                              <ActivityIndicator
+                                 animating = {this.state.animating}
+                                 color = '#87CEFA'
+                                 size = "large"
+                                 style={[styles.square80, styles.centerHorizontally]}/>
+
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                              <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                            </View>
+                          </View>
+                        ) : (
+                          <View>
+                            {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
+                              <View>
+                                {this.state.memberOptions.map((value, optionIndex) =>
+                                  <View key={value._id} style={[styles.calcColumn80,styles.bottomMargin]}>
+                                    <TouchableOpacity onPress={() => this.searchItemClicked(value, 'member',optionIndex)}>
+                                      <View style={[styles.leftPadding,styles.calcColumn80,styles.rowDirection]}>
+                                        <View style={[styles.rightPadding]}>
+                                          <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                          <Image source={(value.pictureURL) ? { uri: value.pictureURL} : { uri: profileIconDark}} style={[styles.square25,styles.contain,{ borderRadius: 12.5 }]} />
+                                        </View>
+                                        <View>
+                                          <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
+                                          <Text style={[styles.descriptionText3]}>{value.roleName}</Text>
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
                                   </View>
-                                </TouchableOpacity>
+                                )}
                               </View>
                             )}
                           </View>
                         )}
                       </View>
                     )}
-                  </View>
-                )}
 
-                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.calcHeight500]}>
-                  {(this.state.messages && this.state.messages.length > 0) ? (
-                    <ScrollView style={[styles.flex1,styles.overflowY]} ref={ref => {this.scrollView = ref}} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
-                      {this.state.messages.map((value, optionIndex) =>
-                        <View key={value._id} style={[styles.bottomPadding20]}>
-                          {(value.senderEmail === this.state.emailId) ? (
-                            <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
-                              <View style={[styles.width50]}>
-                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
-                                  <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
-                                </TouchableOpacity>
-                              </View>
-                              <View style={[styles.calcColumn130]}>
-                                <View style={[styles.rowDirection]}>
-                                  <View style={[styles.calcColumn180]}>
+                    <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.calcHeight500]}>
+                      {(this.state.messages && this.state.messages.length > 0) ? (
+                        <ScrollView style={[styles.flex1,styles.overflowY]} ref={ref => {this.scrollView = ref}} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
+                          {this.state.messages.map((value, optionIndex) =>
+                            <View key={value._id} style={[styles.bottomPadding20]}>
+                              {(value.senderEmail === this.state.emailId) ? (
+                                <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
+                                  <View style={[styles.width50]}>
+                                    <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
-                                      <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
+                                      <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
                                     </TouchableOpacity>
                                   </View>
-                                  <View style={[styles.width50]}>
-                                    <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                  <View style={[styles.calcColumn130]}>
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.calcColumn180]}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
+                                          <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
+                                        </TouchableOpacity>
+                                      </View>
+                                      <View style={[styles.width50]}>
+                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                      </View>
+
+                                    </View>
+
+                                    <Text style={[styles.descriptionText3]}>{value.message}</Text>
                                   </View>
 
                                 </View>
-
-                                <Text style={[styles.descriptionText3]}>{value.message}</Text>
-                              </View>
-
-                            </View>
-                          ) : (
-                            <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
-                              <View style={[styles.width50]}>
-                                <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })}>
-                                  <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
-                                </TouchableOpacity>
-                              </View>
-                              <View style={[styles.calcColumn130]}>
-                                <View style={[styles.rowDirection]}>
-                                  <View style={[styles.calcColumn180]}>
+                              ) : (
+                                <View style={[styles.leftPadding,styles.topPadding,styles.rowDirection]}>
+                                  <View style={[styles.width50]}>
+                                    <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })}>
-                                      <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
+                                      <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
                                     </TouchableOpacity>
                                   </View>
-                                  <View style={[styles.width50]}>
-                                    <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                  <View style={[styles.calcColumn130]}>
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.calcColumn180]}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })}>
+                                          <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
+                                        </TouchableOpacity>
+                                      </View>
+                                      <View style={[styles.width50]}>
+                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
+                                      </View>
+
+                                    </View>
+
+                                    <Text style={[styles.descriptionText3]}>{value.message}</Text>
                                   </View>
 
                                 </View>
-
-                                <Text style={[styles.descriptionText3]}>{value.message}</Text>
-                              </View>
-
+                              )}
+                            </View>
+                          )}
+                        </ScrollView>
+                      ) : (
+                        <View style={[styles.flex1]}>
+                          {(this.state.recipient) && (
+                            <View style={[styles.flex1]}>
+                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })} style={[styles.flex1,styles.flexCenter]}>
+                                <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain, { borderRadius: 30 }]} />
+                                <View>
+                                  <Text style={[styles.topPadding,styles.headingText6,styles.horizontalPadding30,styles.centerText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
+                                  <Text style={[styles.descriptionText3,styles.centerText,styles.topPadding]}>You two are not following each other.</Text>
+                                </View>
+                              </TouchableOpacity>
                             </View>
                           )}
                         </View>
                       )}
-                    </ScrollView>
-                  ) : (
-                    <View style={[styles.flex1]}>
-                      {(this.state.recipient) && (
-                        <View style={[styles.flex1]}>
-                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.recipient.username })} style={[styles.flex1,styles.flexCenter]}>
-                            <Image source={(this.state.recipient.pictureURL) ? { uri: this.state.recipient.pictureURL} : { uri: profileIconDark}} style={[styles.square60,styles.contain, { borderRadius: 30 }]} />
-                            <View>
-                              <Text style={[styles.topPadding,styles.headingText6,styles.horizontalPadding30,styles.centerText]}>{this.state.recipient.firstName} {this.state.recipient.lastName}</Text>
-                              <Text style={[styles.descriptionText3,styles.centerText,styles.topPadding]}>You two are not following each other.</Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      )}
                     </View>
-                  )}
+
+                    <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height120]}>
+                      <TextInput
+                        style={[styles.textArea,styles.descriptionText3]}
+                        onChangeText={(text) => this.formChangeHandler("messageDraft", text)}
+                        value={this.state.messageDraft}
+                        placeholder="Write a message..."
+                        placeholderTextColor="grey"
+                        multiline={true}
+                        numberOfLines={4}
+                      />
+                    </View>
+                    <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height100]}>
+                      <TouchableOpacity style={(this.state.messageDraft && this.state.messageDraft !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} disabled={(this.state.messageDraft && this.state.messageDraft !== '' && !this.state.isSaving) ? false : true} onPress={() => this.sendMessage()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Send</Text></TouchableOpacity>
+
+                      {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText3,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                      {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText3,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+
+                    </View>
+                  </View>
+
                 </View>
-
-                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height120]}>
-                  <TextInput
-                    style={[styles.textArea,styles.descriptionText3]}
-                    onChangeText={(text) => this.formChangeHandler("messageDraft", text)}
-                    value={this.state.messageDraft}
-                    placeholder="Write a message..."
-                    placeholderTextColor="grey"
-                    multiline={true}
-                    numberOfLines={4}
-                  />
-                </View>
-                <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding10,styles.height100]}>
-                  <TouchableOpacity style={(this.state.messageDraft && this.state.messageDraft !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} disabled={(this.state.messageDraft && this.state.messageDraft !== '' && !this.state.isSaving) ? false : true} onPress={() => this.sendMessage()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Send</Text></TouchableOpacity>
-
-                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText3,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
-                  {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText3,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
-
-                </View>
-              </View>
-
+              )}
             </View>
-          )}
-        </View>
-
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </ScrollView>
     )
   }

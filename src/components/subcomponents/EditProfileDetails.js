@@ -6754,7 +6754,7 @@ class EditProfileDetails extends Component {
                         </View>
                       )}
 
-                      <View style={styles.superSpacer} />
+                      <View style={[styles.superSpacer]} />
 
                     </View>
                   )}

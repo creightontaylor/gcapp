@@ -190,7 +190,6 @@ class RenderMyGroups extends Component {
       AsyncStorage.setItem('unreadNotificationsCount', unreadNotificationsCount.toString())
       this.setState({ unreadNotificationsCount })
       this.updateView('Notifications',unreadNotificationsCount)
-
     }
 
     updateView(type,notiCount) {
@@ -208,38 +207,38 @@ class RenderMyGroups extends Component {
       }
 
       if (type === 'Community') {
-        this.props.navigation.setOptions({ tabBarIcon: () => (
-          <View>
-            {(unreadNotificationsCount === 0 ) ? (
-              <TouchableOpacity onPress={() => navigation.navigate('Community')}>
-                <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                  <Icon name="people" size={25} color={'#5A5A5A'} />
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => navigation.navigate('Community')} style={[styles.rowDirection,styles.leftMargin20]}>
-                <ImageBackground source={{uri: socialIconDark }} style={[styles.square25,styles.contain]}>
-                  <View style={[styles.notiBubbleSmall, styles.errorBackgroundColor,styles.leftMargin15,styles.topMarginNegative5]}>
-                    <Text style={[styles.descriptionText5]}>{notiCount}</Text>
-                  </View>
-                </ImageBackground>
-              </TouchableOpacity>
-            )}
-
-          </View>
-        )})
+        // this.props.navigation.setOptions({ tabBarIcon: () => (
+        //   <View>
+        //     {(unreadNotificationsCount === 0 ) ? (
+        //       <TouchableOpacity onPress={() => this.props.navigation.navigate('Community')}>
+        //         <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+        //           <Icon name="people" size={25} color={'#5A5A5A'} />
+        //         </View>
+        //       </TouchableOpacity>
+        //     ) : (
+        //       <TouchableOpacity onPress={() => this.props.navigation.navigate('Community')} style={[styles.rowDirection,styles.leftMargin20]}>
+        //         <ImageBackground source={{uri: socialIconDark }} style={[styles.square25,styles.contain]}>
+        //           <View style={[styles.notiBubbleSmall, styles.errorBackgroundColor,styles.leftMargin15,styles.topMarginNegative5]}>
+        //             <Text style={[styles.descriptionText5]}>{notiCount}</Text>
+        //           </View>
+        //         </ImageBackground>
+        //       </TouchableOpacity>
+        //     )}
+        //
+        //   </View>
+        // )})
       } else {
         if (this.props.fromHome) {
           this.props.navigation.setOptions({ headerLeft: () => (
             <View style={{ flexDirection: 'row'}}>
               {(unreadNotificationsCount === 0 ) ? (
-                <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Notifications')}>
                   <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Icon name="notifications" size={25} color='#5A5A5A' />
                   </View>
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity onPress={() => navigation.navigate('Notifications')} style={[styles.rowDirection,styles.leftMargin20]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Notifications')} style={[styles.rowDirection,styles.leftMargin20]}>
                   <ImageBackground source={{uri: notificationsIconDark }} style={[styles.square25,styles.contain]}>
                     <View style={[styles.notiBubbleSmall, styles.errorBackgroundColor,styles.leftMargin15,styles.topMarginNegative5]}>
                       <Text style={[styles.descriptionText5]}>{unreadNotificationsCount}</Text>
@@ -249,13 +248,13 @@ class RenderMyGroups extends Component {
               )}
 
               {(this.state.unreadMessageCount === 0 ) ? (
-                <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages')}>
                   <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
                     <Image source={{ uri: chatbubblesIcon }} style={[styles.square23,styles.contain]} />
                   </View>
                 </TouchableOpacity>
               ) : (
-                <TouchableOpacity onPress={() => navigation.navigate('Messages')} style={[styles.rowDirection,styles.leftMargin20]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages')} style={[styles.rowDirection,styles.leftMargin20]}>
                   <ImageBackground source={{uri: chatbubblesIcon }} style={[styles.square23,styles.contain]}>
                     <View style={[styles.notiBubbleSmall, styles.errorBackgroundColor,styles.leftMargin15,styles.topMarginNegative5]}>
                       <Text style={[styles.descriptionText5]}>{unreadMessageCount}</Text>

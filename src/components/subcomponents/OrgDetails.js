@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput,Keyboard,KeyboardAvoidingView,TouchableWithoutFeedback } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -545,257 +545,261 @@ class OrgDetails extends Component {
       return (
           <ScrollView>
             {(this.state.orgSelected) && (
-              <View style={[styles.row20]}>
-                <View style={[styles.card]}>
-                  <View style={[styles.topPadding,styles.rowDirection]}>
-                    <View style={[styles.square30 ]}/>
-                    <View style={[styles.calcColumn120,styles.alignCenter]}>
-                      <Image source={(this.state.orgSelected.webLogoURIColor) ? { uri: this.state.orgSelected.webLogoURIColor} : { uri: industryIconDark}} style={[styles.square80,styles.contain]} />
-                    </View>
+              <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={(Platform.OS === 'ios') ? 100 : 100}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <View style={[styles.row20]}>
+                    <View style={[styles.card]}>
+                      <View style={[styles.topPadding,styles.rowDirection]}>
+                        <View style={[styles.square30 ]}/>
+                        <View style={[styles.calcColumn120,styles.alignCenter]}>
+                          <Image source={(this.state.orgSelected.webLogoURIColor) ? { uri: this.state.orgSelected.webLogoURIColor} : { uri: industryIconDark}} style={[styles.square80,styles.contain]} />
+                        </View>
 
-                    {(this.state.inModal) ? (
-                      <View style={[styles.width30]}>
-                        <TouchableOpacity onPress={() => this.closeModal()}>
-                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View style={[styles.square30 ]}/>
-                    )}
-                  </View>
-                  <View style={[styles.row10,styles.rowDirection,styles.flexCenter]}>
-                    <View>
-                      <Text style={[styles.headingText2,styles.centerText]}>{this.state.orgSelected.orgName}</Text>
-                      <TouchableOpacity onPress={() => Linking.openURL(this.state.orgSelected.orgURL)}><Text style={[styles.standardText,styles.ctaColor,styles.boldText,styles.centerText]}>{this.state.orgSelected.orgURL}</Text></TouchableOpacity>
-                    </View>
-
-                  </View>
-
-                  <View style={[styles.row10,styles.rowDirection]}>
-                    {(this.state.orgSelected.cta === 'Join Workspace') ? (
-                      <View style={[styles.bottomMargin,styles.flex50,styles.rightPadding]}>
-                        <TouchableOpacity style={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, this.state.orgSelected, null, true)}>
-                          <View style={[styles.rowDirection]}>
-                            <View style={[styles.width30,styles.rightPadding,styles.topMargin5,styles.flexCenter]}>
-                              <Image source={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? { uri: checkmarkIcon} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
-                            </View>
-                            <View>
-                              <Text style={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? "Joined" : "Join" }</Text>
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View style={[styles.bottomMargin,styles.flex50,styles.rightPadding]}>
-                        <TouchableOpacity style={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, this.state.orgSelected, null, true)}>
-                          <View style={[styles.rowDirection]}>
-                            <View style={[styles.width30,styles.rightPadding,styles.topMargin5,styles.flexCenter]}>
-                              <Image source={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? { uri: timeIconBlue} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
-                            </View>
-                            <View>
-                              <Text style={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? "Requested Access" : this.state.orgSelected.cta }</Text>
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    {(!this.props.fromAdvisor) && (
-                      <View style={[styles.bottomMargin,styles.flex50,styles.leftPadding]}>
-                        <TouchableOpacity style={(this.state.showReviewPanel) ? [styles.btnSquarish,styles.errorBorder,styles.flexCenter] : [styles.btnSquarish,styles.errorBackgroundColor,styles.flexCenter]} onPress={(this.state.showReviewPanel) ? () => this.setState({ showReviewPanel: false }) : () => this.setState({ showReviewPanel: true })}>{(this.state.showReviewPanel) ? <Text style={[styles.descriptionText1,styles.errorColor]}>Close Review Panel</Text> : <Text style={[styles.descriptionText1,styles.whiteColor]}>Give Review</Text>}</TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
-
-                  {(this.state.showReviewPanel) ? (
-                    <View>
-                      <View style={[styles.errorBorder,styles.padding20,styles.topMargin20]}>
-                        <View style={[styles.row10,styles.rowDirection]}>
-                          <View style={[styles.width40]}>
-                            <TouchableOpacity onPress={() => this.setState({ showReviewPanel: false })}>
-                              <Image source={{ uri: closeIcon}} style={[styles.square12,styles.contain]} />
+                        {(this.state.inModal) ? (
+                          <View style={[styles.width30]}>
+                            <TouchableOpacity onPress={() => this.closeModal()}>
+                              <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
                             </TouchableOpacity>
                           </View>
-                          <View style={[styles.calcColumn140]}>
-                            <Text style={[styles.headingText4,styles.centerText]}>Add a Review</Text>
-                          </View>
-                          <View style={[styles.square40]} />
-
-                        </View>
-
-                        <View style={[styles.row10]}>
-                          <View style={[styles.row10]}>
-                            <Text style={[styles.standardText,styles.row10]}>Your Rating (5 is best) <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                            {(Platform.OS === 'ios') ? (
-                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Rating", selectedIndex: null, selectedName: "ratingSelected", selectedValue: this.state.ratingSelected, selectedOptions: ['','1','2','3','4','5'], selectedSubKey: null })}>
-                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                  <View style={[styles.calcColumn150]}>
-                                    <Text style={[styles.descriptionText1]}>{this.state.ratingSelected}</Text>
-                                  </View>
-                                  <View style={[styles.width20,styles.topMargin5]}>
-                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
-                            ) : (
-                              <Picker
-                                selectedValue={this.state.ratingSelected}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler('ratingSelected',itemValue)
-                                }>
-                                {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-                            )}
-
-                          </View>
-
-                        </View>
-
-                        <View style={[styles.row10]}>
-                          <Text style={[styles.standardText,styles.row10]}>Your Review</Text>
-                          <TextInput
-                            style={styles.textArea}
-                            onChangeText={(text) => this.formChangeHandler("reviewSelected", text)}
-                            value={this.state.reviewSelected}
-                            placeholder="What do you think of them..."
-                            placeholderTextColor="grey"
-                            multiline={true}
-                            numberOfLines={4}
-                          />
-                        </View>
-
-                        {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text>}
-                        {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
-
-                        <View style={[styles.row10]}>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitReview()}><Text style={[styles.standardText,styles.whiteColor]}>Submit</Text></TouchableOpacity>
-                        </View>
+                        ) : (
+                          <View style={[styles.square30 ]}/>
+                        )}
                       </View>
-                    </View>
-                  ) : (
-                    <View>
-                      <Text style={[styles.row10]}>{this.state.orgSelected.orgDescription}</Text>
+                      <View style={[styles.row10,styles.rowDirection,styles.flexCenter]}>
+                        <View>
+                          <Text style={[styles.headingText2,styles.centerText]}>{this.state.orgSelected.orgName}</Text>
+                          <TouchableOpacity onPress={() => Linking.openURL(this.state.orgSelected.orgURL)}><Text style={[styles.standardText,styles.ctaColor,styles.boldText,styles.centerText]}>{this.state.orgSelected.orgURL}</Text></TouchableOpacity>
+                        </View>
 
-                      {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text>}
-                      {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
+                      </View>
 
-                      <ScrollView style={[styles.row10]} horizontal={true}>
-                        <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
-                          <View>
-                            <View style={[styles.flexCenter]}>
-                              <View>
-                                <View style={[styles.rowDirection,styles.flexCenter]}>
-                                  <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 0.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                  <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 1.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                  <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 2.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                  <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 3.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                  <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 4.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                      <View style={[styles.row10,styles.rowDirection]}>
+                        {(this.state.orgSelected.cta === 'Join Workspace') ? (
+                          <View style={[styles.bottomMargin,styles.flex50,styles.rightPadding]}>
+                            <TouchableOpacity style={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, this.state.orgSelected, null, true)}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.width30,styles.rightPadding,styles.topMargin5,styles.flexCenter]}>
+                                  <Image source={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? { uri: checkmarkIcon} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
                                 </View>
-
                                 <View>
-                                  <Text style={[styles.descriptionText3,styles.centerText]}><Text style={[styles.boldText]}>{(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.ratingCount) ? this.state.orgSelected.careerSeekerRating.ratingCount : 0}</Text> career-seeker ratings</Text>
-                                </View>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                        <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
-                          <View>
-                            <View style={[styles.flexCenter]}>
-                              <View>
-                                <Text style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.careerSeekerReviews && this.state.orgSelected.careerSeekerReviews.length > 0) ? this.state.orgSelected.careerSeekerReviews.length : '0'}</Text>
-                                <Text  style={[styles.descriptionText3,styles.centerText]}>career-seeker reviews</Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                        <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
-                          <View>
-                            <View style={[styles.flexCenter]}>
-                              <View>
-                                <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.memberCount) ? this.state.orgSelected.stats.memberCount : 0}</Text>
-                                <Text  style={[styles.descriptionText3,styles.centerText]}>members</Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                        <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
-                          <View>
-                            <View style={[styles.flexCenter]}>
-                              <View>
-                                <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.ageRange) ? this.state.orgSelected.stats.ageRange : "N/A"}</Text>
-                                <Text  style={[styles.descriptionText3,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.ageRangeInterval) ? this.state.orgSelected.stats.ageRangeInterval : "N/A"} fall within this age range</Text>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                        <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
-                          <View>
-                            <View style={[styles.flexCenter]}>
-                              <View>
-                                <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.minorities) ? this.state.orgSelected.stats.minorities : "N/A"}</Text>
-                                <Text  style={[styles.descriptionText3,styles.centerText]}>are low-income and minorities</Text>
-                              </View>
-                            </View>
-                          </View>
-
-                        </View>
-
-                      </ScrollView>
-
-                      <View>
-                        {(this.state.orgSelected.careerSeekerReviews && this.state.orgSelected.careerSeekerReviews.length > 0) && (
-                          <View style={[styles.row10]}>
-                            <Text style={[styles.standardText]}>Career-Seeker Reviews</Text>
-                            <View style={[styles.spacer]} />
-
-                            {this.state.orgSelected.careerSeekerReviews.map((value2, optionIndex) =>
-                              <View key={value2 + optionIndex} style={[styles.lightBorder,styles.padding10]}>
-                                <View style={[styles.rowDirection]}>
-                                  <View  style={[styles.width60]}>
-                                    <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
-                                  </View>
-                                  <View style={[styles.calcColumn140]}>
-                                    <Text style={[styles.standardText]}>{value2.firstName} {value2.lastName}</Text>
-                                    {(value2.headline) && (
-                                      <Text style={[styles.descriptionText3]}>{value2.headline}</Text>
-                                    )}
-                                  </View>
-
+                                  <Text style={(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.myOrgs && this.state.myOrgs.includes(this.state.orgSelected.orgCode)) ? "Joined" : "Join" }</Text>
                                 </View>
 
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View><Image source={(value2.rating >= 0.5) ? { uri: fullStar} :{ uri:  emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                    <View><Image source={(value2.rating >= 1.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                    <View><Image source={(value2.rating >= 2.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                    <View><Image source={(value2.rating >= 3.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                    <View><Image source={(value2.rating >= 4.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
-                                  </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        ) : (
+                          <View style={[styles.bottomMargin,styles.flex50,styles.rightPadding]}>
+                            <TouchableOpacity style={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, this.state.orgSelected, null, true)}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.width30,styles.rightPadding,styles.topMargin5,styles.flexCenter]}>
+                                  <Image source={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? { uri: timeIconBlue} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
                                 </View>
-
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{convertDateToString(value2.updatedAt,"daysAgo")}</Text>
-                                </View>
-
                                 <View>
-                                  <Text style={[styles.descriptionText2]}>{value2.review}</Text>
+                                  <Text style={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? "Requested Access" : this.state.orgSelected.cta }</Text>
                                 </View>
+
                               </View>
-                            )}
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                        {(!this.props.fromAdvisor) && (
+                          <View style={[styles.bottomMargin,styles.flex50,styles.leftPadding]}>
+                            <TouchableOpacity style={(this.state.showReviewPanel) ? [styles.btnSquarish,styles.errorBorder,styles.flexCenter] : [styles.btnSquarish,styles.errorBackgroundColor,styles.flexCenter]} onPress={(this.state.showReviewPanel) ? () => this.setState({ showReviewPanel: false }) : () => this.setState({ showReviewPanel: true })}>{(this.state.showReviewPanel) ? <Text style={[styles.descriptionText1,styles.errorColor]}>Close Review</Text> : <Text style={[styles.descriptionText1,styles.whiteColor]}>Give Review</Text>}</TouchableOpacity>
                           </View>
                         )}
                       </View>
 
+                      {(this.state.showReviewPanel) ? (
+                        <View>
+                          <View style={[styles.errorBorder,styles.padding20,styles.topMargin20]}>
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View style={[styles.width40]}>
+                                <TouchableOpacity onPress={() => this.setState({ showReviewPanel: false })}>
+                                  <Image source={{ uri: closeIcon}} style={[styles.square12,styles.contain]} />
+                                </TouchableOpacity>
+                              </View>
+                              <View style={[styles.calcColumn140]}>
+                                <Text style={[styles.headingText4,styles.centerText]}>Add a Review</Text>
+                              </View>
+                              <View style={[styles.square40]} />
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Your Rating (5 is best) <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Rating", selectedIndex: null, selectedName: "ratingSelected", selectedValue: this.state.ratingSelected, selectedOptions: ['','1','2','3','4','5'], selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn150]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.ratingSelected}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <Picker
+                                    selectedValue={this.state.ratingSelected}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler('ratingSelected',itemValue)
+                                    }>
+                                    {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                )}
+
+                              </View>
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Your Review</Text>
+                              <TextInput
+                                style={styles.textArea}
+                                onChangeText={(text) => this.formChangeHandler("reviewSelected", text)}
+                                value={this.state.reviewSelected}
+                                placeholder="What do you think of them..."
+                                placeholderTextColor="grey"
+                                multiline={true}
+                                numberOfLines={4}
+                              />
+                            </View>
+
+                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text>}
+                            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
+
+                            <View style={[styles.row10]}>
+                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitReview()}><Text style={[styles.standardText,styles.whiteColor]}>Submit</Text></TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      ) : (
+                        <View>
+                          <Text style={[styles.row10]}>{this.state.orgSelected.orgDescription}</Text>
+
+                          {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text>}
+                          {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
+
+                          <ScrollView style={[styles.row10]} horizontal={true}>
+                            <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
+                              <View>
+                                <View style={[styles.flexCenter]}>
+                                  <View>
+                                    <View style={[styles.rowDirection,styles.flexCenter]}>
+                                      <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 0.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                      <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 1.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                      <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 2.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                      <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 3.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                      <View><Image source={(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.avgRating >= 4.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                    </View>
+
+                                    <View>
+                                      <Text style={[styles.descriptionText3,styles.centerText]}><Text style={[styles.boldText]}>{(this.state.orgSelected.careerSeekerRating && this.state.orgSelected.careerSeekerRating.ratingCount) ? this.state.orgSelected.careerSeekerRating.ratingCount : 0}</Text> career-seeker ratings</Text>
+                                    </View>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
+                              <View>
+                                <View style={[styles.flexCenter]}>
+                                  <View>
+                                    <Text style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.careerSeekerReviews && this.state.orgSelected.careerSeekerReviews.length > 0) ? this.state.orgSelected.careerSeekerReviews.length : '0'}</Text>
+                                    <Text  style={[styles.descriptionText3,styles.centerText]}>career-seeker reviews</Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
+                              <View>
+                                <View style={[styles.flexCenter]}>
+                                  <View>
+                                    <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.memberCount) ? this.state.orgSelected.stats.memberCount : 0}</Text>
+                                    <Text  style={[styles.descriptionText3,styles.centerText]}>members</Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
+                              <View>
+                                <View style={[styles.flexCenter]}>
+                                  <View>
+                                    <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.ageRange) ? this.state.orgSelected.stats.ageRange : "N/A"}</Text>
+                                    <Text  style={[styles.descriptionText3,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.ageRangeInterval) ? this.state.orgSelected.stats.ageRangeInterval : "N/A"} fall within this age range</Text>
+                                  </View>
+                                </View>
+                              </View>
+                            </View>
+                            <View style={[styles.width150,styles.standardBorder,styles.padding10]}>
+                              <View>
+                                <View style={[styles.flexCenter]}>
+                                  <View>
+                                    <Text  style={[styles.headingText2,styles.boldText,styles.centerText]}>{(this.state.orgSelected.stats && this.state.orgSelected.stats.minorities) ? this.state.orgSelected.stats.minorities : "N/A"}</Text>
+                                    <Text  style={[styles.descriptionText3,styles.centerText]}>are low-income and minorities</Text>
+                                  </View>
+                                </View>
+                              </View>
+
+                            </View>
+
+                          </ScrollView>
+
+                          <View>
+                            {(this.state.orgSelected.careerSeekerReviews && this.state.orgSelected.careerSeekerReviews.length > 0) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText]}>Career-Seeker Reviews</Text>
+                                <View style={[styles.spacer]} />
+
+                                {this.state.orgSelected.careerSeekerReviews.map((value2, optionIndex) =>
+                                  <View key={value2 + optionIndex} style={[styles.lightBorder,styles.padding10]}>
+                                    <View style={[styles.rowDirection]}>
+                                      <View  style={[styles.width60]}>
+                                        <Image source={(value2.pictureURL) ? { uri: value2.pictureURL} : { uri: profileIconDark}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
+                                      </View>
+                                      <View style={[styles.calcColumn140]}>
+                                        <Text style={[styles.standardText]}>{value2.firstName} {value2.lastName}</Text>
+                                        {(value2.headline) && (
+                                          <Text style={[styles.descriptionText3]}>{value2.headline}</Text>
+                                        )}
+                                      </View>
+
+                                    </View>
+
+                                    <View style={[styles.row10]}>
+                                      <View style={[styles.rowDirection]}>
+                                        <View><Image source={(value2.rating >= 0.5) ? { uri: fullStar} :{ uri:  emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                        <View><Image source={(value2.rating >= 1.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                        <View><Image source={(value2.rating >= 2.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                        <View><Image source={(value2.rating >= 3.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                        <View><Image source={(value2.rating >= 4.5) ? { uri: fullStar} : { uri: emptyStar}} style={[styles.square15,styles.contain,styles.horizontalMargin1]}/></View>
+                                      </View>
+                                    </View>
+
+                                    <View style={[styles.row10]}>
+                                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{convertDateToString(value2.updatedAt,"daysAgo")}</Text>
+                                    </View>
+
+                                    <View>
+                                      <Text style={[styles.descriptionText2]}>{value2.review}</Text>
+                                    </View>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+                          </View>
+
+                        </View>
+                      )}
                     </View>
-                  )}
-                </View>
 
-                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.centerText,styles.row5]}>{this.state.errorMessage}</Text>}
-                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.centerText,styles.row5]}>{this.state.successMessage}</Text>}
+                    {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.centerText,styles.row5]}>{this.state.errorMessage}</Text>}
+                    {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.centerText,styles.row5]}>{this.state.successMessage}</Text>}
 
-              </View>
+                  </View>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
             )}
 
             <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
