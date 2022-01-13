@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput, Keyboard, KeyboardAvoidingView } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -30,13 +30,14 @@ const opportunitiesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
 const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png';
 const careerMatchesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-blue.png';
-const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-dark.png';
+const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-blue.png';
 const gcFrontImage = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/gc-front-image.png';
 const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 const exampleInternMatch = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/example-intern-match.png';
 const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/denied-icon.png';
 const experienceIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/experience-icon.png';
+const rightCarrotBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/right-carrot-blue.png'
 
 import {convertDateToString} from '../functions/convertDateToString';
 import SubEditProfileDetails from '../subcomponents/EditProfileDetails';
@@ -55,6 +56,7 @@ class Walkthrough extends Component {
     this.state = {
       pageIndex: 0,
       isChecked: false,
+      headerTitles: ['Build your profile','Who you are','What you want',"What you're great at","Who can see your profile"],
 
       pages: [],
       autoEnrollInProgram: true,
@@ -524,16 +526,34 @@ class Walkthrough extends Component {
     return (
       <ScrollView>
         <View style={[styles.flex1,styles.lightBackground,styles.padding20]}>
-          <View style={[styles.topMargin20,styles.fullScreenWidth,styles.alignCenter]}>
-            <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
-          </View>
-
-          <View style={[styles.topMargin20]}>
-            <Text style={[styles.fullScreenWidth,styles.centerText,styles.headingText3]}>Build your profile</Text>
+          <View style={[styles.topMargin20,styles.flex1,styles.alignCenter,styles.rowDirection]}>
+            <View style={[styles.flex20]}>
+              <TouchableOpacity onPress={() => this.setState({ pageIndex: this.state.pageIndex - 1 })} style={[styles.rowDirection]}>
+                <Image source={{ uri: rightCarrotBlue }} style={[styles.square10,styles.contain,styles.rightMargin5,styles.topMargin5,styles.rotate180]} />
+                <Text style={[styles.ctaColor,styles.descriptionText2,styles.boldText]}>Back</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.flex60,styles.alignCenter]}>
+              <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
+            </View>
+            <View style={[styles.flex20,styles.alignEnd]}>
+              <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.movePage(true)} style={[styles.rowDirection]}>
+                <Text onPress={() => this.movePage(true)} style={[styles.ctaColor,styles.descriptionText2,styles.boldText,styles.rightText]}>Next</Text>
+                <Image source={{ uri: rightCarrotBlue }} style={[styles.square10,styles.contain,styles.leftMargin5,styles.topMargin5]} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={[styles.topMargin20,styles.flex1]}>
-            <Text style={[styles.standardText]}>Step {this.state.pageIndex} of {this.state.pages.length}</Text>
+            <View style={[styles.flex1,styles.rowDirection]}>
+              <View style={[styles.flex60]}>
+                <Text style={[styles.descriptionText2]}>{this.state.headerTitles[this.state.pageIndex - 1]}</Text>
+              </View>
+              <View style={[styles.flex40,styles.alignEnd]}>
+                <Text style={[styles.descriptionText2,styles.rightText]}>Step {this.state.pageIndex} of {this.state.pages.length}</Text>
+              </View>
+            </View>
+
             <View style={[styles.progressBarThin,styles.topMargin,styles.flex1]} >
               {(this.state.pages.length > 0) ? (
                 <View>

@@ -7515,7 +7515,6 @@ class EditProfileDetails extends Component {
                                             {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
                                           </Picker>
                                         )}
-
                                       </View>
 
                                     </View>
@@ -7527,33 +7526,34 @@ class EditProfileDetails extends Component {
                                             <Text style={[styles.standardText,styles.errorColor]}>You have no resumes to publicize. Add resumes in the "Basic Info" section of your profile or by using the Resume Builder.</Text>
                                           </View>
                                         ) : (
-                                          <View style={styles.calcColumn60}>
+                                          <View style={[styles.calcColumn60,styles.row10]}>
                                             <View style={styles.halfSpacer} />
-                                            <View>
-                                              {(Platform.OS === 'ios') ? (
-                                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Selected Resumes', selectedIndex: null, selectedName: "selectedResume", selectedValue: this.state.selectedResume, selectedOptions: this.state.resumeNames, selectedSubKey: null })}>
-                                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                                    <View style={[styles.calcColumn115]}>
-                                                      <Text style={[styles.descriptionText1]}>{this.state.selectedResume}</Text>
+                                            <View style={[styles.rowDirection],styles.rowDirection}>
+                                              <View style={[styles.calcColumn130]}>
+                                                {(Platform.OS === 'ios') ? (
+                                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Selected Resumes', selectedIndex: null, selectedName: "selectedResume", selectedValue: this.state.selectedResume, selectedOptions: this.state.resumeNames, selectedSubKey: null })}>
+                                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                                      <View style={[styles.calcColumn180]}>
+                                                        <Text style={[styles.descriptionText1]}>{this.state.selectedResume}</Text>
+                                                      </View>
+                                                      <View style={[styles.width20,styles.topMargin5]}>
+                                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                                      </View>
                                                     </View>
-                                                    <View style={[styles.width20,styles.topMargin5]}>
-                                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                                    </View>
-                                                  </View>
-                                                </TouchableOpacity>
-                                              ) : (
-                                                <Picker
-                                                  selectedValue={this.state.selectedResume}
-                                                  onValueChange={(itemValue, itemIndex) =>
-                                                    this.formChangeHandler("selectedResume",itemValue)
-                                                  }>
-                                                  {this.state.resumeNames.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                                </Picker>
-                                              )}
-
-                                            </View>
-                                            <View>
-                                              <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text style={[styles.standardText]}>Add</Text></TouchableOpacity>
+                                                  </TouchableOpacity>
+                                                ) : (
+                                                  <Picker
+                                                    selectedValue={this.state.selectedResume}
+                                                    onValueChange={(itemValue, itemIndex) =>
+                                                      this.formChangeHandler("selectedResume",itemValue)
+                                                    }>
+                                                    {this.state.resumeNames.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                                  </Picker>
+                                                )}
+                                              </View>
+                                              <View style={[styles.width70,styles.leftPadding]}>
+                                                <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.optionClicked(null, 'resume', this.state.selectedResume)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                              </View>
                                             </View>
 
                                           </View>

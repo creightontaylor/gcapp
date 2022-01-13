@@ -366,6 +366,9 @@ module.exports = StyleSheet.create({
   rightMarginNegative12: {
     marginRight: -12
   },
+  rightMargin5: {
+    marginRight: 5
+  },
   rightMargin: {
     marginRight: 10
   },
