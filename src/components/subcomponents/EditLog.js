@@ -5386,26 +5386,39 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                     <View>
-                      <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
-                      <DateTimePicker
-                        testID="startTime"
-                        value={(this.state.startTime) ? convertStringToDate(this.state.startTime,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("startTime",d)}
-                      />
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn260]}>
+                          <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
+                        </View>
+                        <View style={[styles.width200,styles.topPadding5]}>
+                          <DateTimePicker
+                            testID="startTime"
+                            value={(this.state.startTime) ? convertStringToDate(this.state.startTime,'toLocal') : new Date()}
+                            mode={'datetime'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("startTime",d)}
+                          />
+                        </View>
+                      </View>
+
                     </View>
                     <View>
-                      <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
-                      <DateTimePicker
-                        testID="endTime"
-                        value={(this.state.endTime) ? convertStringToDate(this.state.endTime,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("endTime",d)}
-                      />
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn260]}>
+                          <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
+                        </View>
+                        <View style={[styles.width200,styles.topPadding5]}>
+                          <DateTimePicker
+                            testID="endTime"
+                            value={(this.state.endTime) ? convertStringToDate(this.state.endTime,'toLocal') : new Date()}
+                            mode={'datetime'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("endTime",d)}
+                          />
+                        </View>
+                      </View>
                     </View>
 
                   </View>
@@ -6098,15 +6111,22 @@ class EditLog extends Component {
                 </View>
 
                 <View style={[styles.row10]}>
-                  <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
-                  <DateTimePicker
-                    testID="applicationDate"
-                    value={(this.state.applicationDate) ? convertStringToDate(this.state.applicationDate,'toLocal') : new Date()}
-                    mode={'datetime'}
-                    is24Hour={true}
-                    display="default"
-                    onChange={(e, d) => this.formChangeHandler("applicationDate",d)}
-                  />
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.calcColumn260]}>
+                      <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
+                    </View>
+                    <View style={[styles.width200,styles.topPadding5]}>
+                      <DateTimePicker
+                        testID="applicationDate"
+                        value={(this.state.applicationDate) ? convertStringToDate(this.state.applicationDate,'toLocal') : new Date()}
+                        mode={'datetime'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(e, d) => this.formChangeHandler("applicationDate",d)}
+                      />
+                    </View>
+                  </View>
+
                 </View>
 
                 <Text style={[styles.row10,styles.standardText]}>Mentor Reviewed Materials?<Text style={[styles.errorColor]}>*</Text></Text>
@@ -6166,15 +6186,22 @@ class EditLog extends Component {
                 {(this.state.associatedApplication.name !== 'Attach a Saved Application') && (
                   <View>
                     <View style={[styles.row10]}>
-                      <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
-                      <DateTimePicker
-                        testID="interviewDate"
-                        value={(this.state.interviewDate) ? convertStringToDate(this.state.interviewDate,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("interviewDate",d)}
-                      />
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn260]}>
+                          <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
+                        </View>
+                        <View style={[styles.width200,styles.topPadding5]}>
+                          <DateTimePicker
+                            testID="interviewDate"
+                            value={(this.state.interviewDate) ? convertStringToDate(this.state.interviewDate,'toLocal') : new Date()}
+                            mode={'datetime'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("interviewDate",d)}
+                          />
+                        </View>
+                      </View>
+
                     </View>
 
                     <View style={[styles.row10]}>
@@ -6622,15 +6649,23 @@ class EditLog extends Component {
                     )}
 
                     <View style={[styles.row10]}>
-                      <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
-                      <DateTimePicker
-                        testID="offerStartDate"
-                        value={(this.state.offerStartDate) ? convertStringToDate(this.state.offerStartDate,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("offerStartDate",d)}
-                      />
+
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn260]}>
+                          <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
+                        </View>
+                        <View style={[styles.width200,styles.topPadding5]}>
+                          <DateTimePicker
+                            testID="offerStartDate"
+                            value={(this.state.offerStartDate) ? convertStringToDate(this.state.offerStartDate,'toLocal') : new Date()}
+                            mode={'datetime'}
+                            is24Hour={true}
+                            display="default"
+                            onChange={(e, d) => this.formChangeHandler("offerStartDate",d)}
+                          />
+                        </View>
+                      </View>
+
                     </View>
 
                     <View style={[styles.row10]}>
