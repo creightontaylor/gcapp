@@ -2893,32 +2893,32 @@ class Apply extends Component {
       // schoolName, major, gradYear, linkedIn, github, portfolioLink, phoneNumber,
 
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <SubEditProfileDetails passedType="Basic" passData={this.passData} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'profileDetails') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <SubEditProfileDetails passedType="Details" passData={this.passData} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
 
     } else if (task.shorthand === 'careerAssessments') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <SubAssessments email={this.state.emailId} passData={this.passData} benchmarkId={this.state.selectedPosting.benchmarkId} tracks={this.state.selectedPosting.tracks} navigation={this.props.navigation} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'endorsements') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <SubEndorsements email={this.state.emailId} navigation={this.props.navigation} passData={this.passData} selectedOpportunity={this.state.selectedPosting} fromApply={true}/>
         </View>
       )
     } else if (task.shorthand === 'resume') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           {(this.state.tasks[index].message !== '' && this.state.tasks[index].name === 'Add Resume Website URL') ? (
             <View style={[styles.rowDirection,styles.flex1]}>
               <View style={[styles.flex5]} />
@@ -2995,7 +2995,7 @@ class Apply extends Component {
       )
     } else if (task.shorthand === 'coverLetter' || task.shorthand === 'identification' || task.shorthand === 'transcript' || task.shorthand === 'letterOfRecommendation' ) {
       return (
-        <View key={this.state.tasks[index].shorthand + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={this.state.tasks[index].shorthand + index} style={[styles.topPadding]}>
           <View>
             <View style={[styles.width70,styles.rightText,styles.rightPadding]}>
               {(this.state.tasks[index].action === 'Upload') ? (
@@ -3015,7 +3015,7 @@ class Apply extends Component {
       )
     } else if (task.shorthand === 'thirdPartyAssessments') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <View style={[styles.row10]}>
             {this.renderQuestions(task.shorthand)}
           </View>
@@ -3023,7 +3023,7 @@ class Apply extends Component {
       )
     } else if (task.shorthand === 'dealBreakers') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <View style={[styles.row10]}>
             {this.renderQuestions(task.shorthand)}
           </View>
@@ -3031,7 +3031,7 @@ class Apply extends Component {
       )
     } else if (task.shorthand === 'customAssessment') {
       return (
-        <View key={"expandedTask" + index} style={[styles.leftPadding20,styles.topPadding]}>
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <View style={[styles.row10]}>
             {this.renderQuestions(task.shorthand)}
           </View>

@@ -116,6 +116,13 @@ class Messages extends Component {
           })
         }
 
+        this.props.navigation.setOptions({ headerRight: () => (
+          <TouchableOpacity onPress={() => this.setState({ newMessage: true, recipient: null, inboxSelected: null, messages: null, searchString: '', viewIndex: 1 })}>
+            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+            <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain]}/>
+          </TouchableOpacity>
+        )})
+
         Axios.get('https://www.guidedcompass.com/api/inboxes', { params: { emailId: email} })
         .then((response) => {
           console.log('Inboxes query attempted', response.data);
@@ -577,6 +584,7 @@ class Messages extends Component {
 
               {(this.state.viewIndex === 0) && (
                 <View style={[styles.fullScreenWidth]}>
+                  {/*
                   <View style={[styles.row10,styles.standardBorder,styles.horizontalPadding20,styles.rowDirection]}>
                     <View style={[styles.calcColumn65]}>
                       <Text style={[styles.descriptionText1,styles.boldText]}>Create New Message</Text>
@@ -587,7 +595,7 @@ class Messages extends Component {
                         <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain]}/>
                       </TouchableOpacity>
                     </View>
-                  </View>
+                  </View>*/}
 
                   <View>
                     {(this.state.inboxes && this.state.inboxes.length > 0) ? (

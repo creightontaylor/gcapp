@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -2609,146 +2609,150 @@ class TakeAssessment extends Component {
                 </View>
               </View>
             ) : (
-              <View>
-                {this.state.assessmentTitle ? (
+              <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={(Platform.OS === 'ios') ? 100 : 100}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   <View>
-                    <View style={[styles.calcColumn60,styles.centerText]}>
+                    {this.state.assessmentTitle ? (
                       <View>
-                        {!this.props.fromWalkthrough && (
+                        <View style={[styles.calcColumn60,styles.centerText]}>
                           <View>
-                            {(!this.props.fromApply) && (
-                              <View style={[styles.superSpacer]}/>
+                            {!this.props.fromWalkthrough && (
+                              <View>
+                                {(!this.props.fromApply) && (
+                                  <View style={[styles.superSpacer]}/>
+                                )}
+
+                                <View style={[styles.rowDirection,styles.flex1]}>
+                                  <View style={[styles.flex10]}>
+                                    <View style={styles.spacer} /><View style={styles.spacer} />
+                                    {(this.props.fromApply) ? (
+                                      <TouchableOpacity onPress={() => this.props.closeModal()}>
+                                        <View>
+                                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('AssessmentDetails', { assessments: this.state.assessments, index: this.state.index, assessment, resultsData: this.state.resultsData })}>
+                                        <View>
+                                          <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.rotate180]} />
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+                                  </View>
+                                  <View style={[styles.flex80]}>
+                                    <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} />
+                                    <Text style={[styles.headingText2,styles.centerText]}>{this.state.assessmentTitle}</Text>
+
+                                    <View style={[styles.halfSpacer]} />
+                                    {(this.state.questions && this.state.type === 'skills') && (
+                                      <View>
+                                        {(this.props.fromApply) && (
+                                          <Text style={[styles.descriptionTextColor]}>{this.state.questions.length} Questions</Text>
+                                        )}
+
+
+                                        <View style={styles.spacer} />
+                                        <View style={styles.spacer} />
+                                      </View>
+                                    )}
+                                  </View>
+                                  <View style={[styles.flex10, styles.row5]}>
+                                  </View>
+
+                                </View>
+                              </View>
                             )}
 
-                            <View style={[styles.rowDirection,styles.flex1]}>
-                              <View style={[styles.flex10]}>
-                                <View style={styles.spacer} /><View style={styles.spacer} />
-                                {(this.props.fromApply) ? (
-                                  <TouchableOpacity onPress={() => this.props.closeModal()}>
-                                    <View>
-                                      <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('AssessmentDetails', { assessments: this.state.assessments, index: this.state.index, assessment, resultsData: this.state.resultsData })}>
-                                    <View>
-                                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.rotate180]} />
-                                    </View>
-                                  </TouchableOpacity>
-                                )}
-                              </View>
-                              <View style={[styles.flex80]}>
-                                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} />
-                                <Text style={[styles.headingText2,styles.centerText]}>{this.state.assessmentTitle}</Text>
-
-                                <View style={[styles.halfSpacer]} />
-                                {(this.state.questions && this.state.type === 'skills') && (
-                                  <View>
-                                    {(this.props.fromApply) && (
-                                      <Text style={[styles.descriptionTextColor]}>{this.state.questions.length} Questions</Text>
-                                    )}
-
-
-                                    <View style={styles.spacer} />
-                                    <View style={styles.spacer} />
-                                  </View>
-                                )}
-                              </View>
-                              <View style={[styles.flex10, styles.row5]}>
-                              </View>
-
-                            </View>
-                          </View>
-                        )}
-
-                        { (this.state.done === true) ? (
-                          <View>
+                            { (this.state.done === true) ? (
                               <View>
-                                <Text style={[styles.headingText6,styles.row10]}>You're done!</Text>
-                              </View>
+                                  <View>
+                                    <Text style={[styles.headingText6,styles.row10]}>You're done!</Text>
+                                  </View>
 
-                              <View style={[styles.padding20]}>
+                                  <View style={[styles.padding20]}>
+                                    <View>
+                                      <View style={[styles.rowDirection,styles.flexCenter]} >
+                                        <View style={[styles.calcColumn60,styles.centerText]}>
+
+                                          {(this.props.fromApply) ? (
+                                            <View>
+                                              <Text style={[styles.standardText]}>Your results have been saved and imported into your application.</Text>
+                                              <View style={styles.spacer} />
+                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.closeModal()}><Text style={[styles.whiteColor]}>Close View</Text></TouchableOpacity>
+                                            </View>
+                                          ) : (
+                                            <View>
+                                              <Text style={[styles.standardText]}>View your results on the previous screen.</Text>
+                                              <View style={styles.spacer} />
+                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.navigation.navigate(resultsPath, { assessment, resultsData: this.state.resultsData, assessments: this.state.assessments, index: this.state.index })}><Text style={[styles.whiteColor]}>View Results</Text></TouchableOpacity>
+                                            </View>
+                                          )}
+
+                                        </View>
+                                      </View>
+                                    </View>
+
+                                    <Text style={[styles.errorColor,styles.row10]}>{this.state.resultsErrorMessage}</Text>
+                                  </View>
+                              </View>
+                            ) : (
                                 <View>
-                                  <View style={[styles.rowDirection,styles.flexCenter]} >
-                                    <View style={[styles.calcColumn60,styles.centerText]}>
-
-                                      {(this.props.fromApply) ? (
-                                        <View>
-                                          <Text style={[styles.standardText]}>Your results have been saved and imported into your application.</Text>
-                                          <View style={styles.spacer} />
-                                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.closeModal()}><Text style={[styles.whiteColor]}>Close View</Text></TouchableOpacity>
-                                        </View>
-                                      ) : (
-                                        <View>
-                                          <Text style={[styles.standardText]}>View your results on the previous screen.</Text>
-                                          <View style={styles.spacer} />
-                                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.navigation.navigate(resultsPath, { assessment, resultsData: this.state.resultsData, assessments: this.state.assessments, index: this.state.index })}><Text style={[styles.whiteColor]}>View Results</Text></TouchableOpacity>
-                                        </View>
-                                      )}
-
-                                    </View>
-                                  </View>
-                                </View>
-
-                                <Text style={[styles.errorColor,styles.row10]}>{this.state.resultsErrorMessage}</Text>
-                              </View>
-                          </View>
-                        ) : (
-                            <View>
-                              <View>
-                                {!this.props.fromWalkthrough && (
                                   <View>
-                                    { (this.state.type === 'skills') && (
-                                      <View style={[styles.topPadding]}>
-                                        {(this.props.fromApply) ? (
-                                          <View>
-                                            <Text style={[styles.standardText]}>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
-                                          </View>
-                                        ) : (
-                                          <View>
-                                            <Text style={[styles.standardText]}>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
+                                    {!this.props.fromWalkthrough && (
+                                      <View>
+                                        { (this.state.type === 'skills') && (
+                                          <View style={[styles.topPadding]}>
+                                            {(this.props.fromApply) ? (
+                                              <View>
+                                                <Text style={[styles.standardText]}>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
+                                              </View>
+                                            ) : (
+                                              <View>
+                                                <Text style={[styles.standardText]}>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
+                                              </View>
+                                            )}
                                           </View>
                                         )}
+
+                                        <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
                                       </View>
                                     )}
 
-                                    <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                    {(this.state.type === 'skills' && !this.props.fromApply) ? (
+                                      <View>
+                                        {console.log('in it')}
+                                        {this.renderTaggingAssessment()}
+
+                                        <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+                                      </View>
+                                    ) : (
+                                      <View>
+                                        {this.renderQuestions()}
+                                      </View>
+                                    )}
+
+                                    {(this.state.resultsErrorMessage) && <Text style={[styles.errorColor,styles.row10]}>{this.state.resultsErrorMessage}</Text>}
+
+                                    {(!this.props.fromWalkthrough && (this.props.fromApply || this.state.type !== 'skills')) && (
+                                      <View style={[styles.flexCenter, styles.flex1]}>
+                                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerText,styles.standardText]}>Submit</Text></TouchableOpacity>
+                                      </View>
+                                    )}
+
+                                    <View style={[styles.superSpacer]} />
+
                                   </View>
-                                )}
-
-                                {(this.state.type === 'skills' && !this.props.fromApply) ? (
-                                  <View>
-                                    {console.log('in it')}
-                                    {this.renderTaggingAssessment()}
-
-                                    <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
-                                  </View>
-                                ) : (
-                                  <View>
-                                    {this.renderQuestions()}
-                                  </View>
-                                )}
-
-                                {(this.state.resultsErrorMessage) && <Text style={[styles.errorColor,styles.row10]}>{this.state.resultsErrorMessage}</Text>}
-
-                                {(!this.props.fromWalkthrough && (this.props.fromApply || this.state.type !== 'skills')) && (
-                                  <View style={[styles.flexCenter, styles.flex1]}>
-                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitAssessment()}><Text style={[styles.whiteColor,styles.centerText,styles.standardText]}>Submit</Text></TouchableOpacity>
-                                  </View>
-                                )}
-
-                                <View style={[styles.superSpacer]} />
-
-                              </View>
-                            </View>
-                        )}
+                                </View>
+                            )}
+                          </View>
+                        </View>
                       </View>
-                    </View>
+                    ) : (
+                      <View />
+                    )}
                   </View>
-                ) : (
-                  <View />
-                )}
-              </View>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
             )}
           </View>
 

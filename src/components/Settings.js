@@ -1294,7 +1294,7 @@ class Settings extends Component {
                       <View style={[styles.row20]}>
                         <TouchableOpacity onPress={() => this.shareApp()}>
                           <View>
-                            <Text style={[styles.standardText,styles.ctaColor]}>Invite People to Join</Text>
+                            <Text style={[styles.standardText]}>Invite People to Join</Text>
                           </View>
                         </TouchableOpacity >
                       </View>

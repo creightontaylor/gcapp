@@ -32,6 +32,7 @@ class EditLog extends Component {
       goalType: { name: ''},
       showModule: true,
       pollConnections: true,
+      extraPaddingForKeyboard: true,
 
       selectedCareers: [],
       selectedCareerDetails: [],
@@ -4663,7 +4664,7 @@ class EditLog extends Component {
                                   {(Platform.OS === 'ios') ? (
                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Job Function', selectedIndex: null, selectedName: "selectedFunction", selectedValue: this.state.selectedFunction, selectedOptions: this.state.functionOptions, selectedSubKey: null })}>
                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn180]}>
+                                        <View style={[styles.calcColumn120]}>
                                           <Text style={[styles.descriptionText1]}>{this.state.selectedFunction}</Text>
                                         </View>
                                         <View style={[styles.width20,styles.topMargin5]}>
@@ -4700,7 +4701,7 @@ class EditLog extends Component {
                                   {(Platform.OS === 'ios') ? (
                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: null, selectedName: "selectedIndustry", selectedValue: this.state.selectedIndustry, selectedOptions: this.state.industryOptions, selectedSubKey: null })}>
                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn180]}>
+                                        <View style={[styles.calcColumn120]}>
                                           <Text style={[styles.descriptionText1]}>{this.state.selectedIndustry}</Text>
                                         </View>
                                         <View style={[styles.width20,styles.topMargin5]}>
@@ -4741,7 +4742,7 @@ class EditLog extends Component {
                                   {(Platform.OS === 'ios') ? (
                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Hours Per Week', selectedIndex: null, selectedName: "selectedHoursPerWeek", selectedValue: this.state.selectedHoursPerWeek, selectedOptions: this.state.hoursPerWeekOptions, selectedSubKey: null })}>
                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn180]}>
+                                        <View style={[styles.calcColumn120]}>
                                           <Text style={[styles.descriptionText1]}>{this.state.selectedHoursPerWeek}</Text>
                                         </View>
                                         <View style={[styles.width20,styles.topMargin5]}>
@@ -4778,7 +4779,7 @@ class EditLog extends Component {
                                   {(Platform.OS === 'ios') ? (
                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pay Range', selectedIndex: null, selectedName: "selectedPayRange", selectedValue: this.state.selectedPayRange, selectedOptions: this.state.annualPayOptions, selectedSubKey: null })}>
                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn180]}>
+                                        <View style={[styles.calcColumn120]}>
                                           <Text style={[styles.descriptionText1]}>{this.state.selectedPayRange}</Text>
                                         </View>
                                         <View style={[styles.width20,styles.topMargin5]}>
@@ -4816,7 +4817,7 @@ class EditLog extends Component {
                                 {(Platform.OS === 'ios') ? (
                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Optimize', selectedIndex: null, selectedName: "selectedOptimize", selectedValue: this.state.selectedOptimize, selectedOptions: this.state.optimizeOptions, selectedSubKey: null })}>
                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn180]}>
+                                      <View style={[styles.calcColumn120]}>
                                         <Text style={[styles.descriptionText1]}>{this.state.selectedOptimize}</Text>
                                       </View>
                                       <View style={[styles.width20,styles.topMargin5]}>
@@ -5942,7 +5943,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Employer Type', selectedIndex: null, selectedName: "employerType", selectedValue: this.state.employerType, selectedOptions: this.state.employerTypeOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.employerType}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -5967,7 +5968,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: null, selectedName: "industry", selectedValue: this.state.industry, selectedOptions: this.state.industryOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.industry}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -5993,7 +5994,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Employee Count', selectedIndex: null, selectedName: "employeeCount", selectedValue: this.state.employeeCount, selectedOptions: this.state.employeeCountOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.employeeCount}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6040,7 +6041,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Function', selectedIndex: null, selectedName: "jobFunction", selectedValue: this.state.jobFunction, selectedOptions: this.state.functionOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.jobFunction}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6065,7 +6066,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Type', selectedIndex: null, selectedName: "workType", selectedValue: this.state.workType, selectedOptions: this.state.workTypeOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.workType}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6090,7 +6091,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Time Frame', selectedIndex: null, selectedName: "timeframe", selectedValue: this.state.timeframe, selectedOptions: this.state.timeframeOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.timeframe}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6134,7 +6135,7 @@ class EditLog extends Component {
                 {(Platform.OS === 'ios') ? (
                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Reviewed Materials', selectedIndex: null, selectedName: "reviewedMaterials", selectedValue: this.state.reviewedMaterials, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                      <View style={[styles.calcColumn180]}>
+                      <View style={[styles.calcColumn120]}>
                         <Text style={[styles.descriptionText1]}>{this.state.reviewedMaterials}</Text>
                       </View>
                       <View style={[styles.width20,styles.topMargin5]}>
@@ -6163,7 +6164,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Associated Application', selectedIndex: null, selectedName: "associatedApplication", selectedValue: this.state.associatedApplication.name, selectedOptions: this.state.applicationOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.associatedApplication.name}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6210,7 +6211,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Interview Round', selectedIndex: null, selectedName: "interviewRound", selectedValue: this.state.interviewRound, selectedOptions: this.state.interviewRoundOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.interviewRound}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6236,7 +6237,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Interview Length', selectedIndex: null, selectedName: "interviewLength", selectedValue: this.state.interviewLength, selectedOptions: this.state.interviewLengthOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.interviewLength}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6320,7 +6321,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Position Rating', selectedIndex: null, selectedName: "positionRating", selectedValue: this.state.positionRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.positionRating}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6356,7 +6357,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Company Rating', selectedIndex: null, selectedName: "companyRating", selectedValue: this.state.companyRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.companyRating}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6392,7 +6393,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Fit Rating', selectedIndex: null, selectedName: "fitRating", selectedValue: this.state.fitRating, selectedOptions: this.state.ratingOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.fitRating}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6461,7 +6462,7 @@ class EditLog extends Component {
                   {(Platform.OS === 'ios') ? (
                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer', selectedIndex: null, selectedName: "offerAssociatedApplication", selectedValue: this.state.offerAssociatedApplication.name, selectedOptions: this.state.applicationOptions, selectedSubKey: null })}>
                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                        <View style={[styles.calcColumn180]}>
+                        <View style={[styles.calcColumn120]}>
                           <Text style={[styles.descriptionText1]}>{this.state.offerAssociatedApplication.name}</Text>
                         </View>
                         <View style={[styles.width20,styles.topMargin5]}>
@@ -6489,7 +6490,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay Type', selectedIndex: null, selectedName: "offerPayType", selectedValue: this.state.offerPayType, selectedOptions: this.state.payTypeOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.offerPayType}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6516,7 +6517,7 @@ class EditLog extends Component {
                           {(Platform.OS === 'ios') ? (
                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay', selectedIndex: null, selectedName: "offerPay", selectedValue: this.state.offerPay, selectedOptions: this.state.hourlyPayOptions, selectedSubKey: null })}>
                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn180]}>
+                                <View style={[styles.calcColumn120]}>
                                   <Text style={[styles.descriptionText1]}>{this.state.offerPay}</Text>
                                 </View>
                                 <View style={[styles.width20,styles.topMargin5]}>
@@ -6539,7 +6540,7 @@ class EditLog extends Component {
                           {(Platform.OS === 'ios') ? (
                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Pay', selectedIndex: null, selectedName: "offerPay", selectedValue: this.state.offerPay, selectedOptions: this.state.annualPayOptions, selectedSubKey: null })}>
                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn180]}>
+                                <View style={[styles.calcColumn120]}>
                                   <Text style={[styles.descriptionText1]}>{this.state.offerPay}</Text>
                                 </View>
                                 <View style={[styles.width20,styles.topMargin5]}>
@@ -6600,7 +6601,7 @@ class EditLog extends Component {
                           {(Platform.OS === 'ios') ? (
                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Equity Percentage', selectedIndex: null, selectedName: "equityPercentage", selectedValue: this.state.equityPercentage, selectedOptions: this.state.equityPercentageOptions, selectedSubKey: null })}>
                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn180]}>
+                                <View style={[styles.calcColumn120]}>
                                   <Text style={[styles.descriptionText1]}>{this.state.equityPercentage}</Text>
                                 </View>
                                 <View style={[styles.width20,styles.topMargin5]}>
@@ -6626,7 +6627,7 @@ class EditLog extends Component {
                           {(Platform.OS === 'ios') ? (
                             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Company Valuation', selectedIndex: null, selectedName: "companyValuation", selectedValue: this.state.companyValuation, selectedOptions: this.state.valuationOptions, selectedSubKey: null })}>
                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn180]}>
+                                <View style={[styles.calcColumn120]}>
                                   <Text style={[styles.descriptionText1]}>{this.state.companyValuation}</Text>
                                 </View>
                                 <View style={[styles.width20,styles.topMargin5]}>
@@ -6673,7 +6674,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Offer Decision', selectedIndex: null, selectedName: "offerDecision", selectedValue: this.state.offerDecision, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn120]}>
                               <Text style={[styles.descriptionText1]}>{this.state.offerDecision}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -6794,15 +6795,34 @@ class EditLog extends Component {
                     />
                   </View>
                 ) : (
-                  <ScrollView key="info" style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
-                   {this.renderDetails()}
+                  <ScrollView key="info">
+                    <View style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
+                      {this.renderDetails()}
+                    </View>
+
+                   {(this.state.extraPaddingForKeyboard) && (
+                     <View>
+                       <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                       <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                     </View>
+                   )}
                   </ScrollView>
                 )}
 
             </Modal>
           ) : (
-            <ScrollView style={[styles.fullScreenWidth,styles.card]}>
-              {this.renderDetails()}
+            <ScrollView>
+              <View style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
+                {this.renderDetails()}
+              </View>
+
+              {(this.state.extraPaddingForKeyboard) && (
+                <View>
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                </View>
+              )}
+
             </ScrollView>
           )}
 

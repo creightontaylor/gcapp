@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, Linking, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -3428,91 +3428,134 @@ class OpportunityDetails extends Component {
                                   <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                                 </View>
                               ) : (
-                                <View>
-                                  {(this.state.emailId || (this.state.selectedOpportunity.isPublic && !this.state.emailId)) && (
-                                    <View>
-                                      <View style={[styles.topPadding20]}>
-                                        <Text style={[styles.headingText3]}>Register for Challenge</Text>
-                                      </View>
+                                <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={(Platform.OS === 'ios') ? 100 : 100}>
+                                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                                    {(this.state.emailId || (this.state.selectedOpportunity.isPublic && !this.state.emailId)) && (
+                                      <View>
+                                        <View style={[styles.topPadding20]}>
+                                          <Text style={[styles.headingText3]}>Register for Challenge</Text>
+                                        </View>
 
-                                      <View style={[styles.row5]}>
-                                        <View style={[styles.row10]}>
-                                          <View style={[styles.rowDirection]}>
-                                            <View style={[styles.calcColumn105]}>
-                                              <Text style={[styles.row10]}>Which best describes you?<Text style={[styles.errorColor]}>*</Text></Text>
-                                            </View>
-                                            <View style={[styles.width45,styles.leftPadding]}>
-                                              <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                            </View>
-
-                                          </View>
-
-                                          <View style={[styles.rowDirection,styles.flexWrap]}>
-                                            {this.state.roleNameOptions.map((value, index) =>
-                                              <View key={value}>
-                                                <View style={[styles.row5,styles.rightPadding]}>
-                                                  <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
-                                                    {(this.state.roleName === value) ? (
-                                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]}>
-                                                        <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
-                                                      </View>
-                                                    ) : (
-                                                      <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder]}>
-                                                        <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
-                                                      </View>
-                                                    )}
-                                                  </TouchableOpacity>
-                                                </View>
+                                        <View style={[styles.row5]}>
+                                          <View style={[styles.row10]}>
+                                            <View style={[styles.rowDirection]}>
+                                              <View style={[styles.calcColumn105]}>
+                                                <Text style={[styles.row10]}>Which best describes you?<Text style={[styles.errorColor]}>*</Text></Text>
                                               </View>
-                                            )}
+                                              <View style={[styles.width45,styles.leftPadding]}>
+                                                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                              </View>
+
+                                            </View>
+
+                                            <View style={[styles.rowDirection,styles.flexWrap]}>
+                                              {this.state.roleNameOptions.map((value, index) =>
+                                                <View key={value}>
+                                                  <View style={[styles.row5,styles.rightPadding]}>
+                                                    <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
+                                                      {(this.state.roleName === value) ? (
+                                                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]}>
+                                                          <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
+                                                        </View>
+                                                      ) : (
+                                                        <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.ctaBorder]}>
+                                                          <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
+                                                        </View>
+                                                      )}
+                                                    </TouchableOpacity>
+                                                  </View>
+                                                </View>
+                                              )}
+                                            </View>
+
                                           </View>
 
-                                        </View>
+                                          {(this.state.roleName === 'Other') && (
+                                            <View style={[styles.row10]}>
+                                              <Text style={[styles.row10]}>You selected "other". Please write your role:<Text style={[styles.errorColor]}>*</Text></Text>
+                                              <TextInput
+                                                style={styles.textInput}
+                                                onChangeText={(text) => this.formChangeHandler("otherRoleName", text)}
+                                                value={this.state.otherRoleName}
+                                                placeholder="Other Role Name..."
+                                                placeholderTextColor="grey"
+                                              />
+                                            </View>
+                                          )}
 
-                                        {(this.state.roleName === 'Other') && (
-                                          <View style={[styles.row10]}>
-                                            <Text style={[styles.row10]}>You selected "other". Please write your role:<Text style={[styles.errorColor]}>*</Text></Text>
-                                            <TextInput
-                                              style={styles.textInput}
-                                              onChangeText={(text) => this.formChangeHandler("otherRoleName", text)}
-                                              value={this.state.otherRoleName}
-                                              placeholder="Other Role Name..."
-                                              placeholderTextColor="grey"
-                                            />
-                                          </View>
-                                        )}
-
-                                        <View>
-                                          <View style={[styles.row10]}>
-                                            <Text style={[styles.row10]}>First Name<Text style={[styles.errorColor]}>*</Text></Text>
-                                            <TextInput
-                                              style={styles.textInput}
-                                              onChangeText={(text) => this.formChangeHandler("firstName", text)}
-                                              value={this.state.firstName}
-                                              placeholder="e.g., Joe..."
-                                              placeholderTextColor="grey"
-                                            />
-                                          </View>
-                                          <View style={[styles.row10]}>
-                                            <Text style={[styles.row10]}>Last Name<Text style={[styles.errorColor]}>*</Text></Text>
-                                            <TextInput
-                                              style={styles.textInput}
-                                              onChangeText={(text) => this.formChangeHandler("lastName", text)}
-                                              value={this.state.lastName}
-                                              placeholder="e.g., Smith..."
-                                              placeholderTextColor="grey"
-                                            />
-                                          </View>
-
-                                        </View>
-
-                                        {(this.state.roleName && this.state.roleNameOptions.includes(this.state.roleName)) && (
                                           <View>
+                                            <View style={[styles.row10]}>
+                                              <Text style={[styles.row10]}>First Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                              <TextInput
+                                                style={styles.textInput}
+                                                onChangeText={(text) => this.formChangeHandler("firstName", text)}
+                                                value={this.state.firstName}
+                                                placeholder="e.g., Joe..."
+                                                placeholderTextColor="grey"
+                                              />
+                                            </View>
+                                            <View style={[styles.row10]}>
+                                              <Text style={[styles.row10]}>Last Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                              <TextInput
+                                                style={styles.textInput}
+                                                onChangeText={(text) => this.formChangeHandler("lastName", text)}
+                                                value={this.state.lastName}
+                                                placeholder="e.g., Smith..."
+                                                placeholderTextColor="grey"
+                                              />
+                                            </View>
+
+                                          </View>
+
+                                          {(this.state.roleName && this.state.roleNameOptions.includes(this.state.roleName)) && (
                                             <View>
-                                              <View style={[styles.row10]}>
-                                                {(this.state.roleName === 'Participant') ? (
-                                                  <View>
-                                                    <Text style={[styles.row10]}>Current / Latest School Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                              <View>
+                                                <View style={[styles.row10]}>
+                                                  {(this.state.roleName === 'Participant') ? (
+                                                    <View>
+                                                      <Text style={[styles.row10]}>Current / Latest School Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                                      <TextInput
+                                                        style={styles.textInput}
+                                                        onChangeText={(text) => this.formChangeHandler("school", text)}
+                                                        value={this.state.school}
+                                                        placeholder="e.g., Guided Compass University..."
+                                                        placeholderTextColor="grey"
+                                                      />
+                                                    </View>
+                                                  ) : (
+                                                    <View>
+                                                      <Text style={[styles.row10]}>Employer Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                                      <TextInput
+                                                        style={styles.textInput}
+                                                        onChangeText={(text) => this.formChangeHandler("employerName", text)}
+                                                        value={this.state.employerName}
+                                                        placeholder="e.g., Amazon..."
+                                                        placeholderTextColor="grey"
+                                                      />
+                                                    </View>
+                                                  )}
+                                                </View>
+                                                <View style={[styles.row10]}>
+                                                  {(this.state.roleName !== 'Participant') && (
+                                                    <View>
+                                                      <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor]}>*</Text></Text>
+                                                      <TextInput
+                                                        style={styles.textInput}
+                                                        onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
+                                                        value={this.state.jobTitle}
+                                                        placeholder="e.g., Software Engineer..."
+                                                        placeholderTextColor="grey"
+                                                      />
+                                                    </View>
+                                                  )}
+                                                </View>
+
+                                              </View>
+
+                                              {(this.state.roleName === 'Educator') && (
+                                                <View>
+                                                  <View style={[styles.row10]}>
+                                                    <Text style={[styles.row10]}>School Name<Text style={[styles.errorColor]}>*</Text></Text>
                                                     <TextInput
                                                       style={styles.textInput}
                                                       onChangeText={(text) => this.formChangeHandler("school", text)}
@@ -3521,112 +3564,71 @@ class OpportunityDetails extends Component {
                                                       placeholderTextColor="grey"
                                                     />
                                                   </View>
-                                                ) : (
-                                                  <View>
-                                                    <Text style={[styles.row10]}>Employer Name<Text style={[styles.errorColor]}>*</Text></Text>
-                                                    <TextInput
-                                                      style={styles.textInput}
-                                                      onChangeText={(text) => this.formChangeHandler("employerName", text)}
-                                                      value={this.state.employerName}
-                                                      placeholder="e.g., Amazon..."
-                                                      placeholderTextColor="grey"
-                                                    />
-                                                  </View>
-                                                )}
-                                              </View>
-                                              <View style={[styles.row10]}>
-                                                {(this.state.roleName !== 'Participant') && (
-                                                  <View>
-                                                    <Text style={[styles.row10]}>Job Title<Text style={[styles.errorColor]}>*</Text></Text>
-                                                    <TextInput
-                                                      style={styles.textInput}
-                                                      onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
-                                                      value={this.state.jobTitle}
-                                                      placeholder="e.g., Software Engineer..."
-                                                      placeholderTextColor="grey"
-                                                    />
-                                                  </View>
-                                                )}
-                                              </View>
 
-                                            </View>
+                                                </View>
+                                              )}
 
-                                            {(this.state.roleName === 'Educator') && (
                                               <View>
                                                 <View style={[styles.row10]}>
-                                                  <Text style={[styles.row10]}>School Name<Text style={[styles.errorColor]}>*</Text></Text>
+                                                  <Text style={[styles.row10]}>Email<Text style={[styles.errorColor]}>*</Text></Text>
                                                   <TextInput
                                                     style={styles.textInput}
-                                                    onChangeText={(text) => this.formChangeHandler("school", text)}
-                                                    value={this.state.school}
-                                                    placeholder="e.g., Guided Compass University..."
+                                                    onChangeText={(text) => this.formChangeHandler("emailId", text)}
+                                                    value={this.state.emailId}
+                                                    placeholder="e.g., guidedcompass@gmail.com..."
                                                     placeholderTextColor="grey"
                                                   />
                                                 </View>
 
                                               </View>
-                                            )}
 
-                                            <View>
-                                              <View style={[styles.row10]}>
-                                                <Text style={[styles.row10]}>Email<Text style={[styles.errorColor]}>*</Text></Text>
-                                                <TextInput
-                                                  style={styles.textInput}
-                                                  onChangeText={(text) => this.formChangeHandler("emailId", text)}
-                                                  value={this.state.emailId}
-                                                  placeholder="e.g., guidedcompass@gmail.com..."
-                                                  placeholderTextColor="grey"
-                                                />
-                                              </View>
-
-                                            </View>
-
-                                            {(this.state.roleName === 'Participant') && (
-                                              <View>
-                                                <Text style={[styles.row10]}>Add Teammates (Optional)</Text>
+                                              {(this.state.roleName === 'Participant') && (
                                                 <View>
-                                                  <View style={[styles.row10,styles.rowDirection]}>
-                                                    <View style={[stles.calcColumn140]}>
-                                                      <TextInput
-                                                        style={styles.textInput}
-                                                        onChangeText={(text) => this.formChangeHandler("collaboratorEmail", text)}
-                                                        value={this.state.collaboratorEmail}
-                                                        placeholder="e.g., collaborator@gmail.com..."
-                                                        placeholderTextColor="grey"
-                                                      />
-                                                    </View>
-                                                    <View style={[styles.width80,styles.leftPadding]}>
-                                                      <TouchableOpacity style={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.unselectedBackground]} onPress={() => this.inviteCollaborators()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                                  <Text style={[styles.row10]}>Add Teammates (Optional)</Text>
+                                                  <View>
+                                                    <View style={[styles.row10,styles.rowDirection]}>
+                                                      <View style={[stles.calcColumn140]}>
+                                                        <TextInput
+                                                          style={styles.textInput}
+                                                          onChangeText={(text) => this.formChangeHandler("collaboratorEmail", text)}
+                                                          value={this.state.collaboratorEmail}
+                                                          placeholder="e.g., collaborator@gmail.com..."
+                                                          placeholderTextColor="grey"
+                                                        />
+                                                      </View>
+                                                      <View style={[styles.width80,styles.leftPadding]}>
+                                                        <TouchableOpacity style={(this.state.collaboratorEmail && this.state.collaboratorEmail !== '') ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.unselectedBackground]} onPress={() => this.inviteCollaborators()}><Text style={[styles.descriptionText1,styles.whiteColor]}>Add</Text></TouchableOpacity>
+                                                      </View>
                                                     </View>
                                                   </View>
-                                                </View>
 
-                                                {(this.state.collaboratorErrorMessage) && <Text style={[styles.errorColor]}>{this.state.collaboratorErrorMessage}</Text>}
+                                                  {(this.state.collaboratorErrorMessage) && <Text style={[styles.errorColor]}>{this.state.collaboratorErrorMessage}</Text>}
 
-                                                <View>
-                                                  {this.renderCollaborators()}
+                                                  <View>
+                                                    {this.renderCollaborators()}
+                                                  </View>
                                                 </View>
-                                              </View>
-                                            )}
+                                              )}
+
+                                            </View>
+                                          )}
+
+                                          <View style={[styles.topPadding20,styles.bottomPadding]}>
+                                            <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}><Text style={[styles.standardText,styles.whiteColor]}>Register</Text></TouchableOpacity>
+
+                                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.errorMessage}</Text>}
+                                            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.successMessage}</Text>}
 
                                           </View>
-                                        )}
-
-                                        <View style={[styles.topPadding20,styles.bottomPadding]}>
-                                          <TouchableOpacity style={(this.state.disableSubmit) ? [styles.btnPrimary,styles.unselectedBackgroundColor,styles.standardBorder,styles.flexCenter] : [styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.disableSubmit} onPress={() => this.handleSubmit(this.state.selectedOpportunity.postType, 'register')}><Text style={[styles.standardText,styles.whiteColor]}>Register</Text></TouchableOpacity>
-
-                                          {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.errorMessage}</Text>}
-                                          {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.topPadding,styles.calcColumn60,styles.centerText]}>{this.state.successMessage}</Text>}
-
                                         </View>
                                       </View>
-                                    </View>
-                                  )}
+                                    )}
 
-                                  <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                                  <View style={[styles.ctaHorizontalLine]} />
-                                  <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                                </View>
+                                    <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+                                    <View style={[styles.ctaHorizontalLine]} />
+                                    <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
+                                  </TouchableWithoutFeedback>
+                                </KeyboardAvoidingView>
                               )}
                             </View>
                           ) : (

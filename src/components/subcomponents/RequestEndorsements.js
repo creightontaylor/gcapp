@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 const styles = require('../css/style');
 import Axios from 'axios';
@@ -20,6 +20,7 @@ class RequestEndorsements extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      extraPaddingForKeyboard: true,
       enableRequestEndorsement: 'No',
 
       goalType: { name: ''},
@@ -1968,6 +1969,13 @@ class RequestEndorsements extends Component {
                   )}
 
               </View>
+
+              {(this.state.extraPaddingForKeyboard) && (
+                <View>
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                </View>
+              )}
 
               <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
                 {(this.state.showPicker) && (

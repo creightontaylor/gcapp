@@ -41,6 +41,7 @@ class EditProfileDetails extends Component {
     super(props)
     this.state = {
       allowMultipleFiles: true,
+      extraPaddingForKeyboard: true,
 
       profilePicFile: null,
       profilePicImage: null,
@@ -3710,7 +3711,7 @@ class EditProfileDetails extends Component {
                   <Text style={styles.headingText5}>Edit experience below</Text>
                 )}
               </View>
-              <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+              <View style={[styles.flex25,styles.rightText,styles.rightPadding20,styles.alignEnd]}>
                 <TouchableOpacity onPress={() => this.saveExperience(rowKey)}>
                   <View>
                     <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
@@ -4274,7 +4275,7 @@ class EditProfileDetails extends Component {
                     <Text style={styles.headingText5}>Edit extracurricular below</Text>
                   )}
                 </View>
-                <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+                <View style={[styles.flex25,styles.rightText,styles.rightPadding20,styles.alignEnd]}>
                   <TouchableOpacity onPress={() => this.saveExtras(rowKey,"extracurricular")}>
                     <View>
                       <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
@@ -4475,7 +4476,7 @@ class EditProfileDetails extends Component {
                     <Text style={styles.headingText5}>Edit award below</Text>
                   )}
                 </View>
-                <View style={[styles.flex25,styles.rightText,styles.rightPadding20]}>
+                <View style={[styles.flex25,styles.rightText,styles.rightPadding20,styles.alignEnd]}>
                   <TouchableOpacity onPress={() => this.saveExtras(rowKey,"award")}>
                     <View>
                       <Text style={[styles.headingText5,styles.ctaColor]}>Done</Text>
@@ -7617,6 +7618,13 @@ class EditProfileDetails extends Component {
                       </View>
                     </View>
                   )}
+                </View>
+              )}
+
+              {(this.state.extraPaddingForKeyboard) && (
+                <View>
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
                 </View>
               )}
 

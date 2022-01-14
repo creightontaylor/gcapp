@@ -7,6 +7,8 @@ class ChangePassword extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      extraPaddingForKeyboard: true,
+
       oldPassword: '',
       newPassword: '',
       repeatedPassword: '',
@@ -142,7 +144,6 @@ class ChangePassword extends Component {
 
       return (
           <ScrollView>
-
               <View style={[styles.card,styles.topMargin20]}>
                   <Text style={[styles.headingText2,styles.row10]}>Change Password</Text>
                   <View style={[styles.spacer]}/>
@@ -194,6 +195,13 @@ class ChangePassword extends Component {
                     <Text style={[styles.ctaColor]}>{this.state.errorMessage}</Text>
                   )}
               </View>
+
+              {(this.state.extraPaddingForKeyboard) && (
+                <View>
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                  <View style={[styles.superSpacer]} /><View style={[styles.superSpacer]} />
+                </View>
+              )}
           </ScrollView>
 
       )
