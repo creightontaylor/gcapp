@@ -22,21 +22,6 @@ class SignInScreen extends Component {
     this.signIn = this.signIn.bind(this)
   }
 
-  //static navigationOptions = { header: null };
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: <Text style={{color: 'white', fontSize: 18}}> </Text>,
-      headerTransparent: true,
-      headerLeft: (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-            <Icon name={'ios-arrow-back'} size={25} color='white' />
-          </View>
-        </TouchableOpacity>
-      ),
-    }
-  }
-
   componentDidMount() {
     console.log('componentDidMount called')
     /*

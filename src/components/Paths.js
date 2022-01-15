@@ -5,8 +5,6 @@ import Axios from 'axios';
 const styles = require('./css/style');
 //import PushNotification from 'react-native-push-notification';
 //import { configurePushNotifications } from '../services/PushNotifications';
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
 
 import SubCareers from './subcomponents/Careers';
 import SubFinancials from './subcomponents/Financials';

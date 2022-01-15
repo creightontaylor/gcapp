@@ -55,11 +55,23 @@ import ChangePassword from './src/components/ChangePassword';
 import AddWorkspaces from './src/components/AddWorkspaces';
 import OrgDetails from './src/components/OrgDetails';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
-
 const orgLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"
-const chatbubblesIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/chatbubbles-icon.png"
+const notificationsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/notifications-icon-dark.png"
+const chatbubblesIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/chatbubbles-icon.png"
+const searchIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png"
+const addIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png"
+const settingsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/settings-icon-dark.png"
+const homeIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/home-icon-dark.png"
+const homeIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/home-icon-blue.png"
+const socialIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png"
+const socialIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-blue.png"
+const pathsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/paths-icon-dark.png"
+const pathsIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/paths-icon-blue.png"
+const opportunitiesIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png"
+const opportunitiesIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-blue.png"
+const profileIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png"
+const profileIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-blue.png"
+const arrowIndicatorIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png"
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -128,7 +140,7 @@ export default class App extends Component<Props> {
             headerLeft: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
                 <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                  <Icon name={'ios-arrow-back'} size={25} color='white' />
+                  <Image source={{uri: arrowIndicatorIcon }} style={[styles.square15,styles.contain,styles.whiteTintColor,styles.rotate180]} />
                 </View>
               </TouchableOpacity>
             ),
@@ -139,7 +151,7 @@ export default class App extends Component<Props> {
             headerLeft: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
                 <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                  <Icon name={'ios-arrow-back'} size={25} color='white' />
+                  <Image source={{uri: arrowIndicatorIcon }} style={[styles.square15,styles.contain,styles.whiteTintColor,styles.rotate180]} />
                 </View>
               </TouchableOpacity>
             ),
@@ -148,28 +160,6 @@ export default class App extends Component<Props> {
         </Stack.Navigator>
       );
     }
-
-    // function HomeStack({ navigation }) {
-    //   return (
-    //     <Stack.Navigator>
-    //       <Stack.Screen name="Home" component={Home} options={{
-    //         headerTitle: '',
-    //         headerLeft: () => (
-    //           <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-    //             <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-    //               <Icon name="person" size={25} color='#5A5A5A' />
-    //             </View>
-    //           </TouchableOpacity>
-    //         ),
-    //         tabBarLabel: 'Home',
-    //         tabBarIcon: ({ color, size }) => (
-    //           <Icon name="home" size={size} color={color} />
-    //         ),
-    //       }} />
-    //       <Stack.Screen name="Profile" component={Profile} />
-    //     </Stack.Navigator>
-    //   );
-    // }
 
     let showDrawerNavigation = false
 
@@ -234,12 +224,13 @@ export default class App extends Component<Props> {
         //   </Drawer.Navigator>
         // )
       } else {
+        // 0,122,255 rgb; 8e8e8f
         return (
           <Tab.Navigator>
             <Tab.Screen name="Home" component={Home} options={{
               tabBarLabel: 'Home',
               tabBarIcon: ({ color, size }) => (
-                <Icon name="home" size={size} color={color} />
+                <Image source={(color === '#8E8E8F') ? { uri: homeIconDark } : { uri: homeIconBlue }} style={{ width: size, height: size, resizeMode: 'contain' }} />
               ),
               headerTitle: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('AddWorkspaces')}>
@@ -250,12 +241,11 @@ export default class App extends Component<Props> {
                 <View style={{ flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
                     <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="notifications" size={25} color='#5A5A5A' />
+                      <Image source={{ uri: notificationsIconDark }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate('Messages')}>
                     <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="chatbubbles" size={25} color='#5A5A5A' />
                       <Image source={{ uri: chatbubblesIcon }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
@@ -265,12 +255,12 @@ export default class App extends Component<Props> {
                 <View style={{ flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="search" size={25} color='#5A5A5A' />
+                      <Image source={{ uri: searchIcon }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Icon name="add-circle-outline" size={25} color='#5A5A5A' />
+                      <Image source={{ uri: addIcon }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -279,31 +269,31 @@ export default class App extends Component<Props> {
             <Tab.Screen name="Community" component={Community} options={{
               tabBarLabel: 'Community',
               tabBarIcon: ({ color, size }) => (
-                <Icon name="people" size={size} color={color} />
+                <Image source={(color === '#8E8E8F') ? { uri: socialIconDark } : { uri: socialIconBlue }} style={{ width: size, height: size, resizeMode: 'contain' }} />
               )
             }}/>
             <Tab.Screen name="Paths" component={Paths} options={{
               tabBarLabel: 'Paths',
               tabBarIcon: ({ color, size }) => (
-                <Icon name="compass" size={size} color={color} />
+                <Image source={(color === '#8E8E8F') ? { uri: pathsIconDark } : { uri: pathsIconBlue }} style={{ width: size, height: size, resizeMode: 'contain' }} />
               )
             }}/>
             <Tab.Screen name="Opportunities" component={Opportunities} options={{
               tabBarLabel: 'Opportunities',
               tabBarIcon: ({ color, size }) => (
-                <Icon name="briefcase" size={size} color={color} />
+                <Image source={(color === '#8E8E8F') ? { uri: opportunitiesIconDark } : { uri: opportunitiesIconBlue }} style={{ width: size, height: size, resizeMode: 'contain' }} />
               )
             }}/>
             <Tab.Screen name="EditProfile" component={EditProfile} options={{
               tabBarLabel: 'Profile',
               tabBarIcon: ({ color, size }) => (
-                <Icon name="person" size={size} color={color} />
+                <Image source={(color === '#8E8E8F') ? { uri: profileIconDark } : { uri: profileIconBlue }} style={{ width: size, height: size, resizeMode: 'contain' }} />
               ),
               headerTitle: 'Edit Profile',
               headerRight: () => (
                 <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
                   <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="settings" size={25} color='#5A5A5A' />
+                    <Image source={{ uri: settingsIconDark }} style={[styles.square23,styles.contain]} />
                   </View>
                 </TouchableOpacity>
               ),

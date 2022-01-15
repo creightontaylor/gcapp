@@ -1214,6 +1214,9 @@ module.exports = StyleSheet.create({
     paddingLeft: 15,
     borderRadius: 8
   },
+  whiteTintColor: {
+    tintColor: 'white'
+  },
   ctaColor: {
     color: primaryColor
   },

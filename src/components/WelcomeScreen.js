@@ -23,7 +23,7 @@ class WelcomeScreen extends Component {
     return (
       <ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={[styles.absolutePosition,styles.absoluteTop0,styles.absoluteRight0,styles.absoluteBottom0,styles.absoluteLeft0]}>
         <View style={[styles.flex1,styles.flexCenter]}>
-            <View>
+            <View style={[styles.alignCenter]}>
               <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={[styles.width300,styles.height60,styles.contain]} />
               <Text style={[styles.whiteColor,styles.topMargin20,styles.bottomMargin200,styles.centerText,styles.horizontalMargin30,styles.descriptionText1]}>Your lifelong career advising and recruiting assistant</Text>
             </View>

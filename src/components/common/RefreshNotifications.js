@@ -7,9 +7,6 @@ const notificationsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const chatbubblesIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/chatbubbles-icon.png'
 const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png'
 
-import Icon from 'react-native-vector-icons/Ionicons';
-Icon.loadFont()
-
 class RenderMyGroups extends Component {
     constructor(props) {
       super(props)
@@ -212,7 +209,7 @@ class RenderMyGroups extends Component {
         //     {(unreadNotificationsCount === 0 ) ? (
         //       <TouchableOpacity onPress={() => this.props.navigation.navigate('Community')}>
         //         <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-        //           <Icon name="people" size={25} color={'#5A5A5A'} />
+        //           <Image source={{ uri: socialIconDark }} style={[styles.square23,styles.contain]} />
         //         </View>
         //       </TouchableOpacity>
         //     ) : (
@@ -234,7 +231,7 @@ class RenderMyGroups extends Component {
               {(unreadNotificationsCount === 0 ) ? (
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Notifications')}>
                   <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Icon name="notifications" size={25} color='#5A5A5A' />
+                    <Image source={{ uri: notificationsIconDark }} style={[styles.square23,styles.contain]} />
                   </View>
                 </TouchableOpacity>
               ) : (
@@ -260,13 +257,6 @@ class RenderMyGroups extends Component {
                       <Text style={[styles.descriptionText5]}>{unreadMessageCount}</Text>
                     </View>
                   </ImageBackground>
-                  {/*
-                  <View style={{ marginLeft: 15 }}>
-                    <Icon name="chatbubbles" size={25} color='#5A5A5A' />
-                  </View>
-                  <View style={[styles.notiBubbleSmall, styles.errorBackgroundColor,styles.rightMarginNegative28]}>
-                    <Text style={[styles.descriptionText5]}>{notiCount}</Text>
-                  </View>*/}
                 </TouchableOpacity>
               )}
 
