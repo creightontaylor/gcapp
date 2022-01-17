@@ -471,13 +471,15 @@ class OrgDetails extends Component {
                 </View>
               </TouchableOpacity>
             ) : (
-              <Picker
-                selectedValue={this.state[value.shorthand]}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.formChangeHandler(value.shorthand,itemValue)
-                }>
-                {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
-              </Picker>
+              <View style={[styles.standardBorder]}>
+                <Picker
+                  selectedValue={this.state[value.shorthand]}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.formChangeHandler(value.shorthand,itemValue)
+                  }>
+                  {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
+                </Picker>
+              </View>
             )}
           </View>
         )}
@@ -641,13 +643,15 @@ class OrgDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.ratingSelected}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler('ratingSelected',itemValue)
-                                    }>
-                                    {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.ratingSelected}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler('ratingSelected',itemValue)
+                                      }>
+                                      {['','1','2','3','4','5'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>

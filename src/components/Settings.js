@@ -1215,11 +1215,13 @@ class Settings extends Component {
                   {(this.state.isWorking || this.state.workMode) && (
                     <View style={[styles.bottomPadding]}>
                       <Text style={[styles.standardText,styles.row10]}>Switch to Work Mode?</Text>
-                      <Switch
-                         onValueChange = {(value) => this.switchMode(value)}
-                         value = {this.state.workMode}
-                         disabled={this.state.isSaving}
-                      />
+                      <View style={[styles.alignStart]}>
+                        <Switch
+                           onValueChange = {(value) => this.switchMode(value)}
+                           value = {this.state.workMode}
+                           disabled={this.state.isSaving}
+                        />
+                      </View>
 
                       <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
                       <View style={styles.lightHorizontalLine} />

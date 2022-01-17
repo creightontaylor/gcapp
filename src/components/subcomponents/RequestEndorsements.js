@@ -1580,13 +1580,15 @@ class RequestEndorsements extends Component {
                             </View>
                           </TouchableOpacity>
                         ) : (
-                          <Picker
-                            selectedValue={this.state.enableRequestEndorsement}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("enableRequestEndorsement",itemValue)
-                            }>
-                            {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                          </Picker>
+                          <View style={[styles.standardBorder]}>
+                            <Picker
+                              selectedValue={this.state.enableRequestEndorsement}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("enableRequestEndorsement",itemValue)
+                              }>
+                              {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                            </Picker>
+                          </View>
                         )}
 
                       </View>
@@ -1671,13 +1673,15 @@ class RequestEndorsements extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.relationship}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("relationship",itemValue)
-                                    }>
-                                      {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.relationship}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("relationship",itemValue)
+                                      }>
+                                        {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -1738,13 +1742,15 @@ class RequestEndorsements extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.relationship}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("relationship",itemValue)
-                                    }>
-                                    {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.relationship}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("relationship",itemValue)
+                                      }>
+                                      {this.state.relationshipOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -1770,13 +1776,15 @@ class RequestEndorsements extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={this.state.goalType.description}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("goalType",itemValue)
-                              }>
-                              {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={this.state.goalType.description}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("goalType",itemValue)
+                                }>
+                                {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
+                              </Picker>
+                            </View>
                           )}
                         </View>
                         <View style={[styles.row10]}>
@@ -1801,13 +1809,15 @@ class RequestEndorsements extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.selectedPathway}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("pathway",itemValue)
-                                      }>
-                                      {this.state.pathwayOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.selectedPathway}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("pathway",itemValue)
+                                        }>
+                                        {this.state.pathwayOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>

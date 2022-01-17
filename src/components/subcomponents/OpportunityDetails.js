@@ -3709,13 +3709,15 @@ class OpportunityDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.selectedProject.name}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("selectProject",itemValue)
-                                          }>
-                                          {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.selectedProject.name}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("selectProject",itemValue)
+                                            }>
+                                            {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                          </Picker>
+                                        </View>
                                       )}
                                     </View>
                                   ) : (

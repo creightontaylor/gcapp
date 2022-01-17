@@ -1090,13 +1090,18 @@ class EditProfileDetails extends Component {
     console.log('componentDidCatch called:', error, info)
   }
 
-  formChangeHandler = (eventName,eventValue) => {
-    console.log('formChangeHandler called: ', eventName, eventValue)
+  formChangeHandler = (eventName,eventValue, dateEvent) => {
+    console.log('formChangeHandler called: ', eventName, eventValue, dateEvent)
 
     // for all pickers
     this.setState({ selectedValue: eventValue })
 
-    if (eventName === 'profilePic') {
+    if (dateEvent && Platform.OS === 'android') {
+      console.log('in dateEvent', dateEvent)
+      //{"nativeEvent": {}, "type": "dismissed"}
+      // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
+      this.setState({ [eventName]: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+    } else if (eventName === 'profilePic') {
       console.log('profilePicSelectedHandler changed')
 
       const options = {
@@ -3767,13 +3772,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].startDate}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("experienceStartDate|" + index,itemValue)
-                    }>
-                    {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].startDate}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("experienceStartDate|" + index,itemValue)
+                      }>
+                      {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -3802,13 +3809,15 @@ class EditProfileDetails extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.experience[i - 1].endDate}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("experienceEndDate|" + index,itemValue)
-                      }>
-                      {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.experience[i - 1].endDate}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("experienceEndDate|" + index,itemValue)
+                        }>
+                        {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -3845,13 +3854,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].jobFunction}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("jobFunction|" + index,itemValue)
-                    }>
-                    {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].jobFunction}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("jobFunction|" + index,itemValue)
+                      }>
+                      {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -3883,13 +3894,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].industry}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("jobIndustry|" + index,itemValue)
-                    }>
-                    {this.state.industryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].industry}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("jobIndustry|" + index,itemValue)
+                      }>
+                      {this.state.industryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
 
@@ -3910,13 +3923,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].wasPaid}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("wasPaid|" + index,itemValue)
-                    }>
-                    {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].wasPaid}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("wasPaid|" + index,itemValue)
+                      }>
+                      {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -3934,13 +3949,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].hoursPerWeek}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("hoursPerWeek|" + index,itemValue)
-                    }>
-                    {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].hoursPerWeek}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("hoursPerWeek|" + index,itemValue)
+                      }>
+                      {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -4054,13 +4071,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].workInterest}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("workInterest|" + index,itemValue)
-                    }>
-                    {this.state.workInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].workInterest}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("workInterest|" + index,itemValue)
+                      }>
+                      {this.state.workInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4080,13 +4099,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].workSkill}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("workSkill|" + index,itemValue)
-                    }>
-                    {this.state.workSkillOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].workSkill}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("workSkill|" + index,itemValue)
+                      }>
+                      {this.state.workSkillOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4110,13 +4131,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].teamInterest}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("teamInterest|" + index,itemValue)
-                    }>
-                    {this.state.teamInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].teamInterest}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("teamInterest|" + index,itemValue)
+                      }>
+                      {this.state.teamInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4136,13 +4159,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].employerInterest}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("employerInterest|" + index,itemValue)
-                    }>
-                      {this.state.employerInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].employerInterest}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("employerInterest|" + index,itemValue)
+                      }>
+                        {this.state.employerInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4166,13 +4191,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].payInterest}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("payInterest|" + index,itemValue)
-                    }>
-                      {this.state.payInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].payInterest}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("payInterest|" + index,itemValue)
+                      }>
+                        {this.state.payInterestOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4192,13 +4219,15 @@ class EditProfileDetails extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.experience[i - 1].overallFit}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("overallFit|" + index,itemValue)
-                    }>
-                      {this.state.overallFitOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.experience[i - 1].overallFit}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("overallFit|" + index,itemValue)
+                      }>
+                        {this.state.overallFitOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
                 <Text style={[styles.descriptionText2]}>Note: this answer is not shared with employers; it's used for career advising.</Text>
@@ -4325,13 +4354,15 @@ class EditProfileDetails extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.extracurriculars[i - 1].startDate}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("extracurricularStartDate|" + index,itemValue)
-                      }>
-                      {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.extracurriculars[i - 1].startDate}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("extracurricularStartDate|" + index,itemValue)
+                        }>
+                        {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -4361,13 +4392,15 @@ class EditProfileDetails extends Component {
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <Picker
-                        selectedValue={this.state.extracurriculars[i - 1].endDate}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("extracurricularEndDate|" + index,itemValue)
-                        }>
-                        {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                      </Picker>
+                      <View style={[styles.standardBorder]}>
+                        <Picker
+                          selectedValue={this.state.extracurriculars[i - 1].endDate}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("extracurricularEndDate|" + index,itemValue)
+                          }>
+                          {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                        </Picker>
+                      </View>
                     )}
 
                   </View>
@@ -4390,13 +4423,15 @@ class EditProfileDetails extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.extracurriculars[i - 1].hoursPerWeek}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("extracurricularHoursPerWeek|" + index,itemValue)
-                      }>
-                      {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.extracurriculars[i - 1].hoursPerWeek}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("extracurricularHoursPerWeek|" + index,itemValue)
+                        }>
+                        {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -4790,7 +4825,7 @@ class EditProfileDetails extends Component {
 
     this.setState({ modalIsOpen: false, showPublicProfileExtentInfo: false, showGrade: false, showJobFunction: false,
       showIndustry: false, showProjectDetail: false, skillTagsInfo: false, showSettings: false, showBirthdate: false,
-      showPicker: false
+      showPicker: false, showDateTimePicker: false
     });
 
     // remove object
@@ -5757,13 +5792,15 @@ class EditProfileDetails extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={item.name}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("education|name|" + optionIndex,itemValue)
-                                        }>
-                                        {this.state.schoolOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={item.name}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("education|name|" + optionIndex,itemValue)
+                                          }>
+                                          {this.state.schoolOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                        </Picker>
+                                      </View>
                                     )}
                                   </View>
                                 ) : (
@@ -5844,13 +5881,15 @@ class EditProfileDetails extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={item.degree}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("education|degree|" + optionIndex,itemValue)
-                                        }>
-                                        {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={item.degree}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("education|degree|" + optionIndex,itemValue)
+                                          }>
+                                          {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                        </Picker>
+                                      </View>
                                     )}
 
                                   </View>
@@ -5963,13 +6002,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={item.startDate}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("education|startDate|" + optionIndex,itemValue)
-                                    }>
-                                    {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.startDate}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("education|startDate|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
                               </View>
                               <View style={[styles.row10]}>
@@ -5988,13 +6029,15 @@ class EditProfileDetails extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={item.gradYear}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("education|gradYear|" + optionIndex,itemValue)
-                                        }>
-                                        {this.state.gradYearOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={item.gradYear}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("education|gradYear|" + optionIndex,itemValue)
+                                          }>
+                                          {this.state.gradYearOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                        </Picker>
+                                      </View>
                                     )}
                                   </View>
                                 ) : (
@@ -6011,13 +6054,15 @@ class EditProfileDetails extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={item.endDate}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("education|endDate|" + optionIndex,itemValue)
-                                        }>
-                                        {this.state.educationDateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={item.endDate}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("education|endDate|" + optionIndex,itemValue)
+                                          }>
+                                          {this.state.educationDateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                                        </Picker>
+                                      </View>
                                     )}
                                   </View>
                                 )}
@@ -6126,23 +6171,44 @@ class EditProfileDetails extends Component {
 
                           <View>
                             <View style={[styles.row10]}>
-                              <View style={[styles.rowDirection]}>
-                                <View style={[styles.calcColumn180]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                              {(Platform.OS === 'ios') ? (
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn180]}>
+                                    <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  </View>
+                                  <View style={[styles.width120,styles.topPadding5]}>
+                                    <DateTimePicker
+                                      testID="DateTimePicker"
+                                      value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                                      mode={'date'}
+                                      is24Hour={true}
+                                      display="default"
+                                      onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                                      minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                                      maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                                    />
+                                  </View>
                                 </View>
-                                <View style={[styles.width120,styles.topPadding5]}>
-                                  <DateTimePicker
-                                    testID="DateTimePicker"
-                                    value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                                    minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                                    maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                                  />
+                              ) : (
+                                <View>
+                                  <View style={[styles.row5]}>
+                                    <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  </View>
+                                  <View>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn115]}>
+                                          <Text style={[styles.descriptionText1]}>{(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly').toString() : ""}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
                                 </View>
-                              </View>
+                              )}
+
                             </View>
 
                           </View>
@@ -6302,13 +6368,15 @@ class EditProfileDetails extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.race}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("race",itemValue)
-                                  }>
-                                  {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.race}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("race",itemValue)
+                                    }>
+                                    {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
                             </View>
                             <View style={[styles.row10]}>
@@ -6326,13 +6394,15 @@ class EditProfileDetails extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.gender}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("gender",itemValue)
-                                  }>
-                                  {this.state.genderOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.gender}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("gender",itemValue)
+                                    }>
+                                    {this.state.genderOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -6358,13 +6428,15 @@ class EditProfileDetails extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.workAuthorization}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("workAuthorization",itemValue)
-                                  }>
-                                  {this.state.workAuthorizationOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.workAuthorization}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("workAuthorization",itemValue)
+                                    }>
+                                    {this.state.workAuthorizationOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -6383,13 +6455,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.veteranStatus}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("veteranStatus",itemValue)
-                                    }>
-                                    {this.state.veteranStatusOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.veteranStatus}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("veteranStatus",itemValue)
+                                      }>
+                                      {this.state.veteranStatusOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -6413,13 +6487,15 @@ class EditProfileDetails extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.dacaStatus}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("dacaStatus",itemValue)
-                                  }>
-                                  {this.state.binaryOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.dacaStatus}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("dacaStatus",itemValue)
+                                    }>
+                                    {this.state.binaryOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -6442,13 +6518,15 @@ class EditProfileDetails extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.numberOfMembers}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("numberOfMembers",itemValue)
-                                      }>
-                                      {this.state.basicCountOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.numberOfMembers}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("numberOfMembers",itemValue)
+                                        }>
+                                        {this.state.basicCountOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -6466,13 +6544,15 @@ class EditProfileDetails extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.householdIncome}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("householdIncome",itemValue)
-                                      }>
-                                      {this.state.householdIncomeOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.householdIncome}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("householdIncome",itemValue)
+                                        }>
+                                        {this.state.householdIncomeOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -6495,13 +6575,15 @@ class EditProfileDetails extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.fosterYouth}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("fosterYouth",itemValue)
-                                      }>
-                                      {this.state.fosterYouthOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.fosterYouth}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("fosterYouth",itemValue)
+                                        }>
+                                        {this.state.fosterYouthOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -6520,13 +6602,15 @@ class EditProfileDetails extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.homeless}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("homeless",itemValue)
-                                      }>
-                                      {this.state.homelessOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.homeless}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("homeless",itemValue)
+                                        }>
+                                        {this.state.homelessOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -6548,13 +6632,15 @@ class EditProfileDetails extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.incarcerated}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("incarcerated",itemValue)
-                                      }>
-                                      {this.state.incarceratedOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.incarcerated}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("incarcerated",itemValue)
+                                        }>
+                                        {this.state.incarceratedOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -6616,13 +6702,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.politicalAlignment}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("politicalAlignment",itemValue)
-                                    }>
-                                    {this.state.politicalAlignmentOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.politicalAlignment}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("politicalAlignment",itemValue)
+                                      }>
+                                      {this.state.politicalAlignmentOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -6641,13 +6729,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.stateRegistration}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("stateRegistration",itemValue)
-                                    }>
-                                    {this.state.registrationOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.stateRegistration}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("stateRegistration",itemValue)
+                                      }>
+                                      {this.state.registrationOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -6680,13 +6770,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.hometown}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("hometown",itemValue)
-                                    }>
-                                    {this.state.hometownOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.hometown}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("hometown",itemValue)
+                                      }>
+                                      {this.state.hometownOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -6972,13 +7064,15 @@ class EditProfileDetails extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.publicProfileExtent}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("publicProfileExtent",itemValue)
-                                    }>
-                                    {this.state.publicProfileExtentOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.publicProfileExtent}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("publicProfileExtent",itemValue)
+                                      }>
+                                      {this.state.publicProfileExtentOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                                 <View style={styles.spacer} />
@@ -7043,13 +7137,15 @@ class EditProfileDetails extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={this.state.postPublicPreference}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("postPublicPreference",itemValue)
-                                        }>
-                                        {['','All','None'].map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={this.state.postPublicPreference}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("postPublicPreference",itemValue)
+                                          }>
+                                          {['','All','None'].map(value => <Picker.Item label={value} value={value} />)}
+                                        </Picker>
+                                      </View>
                                     )}
                                   </View>
 
@@ -7076,13 +7172,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedPost}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedPost",itemValue)
-                                                }>
-                                                {this.state.postOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedPost}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedPost",itemValue)
+                                                  }>
+                                                  {this.state.postOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7117,13 +7215,15 @@ class EditProfileDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.projectPublicPreference}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("projectPublicPreference",itemValue)
-                                          }>
-                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.projectPublicPreference}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("projectPublicPreference",itemValue)
+                                            }>
+                                            {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
                                       )}
 
                                     </View>
@@ -7160,13 +7260,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedProject}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedProject",itemValue)
-                                                }>
-                                                {this.state.projectOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedProject}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedProject",itemValue)
+                                                  }>
+                                                  {this.state.projectOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7202,13 +7304,15 @@ class EditProfileDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.goalPublicPreference}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("goalPublicPreference",itemValue)
-                                          }>
-                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.goalPublicPreference}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("goalPublicPreference",itemValue)
+                                            }>
+                                            {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
                                       )}
 
                                     </View>
@@ -7236,13 +7340,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedGoal}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedGoal",itemValue)
-                                                }>
-                                                {this.state.goalOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedGoal}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedGoal",itemValue)
+                                                  }>
+                                                  {this.state.goalOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7278,13 +7384,15 @@ class EditProfileDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.passionPublicPreference}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("passionPublicPreference",itemValue)
-                                          }>
-                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.passionPublicPreference}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("passionPublicPreference",itemValue)
+                                            }>
+                                            {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
                                       )}
 
                                     </View>
@@ -7313,13 +7421,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedPassion}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedPassion",itemValue)
-                                                }>
-                                                {this.state.passionOptions.map(value => <Picker.Item key={value.passionTitle} label={value.passionTitle} value={value.passionTitle} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedPassion}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedPassion",itemValue)
+                                                  }>
+                                                  {this.state.passionOptions.map(value => <Picker.Item key={value.passionTitle} label={value.passionTitle} value={value.passionTitle} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7354,13 +7464,15 @@ class EditProfileDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.assessmentPublicPreference}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("assessmentPublicPreference",itemValue)
-                                          }>
-                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.assessmentPublicPreference}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("assessmentPublicPreference",itemValue)
+                                            }>
+                                            {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
                                       )}
 
                                     </View>
@@ -7389,13 +7501,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedAssessment}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedAssessment",itemValue)
-                                                }>
-                                                {this.state.assessmentOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedAssessment}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedAssessment",itemValue)
+                                                  }>
+                                                  {this.state.assessmentOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7430,13 +7544,15 @@ class EditProfileDetails extends Component {
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <Picker
-                                          selectedValue={this.state.endorsementPublicPreference}
-                                          onValueChange={(itemValue, itemIndex) =>
-                                            this.formChangeHandler("endorsementPublicPreference",itemValue)
-                                          }>
-                                          {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                        </Picker>
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={this.state.endorsementPublicPreference}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("endorsementPublicPreference",itemValue)
+                                            }>
+                                            {this.state.publicPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
                                       )}
 
                                     </View>
@@ -7465,13 +7581,15 @@ class EditProfileDetails extends Component {
                                                 </View>
                                               </TouchableOpacity>
                                             ) : (
-                                              <Picker
-                                                selectedValue={this.state.selectedEndorsement}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                  this.formChangeHandler("selectedEndorsement",itemValue)
-                                                }>
-                                                {this.state.endorsementOptions.map(value => <Picker.Item key={value.senderEmail} label={value.senderEmail} value={value.senderEmail} />)}
-                                              </Picker>
+                                              <View style={[styles.standardBorder]}>
+                                                <Picker
+                                                  selectedValue={this.state.selectedEndorsement}
+                                                  onValueChange={(itemValue, itemIndex) =>
+                                                    this.formChangeHandler("selectedEndorsement",itemValue)
+                                                  }>
+                                                  {this.state.endorsementOptions.map(value => <Picker.Item key={value.senderEmail} label={value.senderEmail} value={value.senderEmail} />)}
+                                                </Picker>
+                                              </View>
                                             )}
 
                                           </View>
@@ -7508,13 +7626,15 @@ class EditProfileDetails extends Component {
                                             </View>
                                           </TouchableOpacity>
                                         ) : (
-                                          <Picker
-                                            selectedValue={this.state.resumePublicPreference}
-                                            onValueChange={(itemValue, itemIndex) =>
-                                              this.formChangeHandler("resumePublicPreference",itemValue)
-                                            }>
-                                            {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                          </Picker>
+                                          <View style={[styles.standardBorder]}>
+                                            <Picker
+                                              selectedValue={this.state.resumePublicPreference}
+                                              onValueChange={(itemValue, itemIndex) =>
+                                                this.formChangeHandler("resumePublicPreference",itemValue)
+                                              }>
+                                              {['','Yes','No'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                            </Picker>
+                                          </View>
                                         )}
                                       </View>
 
@@ -7543,13 +7663,15 @@ class EditProfileDetails extends Component {
                                                     </View>
                                                   </TouchableOpacity>
                                                 ) : (
-                                                  <Picker
-                                                    selectedValue={this.state.selectedResume}
-                                                    onValueChange={(itemValue, itemIndex) =>
-                                                      this.formChangeHandler("selectedResume",itemValue)
-                                                    }>
-                                                    {this.state.resumeNames.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                                  </Picker>
+                                                  <View style={[styles.standardBorder]}>
+                                                    <Picker
+                                                      selectedValue={this.state.selectedResume}
+                                                      onValueChange={(itemValue, itemIndex) =>
+                                                        this.formChangeHandler("selectedResume",itemValue)
+                                                      }>
+                                                      {this.state.resumeNames.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                                    </Picker>
+                                                  </View>
                                                 )}
                                               </View>
                                               <View style={[styles.width70,styles.leftPadding]}>
@@ -7850,46 +7972,21 @@ class EditProfileDetails extends Component {
                         formChangeHandler={this.formChangeHandler}
                         closeModal={this.closeModal}
                       />
-                      {/*
-                      <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
-                        <View style={[styles.card,styles.absoluteBottom0,styles.absoluteLeft0,styles.absoluteRight0]}>
-                          <View style={[styles.rowDirection,styles.bottomMargin]}>
-                            <View style={[styles.calcColumn120]}>
-                              <Text style={[styles.descriptionText2]}>Pick {this.state.pickerName}</Text>
-                            </View>
-                            <View style={[styles.width30]}>
-                              <TouchableOpacity onPress={() => this.closeModal()}>
-                                <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
+                    </View>
+                  )}
 
-                          <View style={[styles.lightHorizontalLine]} />
-
-                          {(this.state.differentLabels) ? (
-                            <Picker
-                              selectedValue={this.state.selectedValue}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler(this.state.selectedName,itemValue)
-                              }>
-                                {this.state.selectedOptions.map(value =>
-                                  <Picker.Item key={value.label} label={value.label} value={value.value} />
-                                )}
-                            </Picker>
-                          ) : (
-                            <Picker
-                              selectedValue={this.state.selectedValue}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler(this.state.selectedName,itemValue)
-                              }>
-                                {this.state.selectedOptions.map(value =>
-                                  <Picker.Item key={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} label={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} value={(this.state.selectedSubKey) ? value[this.state.selectedSubKey] : value} />
-                                )}
-                            </Picker>
-                          )}
-
-                        </View>
-                      </View>*/}
+                  {(this.state.showDateTimePicker) && (
+                    <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <DateTimePicker
+                        testID={this.state.selectedName}
+                        value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
+                        minimumDate={this.state.minimumDate}
+                        maximumDate={this.state.maximumDate}
+                      />
                     </View>
                   )}
 

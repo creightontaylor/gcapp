@@ -2387,13 +2387,15 @@ class TakeAssessment extends Component {
                 </View>
               </TouchableOpacity>
             ) : (
-              <Picker
-                selectedValue={this.state.score}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.formChangeHandler("score",itemValue)
-                }>
-                  {this.state.scoreOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
-              </Picker>
+              <View style={[styles.standardBorder]}>
+                <Picker
+                  selectedValue={this.state.score}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.formChangeHandler("score",itemValue)
+                  }>
+                    {this.state.scoreOptions.map(value => <Picker.Item key={value.label} label={value.label} value={value.value} />)}
+                </Picker>
+              </View>
             )}
 
           </View>

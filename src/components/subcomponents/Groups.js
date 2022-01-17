@@ -1012,13 +1012,15 @@ class Groups extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={item.value}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("filter|" + item.name,itemValue)
-                              }>
-                              {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={item.value}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("filter|" + item.name,itemValue)
+                                }>
+                                {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
                         </View>
                       )}
@@ -1045,13 +1047,15 @@ class Groups extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={item.value}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("sort|" + filters[i - 1].name,itemValue)
-                              }>
-                              {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={item.value}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("sort|" + filters[i - 1].name,itemValue)
+                                }>
+                                {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
                         </View>
                       )}

@@ -3483,13 +3483,15 @@ class EditLog extends Component {
                         </View>
                       </TouchableOpacity>
                     ) : (
-                      <Picker
-                        selectedValue={this.state.logType}
-                        onValueChange={(itemValue, itemIndex) =>
-                          this.formChangeHandler("logType",itemValue)
-                        }>
-                        {this.state.logTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                      </Picker>
+                      <View style={[styles.standardBorder]}>
+                        <Picker
+                          selectedValue={this.state.logType}
+                          onValueChange={(itemValue, itemIndex) =>
+                            this.formChangeHandler("logType",itemValue)
+                          }>
+                          {this.state.logTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                        </Picker>
+                      </View>
                     )}
 
                     {(!this.props.fromWalkthrough) && (
@@ -3580,13 +3582,15 @@ class EditLog extends Component {
                             </View>
                           </TouchableOpacity>
                         ) : (
-                          <Picker
-                            selectedValue={this.state.goalType.description}
-                            onValueChange={(itemValue, itemIndex) =>
-                              this.formChangeHandler("goalType",itemValue)
-                            }>
-                            {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
-                          </Picker>
+                          <View style={[styles.standardBorder]}>
+                            <Picker
+                              selectedValue={this.state.goalType.description}
+                              onValueChange={(itemValue, itemIndex) =>
+                                this.formChangeHandler("goalType",itemValue)
+                              }>
+                              {this.state.goalTypeOptions.map(value => <Picker.Item key={value.description} label={value.description} value={value.description} />)}
+                            </Picker>
+                          </View>
                         )}
 
                       </View>
@@ -3610,13 +3614,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.comparisonType}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("comparisonType",itemValue)
-                                  }>
-                                  {this.state.comparisonTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.comparisonType}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("comparisonType",itemValue)
+                                    }>
+                                    {this.state.comparisonTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -3914,13 +3920,15 @@ class EditLog extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={(this.state.aItem) && this.state.aItem.name}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("aItemProject",itemValue)
-                                        }>
-                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={(this.state.aItem) && this.state.aItem.name}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("aItemProject",itemValue)
+                                          }>
+                                          {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                        </Picker>
+                                      </View>
                                     )}
 
                                     <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})} style={[styles.decriptionText2,styles.ctaColor,styles.boldText]}>here</Text></Text>
@@ -4274,13 +4282,15 @@ class EditLog extends Component {
                                         </View>
                                       </TouchableOpacity>
                                     ) : (
-                                      <Picker
-                                        selectedValue={(this.state.bItem) && this.state.bItem.name}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("bItemProject",itemValue)
-                                        }>
-                                        {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                      </Picker>
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={(this.state.bItem) && this.state.bItem.name}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("bItemProject",itemValue)
+                                          }>
+                                          {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                        </Picker>
+                                      </View>
                                     )}
 
                                     <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})} style={[styles.decriptionText2,styles.ctaColor,styles.boldText]}>here</Text></Text>
@@ -4395,13 +4405,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.degreeType}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("degreeType",itemValue)
-                                  }>
-                                  {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.degreeType}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("degreeType",itemValue)
+                                    }>
+                                    {this.state.degreeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -4486,13 +4498,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.societalProblem}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("societalProblem",itemValue)
-                                  }>
-                                  {this.state.societalProblemOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.societalProblem}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("societalProblem",itemValue)
+                                    }>
+                                    {this.state.societalProblemOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -4673,13 +4687,15 @@ class EditLog extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.selectedFunction}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("selectedFunction",itemValue)
-                                      }>
-                                      {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.selectedFunction}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("selectedFunction",itemValue)
+                                        }>
+                                        {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -4710,13 +4726,15 @@ class EditLog extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.selectedIndustry}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("selectedIndustry",itemValue)
-                                      }>
-                                      {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.selectedIndustry}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("selectedIndustry",itemValue)
+                                        }>
+                                        {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -4751,13 +4769,15 @@ class EditLog extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.selectedHoursPerWeek}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("selectedHoursPerWeek",itemValue)
-                                      }>
-                                      {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.selectedHoursPerWeek}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("selectedHoursPerWeek",itemValue)
+                                        }>
+                                        {this.state.hoursPerWeekOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
 
                                 </View>
@@ -4788,13 +4808,15 @@ class EditLog extends Component {
                                       </View>
                                     </TouchableOpacity>
                                   ) : (
-                                    <Picker
-                                      selectedValue={this.state.selectedPayRange}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("selectedPayRange",itemValue)
-                                      }>
-                                      {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                    </Picker>
+                                    <View style={[styles.standardBorder]}>
+                                      <Picker
+                                        selectedValue={this.state.selectedPayRange}
+                                        onValueChange={(itemValue, itemIndex) =>
+                                          this.formChangeHandler("selectedPayRange",itemValue)
+                                        }>
+                                        {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                      </Picker>
+                                    </View>
                                   )}
                                 </View>
                                 <View style={[styles.width70,styles.leftPadding]}>
@@ -4826,13 +4848,15 @@ class EditLog extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.selectedOptimize}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("selectedOptimize",itemValue)
-                                    }>
-                                    {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.selectedOptimize}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("selectedOptimize",itemValue)
+                                      }>
+                                      {this.state.optimizeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -4866,13 +4890,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.entrepreneurshipStage}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("entrepreneurshipStage",itemValue)
-                                  }>
-                                  {this.state.entrepreneurshipStageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.entrepreneurshipStage}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("entrepreneurshipStage",itemValue)
+                                    }>
+                                    {this.state.entrepreneurshipStageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
                             </View>
 
@@ -4890,13 +4916,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.entrepreneurshipType}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("entrepreneurshipType",itemValue)
-                                  }>
-                                  {['','For-Profit','Non-Profit'].map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.entrepreneurshipType}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("entrepreneurshipType",itemValue)
+                                    }>
+                                    {['','For-Profit','Non-Profit'].map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -4918,13 +4946,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.entrepreneurshipProject.name}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("entrepreneurshipProject",itemValue)
-                                  }>
-                                  {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.entrepreneurshipProject.name}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("entrepreneurshipProject",itemValue)
+                                    }>
+                                    {this.state.projectOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                               <Text style={[styles.descriptionText2,styles.bottomPadding5]}>You can add projects to your profile <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Details'})} style={[styles.decriptionText2,styles.ctaColor,styles.boldText]}>here</Text></Text>
@@ -4944,13 +4974,15 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.entrepreneurshipGoal}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("entrepreneurshipGoal",itemValue)
-                                  }>
-                                  {this.state.entrepreneurshipGoalOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.entrepreneurshipGoal}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("entrepreneurshipGoal",itemValue)
+                                    }>
+                                    {this.state.entrepreneurshipGoalOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -4996,13 +5028,15 @@ class EditLog extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.skillPreference}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("skillPreference",itemValue)
-                                    }>
-                                    {this.state.skillPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.skillPreference}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("skillPreference",itemValue)
+                                      }>
+                                      {this.state.skillPreferenceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -5126,13 +5160,15 @@ class EditLog extends Component {
                                     </View>
                                   </TouchableOpacity>
                                 ) : (
-                                  <Picker
-                                    selectedValue={this.state.intensity}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("intensity",itemValue)
-                                    }>
-                                    {this.state.intensityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                                  </Picker>
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.intensity}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("intensity",itemValue)
+                                      }>
+                                      {this.state.intensityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
                                 )}
 
                               </View>
@@ -5204,15 +5240,17 @@ class EditLog extends Component {
                                   </View>
                                 </TouchableOpacity>
                               ) : (
-                                <Picker
-                                  selectedValue={this.state.goalDecision}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("goalDecision",itemValue)
-                                  }>
-                                  <Picker.Item label={""} value={""} />
-                                  <Picker.Item label={"Option A: " + this.state.aName} value={"Option A: " + this.state.aName} />
-                                  <Picker.Item label={"Option B: " + this.state.bName} value={"Option B: " + this.state.bName} />
-                                </Picker>
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.goalDecision}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("goalDecision",itemValue)
+                                    }>
+                                    <Picker.Item label={""} value={""} />
+                                    <Picker.Item label={"Option A: " + this.state.aName} value={"Option A: " + this.state.aName} />
+                                    <Picker.Item label={"Option B: " + this.state.bName} value={"Option B: " + this.state.bName} />
+                                  </Picker>
+                                </View>
                               )}
 
                             </View>
@@ -5233,13 +5271,15 @@ class EditLog extends Component {
                                 </View>
                               </TouchableOpacity>
                             ) : (
-                              <Picker
-                                selectedValue={this.state.goalStatus}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("goalStatus",itemValue)
-                                }>
-                                  {this.state.goalStatusOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+                              <View style={[styles.standardBorder]}>
+                                <Picker
+                                  selectedValue={this.state.goalStatus}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("goalStatus",itemValue)
+                                  }>
+                                    {this.state.goalStatusOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                </Picker>
+                              </View>
                             )}
                           </View>
                         )}
@@ -5439,13 +5479,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.method}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("method",itemValue)
-                          }>
-                          {this.state.methodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.method}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("method",itemValue)
+                            }>
+                            {this.state.methodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -5484,13 +5526,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.repeats}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("repeats",itemValue)
-                          }>
-                          {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.repeats}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("repeats",itemValue)
+                            }>
+                            {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -5857,13 +5901,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.sessionMethod}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("sessionMethod",itemValue)
-                          }>
-                          {this.state.sessionMethodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.sessionMethod}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("sessionMethod",itemValue)
+                            }>
+                            {this.state.sessionMethodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -5886,13 +5932,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.category}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("category",itemValue)
-                          }>
-                          {this.state.categoryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.category}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("category",itemValue)
+                            }>
+                            {this.state.categoryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                   </View>
@@ -5952,13 +6000,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.employerType}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("employerType",itemValue)
-                      }>
-                      {this.state.employerTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.employerType}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("employerType",itemValue)
+                        }>
+                        {this.state.employerTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -5977,13 +6027,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.industry}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("industry",itemValue)
-                      }>
-                      {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.industry}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("industry",itemValue)
+                        }>
+                        {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6003,13 +6055,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.employeeCount}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("employeeCount",itemValue)
-                      }>
-                      {this.state.employeeCountOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.employeeCount}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("employeeCount",itemValue)
+                        }>
+                        {this.state.employeeCountOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6050,13 +6104,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.jobFunction}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("jobFunction",itemValue)
-                      }>
-                      {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.jobFunction}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("jobFunction",itemValue)
+                        }>
+                        {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6075,13 +6131,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.workType}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("workType",itemValue)
-                      }>
-                      {this.state.workTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.workType}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("workType",itemValue)
+                        }>
+                        {this.state.workTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6100,13 +6158,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.timeframe}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("timeframe",itemValue)
-                      }>
-                      {this.state.timeframeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.timeframe}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("timeframe",itemValue)
+                        }>
+                        {this.state.timeframeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6144,13 +6204,15 @@ class EditLog extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.reviewedMaterials}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("reviewedMaterials",itemValue)
-                    }>
-                    {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.reviewedMaterials}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("reviewedMaterials",itemValue)
+                      }>
+                      {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -6173,13 +6235,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.associatedApplication.name}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("associatedApplication",itemValue)
-                      }>
-                      {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.associatedApplication.name}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("associatedApplication",itemValue)
+                        }>
+                        {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6220,13 +6284,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.interviewRound}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("interviewRound",itemValue)
-                          }>
-                          {this.state.interviewRoundOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.interviewRound}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("interviewRound",itemValue)
+                            }>
+                            {this.state.interviewRoundOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -6246,13 +6312,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.interviewLength}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("interviewLength",itemValue)
-                          }>
-                          {this.state.interviewLengthOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.interviewLength}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("interviewLength",itemValue)
+                            }>
+                            {this.state.interviewLengthOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -6330,13 +6398,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.positionRating}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("positionRating",itemValue)
-                          }>
-                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.positionRating}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("positionRating",itemValue)
+                            }>
+                            {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                       <View style={[styles.halfSpacer]}/>
@@ -6366,13 +6436,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.companyRating}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("companyRating",itemValue)
-                          }>
-                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.companyRating}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("companyRating",itemValue)
+                            }>
+                            {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                       <View style={[styles.halfSpacer]}/>
@@ -6402,13 +6474,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.fitRating}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("fitRating",itemValue)
-                          }>
-                          {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.fitRating}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("fitRating",itemValue)
+                            }>
+                            {this.state.ratingOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                       <View style={[styles.halfSpacer]}/>
@@ -6471,13 +6545,15 @@ class EditLog extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.offerAssociatedApplication.name}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("offerAssociatedApplication",itemValue)
-                      }>
-                      {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.offerAssociatedApplication.name}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("offerAssociatedApplication",itemValue)
+                        }>
+                        {this.state.applicationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -6499,13 +6575,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.offerPayType}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("offerPayType",itemValue)
-                          }>
-                          {this.state.payTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.offerPayType}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("offerPayType",itemValue)
+                            }>
+                            {this.state.payTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>
@@ -6526,13 +6604,15 @@ class EditLog extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={this.state.offerPay}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("offerPay",itemValue)
-                              }>
-                              {this.state.hourlyPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={this.state.offerPay}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("offerPay",itemValue)
+                                }>
+                                {this.state.hourlyPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
                         </View>
                       ) : (
@@ -6549,13 +6629,15 @@ class EditLog extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={this.state.offerPay}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("offerPay",itemValue)
-                              }>
-                              {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={this.state.offerPay}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("offerPay",itemValue)
+                                }>
+                                {this.state.annualPayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
                         </View>
                       )}
@@ -6610,13 +6692,15 @@ class EditLog extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={this.state.equityPercentage}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("equityPercentage",itemValue)
-                              }>
-                              {this.state.equityPercentageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={this.state.equityPercentage}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("equityPercentage",itemValue)
+                                }>
+                                {this.state.equityPercentageOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
 
                         </View>
@@ -6636,13 +6720,15 @@ class EditLog extends Component {
                               </View>
                             </TouchableOpacity>
                           ) : (
-                            <Picker
-                              selectedValue={this.state.companyValuation}
-                              onValueChange={(itemValue, itemIndex) =>
-                                this.formChangeHandler("companyValuation",itemValue)
-                              }>
-                              {this.state.valuationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                            </Picker>
+                            <View style={[styles.standardBorder]}>
+                              <Picker
+                                selectedValue={this.state.companyValuation}
+                                onValueChange={(itemValue, itemIndex) =>
+                                  this.formChangeHandler("companyValuation",itemValue)
+                                }>
+                                {this.state.valuationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                              </Picker>
+                            </View>
                           )}
 
                         </View>
@@ -6683,13 +6769,15 @@ class EditLog extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.offerDecision}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("offerDecision",itemValue)
-                          }>
-                          {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.offerDecision}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("offerDecision",itemValue)
+                            }>
+                            {this.state.binaryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
 
                     </View>

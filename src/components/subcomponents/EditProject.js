@@ -1041,13 +1041,15 @@ class EditProject extends Component {
                   </View>
                 </TouchableOpacity>
               ) : (
-                <Picker
-                  selectedValue={this.state.selectedProject.startDate}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("startDate",itemValue)
-                  }>
-                  {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                </Picker>
+                <View style={[styles.standardBorder]}>
+                  <Picker
+                    selectedValue={this.state.selectedProject.startDate}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("startDate",itemValue)
+                    }>
+                    {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                  </Picker>
+                </View>
               )}
             </View>
 
@@ -1076,13 +1078,15 @@ class EditProject extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.selectedProject.endDate}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("endDate",itemValue)
-                    }>
-                    {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.selectedProject.endDate}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("endDate",itemValue)
+                      }>
+                      {this.state.dateOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
 
               </View>
@@ -1141,13 +1145,15 @@ class EditProject extends Component {
                       </View>
                     </TouchableOpacity>
                   ) : (
-                    <Picker
-                      selectedValue={this.state.selectedProject.collaboratorCount}
-                      onValueChange={(itemValue, itemIndex) =>
-                        this.formChangeHandler("collaboratorCount",itemValue)
-                      }>
-                      {this.state.collaboratorOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                    </Picker>
+                    <View style={[styles.standardBorder]}>
+                      <Picker
+                        selectedValue={this.state.selectedProject.collaboratorCount}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.formChangeHandler("collaboratorCount",itemValue)
+                        }>
+                        {this.state.collaboratorOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                      </Picker>
+                    </View>
                   )}
 
                 </View>
@@ -1168,13 +1174,15 @@ class EditProject extends Component {
                   </View>
                 </TouchableOpacity>
               ) : (
-                <Picker
-                  selectedValue={this.state.selectedProject.hours}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("projectHours",itemValue)
-                  }>
-                  {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                </Picker>
+                <View style={[styles.standardBorder]}>
+                  <Picker
+                    selectedValue={this.state.selectedProject.hours}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("projectHours",itemValue)
+                    }>
+                    {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                  </Picker>
+                </View>
               )}
 
             </View>
@@ -1198,13 +1206,15 @@ class EditProject extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={this.state.selectedProject.totalHours}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("projectTotalHours",itemValue)
-                    }>
-                    {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={this.state.selectedProject.totalHours}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("projectTotalHours",itemValue)
+                      }>
+                      {this.state.hourOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
               <View style={[styles.row10]}>
@@ -1261,13 +1271,15 @@ class EditProject extends Component {
                   </View>
                 </TouchableOpacity>
               ) : (
-                <Picker
-                  selectedValue={this.state.selectedProject.category}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("projectCategory",itemValue)
-                  }>
-                  {this.state.projectCategoryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                </Picker>
+                <View style={[styles.standardBorder]}>
+                  <Picker
+                    selectedValue={this.state.selectedProject.category}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("projectCategory",itemValue)
+                    }>
+                    {this.state.projectCategoryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                  </Picker>
+                </View>
               )}
 
             </View>
@@ -1388,13 +1400,15 @@ class EditProject extends Component {
                   </View>
                 </TouchableOpacity>
               ) : (
-                <Picker
-                  selectedValue={this.state.selectedProject.jobFunction}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("projectFunction",itemValue)
-                  }>
-                  {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                </Picker>
+                <View style={[styles.standardBorder]}>
+                  <Picker
+                    selectedValue={this.state.selectedProject.jobFunction}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("projectFunction",itemValue)
+                    }>
+                    {this.state.functionOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                  </Picker>
+                </View>
               )}
 
             </View>
@@ -1426,13 +1440,15 @@ class EditProject extends Component {
                   </View>
                 </TouchableOpacity>
               ) : (
-                <Picker
-                  selectedValue={this.state.selectedProject.industry}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler("projectIndustry",itemValue)
-                  }>
-                  {this.state.industryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
-                </Picker>
+                <View style={[styles.standardBorder]}>
+                  <Picker
+                    selectedValue={this.state.selectedProject.industry}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.formChangeHandler("projectIndustry",itemValue)
+                    }>
+                    {this.state.industryOptions.map(value => <Picker.Item key={value.value} label={value.value} value={value.value} />)}
+                  </Picker>
+                </View>
               )}
 
             </View>

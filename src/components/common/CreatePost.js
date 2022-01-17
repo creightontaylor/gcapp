@@ -1662,13 +1662,15 @@ class CreatePost extends Component {
                                </View>
                              </TouchableOpacity>
                            ) : (
-                             <Picker
-                               selectedValue={this.state.profileItemType}
-                               onValueChange={(itemValue, itemIndex) =>
-                                 this.formChangeHandler("profileItemType",itemValue)
-                               }>
-                               {this.state.profileItemTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                             </Picker>
+                             <View style={[styles.standardBorder]}>
+                               <Picker
+                                 selectedValue={this.state.profileItemType}
+                                 onValueChange={(itemValue, itemIndex) =>
+                                   this.formChangeHandler("profileItemType",itemValue)
+                                 }>
+                                 {this.state.profileItemTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                               </Picker>
+                             </View>
                            )}
                          </View>
 
@@ -1688,13 +1690,15 @@ class CreatePost extends Component {
                                      </View>
                                    </TouchableOpacity>
                                  ) : (
-                                   <Picker
-                                     selectedValue={this.state.profileItem}
-                                     onValueChange={(itemValue, itemIndex) =>
-                                       this.formChangeHandler("profileItem",itemValue)
-                                     }>
-                                     {this.state.profileItemOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
-                                   </Picker>
+                                   <View style={[styles.standardBorder]}>
+                                     <Picker
+                                       selectedValue={this.state.profileItem}
+                                       onValueChange={(itemValue, itemIndex) =>
+                                         this.formChangeHandler("profileItem",itemValue)
+                                       }>
+                                       {this.state.profileItemOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                     </Picker>
+                                   </View>
                                  )}
 
                                </View>

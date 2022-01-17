@@ -239,8 +239,9 @@ class Employers extends Component {
        function pullAccounts(placementPartners) {
          console.log('pullAccounts called')
 
+         const sortAlphabetically = true
          let resLimit = 250
-         Axios.get('https://www.guidedcompass.com/api/account/partners', { params: { org, placementPartners, resLimit } })
+         Axios.get('https://www.guidedcompass.com/api/account/partners', { params: { org, placementPartners, resLimit, sortAlphabetically } })
          .then((response) => {
            console.log('Posted employer query attempted');
 
@@ -482,13 +483,15 @@ class Employers extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={filters[i - 1].value}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-                    }>
-                    {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={filters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                      }>
+                      {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
             </View>
@@ -521,13 +524,15 @@ class Employers extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={sorters[i - 1].value}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                    }>
-                    {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={sorters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                      }>
+                      {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
             </View>

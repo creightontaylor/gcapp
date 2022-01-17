@@ -4071,13 +4071,15 @@ class Opportunities extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={filters[i - 1].value}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-                    }>
-                    {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={filters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                      }>
+                      {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
             </View>
@@ -4123,13 +4125,15 @@ class Opportunities extends Component {
                     </View>
                   </TouchableOpacity>
                 ) : (
-                  <Picker
-                    selectedValue={sorters[i - 1].value}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                    }>
-                    {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
-                  </Picker>
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={sorters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                      }>
+                      {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
                 )}
               </View>
             </View>
@@ -4513,7 +4517,7 @@ class Opportunities extends Component {
                                 <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
                                   {(this.props.passedType) ? (
                                     <TextInput
-                                      style={[styles.height30,,styles.descriptionText2]}
+                                      style={[styles.height30,styles.descriptionText2]}
                                       onChangeText={(text) => this.formChangeHandler('search', text)}
                                       value={this.state.searchString}
                                       placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}

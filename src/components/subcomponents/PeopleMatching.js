@@ -853,13 +853,15 @@ class PeopleMatching extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.ageRange}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("filter|ageRange",itemValue)
-                          }>
-                          {this.state.ageRangeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.ageRange}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("filter|ageRange",itemValue)
+                            }>
+                            {this.state.ageRangeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
                     </View>
 
@@ -877,13 +879,15 @@ class PeopleMatching extends Component {
                           </View>
                         </TouchableOpacity>
                       ) : (
-                        <Picker
-                          selectedValue={this.state.proximity}
-                          onValueChange={(itemValue, itemIndex) =>
-                            this.formChangeHandler("filter|proximity",itemValue)
-                          }>
-                          {this.state.proximityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        </Picker>
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={this.state.proximity}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("filter|proximity",itemValue)
+                            }>
+                            {this.state.proximityOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                          </Picker>
+                        </View>
                       )}
                     </View>
                   </View>

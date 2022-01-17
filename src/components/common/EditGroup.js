@@ -12,6 +12,7 @@ const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
 
 import {convertDateToString} from '../functions/convertDateToString';
+import {convertStringToDate} from '../functions/convertStringToDate';
 
 class EditGroup extends Component {
     constructor(props) {

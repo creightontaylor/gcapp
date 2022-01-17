@@ -534,13 +534,15 @@ class AddWorkspaces extends Component {
                 </View>
               </TouchableOpacity>
             ) : (
-              <Picker
-                selectedValue={this.state[value.shorthand]}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.formChangeHandler(value.shorthand,itemValue)
-                }>
-                {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
-              </Picker>
+              <View style={[styles.standardBorder]}>
+                <Picker
+                  selectedValue={this.state[value.shorthand]}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.formChangeHandler(value.shorthand,itemValue)
+                  }>
+                  {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
+                </Picker>
+              </View>
             )}
 
           </View>

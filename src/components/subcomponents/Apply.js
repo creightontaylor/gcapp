@@ -2966,13 +2966,15 @@ class Apply extends Component {
                                 </View>
                               </TouchableOpacity>
                             ) : (
-                              <Picker
-                                selectedValue={this.state.resumeName}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("resumeName",itemValue)
-                                }>
-                                {this.state.resumeNames.map(value2 => <Picker.Item key={value2} label={value2} value={value2} />)}
-                              </Picker>
+                              <View style={[styles.standardBorder]}>
+                                <Picker
+                                  selectedValue={this.state.resumeName}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("resumeName",itemValue)
+                                  }>
+                                  {this.state.resumeNames.map(value2 => <Picker.Item key={value2} label={value2} value={value2} />)}
+                                </Picker>
+                              </View>
                             )}
 
                           </View>
