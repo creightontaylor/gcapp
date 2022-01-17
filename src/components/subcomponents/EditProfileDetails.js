@@ -1094,13 +1094,44 @@ class EditProfileDetails extends Component {
     console.log('formChangeHandler called: ', eventName, eventValue, dateEvent)
 
     // for all pickers
-    this.setState({ selectedValue: eventValue })
+    if (eventValue && !dateEvent) {
+      this.setState({ selectedValue: eventValue })
+    }
 
     if (dateEvent && Platform.OS === 'android') {
       console.log('in dateEvent', dateEvent)
       //{"nativeEvent": {}, "type": "dismissed"}
       // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
-      this.setState({ [eventName]: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+      if (eventName.includes('awardDate')) {
+        if (eventValue) {
+
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+
+          const nameArray = eventName.split("|")
+          const index = nameArray[1]
+
+          let awards = this.state.awards
+          awards[index]['awardDate'] = eventValue
+
+          let awardHasChangedArray = this.state.awardHasChangedArray
+          awardHasChangedArray[index] = true
+
+          let awardHasChanged = true
+
+          this.setState({ awards, awardHasChanged, awardHasChangedArray,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+        } else {
+          this.setState({ showDateTimePicker: false, modalIsOpen: false })
+        }
+      } else {
+        if (eventValue) {
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+          console.log('is this working? ', eventValue)
+          this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+        } else {
+          this.setState({ showDateTimePicker: false, modalIsOpen: false })
+        }
+      }
+
     } else if (eventName === 'profilePic') {
       console.log('profilePicSelectedHandler changed')
 
@@ -1958,7 +1989,7 @@ class EditProfileDetails extends Component {
       const index = nameArray[1]
 
       let awards = this.state.awards
-      awards[index]['awardDate'] = eventValue
+      awards[index]['awardDate'] = convertDateToString(new Date(eventValue),'hyphenatedDate')
 
       let awardHasChangedArray = this.state.awardHasChangedArray
       awardHasChangedArray[index] = true
@@ -1992,8 +2023,9 @@ class EditProfileDetails extends Component {
     } else if (eventName === 'dacaStatus') {
       this.setState({ dacaStatus: eventValue, textFormHasChanged: true })
     } else if (eventName === 'dateOfBirth') {
-      console.log('dateOfBirth called: ', eventValue, typeof eventValue, new Date(eventValue))
-      this.setState({ dateOfBirth: eventValue, textFormHasChanged: true })
+      // console.log('dateOfBirth called: ', convertDateToString(new Date(eventValue),'hyphenatedDate'))
+
+      this.setState({ dateOfBirth: convertDateToString(new Date(eventValue),'hyphenatedDate'), textFormHasChanged: true })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
@@ -4533,21 +4565,43 @@ class EditProfileDetails extends Component {
                   />
                 </View>
                 <View style={[styles.row10]}>
-                  <View style={[styles.rowDirection]}>
-                    <View style={[styles.calcColumn180]}>
-                      <Text style={[styles.standardText,styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                  {(Platform.OS === 'ios') ? (
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.calcColumn180]}>
+                        <Text style={[styles.standardText,styles.row10]}>Date Awarded<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                      </View>
+                      <View style={[styles.width120,styles.topPadding5]}>
+                        <DateTimePicker
+                          testID="dateAwarded"
+                          value={(this.state.awards[i - 1].awardDate) ? convertStringToDate(this.state.awards[i - 1].awardDate,'dateOnly') : new Date()}
+                          mode={'date'}
+                          is24Hour={true}
+                          display="default"
+                          onChange={(e, d) => this.formChangeHandler("awardDate|" + index,d)}
+                        />
+                      </View>
                     </View>
-                    <View style={[styles.width120,styles.topPadding5]}>
-                      <DateTimePicker
-                        testID="dateOfBirth"
-                        value={(this.state.awards[i - 1].awardDate) ? convertStringToDate(this.state.awards[i - 1].awardDate,'dateOnly') : new Date()}
-                        mode={'date'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("awardDate|" + index,d)}
-                      />
+                  ) : (
+                    <View>
+                      <View style={[styles.row5]}>
+                        <Text style={[styles.standardText,styles.row10]}>Date Awarded{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                      </View>
+                      <View>
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date Awarded', selectedIndex: null, selectedName: "awardDate|" + index, selectedValue: this.state.awards[i - 1].awardDate })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn115]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.awards[i - 1].awardDate}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+
                     </View>
-                  </View>
+                  )}
+
                 </View>
 
               </View>
@@ -6198,7 +6252,7 @@ class EditProfileDetails extends Component {
                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                         <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly').toString() : ""}</Text>
+                                          <Text style={[styles.descriptionText1]}>{this.state.dateOfBirth}</Text>
                                         </View>
                                         <View style={[styles.width20,styles.topMargin5]}>
                                           <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -7926,23 +7980,44 @@ class EditProfileDetails extends Component {
                       <Text style={[styles.standardText]}>Currently, you must be over 18 to set your profile to public.</Text>
 
                       <View style={[styles.row10]}>
-                        <View style={[styles.rowDirection]}>
-                          <View style={[styles.calcColumn180]}>
-                            <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
+
+                        {(Platform.OS === 'ios') ? (
+                          <View style={[styles.rowDirection]}>
+                            <View style={[styles.calcColumn180]}>
+                              <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
+                            </View>
+                            <View style={[styles.width120,styles.topPadding5]}>
+                              <DateTimePicker
+                                testID="dateOfBirth"
+                                value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                                mode={'date'}
+                                is24Hour={true}
+                                display="default"
+                                onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                                minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                                maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                              />
+                            </View>
                           </View>
-                          <View style={[styles.width120,styles.topPadding5]}>
-                            <DateTimePicker
-                              testID="dateOfBirth"
-                              value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                              mode={'date'}
-                              is24Hour={true}
-                              display="default"
-                              onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                              minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                              maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                            />
+                        ) : (
+                          <View>
+                            <View style={[styles.row5]}>
+                              <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            </View>
+                            <View>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly').toString() : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
                           </View>
-                        </View>
+                        )}
                       </View>
 
                       {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
@@ -7977,6 +8052,12 @@ class EditProfileDetails extends Component {
 
                   {(this.state.showDateTimePicker) && (
                     <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <View style={[styles.alignCenter]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+
+                          <Text style={[styles.standardText,styles.centerText,styles.ctaColor]}>Cancel</Text>
+                        </TouchableOpacity>
+                      </View>
                       <DateTimePicker
                         testID={this.state.selectedName}
                         value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}

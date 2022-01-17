@@ -95,16 +95,17 @@ export const convertDateToString = (passedValue, type)=>{
       const year = passedValue.getFullYear()
 
       returnedValue = month + '/' + day + '/' + year
-    } else if (type === 'rawDateForInput') {
+    } else if (type === 'hyphenatedDate') {
       // console.log('show passedValue: ', passedValue)
       let month = passedValue.getMonth()
-      if ((month + 1) > 10) {
+      console.log('show month: ', month)
+      if ((month + 2) > 10) {
         month = (month + 1).toString()
       } else {
         month = '0' + (month + 1).toString()
       }
       let day = passedValue.getDate()
-      if (day > 10) {
+      if ((day + 1) > 10) {
         day = day.toString()
       } else {
         day = '0' + day.toString()
@@ -118,24 +119,32 @@ export const convertDateToString = (passedValue, type)=>{
       // const year = returnedValue.substring(0,4)
 
       returnedValue = year + '-' + month + '-' + day
-    } else if (type === 'rawDateTimeForInput') {
+    } else if (type === 'hyphenatedDateTime') {
       // console.log('show passedValue: ', passedValue)
       let month = passedValue.getMonth()
-      if ((month + 1) >= 10) {
+      if ((month + 2) >= 10) {
         month = (month + 1).toString()
       } else {
         month = '0' + (month + 1).toString()
       }
       let day = passedValue.getDate()
-      if (day > 10) {
+      if ((day + 1) > 10) {
         day = day.toString()
       } else {
         day = '0' + day.toString()
       }
       const year = passedValue.getFullYear()
 
-      const hours = passedValue.getHours().toString()
-      const mins = passedValue.getMinutes().toString()
+      let hours = passedValue.getHours().toString()
+      if (Number(hours) < 10) {
+        hours = '0' + hours
+      }
+
+      let mins = passedValue.getMinutes().toString()
+      if (Number(mins) < 10) {
+        mins = '0' + mins
+      }
+
       console.log('show hours: ', hours)
       console.log('show mins: ', mins)
 

@@ -909,12 +909,51 @@ class EditLog extends Component {
      }
   }
 
-  formChangeHandler(eventName, eventValue) {
-    console.log('formChangeHandler clicked');
+  formChangeHandler(eventName, eventValue, dateEvent, changeDateTime, mode) {
+    console.log('formChangeHandler clicked', eventName, eventValue, dateEvent, changeDateTime);
 
-    this.setState({ selectedValue: eventValue })
+    if (eventValue && !dateEvent) {
+      this.setState({ selectedValue: eventValue })
+    }
 
-    if (eventName === 'associatedApplication') {
+    if (dateEvent && Platform.OS === 'android') {
+      console.log('in dateEvent', dateEvent, this.state.mode)
+      //{"nativeEvent": {}, "type": "dismissed"}
+      // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
+      if (this.state.mode === 'datetime') {
+        if (eventValue) {
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+          if (this.state[eventName] && this.state[eventName].split("T")) {
+            eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
+          }
+          this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+        } else {
+          this.setState({ showDateTimePicker: false, modalIsOpen: false })
+        }
+      } else if (this.state.mode === 'time') {
+        if (eventValue) {
+
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
+          eventValue = eventValue.split("T")[1]
+          console.log('is this working? ', eventValue, eventName, this.state[eventName])
+          if (this.state[eventName] && this.state[eventName].split("T")) {
+            eventValue = this.state[eventName].split("T")[0] + "T" + eventValue
+
+          }
+          this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+        } else {
+          this.setState({ showDateTimePicker: false, modalIsOpen: false })
+        }
+      } else {
+        if (eventValue) {
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+          console.log('is this working? ', eventValue)
+          this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+        } else {
+          this.setState({ showDateTimePicker: false, modalIsOpen: false })
+        }
+      }
+    } else if (eventName === 'associatedApplication') {
 
       let associatedApplication = null
       for (let i = 1; i <= this.state.logs.length; i++) {
@@ -1117,7 +1156,23 @@ class EditLog extends Component {
         pollQuestion = 'Which job should I take? Why?'
       }
       this.setState({ [eventName]: eventValue, pollQuestion })
+    } else if (changeDateTime) {
+      if (mode === 'date') {
+        console.log('view date 1: ', eventValue)
+        eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+        console.log('view date 2: ', eventValue)
+        this.setState({ [eventName]: eventValue })
+      } else if (mode === 'datetime') {
+        //date component
+
+        eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
+        // if (this.state[eventName] && this.state[eventName].split("T")) {
+        //   eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
+        // }
+        this.setState({ [eventName]: eventValue })
+      }
     } else {
+      console.log('in regular')
       this.setState({ [eventName]: eventValue })
     }
   }
@@ -3426,7 +3481,7 @@ class EditLog extends Component {
   closeModal() {
     console.log('closeModal called in SubEditLog')
 
-    this.setState({ modalIsOpen: false, showSmartDefinition: false, showPicker: false })
+    this.setState({ modalIsOpen: false, showSmartDefinition: false, showPicker: false, showDateTimePicker: false })
     if (this.props.closeModal) {
       this.props.closeModal()
     }
@@ -3497,7 +3552,7 @@ class EditLog extends Component {
                     {(!this.props.fromWalkthrough) && (
                       <View style={[styles.row10]}>
                         {(this.state.logType === 'Goal') && (
-                          <Text style={[styles.descriptionText1]}>Set <TouchableOpacity style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}onPress={() => this.setState({ modalIsOpen: true, showSmartDefinition: true })}><Text style={[styles.standardText]}>S.M.A.R.T.</Text></TouchableOpacity> career goals to get suggestions, get resources, and make use of accountability groups.</Text>
+                          <Text style={[styles.descriptionText1]}>Set <Text style={[styles.standardText,styles.ctaColor,styles.underlineText,styles.offsetUnderline]} onPress={() => this.setState({ modalIsOpen: true, showSmartDefinition: true })}>S.M.A.R.T.</Text> career goals to get suggestions, get resources, and make use of accountability groups.</Text>
                         )}
                         {(this.state.logType === 'Meeting') && (
                           <Text style={[styles.descriptionText1]}>Add meetings and associated meeting minutes within accountability groups.</Text>
@@ -5103,42 +5158,81 @@ class EditLog extends Component {
                         <View>
                           <View style={[styles.row10]}>
                             <View>
-                              <View style={[styles.rowDirection]}>
-                                <View style={[styles.calcColumn180]}>
-                                  <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                              {(Platform.OS === 'ios') ? (
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn180]}>
+                                    <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                                  </View>
+                                  <View style={[styles.width120,styles.topPadding5]}>
+                                    <DateTimePicker
+                                      testID="goalStartDate"
+                                      value={(this.state.goalStartDate) ? convertStringToDate(this.state.goalStartDate,'dateOnly') : new Date()}
+                                      mode={'date'}
+                                      is24Hour={true}
+                                      display="default"
+                                      onChange={(e, d) => this.formChangeHandler("goalStartDate",d,null,true,'date')}
+                                    />
+                                  </View>
                                 </View>
-                                <View style={[styles.width120,styles.topPadding5]}>
-                                  <DateTimePicker
-                                    testID="goalStartDate"
-                                    value={(this.state.goalStartDate) ? convertStringToDate(this.state.goalStartDate,'dateOnly') : new Date()}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={(e, d) => this.formChangeHandler("goalStartDate",d)}
-                                  />
+                              ) : (
+                                <View>
+                                  <View style={[styles.row5]}>
+                                    <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                                  </View>
+                                  <View style>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Goal Start Date', selectedIndex: null, selectedName: "goalStartDate", selectedValue: this.state.goalStartDate, mode: 'date' })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn115]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.goalStartDate}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
+
                                 </View>
-                              </View>
+                              )}
+
                             </View>
                             <View>
-                              <Text style={[styles.row10,styles.standardText]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>
-
-                              <View style={[styles.rowDirection]}>
-                                <View style={[styles.calcColumn180]}>
-                                  <Text style={[styles.row10,styles.standardText]}>When Will You Start Working Toward This?<Text style={[styles.errorColor]}>*</Text></Text>
+                              {(Platform.OS === 'ios') ? (
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn180]}>
+                                    <Text style={[styles.row10,styles.standardText]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>
+                                  </View>
+                                  <View style={[styles.width120,styles.topPadding5]}>
+                                    <DateTimePicker
+                                      testID="goalDeadline"
+                                      value={(this.state.goalDeadline) ? convertStringToDate(this.state.goalDeadline,'dateOnly') : new Date()}
+                                      mode={'date'}
+                                      is24Hour={true}
+                                      display="default"
+                                      onChange={(e, d) => this.formChangeHandler("goalDeadline",d,null,true,'date')}
+                                      minimumDate={new Date()}
+                                    />
+                                  </View>
                                 </View>
-                                <View style={[styles.width120,styles.topPadding5]}>
-                                  <DateTimePicker
-                                    testID="goalDeadline"
-                                    value={(this.state.goalDeadline) ? convertStringToDate(this.state.goalDeadline,'dateOnly') : new Date()}
-                                    mode={'date'}
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={(e, d) => this.formChangeHandler("goalDeadline",d)}
-                                    minimumDate={new Date()}
-                                  />
+                              ) : (
+                                <View>
+                                  <View style={[styles.row5]}>
+                                    <Text style={[styles.row10,styles.standardText]}>Deadline to Reach Your Goal<Text style={[styles.errorColor]}>*</Text></Text>
+                                  </View>
+                                  <View>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Goal Deadline', selectedIndex: null, selectedName: "goalDeadline", selectedValue: this.state.goalDeadline, mode: 'date' })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                        <View style={[styles.calcColumn115]}>
+                                          <Text style={[styles.descriptionText1]}>{this.state.goalDeadline}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
                                 </View>
-                              </View>
-
+                              )}
                             </View>
 
                           </View>
@@ -5427,39 +5521,80 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                     <View>
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.calcColumn260]}>
-                          <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn260]}>
+                            <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.width200,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="startTime"
+                              value={(this.state.startTime) ? convertStringToDate(this.state.startTime,'toLocal') : new Date()}
+                              mode={'datetime'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("startTime",d,null,true,'datetime')}
+                            />
+                          </View>
                         </View>
-                        <View style={[styles.width200,styles.topPadding5]}>
-                          <DateTimePicker
-                            testID="startTime"
-                            value={(this.state.startTime) ? convertStringToDate(this.state.startTime,'toLocal') : new Date()}
-                            mode={'datetime'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("startTime",d)}
-                          />
+                      ) : (
+                        <View>
+                          <View style={[styles.row5]}>
+                            <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'datetime' })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.startTime}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
-                      </View>
+                      )}
 
                     </View>
                     <View>
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.calcColumn260]}>
-                          <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn260]}>
+                            <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.width200,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="endTime"
+                              value={(this.state.endTime) ? convertStringToDate(this.state.endTime,'toLocal') : new Date()}
+                              mode={'datetime'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("endTime",d,null,true,'datetime')}
+                            />
+                          </View>
                         </View>
-                        <View style={[styles.width200,styles.topPadding5]}>
-                          <DateTimePicker
-                            testID="endTime"
-                            value={(this.state.endTime) ? convertStringToDate(this.state.endTime,'toLocal') : new Date()}
-                            mode={'datetime'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("endTime",d)}
-                          />
+                      ) : (
+                        <View>
+                          <View style={[styles.row5]}>
+                            <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "endTime", selectedValue: this.state.endTime, mode: 'datetime' })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.endTime}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
-                      </View>
+                      )}
+
                     </View>
 
                   </View>
@@ -5869,21 +6004,56 @@ class EditLog extends Component {
 
                   <View style={[styles.row10]}>
                     <View>
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.calcColumn260]}>
-                          <Text style={[styles.row10,styles.standardText]}>Session Date<Text style={[styles.errorColor]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn260]}>
+                            <Text style={[styles.row10,styles.standardText]}>Session Date<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.width200,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="sessionDate"
+                              value={(this.state.sessionDate) ? convertStringToDate(this.state.sessionDate,'toLocal') : new Date()}
+                              mode={'datetime'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("sessionDate",d,null,true,'datetime')}
+                            />
+                          </View>
                         </View>
-                        <View style={[styles.width200,styles.topPadding5]}>
-                          <DateTimePicker
-                            testID="sessionDate"
-                            value={(this.state.sessionDate) ? convertStringToDate(this.state.sessionDate,'toLocal') : new Date()}
-                            mode={'datetime'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("sessionDate",d)}
-                          />
+                      ) : (
+                        <View>
+                          <View style={[styles.row5]}>
+                            <Text style={[styles.row10,styles.standardText]}>Session Date<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.flex1,styles.rowDirection]}>
+                            <View style={[styles.flex50]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Session Date', selectedIndex: null, selectedName: "sessionDate", selectedValue: this.state.sessionDate, mode: 'datetime' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.sessionDate) ? (this.state.sessionDate.split("T")[0]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+                            <View style={[styles.flex50]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Session Time', selectedIndex: null, selectedName: "sessionDate", selectedValue: this.state.sessionDate, mode: 'time' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.sessionDate) ? (this.state.sessionDate.split("T")[1]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
                         </View>
-                      </View>
+                      )}
+
                     </View>
 
                     <View>
@@ -6172,21 +6342,41 @@ class EditLog extends Component {
                 </View>
 
                 <View style={[styles.row10]}>
-                  <View style={[styles.rowDirection]}>
-                    <View style={[styles.calcColumn260]}>
-                      <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
+                  {(Platform.OS === 'ios') ? (
+                    <View style={[styles.rowDirection]}>
+                      <View style={[styles.calcColumn260]}>
+                        <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
+                      </View>
+                      <View style={[styles.width200,styles.topPadding5]}>
+                        <DateTimePicker
+                          testID="applicationDate"
+                          value={(this.state.applicationDate) ? convertStringToDate(this.state.applicationDate,'toLocal') : new Date()}
+                          mode={'datetime'}
+                          is24Hour={true}
+                          display="default"
+                          onChange={(e, d) => this.formChangeHandler("applicationDate",d,null,true,'datetime')}
+                        />
+                      </View>
                     </View>
-                    <View style={[styles.width200,styles.topPadding5]}>
-                      <DateTimePicker
-                        testID="applicationDate"
-                        value={(this.state.applicationDate) ? convertStringToDate(this.state.applicationDate,'toLocal') : new Date()}
-                        mode={'datetime'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={(e, d) => this.formChangeHandler("applicationDate",d)}
-                      />
+                  ) : (
+                    <View>
+                      <View style={[styles.row5]}>
+                        <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
+                      </View>
+                      <View>
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDate", selectedValue: this.state.applicationDate, mode: 'datetime' })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn115]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.applicationDate}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>
+                  )}
 
                 </View>
 
@@ -6251,22 +6441,41 @@ class EditLog extends Component {
                 {(this.state.associatedApplication.name !== 'Attach a Saved Application') && (
                   <View>
                     <View style={[styles.row10]}>
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.calcColumn260]}>
-                          <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn260]}>
+                            <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.width200,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="interviewDate"
+                              value={(this.state.interviewDate) ? convertStringToDate(this.state.interviewDate,'toLocal') : new Date()}
+                              mode={'datetime'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("interviewDate",d,null,true,'datetime')}
+                            />
+                          </View>
                         </View>
-                        <View style={[styles.width200,styles.topPadding5]}>
-                          <DateTimePicker
-                            testID="interviewDate"
-                            value={(this.state.interviewDate) ? convertStringToDate(this.state.interviewDate,'toLocal') : new Date()}
-                            mode={'datetime'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("interviewDate",d)}
-                          />
+                      ) : (
+                        <View>
+                          <View style={[styles.row5]}>
+                            <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Interview Date', selectedIndex: null, selectedName: "interviewDate", selectedValue: this.state.interviewDate, mode: 'datetime' })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.interviewDate}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
-                      </View>
-
+                      )}
                     </View>
 
                     <View style={[styles.row10]}>
@@ -6736,22 +6945,41 @@ class EditLog extends Component {
                     )}
 
                     <View style={[styles.row10]}>
-
-                      <View style={[styles.rowDirection]}>
-                        <View style={[styles.calcColumn260]}>
-                          <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <View style={[styles.rowDirection]}>
+                          <View style={[styles.calcColumn260]}>
+                            <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View style={[styles.width200,styles.topPadding5]}>
+                            <DateTimePicker
+                              testID="offerStartDate"
+                              value={(this.state.offerStartDate) ? convertStringToDate(this.state.offerStartDate,'toLocal') : new Date()}
+                              mode={'datetime'}
+                              is24Hour={true}
+                              display="default"
+                              onChange={(e, d) => this.formChangeHandler("offerStartDate",d,null,true,'datetime')}
+                            />
+                          </View>
                         </View>
-                        <View style={[styles.width200,styles.topPadding5]}>
-                          <DateTimePicker
-                            testID="offerStartDate"
-                            value={(this.state.offerStartDate) ? convertStringToDate(this.state.offerStartDate,'toLocal') : new Date()}
-                            mode={'datetime'}
-                            is24Hour={true}
-                            display="default"
-                            onChange={(e, d) => this.formChangeHandler("offerStartDate",d)}
-                          />
+                      ) : (
+                        <View>
+                          <View style={[styles.row5]}>
+                            <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
+                          </View>
+                          <View>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Offer Start Date', selectedIndex: null, selectedName: "offerStartDate", selectedValue: this.state.offerStartDate, mode: 'datetime' })}>
+                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                <View style={[styles.calcColumn115]}>
+                                  <Text style={[styles.descriptionText1]}>{this.state.offerStartDate}</Text>
+                                </View>
+                                <View style={[styles.width20,styles.topMargin5]}>
+                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
-                      </View>
+                      )}
 
                     </View>
 
@@ -6869,18 +7097,39 @@ class EditLog extends Component {
         <View>
           {(this.state.modalIsOpen && this.props.modalView) ? (
               <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
-                {(this.state.showPicker) ? (
+                {(this.state.showPicker || this.state.showDateTimePicker) ? (
                   <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
-                    <SubPicker
-                      selectedSubKey={this.state.selectedSubKey}
-                      selectedName={this.state.selectedName}
-                      selectedOptions={this.state.selectedOptions}
-                      selectedValue={this.state.selectedValue}
-                      differentLabels={this.state.differentLabels}
-                      pickerName={this.state.pickerName}
-                      formChangeHandler={this.formChangeHandler}
-                      closeModal={this.closeModal}
-                    />
+                    {(this.state.showPicker) ? (
+                      <SubPicker
+                        selectedSubKey={this.state.selectedSubKey}
+                        selectedName={this.state.selectedName}
+                        selectedOptions={this.state.selectedOptions}
+                        selectedValue={this.state.selectedValue}
+                        differentLabels={this.state.differentLabels}
+                        pickerName={this.state.pickerName}
+                        formChangeHandler={this.formChangeHandler}
+                        closeModal={this.closeModal}
+                      />
+                    ) : (
+                      <View>
+                        <View style={[styles.alignCenter]}>
+                          <TouchableOpacity onPress={() => this.closeModal()}>
+
+                            <Text style={[styles.standardText,styles.centerText,styles.ctaColor]}>Cancel</Text>
+                          </TouchableOpacity>
+                        </View>
+                        <DateTimePicker
+                          testID={this.state.selectedName}
+                          value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
+                          mode={this.state.mode}
+                          is24Hour={true}
+                          display="default"
+                          onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
+                          minimumDate={this.state.minimumDate}
+                          maximumDate={this.state.maximumDate}
+                        />
+                      </View>
+                    )}
                   </View>
                 ) : (
                   <ScrollView key="info">
@@ -6916,18 +7165,40 @@ class EditLog extends Component {
 
           {(!this.props.modalView) && (
             <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
-              {(this.state.showPicker) ? (
+              {(this.state.showPicker || this.state.showDateTimePicker) ? (
                 <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
-                  <SubPicker
-                    selectedSubKey={this.state.selectedSubKey}
-                    selectedName={this.state.selectedName}
-                    selectedOptions={this.state.selectedOptions}
-                    selectedValue={this.state.selectedValue}
-                    differentLabels={this.state.differentLabels}
-                    pickerName={this.state.pickerName}
-                    formChangeHandler={this.formChangeHandler}
-                    closeModal={this.closeModal}
-                  />
+                  {(this.state.showPicker) ? (
+                    <SubPicker
+                      selectedSubKey={this.state.selectedSubKey}
+                      selectedName={this.state.selectedName}
+                      selectedOptions={this.state.selectedOptions}
+                      selectedValue={this.state.selectedValue}
+                      differentLabels={this.state.differentLabels}
+                      pickerName={this.state.pickerName}
+                      formChangeHandler={this.formChangeHandler}
+                      closeModal={this.closeModal}
+                    />
+                  ) : (
+                    <View>
+                      <View style={[styles.alignCenter]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+
+                          <Text style={[styles.standardText,styles.centerText,styles.ctaColor]}>Cancel</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <DateTimePicker
+                        testID={this.state.selectedName}
+                        value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
+                        mode={this.state.mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
+                        minimumDate={this.state.minimumDate}
+                        maximumDate={this.state.maximumDate}
+                      />
+                    </View>
+                  )}
+
                 </View>
               ) : (
                 <ScrollView key="info" style={[styles.card,styles.fullScreenWidth]}>

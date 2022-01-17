@@ -205,12 +205,29 @@ class OrgDetails extends Component {
      }
   }
 
-  formChangeHandler(eventName,eventValue) {
+  formChangeHandler(eventName,eventValue,dateEvent) {
     console.log('formChangeHandler called')
 
-    this.setState({ selectedValue: eventValue })
-    this.setState({ [eventName]: eventValue })
+    if (eventValue && !dateEvent) {
+      this.setState({ selectedValue: eventValue })
+    }
 
+    if (dateEvent && Platform.OS === 'android') {
+      console.log('in dateEvent', dateEvent)
+      //{"nativeEvent": {}, "type": "dismissed"}
+      // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
+      if (eventValue) {
+        eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+        console.log('is this working? ', eventValue)
+        this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+      } else {
+        this.setState({ showDateTimePicker: false, modalIsOpen: false })
+      }
+    } else if (this.state.showDateTimePicker) {
+      this.setState({ [eventName]: convertDateToString(new Date(eventValue),'hyphenatedDate') })
+    } else {
+      this.setState({ [eventName]: eventValue })
+    }
   }
 
   submitSignUpFields() {
@@ -439,14 +456,29 @@ class OrgDetails extends Component {
       <View key="signUpField">
         <Text style={[styles.standardText,styles.row10]}>{value.name}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
         {(value.questionType === 'Date') && (
-          <DateTimePicker
-            testID={value.shorthand}
-            value={(this.state[value.shorthand]) ? convertStringToDate(this.state[value.shorthand],'dateOnly') : new Date()}
-            mode={'date'}
-            is24Hour={true}
-            display="default"
-            onChange={(e, d) => this.formChangeHandler(value.shorthand,d)}
-          />
+          <View>
+            {(Platform.OS === 'ios') ? (
+              <DateTimePicker
+                testID={value.shorthand}
+                value={(this.state[value.shorthand]) ? convertStringToDate(this.state[value.shorthand],'dateOnly') : new Date()}
+                mode={'date'}
+                is24Hour={true}
+                display="default"
+                onChange={(e, d) => this.formChangeHandler(value.shorthand,d)}
+              />
+            ) : (
+              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: this.state.shorthand, selectedIndex: null, selectedName: this.state.shorthand, selectedValue: this.state[value.shorthand] })}>
+                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                  <View style={[styles.calcColumn115]}>
+                    <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
+                  </View>
+                  <View style={[styles.width20,styles.topMargin5]}>
+                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          </View>
         )}
         {(value.questionType === 'Short Answer') && (
           <TextInput
@@ -539,7 +571,7 @@ class OrgDetails extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showPicker: false })
+    this.setState({ modalIsOpen: false, showPicker: false, showDateTimePicker: false })
   }
 
   render() {
@@ -818,6 +850,27 @@ class OrgDetails extends Component {
                     pickerName={this.state.pickerName}
                     formChangeHandler={this.formChangeHandler}
                     closeModal={this.closeModal}
+                  />
+                </View>
+              )}
+
+              {(this.state.showDateTimePicker) && (
+                <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                  <View style={[styles.alignCenter]}>
+                    <TouchableOpacity onPress={() => this.closeModal()}>
+
+                      <Text style={[styles.standardText,styles.centerText,styles.ctaColor]}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <DateTimePicker
+                    testID={this.state.selectedName}
+                    value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
+                    mode={this.state.mode}
+                    is24Hour={true}
+                    display="default"
+                    onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
+                    minimumDate={this.state.minimumDate}
+                    maximumDate={this.state.maximumDate}
                   />
                 </View>
               )}
