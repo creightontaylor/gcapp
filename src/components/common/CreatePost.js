@@ -1256,7 +1256,7 @@ class CreatePost extends Component {
       console.log('saved file: ', originalName)
       fileData.append('baseFileName', passedFile, originalName)
 
-      fetch("/api/file-upload", {
+      fetch("https://www.guidedcompass.com/api/file-upload", {
           mode: 'no-cors',
           method: "POST",
           body: fileData

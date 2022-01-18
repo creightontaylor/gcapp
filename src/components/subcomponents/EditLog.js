@@ -1165,7 +1165,18 @@ class EditLog extends Component {
       } else if (mode === 'datetime') {
         //date component
 
-        eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
+        // const timeDifferenceUnadjusted = new Date().getTime() - new Date(eventValue).getTime()
+        // const timeZoneDifferenceMiliseconds = (new Date(eventValue).getTimezoneOffset()) * 60000
+        const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
+        let adjustedDate = new Date(eventValue)
+        adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
+
+        // const adjustedDate = new Date(new Date(eventValue).getTime() - timeZoneDifferenceMiliseconds)
+
+        // console.log('compare the dates: ', eventValue, new Date(eventValue),convertDateToString(adjustedDate,'hyphenatedDateTime'), typeof timeDifference, adjustedDate)
+        eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
+
+        // subtracts 6 hours
         // if (this.state[eventName] && this.state[eventName].split("T")) {
         //   eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
         // }
@@ -1357,37 +1368,6 @@ class EditLog extends Component {
                 searchIsAnimatingOpportunities: false, searchIsAnimatingOpportunitiesA: false, searchIsAnimatingOpportunitiesB: false
               })
           });
-
-          // Axios.put('/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
-          // .then((response) => {
-          //   console.log('Careers query attempted', response.data);
-          //
-          //     if (response.data.success) {
-          //       console.log('successfully retrieved careers')
-          //
-          //       if (response.data) {
-          //
-          //         let careerOptions = []
-          //         if (response.data.careers && response.data.careers.length > 0) {
-          //           careerOptions = response.data.careers
-          //         }
-          //
-          //         // THIS IS SUPER UNNECESSARY
-          //         const filterCriteriaArray = response.data.filterCriteriaArray
-          //         const sortCriteriaArray = null
-          //
-          //         self.setState({ careerOptions, animating: false })
-          //       }
-          //
-          //     } else {
-          //       console.log('no career data found', response.data.message)
-          //       self.setState({ animating: false })
-          //     }
-          //
-          // }).catch((error) => {
-          //     console.log('Career query did not work', error);
-          //     self.setState({ animating: false })
-          // });
         }
 
         const delayFilter = () => {

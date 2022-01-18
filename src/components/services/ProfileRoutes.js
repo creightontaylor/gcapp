@@ -15,7 +15,7 @@ export const requestAccessToWorkspace = async(email, orgCode, orgName, requestTy
 
     if (accountCode) {
       // adjust employers training partners
-      return await Axios.post('/api/account/update', { accountCode, activeOrg: orgCode, keepActiveOrg: true })
+      return await Axios.post('https://www.guidedcompass.com/api/account/update', { accountCode, activeOrg: orgCode, keepActiveOrg: true })
       .then((response) => {
         console.log('Attempting to add training organization', response.data);
 
@@ -36,7 +36,7 @@ export const requestAccessToWorkspace = async(email, orgCode, orgName, requestTy
           return { success: false, errorMessage: error }
       });
     } else {
-      return await Axios.get('/api/request-access-to-workspace', { params: { email, orgCode, orgName, requestType, orgContactFirstName, orgContactLastName, orgContactEmail, signUpFields }})
+      return await Axios.get('https://www.guidedcompass.com/api/request-access-to-workspace', { params: { email, orgCode, orgName, requestType, orgContactFirstName, orgContactLastName, orgContactEmail, signUpFields }})
       .then((response) => {
         console.log('Request to access workspace attempted', response.data);
 

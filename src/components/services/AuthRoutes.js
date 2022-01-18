@@ -40,7 +40,7 @@ export const signUp = async(firstName, lastName, email, password, gradYear, jobT
 
     let activeOrg = orgCode.toLowerCase()
 
-    return await Axios.get('/api/org', { params: { orgCode: activeOrg } })
+    return await Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
     .then(async(response) => {
       console.log('Org info query attempted', response.data);
 
@@ -116,7 +116,7 @@ export const signUp = async(firstName, lastName, email, password, gradYear, jobT
           const orgRegion = passedOrgRegion
           const orgDescription = passedOrgDescription
 
-          return await Axios.post('/api/users/register', {
+          return await Axios.post('https://www.guidedcompass.com/api/users/register', {
             firstName,lastName, username, email, password, gradYear, orgName, courseIds, workIds,
             orgContactFirstName, orgContactLastName, orgContactEmail,
             activeOrg, myOrgs, roleName, otherRoleName, school, schoolDistrict, jobTitle, employerName, accountCode,
@@ -199,7 +199,7 @@ export const signIn = async(email, password, orgFocus)=>{
     return { error: { message: 'please enter your password' }}
   } else {
 
-    return await Axios.post('/api/users/login', { email, password })
+    return await Axios.post('https://www.guidedcompass.com/api/users/login', { email, password })
     .then((response) => {
       console.log('Login attempted', response.data);
 
@@ -304,7 +304,7 @@ export const signOut = async(email, activeOrg, orgFocus, accountCode, roleName, 
     }
   }
 
-  return await Axios.post('/api/users/logout', { email })
+  return await Axios.post('https://www.guidedcompass.com/api/users/logout', { email })
   .then((response) => {
     console.log('Logout attempted', response.data);
 

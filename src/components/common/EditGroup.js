@@ -2,17 +2,22 @@ import React, {Component} from 'react';
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Image, TextInput } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png'
 const imageIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/image-icon.png'
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
 const deniedIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/denied-icon.png'
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
+
+import SubPicker from '../common/SubPicker';
 
 class EditGroup extends Component {
     constructor(props) {
@@ -25,6 +30,7 @@ class EditGroup extends Component {
           goalTypeOptions: ['Land a Job', 'Become a freelancer','Start a business','Grow a business','Explore careers','Find my purpose','Learn new skill(s)','Earn an educational degree','Develop a robust network','Solve a social problem'],
           repeatOptions: ['Every Day','Every Week','Every 2 Weeks','Every Month','Every Year'],
           reminderOptions: ['None','At time of event','5 minutes before','10 minutes before','15 minutes before','30 minutes before','1 hour before','2 hous before','1 day before','2 days before','1 week before'],
+          meetingMethodOptions: ['','In Person','Remote'],
 
           meetingRepeats: 'Every Week',
           groupGoals: [],
@@ -58,7 +64,7 @@ class EditGroup extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in commonEditGroup', this.props.activeOrg, prevProps)
+      console.log('componentDidUpdate called in commonEditGroup')
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
         console.log('t0 will update')
@@ -185,24 +191,124 @@ class EditGroup extends Component {
       }
     }
 
-    formChangeHandler = (eventName,eventValue) => {
+    formChangeHandler = (eventName,eventValue, dateEvent, changeDateTime, mode) => {
       console.log('formChangeHandler called')
 
-      if (eventName === 'groupCoverImage') {
+      if (eventValue && !dateEvent) {
+        this.setState({ selectedValue: eventValue })
+      }
 
-          if (event.target.files[0]) {
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                this.setState({ groupCoverImage: e.target.result, saveGroupImage: true });
-                console.log('how do i access the image', e.target.result)
-            };
-            reader.readAsDataURL(event.target.files[0]);
-            this.setState({ groupImageFile: event.target.files[0] })
-            // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
-            // this.saveFile(eventName, event.target.files[0])
+      if (dateEvent && Platform.OS === 'android') {
+        console.log('in dateEvent', dateEvent, this.state.mode)
+        //{"nativeEvent": {}, "type": "dismissed"}
+        // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
+        if (this.state.mode === 'datetime') {
+          if (eventValue) {
+            eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+            if (this.state[eventName] && this.state[eventName].split("T")) {
+              eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
+            }
+            this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+          } else {
+            this.setState({ showDateTimePicker: false, modalIsOpen: false })
           }
+        } else if (this.state.mode === 'time') {
+          if (eventValue) {
+
+            eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
+            eventValue = eventValue.split("T")[1]
+            console.log('is this working? ', eventValue, eventName, this.state[eventName])
+            if (this.state[eventName] && this.state[eventName].split("T")) {
+              eventValue = this.state[eventName].split("T")[0] + "T" + eventValue
+
+            }
+            this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+          } else {
+            this.setState({ showDateTimePicker: false, modalIsOpen: false })
+          }
+        } else {
+          if (eventValue) {
+            eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+            console.log('is this working? ', eventValue)
+            this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
+          } else {
+            this.setState({ showDateTimePicker: false, modalIsOpen: false })
+          }
+        }
+      } else if (eventName === 'groupCoverImage') {
+
+        const options = {
+          selectionLimit: 1,
+          mediaType: 'photo',
+          includeBase64: false,
+        };
+
+        // const launch = async () => {
+        //   const result = await launchImageLibrary(options?);
+        //   console.log('show result: ', result)
+        // }
+        //
+        // launch()
+        const self = this
+        function pickedImage(callbackObject) {
+          console.log('callback called, ', callbackObject)
+
+          if (callbackObject && callbackObject.assets && callbackObject.assets[0]) {
+            const file = callbackObject.assets[0]
+            const mbLimit = 10
+            if (file.fileSize > mbLimit * 1024 * 1024) {
+              console.log('file is too big')
+
+              const errorMessage = 'File must be less than ' + mbLimit + 'MB. This file is ' + (file.fileSize / (1024 * 1024)).toFixed() + 'MB'
+              self.setState({ serverSuccessProfilePic: false, serverErrorMessageProfilePic: errorMessage })
+
+            } else {
+              console.log('file is small enough')
+
+              self.setState({ groupImageFile: file, groupCoverImage: file.uri, saveGroupImage: true })
+              // let reader = new FileReader();
+              // reader.onload = (e) => {
+              //     self.setState({ profilePicImage: file.uri });
+              //     console.log('how do i access the image', e.target.result)
+              // };
+              // reader.readAsDataURL(file);
+              // // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+              // self.saveFile(eventName, file)
+            }
+          }
+        }
+        launchImageLibrary(options,pickedImage);
+        // if (event.target.files[0]) {
+        //   let reader = new FileReader();
+        //   reader.onload = (e) => {
+        //       this.setState({ groupCoverImage: e.target.result, saveGroupImage: true });
+        //       console.log('how do i access the image', e.target.result)
+        //   };
+        //   reader.readAsDataURL(event.target.files[0]);
+        //   this.setState({ groupImageFile: event.target.files[0] })
+        //   // this.setState({ profilePicFile: event.target.files[0], profilePicHasChanged: true })
+        //   // this.saveFile(eventName, event.target.files[0])
+        // }
       } else if (eventName === 'searchMembers') {
         this.searchItems(eventValue,'member')
+
+      } else if (changeDateTime) {
+        if (mode === 'date') {
+          console.log('view date 1: ', eventValue)
+          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+          console.log('view date 2: ', eventValue)
+          this.setState({ [eventName]: eventValue })
+        } else if (mode === 'datetime') {
+          //date component
+          console.log('show eventValue 1: ', eventValue)
+          const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
+          let adjustedDate = new Date(eventValue)
+          adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
+
+          eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
+          console.log('show eventValue 2: ', adjustedDate, eventValue)
+          this.setState({ [eventName]: eventValue })
+        }
       } else {
         this.setState({ [eventName]: eventValue })
       }
@@ -395,8 +501,8 @@ class EditGroup extends Component {
     closeModal() {
       console.log('closeModal called')
 
-      this.props.closeModal()
-      // this.setState({ modalIsOpen: false, showMessageWidget: false, showMatchingCriteria: false, addOrgGroup: false })
+      this.setState({ modalIsOpen: false, showPicker: false, showDateTimePicker: false })
+
     }
 
     deleteGroup() {
@@ -458,7 +564,7 @@ class EditGroup extends Component {
       } else if (this.state.groupCategory === 'Accountability' && (!this.state.meetingEndTime || this.state.meetingEndTime === '')) {
         this.setState({ errorMessage: 'please add a meeting end time', isSaving: false })
       } else {
-
+        console.log('about to save')
         let _id = this.state._id
         if (!_id) {
           _id = null
@@ -571,7 +677,7 @@ class EditGroup extends Component {
                 groupDescription: '', groupAccessType: '', selectedRoleNames: [], groupMembers: []
                 })
 
-                this.closeModal()
+                this.props.closeModal()
                 if (this.props.fromAdvisor) {
                   this.props.navigation.navigate('GroupDetails', { selectedGroup: posting })
                 } else if (this.props.fromWalkthrough) {
@@ -603,8 +709,15 @@ class EditGroup extends Component {
       const passedFile = this.state.groupImageFile
 
       // const emailId = this.state.emailId
-      const fileName = passedFile.name
+      const fileName = passedFile.fileName
       let originalName = fileCategory + '|' + groupId + '|' + fileName + '|' + new Date()
+
+      passedFile['name'] = originalName
+      passedFile['size'] = passedFile.fileSize
+      passedFile['uri'] = passedFile.uri
+      if (Platform.OS === 'ios') {
+        passedFile['uri'] = passedFile.uri.replace('file://', '')
+      }
 
       let fileData = new FormData();
       // const fileName = 'profileImage'
@@ -612,14 +725,14 @@ class EditGroup extends Component {
       console.log('saved file: ', originalName)
       fileData.append('baseFileName', passedFile, originalName)
 
-      fetch("/api/file-upload", {
+      fetch("https://www.guidedcompass.com/api/file-upload", {
           mode: 'no-cors',
           method: "POST",
           body: fileData
       }).then(function (res) {
-        console.log('what is the profile pic response');
+        console.log('what is the file response');
         if (res.ok) {
-
+          console.log('success on save')
           if (fileCategory === 'groupImage') {
             if (!saveNewGroup) {
               this.setState({ successMessage: 'Group created successfully', isSaving: false, groupPicFile: passedFile })
@@ -665,7 +778,7 @@ class EditGroup extends Component {
                       isSaving: false, groupName: '', groupCategory: '', groupDescription: '',
                       groupAccessType: '', selectedRoleNames: [], groupMembers: []
                     })
-                    self.closeModal()
+                    self.props.closeModal()
                     if (self.props.fromAdvisor) {
                       self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                     } else if (self.props.fromWalkthrough) {
@@ -682,7 +795,7 @@ class EditGroup extends Component {
                   self.setState({ isSaving: false, groupName: '', groupCategory: '', groupDescription: '',
                   groupAccessType: '', selectedRoleNames: [], groupMembers: [], errorMessage: response.data.message
                   })
-                  self.closeModal()
+                  self.props.closeModal()
                   if (self.props.fromAdvisor) {
                     self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                   } else if (self.props.fromWalkthrough) {
@@ -700,7 +813,7 @@ class EditGroup extends Component {
                     groupDescription: '', groupAccessType: '', selectedRoleNames: [], groupMembers: [],
                     errorMessage: error
                   })
-                  self.closeModal()
+                  self.props.closeModal()
                   if (self.props.fromAdvisor) {
                     self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
                   } else if (self.props.fromWalkthrough) {
@@ -714,7 +827,7 @@ class EditGroup extends Component {
               self.setState({ isSaving: false, groupName: '', groupCategory: '', groupDescription: '',
               groupAccessType: '', selectedRoleNames: [], groupMembers: [], errorMessage: 'Successfully created a group'
               })
-              self.closeModal()
+              self.props.closeModal()
               if (self.props.fromAdvisor) {
                 self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
               } else if (self.props.fromWalkthrough) {
@@ -734,7 +847,7 @@ class EditGroup extends Component {
             this.setState({ successMessage: 'Group created successfully', isSaving: false,
               groupName: '', groupCategory: '', groupDescription: '', groupAccessType: '', selectedRoleNames: []
             })
-            this.closeModal()
+            this.props.closeModal()
             if (self.props.fromAdvisor) {
               self.props.navigation.navigate('GroupDetails', { selectedGroup: group })
             } else if (self.props.fromWalkthrough) {
@@ -753,7 +866,7 @@ class EditGroup extends Component {
           this.setState({ successMessage: 'Group created successfully', isSaving: false,
             groupName: '', groupCategory: '', groupDescription: '', groupAccessType: '', selectedRoleNames: []
           })
-          this.closeModal()
+          this.props.closeModal()
           if (this.props.fromAdvisor) {
             this.props.navigation.navigate('GroupDetails', { selectedGroup: group })
           } else if (this.props.fromWalkthrough) {
@@ -889,13 +1002,11 @@ class EditGroup extends Component {
                        <Text style={[styles.headingText6]}>Group Name<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                        <View style={styles.spacer} />
                        <TextInput
-                         style={styles.textArea}
+                         style={styles.textInput}
                          onChangeText={(text) => this.formChangeHandler("groupName", text)}
                          value={this.state.groupName}
                          placeholder="Add group name..."
                          placeholderTextColor="grey"
-                         multiline={true}
-                         numberOfLines={4}
                        />
                      </View>
                      {/*
@@ -966,13 +1077,30 @@ class EditGroup extends Component {
                          <View style={[styles.row5]}>
                            <View style={[styles.row10]}>
                              <Text style={[styles.row10]}>Repeats<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                             <Picker
-                               selectedValue={this.state.meetingRepeats}
-                               onValueChange={(itemValue, itemIndex) =>
-                                 this.formChangeHandler("meetingRepeats",itemValue)
-                               }>
-                               {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                             </Picker>
+
+                             {(Platform.OS === 'ios') ? (
+                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Repeats", selectedIndex: null, selectedName: "meetingRepeats", selectedValue: this.state.meetingRepeats, selectedOptions: this.state.repeatOptions, selectedSubKey: null })}>
+                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                   <View style={[styles.calcColumn140]}>
+                                     <Text style={[styles.descriptionText1]}>{this.state.meetingRepeats}</Text>
+                                   </View>
+                                   <View style={[styles.width20,styles.topMargin5]}>
+                                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                   </View>
+                                 </View>
+                               </TouchableOpacity>
+                             ) : (
+                               <View style={[styles.standardBorder]}>
+                                 <Picker
+                                   selectedValue={this.state.meetingRepeats}
+                                   onValueChange={(itemValue, itemIndex) =>
+                                     this.formChangeHandler("meetingRepeats",itemValue)
+                                   }>
+                                   {this.state.repeatOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                 </Picker>
+                               </View>
+                             )}
+
                            </View>
 
                          </View>
@@ -980,27 +1108,40 @@ class EditGroup extends Component {
                          <View style={[styles.row5]}>
                            <View style={[styles.row10]}>
                              <Text style={[styles.row10]}>{this.state.logType} Method<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                             <Picker
-                               selectedValue={this.state.meetingMethod}
-                               onValueChange={(itemValue, itemIndex) =>
-                                 this.formChangeHandler("meetingMethod",itemValue)
-                               }>
-                                <Picker.Item key={""} label={""} value={""} />
-                                <Picker.Item key={"In Person"} label={"In Person"} value={"In Person"} />
-                                <Picker.Item key={"Remote"} label={"Remote"} value={"Remote"} />
-                             </Picker>
+
+                             {(Platform.OS === 'ios') ? (
+                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Meeting Method", selectedIndex: null, selectedName: "meetingMethod", selectedValue: this.state.meetingMethod, selectedOptions: this.state.meetingMethodOptions, selectedSubKey: null })}>
+                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                   <View style={[styles.calcColumn140]}>
+                                     <Text style={[styles.descriptionText1]}>{this.state.meetingMethod}</Text>
+                                   </View>
+                                   <View style={[styles.width20,styles.topMargin5]}>
+                                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                   </View>
+                                 </View>
+                               </TouchableOpacity>
+                             ) : (
+                               <View style={[styles.standardBorder]}>
+                                 <Picker
+                                   selectedValue={this.state.meetingMethod}
+                                   onValueChange={(itemValue, itemIndex) =>
+                                     this.formChangeHandler("meetingMethod",itemValue)
+                                   }>
+                                    {this.state.meetingMethodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                 </Picker>
+                               </View>
+                             )}
+
                            </View>
 
                            <View style={[styles.row10]}>
                              <Text style={[styles.row10]}>{(this.state.meetingMethod === "In Person") ? "Location" : "Meeting Link"}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                              <TextInput
-                               style={styles.textArea}
+                               style={styles.textInput}
                                onChangeText={(text) => this.formChangeHandler("meetingLocation", text)}
                                value={this.state.meetingLocation}
                                placeholder={(this.state.meetingMethod === "In Person") ? "Address..." : "Http..."}
                                placeholderTextColor="grey"
-                               multiline={true}
-                               numberOfLines={4}
                              />
                              {(this.state.meetingMethod === "Remote") && this.state.meetingLocation && this.state.meetingLocation !== '' && !this.state.meetingLocation.startsWith('http') && (
                                <View style={[styles.topPadding5]}>
@@ -1014,38 +1155,82 @@ class EditGroup extends Component {
 
                          <View style={[styles.row5]}>
                            <View style={[styles.row10]}>
-                             <View style={[styles.rowDirection]}>
-                               <View style={[styles.calcColumn260]}>
-                                 <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             {(Platform.OS === 'ios') ? (
+                               <View style={[styles.rowDirection]}>
+                                 <View style={[styles.calcColumn260]}>
+                                   <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                 </View>
+                                 <View style={[styles.width200,styles.topPadding5]}>
+                                   <DateTimePicker
+                                     testID={"1"}
+                                     value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
+                                     mode={'datetime'}
+                                     is24Hour={true}
+                                     display="default"
+                                     onChange={(e, d) => this.formChangeHandler("meetingStartTime",d,null,true,'datetime')}
+                                   />
+                                 </View>
                                </View>
-                               <View style={[styles.width200,styles.topPadding5]}>
-                                 <DateTimePicker
-                                   testID={"1"}
-                                   value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
-                                   mode={'datetime'}
-                                   is24Hour={true}
-                                   display="default"
-                                   onChange={(e, d) => this.formChangeHandler("meetingStartTime",d)}
-                                 />
+                             ) : (
+                               <View>
+                                 <View style={[styles.row5]}>
+                                   <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                 </View>
+                                 <View style>
+                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Meeting Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'datetime' })}>
+                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                       <View style={[styles.calcColumn115]}>
+                                         <Text style={[styles.descriptionText1]}>{this.state.meetingStartTime}</Text>
+                                       </View>
+                                       <View style={[styles.width20,styles.topMargin5]}>
+                                         <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                       </View>
+                                     </View>
+                                   </TouchableOpacity>
+                                 </View>
+
                                </View>
-                             </View>
+                             )}
+
                            </View>
                            <View style={[styles.row10]}>
-                             <View style={[styles.rowDirection]}>
-                               <View style={[styles.calcColumn260]}>
-                                 <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                             {(Platform.OS === 'ios') ? (
+                               <View style={[styles.rowDirection]}>
+                                 <View style={[styles.calcColumn260]}>
+                                   <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                 </View>
+                                 <View style={[styles.width200,styles.topPadding5]}>
+                                   <DateTimePicker
+                                     testID={"2"}
+                                     value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
+                                     mode={'datetime'}
+                                     is24Hour={true}
+                                     display="default"
+                                     onChange={(e, d) => this.formChangeHandler("meetingEndTime",d,null,true,'datetime')}
+                                   />
+                                 </View>
                                </View>
-                               <View style={[styles.width200,styles.topPadding5]}>
-                                 <DateTimePicker
-                                   testID={"2"}
-                                   value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
-                                   mode={'datetime'}
-                                   is24Hour={true}
-                                   display="default"
-                                   onChange={(e, d) => this.formChangeHandler("meetingEndTime",d)}
-                                 />
+                             ) : (
+                               <View>
+                                 <View style={[styles.row5]}>
+                                   <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                 </View>
+                                 <View style>
+                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Meeting End Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'datetime' })}>
+                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                       <View style={[styles.calcColumn115]}>
+                                         <Text style={[styles.descriptionText1]}>{this.state.meetingEndTime}</Text>
+                                       </View>
+                                       <View style={[styles.width20,styles.topMargin5]}>
+                                         <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                       </View>
+                                     </View>
+                                   </TouchableOpacity>
+                                 </View>
+
                                </View>
-                             </View>
+                             )}
+
                            </View>
 
                          </View>
@@ -1076,13 +1261,29 @@ class EditGroup extends Component {
                            <View style={[styles.row10]}>
                              <Text style={[styles.headingText6]}>Access Type<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                              <View style={styles.spacer} />
-                             <Picker
-                               selectedValue={this.state.groupAccessType}
-                               onValueChange={(itemValue, itemIndex) =>
-                                 this.formChangeHandler("groupAccessType",itemValue)
-                               }>
-                               {this.state.accessTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                             </Picker>
+
+                             {(Platform.OS === 'ios') ? (
+                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Access Type", selectedIndex: null, selectedName: "groupAccessType", selectedValue: this.state.groupAccessType, selectedOptions: this.state.accessTypeOptions, selectedSubKey: null })}>
+                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                   <View style={[styles.calcColumn140]}>
+                                     <Text style={[styles.descriptionText1]}>{this.state.groupAccessType}</Text>
+                                   </View>
+                                   <View style={[styles.width20,styles.topMargin5]}>
+                                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                   </View>
+                                 </View>
+                               </TouchableOpacity>
+                             ) : (
+                               <View style={[styles.standardBorder]}>
+                                 <Picker
+                                   selectedValue={this.state.groupAccessType}
+                                   onValueChange={(itemValue, itemIndex) =>
+                                     this.formChangeHandler("groupAccessType",itemValue)
+                                   }>
+                                   {this.state.accessTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                 </Picker>
+                               </View>
+                             )}
                            </View>
 
                          </View>
@@ -1130,13 +1331,11 @@ class EditGroup extends Component {
                      <View style={[styles.rowDirection,styles.row10]}>
                         <View style={[styles.calcColumn160]}>
                           <TextInput
-                            style={styles.textArea}
+                            style={styles.textInput}
                             onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
                             value={this.state.searchString}
                             placeholder="Search members..."
                             placeholderTextColor="grey"
-                            multiline={true}
-                            numberOfLines={4}
                           />
                         </View>
                         <View style={[styles.width80,styles.leftPadding]}>
@@ -1210,13 +1409,11 @@ class EditGroup extends Component {
                              <View>
                               <View style={[styles.row10]}>
                                 <TextInput
-                                  style={styles.textArea}
+                                  style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
                                   value={this.state.searchString}
                                   placeholder="Search members..."
                                   placeholderTextColor="grey"
-                                  multiline={true}
-                                  numberOfLines={4}
                                 />
                               </View>
                               <View style={[styles.row10]}>
@@ -1301,7 +1498,7 @@ class EditGroup extends Component {
                        <View>
                         <View style={[styles.rowDirection]}>
                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter,styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter,styles.topMargin]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter,styles.topMargin]} onPress={() => this.props.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                           {(this.state._id) && (
                             <TouchableOpacity style={[styles.btnPrimary, styles.errorBackgroundColor,styles.flexCenter,styles.topMargin]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.descriptionText1,styles.whiteColor]}>Delete Group</Text></TouchableOpacity>
                           )}
@@ -1313,6 +1510,47 @@ class EditGroup extends Component {
                )}
 
              </View>
+
+             <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+
+                {(this.state.showPicker) && (
+                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                    <SubPicker
+                      selectedSubKey={this.state.selectedSubKey}
+                      selectedName={this.state.selectedName}
+                      selectedOptions={this.state.selectedOptions}
+                      selectedValue={this.state.selectedValue}
+                      differentLabels={this.state.differentLabels}
+                      pickerName={this.state.pickerName}
+                      formChangeHandler={this.formChangeHandler}
+                      closeModal={this.closeModal}
+                    />
+                  </View>
+                )}
+
+                {(this.state.showDateTimePicker) && (
+                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                    <View style={[styles.alignCenter]}>
+                      <TouchableOpacity onPress={() => this.closeModal()}>
+
+                        <Text style={[styles.standardText,styles.centerText,styles.ctaColor]}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <DateTimePicker
+                      testID={this.state.selectedName}
+                      value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
+                      mode={'date'}
+                      is24Hour={true}
+                      display="default"
+                      onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
+                      minimumDate={this.state.minimumDate}
+                      maximumDate={this.state.maximumDate}
+                    />
+                  </View>
+                )}
+
+
+            </Modal>
 
           </ScrollView>
 

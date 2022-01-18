@@ -2520,7 +2520,7 @@ class EditProfileDetails extends Component {
         const dateOfBirth = birthdate
         const updatedAt = new Date()
 
-        Axios.post('/api/users/profile/details', userObject)
+        Axios.post('https://www.guidedcompass.com/api/users/profile/details', userObject)
         .then((response) => {
 
           if (response.data.success) {
