@@ -76,7 +76,7 @@ class EditGroup extends Component {
 
     retrieveData = async() => {
       try {
-        console.log('retrieveData called in commonEditGroup', this.props.selectedGroup)
+        console.log('retrieveData called in commonEditGroup')
 
         const accountCode = this.props.accountCode
 
@@ -114,6 +114,8 @@ class EditGroup extends Component {
         let selectedGroup = null
 
         if (this.props.selectedGroup) {
+          console.log('passed selectedGroup')
+
           _id = this.props.selectedGroup._id
           groupPictureURL = this.props.selectedGroup.pictureURL
           groupName = this.props.selectedGroup.name
@@ -129,27 +131,16 @@ class EditGroup extends Component {
           meetingMethod = this.props.selectedGroup.meetingMethod
           meetingLocation = this.props.selectedGroup.meetingLocation
           if (this.props.selectedGroup.meetingStartTime) {
-            meetingStartTime = convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput")
+            meetingStartTime = convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"hyphenatedDateTime")
           }
           if (this.props.selectedGroup.meetingEndTime) {
-            meetingEndTime = convertDateToString(new Date(this.props.selectedGroup.meetingEndTime),"rawDateTimeForInput")
+            meetingEndTime = convertDateToString(new Date(this.props.selectedGroup.meetingEndTime),"hyphenatedDateTime")
           }
+          console.log('show meeting times: ', meetingStartTime,meetingEndTime)
 
           meetingRepeats = this.props.selectedGroup.meetingRepeats
           invites = this.props.selectedGroup.invites
-          // console.log('meetingStartTime: ', meetingStartTime)
-          // console.log('meetingStartTime 2: ', new Date(this.props.selectedGroup.meetingStartTime))
-          // console.log('meetingStartTime 3: ', convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"rawDateTimeForInput"))
-          // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/New_York"}))
-          // console.log('meetingStartTime 3: ', typeof this.props.selectedGroup.meetingStartTime)
-          // console.log('meetingStartTime 4: ', new Date(this.props.selectedGroup.meetingStartTime))
-          // console.log('meetingStartTime 2: ', this.props.selectedGroup.meetingStartTime.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}))
-          // meetingStartTime = convertDateToString(meetingStartTime,"first16")
-          // console.log('meetingStartTime 2: ', meetingStartTime)
-
-          // 2021-10-30T04:32:00.000Z
-          // 2021-10-12T08:55
-          // 2021-010-30T19:30
+0
           selectedGroup = this.props.selectedGroup
         }
 
@@ -167,7 +158,7 @@ class EditGroup extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
-          console.log('Org info query attempted one', response.data);
+          console.log('Org info query attempted one');
 
           if (response.data.success) {
             console.log('org info query worked')
@@ -337,7 +328,7 @@ class EditGroup extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/members/search', {  params: {searchString, excludeCurrentUser, emailId, roleNames, orgCode }})
             .then((response) => {
-              console.log('Careers query attempted', response.data);
+              console.log('Careers query attempted');
 
                 if (response.data.success) {
                   console.log('successfully retrieved careers')
