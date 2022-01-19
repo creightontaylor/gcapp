@@ -594,15 +594,30 @@ class EditLog extends Component {
                 notes = log.notes
               }
 
+              let sessionDate = null
+              if (log.sessionDate) {
+                sessionDate = new Date(log.sessionDate)
+                const newSessionDate = new Date(sessionDate.getTime() + new Date().getTimezoneOffset()*60000)
+                sessionDate = convertDateToString(newSessionDate,"hyphenatedDateTime")
+              }
+
               this.setState({
                 _id: log._id, sessionId: log._id, advisorFirstName, advisorLastName, advisorEmail,
-                sessionDate: log.sessionDate, category: log.category,
+                sessionDate, category: log.category,
                 notes, sessionMethod: log.sessionMethod, createdAt: log.createdAt, selectedMembers, selectedMemberDetails
               })
             } else if (logType === 'Meeting') {
               const meetingId = log._id
-              const startTime = convertDateToString(new Date(log.startTime),"rawDateTimeForInput")
-              const endTime = convertDateToString(new Date(log.endTime),"rawDateTimeForInput")
+              // const startTime = convertDateToString(new Date(log.startTime),"rawDateTimeForInput")
+              let startTime = new Date(log.startTime)
+              const newStartTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
+              startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
+
+              // const endTime = convertDateToString(new Date(log.endTime),"rawDateTimeForInput")
+              let endTime = new Date(log.endTime)
+              const newEndTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
+              endTime = convertDateToString(newEndTime,"hyphenatedDateTime")
+
               const method = log.method
               const location = log.location
               const repeats = log.repeats
@@ -807,7 +822,9 @@ class EditLog extends Component {
 
               let applicationDeadline = ''
               if (log.applicationDeadline) {
-                applicationDeadline = log.applicationDeadline
+                applicationDeadline = new Date(log.applicationDeadline)
+                const newApplicationDeadline = new Date(applicationDeadline.getTime() + new Date().getTimezoneOffset()*60000)
+                applicationDeadline = convertDateToString(newApplicationDeadline,"hyphenatedDateTime")
               }
 
               let reviewedMaterials = ''
@@ -832,9 +849,16 @@ class EditLog extends Component {
                 name: log.associatedApplicationPositionTitle + " | " + log.associatedApplicationEmployerName
               }
 
+              let interviewDate = null
+              if (log.interviewDate) {
+                interviewDate = new Date(log.interviewDate)
+                const newInterviewDate = new Date(interviewDate.getTime() + new Date().getTimezoneOffset()*60000)
+                interviewDate = convertDateToString(newInterviewDate,"hyphenatedDateTime")
+              }
+
               this.setState({
                 _id: log._id,
-                interviewId: log._id, interviewDate: log.interviewDate, interviewRound: log.interviewRound,
+                interviewId: log._id, interviewDate, interviewRound: log.interviewRound,
                 numberOfInterviews: log.numberOfInterviews, interviewLength: log.interviewLength,
                 interviews: log.interviews, mcPracticedInterviewing: log.mcPracticedInterviewing,
                 wasPrepared: log.wasPrepared, questionsAsked: log.questionsAsked,
@@ -855,12 +879,19 @@ class EditLog extends Component {
                 name: log.associatedApplicationPositionTitle + " | " + log.associatedApplicationEmployerName
               }
 
+              let offerStartDate = null
+              if (log.startDate) {
+                offerStartDate = new Date(log.startTime)
+                const newOfferStartDate = new Date(offerStartDate.getTime() + new Date().getTimezoneOffset()*60000)
+                offerStartDate = convertDateToString(newOfferStartDate,"hyphenatedDateTime")
+              }
+
               this.setState({
                 _id: log._id,
                 offerId: log._id, offerAssociatedApplication,
                 offerPayType: log.payType, offerPay: log.pay, hasBonus: log.hasBonus, bonusDescription: log.bonusDescription,
                 offerBenefits: log.benefits, offeredEquity: log.offeredEquity, equityPercentage: log.equityPercentage,
-                companyValuation: log.companyValuation, offerStartDate: log.startDate, offerDecision: log.decision, decisionReason: log.decisionReason,
+                companyValuation: log.companyValuation, offerStartDate, offerDecision: log.decision, decisionReason: log.decisionReason,
                 createdAt: log.createdAt
               })
 
@@ -1165,21 +1196,7 @@ class EditLog extends Component {
       } else if (mode === 'datetime') {
         //date component
 
-        // const timeDifferenceUnadjusted = new Date().getTime() - new Date(eventValue).getTime()
-        // const timeZoneDifferenceMiliseconds = (new Date(eventValue).getTimezoneOffset()) * 60000
-        const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
-        let adjustedDate = new Date(eventValue)
-        adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
-
-        // const adjustedDate = new Date(new Date(eventValue).getTime() - timeZoneDifferenceMiliseconds)
-
-        // console.log('compare the dates: ', eventValue, new Date(eventValue),convertDateToString(adjustedDate,'hyphenatedDateTime'), typeof timeDifference, adjustedDate)
-        eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
-
-        // subtracts 6 hours
-        // if (this.state[eventName] && this.state[eventName].split("T")) {
-        //   eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
-        // }
+        eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
         this.setState({ [eventName]: eventValue })
       }
     } else {
@@ -5509,7 +5526,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="startTime"
-                              value={(this.state.startTime) ? convertStringToDate(this.state.startTime,'toLocal') : new Date()}
+                              value={(this.state.startTime) ? new Date(this.state.startTime) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -5547,7 +5564,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="endTime"
-                              value={(this.state.endTime) ? convertStringToDate(this.state.endTime,'toLocal') : new Date()}
+                              value={(this.state.endTime) ? new Date(this.state.endTime) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -5992,7 +6009,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="sessionDate"
-                              value={(this.state.sessionDate) ? convertStringToDate(this.state.sessionDate,'toLocal') : new Date()}
+                              value={(this.state.sessionDate) ? new Date(this.state.sessionDate) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -6329,12 +6346,12 @@ class EditLog extends Component {
                       </View>
                       <View style={[styles.width200,styles.topPadding5]}>
                         <DateTimePicker
-                          testID="applicationDate"
-                          value={(this.state.applicationDate) ? convertStringToDate(this.state.applicationDate,'toLocal') : new Date()}
+                          testID="applicationDeadline"
+                          value={(this.state.applicationDeadline) ? new Date(this.state.applicationDeadline) : new Date()}
                           mode={'datetime'}
                           is24Hour={true}
                           display="default"
-                          onChange={(e, d) => this.formChangeHandler("applicationDate",d,null,true,'datetime')}
+                          onChange={(e, d) => this.formChangeHandler("applicationDeadline",d,null,true,'datetime')}
                         />
                       </View>
                     </View>
@@ -6344,10 +6361,10 @@ class EditLog extends Component {
                         <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
                       </View>
                       <View>
-                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDate", selectedValue: this.state.applicationDate, mode: 'datetime' })}>
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDeadline", selectedValue: this.state.applicationDeadline, mode: 'datetime' })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                             <View style={[styles.calcColumn115]}>
-                              <Text style={[styles.descriptionText1]}>{this.state.applicationDate}</Text>
+                              <Text style={[styles.descriptionText1]}>{this.state.applicationDeadline}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
                               <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -6429,7 +6446,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="interviewDate"
-                              value={(this.state.interviewDate) ? convertStringToDate(this.state.interviewDate,'toLocal') : new Date()}
+                              value={(this.state.interviewDate) ? new Date(this.state.interviewDate) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -6933,7 +6950,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="offerStartDate"
-                              value={(this.state.offerStartDate) ? convertStringToDate(this.state.offerStartDate,'toLocal') : new Date()}
+                              value={(this.state.offerStartDate) ? new Date(this.state.offerStartDate) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
