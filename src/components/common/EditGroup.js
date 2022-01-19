@@ -132,14 +132,22 @@ class EditGroup extends Component {
           meetingMethod = this.props.selectedGroup.meetingMethod
           meetingLocation = this.props.selectedGroup.meetingLocation
           if (this.props.selectedGroup.meetingStartTime) {
-            meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
-            const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
-            meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
+            if (Platform.OS === 'ios') {
+              meetingStartTime = this.props.selectedGroup.meetingStartTime
+            } else {
+              meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
+              const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
+              meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
+            }
           }
           if (this.props.selectedGroup.meetingEndTime) {
-            meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
-            const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
-            meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
+            if (Platform.OS === 'ios') {
+              meetingEndTime = this.props.selectedGroup.meetingEndTime
+            } else {
+              meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
+              const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
+              meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
+            }
           }
           // console.log('show meeting times: ', meetingStartTime,meetingEndTime)
 
@@ -416,7 +424,7 @@ class EditGroup extends Component {
 
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                       <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
-                        <Image source={deniedIcon} style={[styles.square20,styles.contain]} />
+                        <Image source={{ uri: deniedIcon }} style={[styles.square20,styles.contain]} />
                       </TouchableOpacity>
                     </View>
                     <View style={[styles.rightPadding5]}>
@@ -1190,7 +1198,7 @@ class EditGroup extends Component {
                                    <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                  </View>
                                  <View style={[styles.flex1,styles.rowDirection]}>
-                                   <View style={[styles.flex50]}>
+                                   <View style={[styles.flex50,styles.rightPadding]}>
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'datetime' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
@@ -1202,7 +1210,7 @@ class EditGroup extends Component {
                                        </View>
                                      </TouchableOpacity>
                                    </View>
-                                   <View style={[styles.flex50]}>
+                                   <View style={[styles.flex50,styles.leftPadding]}>
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'time' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
@@ -1243,7 +1251,7 @@ class EditGroup extends Component {
                                    <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                  </View>
                                  <View style={[styles.flex1,styles.rowDirection]}>
-                                   <View style={[styles.flex50]}>
+                                   <View style={[styles.flex50,styles.rightPadding]}>
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'datetime' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
@@ -1255,7 +1263,7 @@ class EditGroup extends Component {
                                        </View>
                                      </TouchableOpacity>
                                    </View>
-                                   <View style={[styles.flex50]}>
+                                   <View style={[styles.flex50,styles.leftPadding]}>
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'time' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
@@ -1536,7 +1544,7 @@ class EditGroup extends Component {
                        </View>
                      ) : (
                        <View>
-                        <View style={[styles.rowDirection]}>
+                        <View>
                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter,styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter,styles.topMargin]} onPress={() => this.props.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                           {(this.state._id) && (

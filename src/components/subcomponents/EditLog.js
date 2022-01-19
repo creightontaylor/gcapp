@@ -377,7 +377,7 @@ class EditLog extends Component {
 
            if (response2.data.success) {
 
-             console.log('actual assessment results', response2.data)
+             console.log('actual assessment results')
 
              let profile = { firstName: cuFirstName, lastName: cuLastName, email }
              profile['workPreferences'] = response2.data.results.workPreferenceAnswers
@@ -399,7 +399,7 @@ class EditLog extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email, includeCollaborations: true } })
         .then((response) => {
-          console.log('Projects query attempted', response.data);
+          console.log('Projects query attempted');
 
             if (response.data.success) {
               console.log('successfully retrieved projects')
@@ -423,7 +423,7 @@ class EditLog extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
-          console.log('Org info query attempted', response.data);
+          console.log('Org info query attempted');
 
             if (response.data.success) {
               console.log('org info query worked')
@@ -443,7 +443,7 @@ class EditLog extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
         .then((response) => {
-          console.log('User profile query attempted', response.data);
+          console.log('User profile query attempted');
 
           if (response.data.success) {
             console.log('successfully retrieved profile')
@@ -466,7 +466,7 @@ class EditLog extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/workoptions')
        .then((response) => {
-         console.log('Work options query tried', response.data);
+         console.log('Work options query tried');
 
          if (response.data.success) {
            console.log('Work options query succeeded')
@@ -596,9 +596,13 @@ class EditLog extends Component {
 
               let sessionDate = null
               if (log.sessionDate) {
-                sessionDate = new Date(log.sessionDate)
-                const newSessionDate = new Date(sessionDate.getTime() + new Date().getTimezoneOffset()*60000)
-                sessionDate = convertDateToString(newSessionDate,"hyphenatedDateTime")
+                if (Platform.OS === 'ios') {
+                  sessionDate = log.sessionDate
+                } else {
+                  sessionDate = new Date(log.sessionDate)
+                  const newSessionDate = new Date(sessionDate.getTime() + new Date().getTimezoneOffset()*60000)
+                  sessionDate = convertDateToString(newSessionDate,"hyphenatedDateTime")
+                }
               }
 
               this.setState({
@@ -608,15 +612,30 @@ class EditLog extends Component {
               })
             } else if (logType === 'Meeting') {
               const meetingId = log._id
+
               // const startTime = convertDateToString(new Date(log.startTime),"rawDateTimeForInput")
-              let startTime = new Date(log.startTime)
-              const newStartTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
-              startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
+              let startTime = null
+              if (log.startTime) {
+                if (Platform.OS === 'ios') {
+                  startTime = log.startTime
+                } else {
+                  startTime = new Date(log.startTime)
+                  const newStartTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
+                  startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
+                }
+              }
 
               // const endTime = convertDateToString(new Date(log.endTime),"rawDateTimeForInput")
-              let endTime = new Date(log.endTime)
-              const newEndTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
-              endTime = convertDateToString(newEndTime,"hyphenatedDateTime")
+              let endTime = null
+              if (log.endTime) {
+                if (Platform.OS === 'ios') {
+                  endTime = log.endTime
+                } else {
+                  endTime = new Date(log.endTime)
+                  const newEndTime = new Date(endTime.getTime() + new Date().getTimezoneOffset()*60000)
+                  endTime = convertDateToString(newEndTime,"hyphenatedDateTime")
+                }
+              }
 
               const method = log.method
               const location = log.location
@@ -806,7 +825,7 @@ class EditLog extends Component {
 
                  if (response.data.success) {
 
-                   console.log('suggestion results: ', response.data)
+                   console.log('suggestion results: ')
                    const suggestions = response.data.suggestions
                    this.setState({ suggestions })
 
@@ -822,9 +841,13 @@ class EditLog extends Component {
 
               let applicationDeadline = ''
               if (log.applicationDeadline) {
-                applicationDeadline = new Date(log.applicationDeadline)
-                const newApplicationDeadline = new Date(applicationDeadline.getTime() + new Date().getTimezoneOffset()*60000)
-                applicationDeadline = convertDateToString(newApplicationDeadline,"hyphenatedDateTime")
+                if (Platform.OS === 'ios') {
+                  applicationDeadline = log.applicationDeadline
+                } else {
+                  applicationDeadline = new Date(log.applicationDeadline)
+                  const newApplicationDeadline = new Date(applicationDeadline.getTime() + new Date().getTimezoneOffset()*60000)
+                  applicationDeadline = convertDateToString(newApplicationDeadline,"hyphenatedDateTime")
+                }
               }
 
               let reviewedMaterials = ''
@@ -851,9 +874,13 @@ class EditLog extends Component {
 
               let interviewDate = null
               if (log.interviewDate) {
-                interviewDate = new Date(log.interviewDate)
-                const newInterviewDate = new Date(interviewDate.getTime() + new Date().getTimezoneOffset()*60000)
-                interviewDate = convertDateToString(newInterviewDate,"hyphenatedDateTime")
+                if (Platform.OS === 'ios') {
+                  interviewDate = log.interviewDate
+                } else {
+                  interviewDate = new Date(log.interviewDate)
+                  const newInterviewDate = new Date(interviewDate.getTime() + new Date().getTimezoneOffset()*60000)
+                  interviewDate = convertDateToString(newInterviewDate,"hyphenatedDateTime")
+                }
               }
 
               this.setState({
@@ -881,9 +908,7 @@ class EditLog extends Component {
 
               let offerStartDate = null
               if (log.startDate) {
-                offerStartDate = new Date(log.startTime)
-                const newOfferStartDate = new Date(offerStartDate.getTime() + new Date().getTimezoneOffset()*60000)
-                offerStartDate = convertDateToString(newOfferStartDate,"hyphenatedDateTime")
+                offerStartDate = log.startDate
               }
 
               this.setState({
@@ -917,7 +942,7 @@ class EditLog extends Component {
               .then((response) => {
 
                 if (response.data.success) {
-                  console.log('Application query worked', response.data);
+                  console.log('Application query worked');
 
                   if (response.data.application) {
                     this.setState({ log: response.data.application })
@@ -1248,7 +1273,7 @@ class EditLog extends Component {
 
           Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
           .then((response) => {
-            console.log('Careers query attempted', response.data);
+            console.log('Careers query attempted');
 
               if (response.data.success) {
                 console.log('successfully retrieved careers')
@@ -1345,7 +1370,7 @@ class EditLog extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
           .then((response) => {
-            console.log('Opportunity search query attempted', response.data);
+            console.log('Opportunity search query attempted');
 
               if (response.data.success) {
                 console.log('opportunity search query worked')
@@ -1437,7 +1462,7 @@ class EditLog extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/competency/search', { params: { searchString } })
           .then((response) => {
-            console.log('Competencies search query attempted', response.data);
+            console.log('Competencies search query attempted');
 
               if (response.data.success) {
                 console.log('competency search query worked')
@@ -1522,7 +1547,7 @@ class EditLog extends Component {
           .then((response) => {
 
               if (response.data.success) {
-                console.log('Member query worked', response.data);
+                console.log('Member query worked');
 
                 self.setState({ memberOptions: response.data.members, searchIsAnimatingMembers: false })
 
@@ -1666,7 +1691,7 @@ class EditLog extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: benchmarkId, jobFunction } })
         .then((response) => {
-          console.log('Benchmarks query by id attempted', response.data);
+          console.log('Benchmarks query by id attempted');
 
             if (response.data.success) {
               console.log('successfully retrieved benchmarks for individual')
@@ -1776,7 +1801,7 @@ class EditLog extends Component {
 
       Axios.put('https://www.guidedcompass.com/api/learning-objectives', { profile, category: type })
       .then((response) => {
-        console.log('Learning objectives query attempted', response.data);
+        console.log('Learning objectives query attempted');
 
         if (response.data.success) {
           console.log('learning objectives query worked')
@@ -1856,7 +1881,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Session save worked', response.data);
+            console.log('Session save worked');
 
             let selectedMemberDetails = this.state.selectedMemberDetails
             let firstName = this.state.firstName
@@ -1940,7 +1965,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Meeting save worked', response.data);
+            console.log('Meeting save worked');
 
             selectedMembers = this.state.selectedMembers
             let selectedMemberDetails = this.state.selectedMemberDetails
@@ -2077,7 +2102,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Goal save worked', response.data);
+            console.log('Goal save worked');
 
             let currentPage = 'Details'
             if (!this.state.editExisting) {
@@ -2167,7 +2192,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Application save worked', response.data);
+            console.log('Application save worked');
 
             if (!this.state.editExisting) {
               employerName = ''
@@ -2265,7 +2290,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Interview save worked', response.data);
+            console.log('Interview save worked');
 
             let associatedApplication = this.state.associatedApplication
 
@@ -2369,7 +2394,7 @@ class EditLog extends Component {
           console.log('testing ')
           if (response.data.success) {
             //save values
-            console.log('Offer save worked', response.data);
+            console.log('Offer save worked');
 
             let offerAssociatedApplication = this.state.offerAssociatedApplication
 
@@ -2443,7 +2468,7 @@ class EditLog extends Component {
 
           if (response.data.success) {
             //save values
-            console.log('Passion save worked', response.data);
+            console.log('Passion save worked');
 
             if (!this.state.editExisting) {
               passionTitle = ''
@@ -3686,14 +3711,17 @@ class EditLog extends Component {
 
                                 </View>
 
-                                <Switch
-                                  onValueChange={(change) => {
-                                    console.log('show change: ', change, typeof change)
-                                    this.setState({ pollConnections: change, formHasChanged: true })}
-                                  }
-                                  value={this.state.pollConnections}
-                                  id="pollConnections"
-                                />
+                                <View style={[styles.alignStart]}>
+                                  <Switch
+                                    onValueChange={(change) => {
+                                      console.log('show change: ', change, typeof change)
+                                      this.setState({ pollConnections: change, formHasChanged: true })}
+                                    }
+                                    value={this.state.pollConnections}
+                                    id="pollConnections"
+                                  />
+                                </View>
+
                               </View>
                             </View>
 
@@ -5526,7 +5554,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="startTime"
-                              value={(this.state.startTime) ? new Date(this.state.startTime) : new Date()}
+                              value={(this.state.startTime) ? this.prepareDate(this.state.startTime) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -5539,17 +5567,31 @@ class EditLog extends Component {
                           <View style={[styles.row5]}>
                             <Text style={[styles.row10,styles.standardText]}>Starts<Text style={[styles.errorColor]}>*</Text></Text>
                           </View>
-                          <View>
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'datetime' })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.startTime}</Text>
+                          <View style={[styles.flex1,styles.rowDirection]}>
+                            <View style={[styles.flex50,styles.rightPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'datetime' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? (this.state.startTime.split("T")[0]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </TouchableOpacity>
+                            </View>
+                            <View style={[styles.flex50,styles.leftPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'time' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? (this.state.startTime.split("T")[1]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                              </View>
-                            </TouchableOpacity>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                       )}
@@ -5577,17 +5619,31 @@ class EditLog extends Component {
                           <View style={[styles.row5]}>
                             <Text style={[styles.row10,styles.standardText]}>Ends<Text style={[styles.errorColor]}>*</Text></Text>
                           </View>
-                          <View>
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "endTime", selectedValue: this.state.endTime, mode: 'datetime' })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.endTime}</Text>
+                          <View style={[styles.flex1,styles.rowDirection]}>
+                            <View style={[styles.flex50,styles.rightPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "endTime", selectedValue: this.state.endTime, mode: 'datetime' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.endTime) ? (this.state.endTime.split("T")[0]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </TouchableOpacity>
+                            </View>
+                            <View style={[styles.flex50,styles.leftPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "endTime", selectedValue: this.state.endTime, mode: 'time' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.endTime) ? (this.state.endTime.split("T")[1]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                              </View>
-                            </TouchableOpacity>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                       )}
@@ -5602,7 +5658,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "method", selectedValue: this.state.method, selectedOptions: this.state.methodOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.descriptionText1]}>{this.state.method}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -5649,7 +5705,7 @@ class EditLog extends Component {
                       {(Platform.OS === 'ios') ? (
                         <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Method', selectedIndex: null, selectedName: "repeats", selectedValue: this.state.repeats, selectedOptions: this.state.repeatOptions, selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn130]}>
                               <Text style={[styles.descriptionText1]}>{this.state.repeats}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
@@ -5828,7 +5884,7 @@ class EditLog extends Component {
                             <View>
                               <Text style={[styles.row10,styles.standardText]}>Action Items</Text>
                             </View>
-                            <View style={[styles.leftPadding,styles.topPadding]}>
+                            <View style={[styles.leftPadding,styles.topPadding15]}>
                               <TouchableOpacity onPress={() => this.addItem('actionItem')}>
                                 <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
                               </TouchableOpacity>
@@ -6023,7 +6079,7 @@ class EditLog extends Component {
                             <Text style={[styles.row10,styles.standardText]}>Session Date<Text style={[styles.errorColor]}>*</Text></Text>
                           </View>
                           <View style={[styles.flex1,styles.rowDirection]}>
-                            <View style={[styles.flex50]}>
+                            <View style={[styles.flex50,styles.rightPadding]}>
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Session Date', selectedIndex: null, selectedName: "sessionDate", selectedValue: this.state.sessionDate, mode: 'datetime' })}>
                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                   <View style={[styles.calcColumn115]}>
@@ -6035,7 +6091,7 @@ class EditLog extends Component {
                                 </View>
                               </TouchableOpacity>
                             </View>
-                            <View style={[styles.flex50]}>
+                            <View style={[styles.flex50,styles.leftPadding]}>
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Session Time', selectedIndex: null, selectedName: "sessionDate", selectedValue: this.state.sessionDate, mode: 'time' })}>
                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                   <View style={[styles.calcColumn115]}>
@@ -6360,18 +6416,33 @@ class EditLog extends Component {
                       <View style={[styles.row5]}>
                         <Text style={[styles.row10,styles.standardText]}>Application Deadline<Text style={[styles.errorColor]}>*</Text></Text>
                       </View>
-                      <View>
-                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDeadline", selectedValue: this.state.applicationDeadline, mode: 'datetime' })}>
-                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                            <View style={[styles.calcColumn115]}>
-                              <Text style={[styles.descriptionText1]}>{this.state.applicationDeadline}</Text>
+                      <View style={[styles.flex1,styles.rowDirection]}>
+                        <View style={[styles.flex50,styles.rightPadding]}>
+                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDeadline", selectedValue: this.state.applicationDeadline, mode: 'datetime' })}>
+                            <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                              <View style={[styles.calcColumn115]}>
+                                <Text style={[styles.descriptionText1]}>{(this.state.applicationDeadline) ? (this.state.applicationDeadline.split("T")[0]) : ""}</Text>
+                              </View>
+                              <View style={[styles.width20,styles.topMargin5]}>
+                                <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </View>
                             </View>
-                            <View style={[styles.width20,styles.topMargin5]}>
-                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={[styles.flex50,styles.leftPadding]}>
+                          <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Application Deadline', selectedIndex: null, selectedName: "applicationDeadline", selectedValue: this.state.applicationDeadline, mode: 'time' })}>
+                            <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                              <View style={[styles.calcColumn115]}>
+                                <Text style={[styles.descriptionText1]}>{(this.state.applicationDeadline) ? (this.state.applicationDeadline.split("T")[1]) : ""}</Text>
+                              </View>
+                              <View style={[styles.width20,styles.topMargin5]}>
+                                <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </View>
                             </View>
-                          </View>
-                        </TouchableOpacity>
+                          </TouchableOpacity>
+                        </View>
                       </View>
+
                     </View>
                   )}
 
@@ -6459,17 +6530,31 @@ class EditLog extends Component {
                           <View style={[styles.row5]}>
                             <Text style={[styles.row10,styles.standardText]}>Date of Interview<Text style={[styles.errorColor]}>*</Text></Text>
                           </View>
-                          <View>
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Interview Date', selectedIndex: null, selectedName: "interviewDate", selectedValue: this.state.interviewDate, mode: 'datetime' })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.interviewDate}</Text>
+                          <View style={[styles.flex1,styles.rowDirection]}>
+                            <View style={[styles.flex50,styles.rightPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Interview Date', selectedIndex: null, selectedName: "interviewDate", selectedValue: this.state.interviewDate, mode: 'datetime' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.interviewDate) ? (this.state.interviewDate.split("T")[0]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                              </TouchableOpacity>
+                            </View>
+                            <View style={[styles.flex50,styles.leftPadding]}>
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Interview Date', selectedIndex: null, selectedName: "interviewDate", selectedValue: this.state.interviewDate, mode: 'time' })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.interviewDate) ? (this.state.interviewDate.split("T")[1]) : ""}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
                                 </View>
-                              </View>
-                            </TouchableOpacity>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                       )}
@@ -6543,19 +6628,27 @@ class EditLog extends Component {
                       <View>
                         <View>
                           <Text style={[styles.row10,styles.standardText]}>Practiced Interviewing?</Text>
-                          <Switch
-                            onValueChange={(change) => this.setState({ mcPracticedInterviewing: change, formHasChanged: true })}
-                            value={this.state.mcPracticedInterviewing}
-                            id="mcPracticedInterviewing"
-                          />
+
+                          <View style={[styles.alignStart]}>
+                            <Switch
+                              onValueChange={(change) => this.setState({ mcPracticedInterviewing: change, formHasChanged: true })}
+                              value={this.state.mcPracticedInterviewing}
+                              id="mcPracticedInterviewing"
+                            />
+                          </View>
+
                         </View>
                         <View>
                           <Text style={[styles.row10,styles.standardText]}>Felt Prepared?</Text>
-                          <Switch
-                            onValueChange={(change) => this.setState({ wasPrepared: change, formHasChanged: true })}
-                            value={this.state.wasPrepared}
-                            id="wasPrepared"
-                          />
+
+                          <View style={[styles.alignStart]}>
+                            <Switch
+                              onValueChange={(change) => this.setState({ wasPrepared: change, formHasChanged: true })}
+                              value={this.state.wasPrepared}
+                              id="wasPrepared"
+                            />
+                          </View>
+
                         </View>
                       </View>
                     </View>
@@ -6851,11 +6944,14 @@ class EditLog extends Component {
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10,styles.standardText]}>Do you have a bonus?</Text>
-                      <Switch
-                        onValueChange={(change) => this.setState({ hasBonus: change, formHasChanged: true })}
-                        value={this.state.hasBonus}
-                        id="hasBonus"
-                      />
+                      <View style={[styles.alignStart]}>
+                        <Switch
+                          onValueChange={(change) => this.setState({ hasBonus: change, formHasChanged: true })}
+                          value={this.state.hasBonus}
+                          id="hasBonus"
+                        />
+                      </View>
+
                     </View>
 
                     {(this.state.hasBonus) && (
@@ -6875,11 +6971,14 @@ class EditLog extends Component {
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10,styles.standardText]}>Were you offered equity?</Text>
-                      <Switch
-                        onValueChange={(change) => this.setState({ offeredEquity: change, formHasChanged: true })}
-                        value={this.state.offeredEquity}
-                        id="offeredEquity"
-                      />
+
+                      <View style={[styles.alignStart]}>
+                        <Switch
+                          onValueChange={(change) => this.setState({ offeredEquity: change, formHasChanged: true })}
+                          value={this.state.offeredEquity}
+                          id="offeredEquity"
+                        />
+                      </View>
                     </View>
 
                     {(this.state.offeredEquity) && (
@@ -6942,6 +7041,7 @@ class EditLog extends Component {
                     )}
 
                     <View style={[styles.row10]}>
+
                       {(Platform.OS === 'ios') ? (
                         <View style={[styles.rowDirection]}>
                           <View style={[styles.calcColumn260]}>
@@ -6951,10 +7051,10 @@ class EditLog extends Component {
                             <DateTimePicker
                               testID="offerStartDate"
                               value={(this.state.offerStartDate) ? new Date(this.state.offerStartDate) : new Date()}
-                              mode={'datetime'}
+                              mode={'date'}
                               is24Hour={true}
                               display="default"
-                              onChange={(e, d) => this.formChangeHandler("offerStartDate",d,null,true,'datetime')}
+                              onChange={(e, d) => this.formChangeHandler("offerStartDate",d,null,true,'date')}
                             />
                           </View>
                         </View>
@@ -6963,8 +7063,9 @@ class EditLog extends Component {
                           <View style={[styles.row5]}>
                             <Text style={[styles.row10,styles.standardText]}>Start Date<Text style={[styles.errorColor]}>*</Text></Text>
                           </View>
+
                           <View>
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Offer Start Date', selectedIndex: null, selectedName: "offerStartDate", selectedValue: this.state.offerStartDate, mode: 'datetime' })}>
+                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Offer Start Date', selectedIndex: null, selectedName: "offerStartDate", selectedValue: this.state.offerStartDate, mode: 'date' })}>
                               <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                 <View style={[styles.calcColumn115]}>
                                   <Text style={[styles.descriptionText1]}>{this.state.offerStartDate}</Text>
@@ -7086,6 +7187,17 @@ class EditLog extends Component {
         </View>
       </View>
     )
+  }
+
+  prepareDate(passedDate) {
+    console.log('passedDate called', passedDate)
+
+    passedDate = new Date(passedDate)
+    const returnedDate = new Date(passedDate.getTime() + new Date().getTimezoneOffset()*60000)
+    // startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
+    // const returnedDate = convertStringToDate(passedDate,'toLocal')
+    // console.log('compare dates: ', passedDate, returnedDate, typeof returnedDate, new Date().getTimezoneOffset()*60000)
+    return returnedDate
   }
 
   render() {
