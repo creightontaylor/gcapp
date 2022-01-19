@@ -55,6 +55,7 @@ class EditGroup extends Component {
         this.removeTag = this.removeTag.bind(this)
         this.addItem = this.addItem.bind(this)
         this.itemClicked = this.itemClicked.bind(this)
+        this.adjustForTimeDifference = this.adjustForTimeDifference.bind(this)
 
     }
 
@@ -131,16 +132,20 @@ class EditGroup extends Component {
           meetingMethod = this.props.selectedGroup.meetingMethod
           meetingLocation = this.props.selectedGroup.meetingLocation
           if (this.props.selectedGroup.meetingStartTime) {
-            meetingStartTime = convertDateToString(new Date(this.props.selectedGroup.meetingStartTime),"hyphenatedDateTime")
+            meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
+            const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
+            meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
           }
           if (this.props.selectedGroup.meetingEndTime) {
-            meetingEndTime = convertDateToString(new Date(this.props.selectedGroup.meetingEndTime),"hyphenatedDateTime")
+            meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
+            const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
+            meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
           }
-          console.log('show meeting times: ', meetingStartTime,meetingEndTime)
+          // console.log('show meeting times: ', meetingStartTime,meetingEndTime)
 
           meetingRepeats = this.props.selectedGroup.meetingRepeats
           invites = this.props.selectedGroup.invites
-0
+
           selectedGroup = this.props.selectedGroup
         }
 
@@ -292,12 +297,20 @@ class EditGroup extends Component {
         } else if (mode === 'datetime') {
           //date component
           console.log('show eventValue 1: ', eventValue)
-          const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
-          let adjustedDate = new Date(eventValue)
-          adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
 
-          eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
-          console.log('show eventValue 2: ', adjustedDate, eventValue)
+          eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
+          // let doNotAdjust = true
+          // if (doNotAdjust) {
+          //   eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
+          // } else {
+          //   const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
+          //   let adjustedDate = new Date(eventValue)
+          //   adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
+          //   eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
+          // }
+
+          // 15, 23, 7
+          console.log('show eventValue 2: ', eventValue)
           this.setState({ [eventName]: eventValue })
         }
       } else {
@@ -892,6 +905,17 @@ class EditGroup extends Component {
 
     }
 
+    adjustForTimeDifference(passedDate) {
+      console.log('adjustTimeDifference called', passedDate)
+
+      const timeDifference = new Date(passedDate).getTimezoneOffset() / 60
+      let adjustedDate = new Date(passedDate)
+      adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
+      passedDate = convertDateToString(adjustedDate,'hyphenatedDateTime')
+
+      return passedDate
+    }
+
     render() {
 
       return (
@@ -1140,8 +1164,6 @@ class EditGroup extends Component {
                                </View>
                              )}
                            </View>
-
-
                          </View>
 
                          <View style={[styles.row5]}>
@@ -1154,7 +1176,7 @@ class EditGroup extends Component {
                                  <View style={[styles.width200,styles.topPadding5]}>
                                    <DateTimePicker
                                      testID={"1"}
-                                     value={(this.state.meetingStartTime) ? convertStringToDate(this.state.meetingStartTime,'toLocal') : new Date()}
+                                     value={(this.state.meetingStartTime) ? new Date(this.state.meetingStartTime) : new Date()}
                                      mode={'datetime'}
                                      is24Hour={true}
                                      display="default"
@@ -1193,7 +1215,7 @@ class EditGroup extends Component {
                                  <View style={[styles.width200,styles.topPadding5]}>
                                    <DateTimePicker
                                      testID={"2"}
-                                     value={(this.state.meetingEndTime) ? convertStringToDate(this.state.meetingEndTime,'toLocal') : new Date()}
+                                     value={(this.state.meetingEndTime) ? new Date(this.state.meetingEndTime) : new Date()}
                                      mode={'datetime'}
                                      is24Hour={true}
                                      display="default"
