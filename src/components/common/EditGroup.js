@@ -1189,17 +1189,31 @@ class EditGroup extends Component {
                                  <View style={[styles.row5]}>
                                    <Text style={[styles.row10]}>Starts<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                  </View>
-                                 <View style>
-                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Meeting Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'datetime' })}>
-                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                       <View style={[styles.calcColumn115]}>
-                                         <Text style={[styles.descriptionText1]}>{this.state.meetingStartTime}</Text>
+                                 <View style={[styles.flex1,styles.rowDirection]}>
+                                   <View style={[styles.flex50]}>
+                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'datetime' })}>
+                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                         <View style={[styles.calcColumn115]}>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? (this.state.meetingStartTime.split("T")[0]) : ""}</Text>
+                                         </View>
+                                         <View style={[styles.width20,styles.topMargin5]}>
+                                           <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                         </View>
                                        </View>
-                                       <View style={[styles.width20,styles.topMargin5]}>
-                                         <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                     </TouchableOpacity>
+                                   </View>
+                                   <View style={[styles.flex50]}>
+                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'time' })}>
+                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                         <View style={[styles.calcColumn115]}>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? (this.state.meetingStartTime.split("T")[1]) : ""}</Text>
+                                         </View>
+                                         <View style={[styles.width20,styles.topMargin5]}>
+                                           <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                         </View>
                                        </View>
-                                     </View>
-                                   </TouchableOpacity>
+                                     </TouchableOpacity>
+                                   </View>
                                  </View>
 
                                </View>
@@ -1228,19 +1242,32 @@ class EditGroup extends Component {
                                  <View style={[styles.row5]}>
                                    <Text style={[styles.row10]}>Ends<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                  </View>
-                                 <View style>
-                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Meeting End Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'datetime' })}>
-                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                       <View style={[styles.calcColumn115]}>
-                                         <Text style={[styles.descriptionText1]}>{this.state.meetingEndTime}</Text>
+                                 <View style={[styles.flex1,styles.rowDirection]}>
+                                   <View style={[styles.flex50]}>
+                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'datetime' })}>
+                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                         <View style={[styles.calcColumn115]}>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ? (this.state.meetingEndTime.split("T")[0]) : ""}</Text>
+                                         </View>
+                                         <View style={[styles.width20,styles.topMargin5]}>
+                                           <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                         </View>
                                        </View>
-                                       <View style={[styles.width20,styles.topMargin5]}>
-                                         <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                     </TouchableOpacity>
+                                   </View>
+                                   <View style={[styles.flex50]}>
+                                     <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'time' })}>
+                                       <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                         <View style={[styles.calcColumn115]}>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ? (this.state.meetingEndTime.split("T")[1]) : ""}</Text>
+                                         </View>
+                                         <View style={[styles.width20,styles.topMargin5]}>
+                                           <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                         </View>
                                        </View>
-                                     </View>
-                                   </TouchableOpacity>
+                                     </TouchableOpacity>
+                                   </View>
                                  </View>
-
                                </View>
                              )}
 
@@ -1552,7 +1579,7 @@ class EditGroup extends Component {
                     <DateTimePicker
                       testID={this.state.selectedName}
                       value={(this.state.selectedValue) ? convertStringToDate(this.state.selectedValue,'dateOnly') : new Date()}
-                      mode={'date'}
+                      mode={this.state.mode}
                       is24Hour={true}
                       display="default"
                       onChange={(e, d) => this.formChangeHandler(this.state.selectedName,d,e)}
