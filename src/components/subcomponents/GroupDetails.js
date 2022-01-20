@@ -1554,8 +1554,6 @@ class GroupDetails extends Component {
                                   <View style={[styles.topPadding]}>
                                     {this.renderMeetings(false)}
 
-
-
                                     {(this.state.meetings && this.state.meetings.length > 0) && (
                                       <View>
                                         <View style={[styles.horizontalLine]} />

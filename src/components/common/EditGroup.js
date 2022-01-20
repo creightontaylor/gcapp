@@ -1545,7 +1545,7 @@ class EditGroup extends Component {
                      ) : (
                        <View>
                         <View>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.rightMargin,styles.flexCenter,styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.editGroup()}><Text style={[styles.standardText,styles.whiteColor]}>{(this.state.selectedGroup) ? "Save & Edit Group" : "Save & Add Group"}</Text></TouchableOpacity>
                           <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter,styles.topMargin]} onPress={() => this.props.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                           {(this.state._id) && (
                             <TouchableOpacity style={[styles.btnPrimary, styles.errorBackgroundColor,styles.flexCenter,styles.topMargin]} onPress={() => this.setState({ confirmDelete: true })}><Text style={[styles.descriptionText1,styles.whiteColor]}>Delete Group</Text></TouchableOpacity>

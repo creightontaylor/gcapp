@@ -576,14 +576,14 @@ class Walkthrough extends Component {
                   <View style={[styles.topMargin20]}>
                     <View style={[styles.lightHorizontalLine]} />
 
-                    <View style={[styles.row30]}>
+                    <View style={[styles.row10]}>
                       <View style={[styles.row10]}>
-                        <View style={[styles.row20]}>
+                        <View style={[styles.row15]}>
                           <View style={[styles.rowDirection]}>
-                            <View style={[styles.width70,styles.topMargin5]}>
-                              <Image source={{ uri: socialIconBlue}} style={[styles.square50,styles.contain]} />
+                            <View style={[styles.width55,styles.topMargin5]}>
+                              <Image source={{ uri: socialIconBlue}} style={[styles.square40,styles.contain]} />
                             </View>
-                            <View style={[styles.calcColumn130]}>
+                            <View style={[styles.calcColumn105]}>
                               <Text style={[styles.headingText4,styles.row5]}>Build Your Supportive Community</Text>
                               <Text style={[styles.descriptionText1]}>Connect with others, join accountability groups, attend career events, get feedback on projects, follow employers, and get support from {this.state.orgName} staff.</Text>
                             </View>
@@ -591,12 +591,12 @@ class Walkthrough extends Component {
                           </View>
                         </View>
 
-                        <View style={[styles.row20]}>
+                        <View style={[styles.row15]}>
                           <View style={[styles.rowDirection]}>
-                            <View style={[styles.width70,styles.topMargin5]}>
-                              <Image source={{ uri: careerMatchesIconBlue}} style={[styles.square50,styles.contain]} />
+                            <View style={[styles.width55,styles.topMargin5]}>
+                              <Image source={{ uri: careerMatchesIconBlue}} style={[styles.square40,styles.contain]} />
                             </View>
-                            <View style={[styles.calcColumn130]}>
+                            <View style={[styles.calcColumn105]}>
                               <Text style={[styles.headingText4,styles.row5]}>Prepare for Your Best Life</Text>
                               <Text style={[styles.descriptionText1]}>Set career goals, take career assessments, explore career paths, make financial plans, get personalized resources, get interview feedback, and submit projects for feedback.</Text>
                             </View>
@@ -604,12 +604,12 @@ class Walkthrough extends Component {
                           </View>
                         </View>
 
-                        <View style={[styles.row20]}>
+                        <View style={[styles.row15]}>
                           <View style={[styles.rowDirection]}>
-                            <View style={[styles.width70,styles.topMargin5]}>
-                              <Image source={{ uri: moneyIconBlue}} style={[styles.square50,styles.contain]} />
+                            <View style={[styles.width55,styles.topMargin5]}>
+                              <Image source={{ uri: moneyIconBlue}} style={[styles.square40,styles.contain]} />
                             </View>
-                            <View style={[styles.calcColumn130]}>
+                            <View style={[styles.calcColumn105]}>
                               <Text style={[styles.headingText4,styles.row5]}>Land Paid Work Opportunities</Text>
                               <Text style={[styles.descriptionText1]}>Activities in your portal strengthen your candidacy, and make it easier to recommend you for specific opportunities. Import your profile to apply for paid work opportunities.</Text>
                             </View>
@@ -626,7 +626,7 @@ class Walkthrough extends Component {
 
                         <View style={[styles.horizontalPadding30,styles.alignCenter]}>
 
-                          <Image style={[styles.square300,styles.contain,styles.topMargin20]} source={{ uri: gcFrontImage}} />
+                          <Image style={[styles.square300,styles.contain,styles.topMargin]} source={{ uri: gcFrontImage}} />
 
                           <View style={[styles.spacer]} />
 
@@ -656,7 +656,7 @@ class Walkthrough extends Component {
                       </View>
 
                       <View style={[styles.row10]}>
-                        <View style={[styles.row10]}>
+                        <View>
                           <Text style={[styles.row10,styles.standardText]}>Name of person who recommended you (N/A if no one)<Text style={[styles.errorColor,styles.boldText]}> *</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -666,7 +666,7 @@ class Walkthrough extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-                        <View style={[styles.row10]}>
+                        <View>
                           <Text style={[styles.row10,styles.standardText]}>Email of person who recommended you (N/A if no one)<Text style={[styles.errorColor,styles.boldText]}> *</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -676,11 +676,7 @@ class Walkthrough extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-
-                      </View>
-
-                      <View style={[styles.row10]}>
-                        <View style={[styles.row10]}>
+                        <View>
                           <Text style={[styles.row10,styles.standardText]}>Name of organization that recommended you (N/A if no org)<Text style={[styles.errorColor,styles.boldText]}> *</Text></Text>
                           <TextInput
                             style={styles.textInput}
@@ -690,16 +686,16 @@ class Walkthrough extends Component {
                             placeholderTextColor="grey"
                           />
                         </View>
-
                       </View>
+
                     </View>
                   )}
                 </View>
 
-                <View style={[styles.calcColumn60,styles.topMargin50]}>
+                <View style={[styles.calcColumn60,styles.topMargin20]}>
                   <View style={[styles.lightHorizontalLine]} />
 
-                  <View style={[styles.calcColumn60,styles.topMargin50]}>
+                  <View style={[styles.calcColumn60]}>
                     {(this.state.pageIndex > 1) ? (
                       <View style={[styles.flex50,styles.rightPadding5]}>
                         <TouchableOpacity style={[styles.btnPrimary,styles.mediumBackground,styles.standardBorder,styles.flexCenter]} onPress={() => this.setState({ pageIndex: this.state.pageIndex - 1 })}><Text style={[styles.standardText,styles.whiteColor]}>Back</Text></TouchableOpacity>
@@ -913,9 +909,9 @@ class Walkthrough extends Component {
 
 
         {(this.state.showGoal) && (
-          <View>
+          <Modal isVisible={this.state.modalIsOpen} style={[styles.modal]}>
             <SubEditLog modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} navigation={this.props.navigation} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType="Goal" selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId} passGoal={this.passGoal} modalView={true} fromWalkthrough={true}/>
-          </View>
+          </Modal>
         )}
 
         {(this.state.showEditGroup || this.state.showSearchGroups || this.state.showAddWorkspaces || this.state.enlargeImage || this.state.showCreateBenchmark || this.state.showATS || this.state.showSocialPost || this.state.showCreateEvent || this.state.showCreateProject || this.state.showCreatePipeline || this.state.showCreateCommunity || this.state.showCreateWork) && (

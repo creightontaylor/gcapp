@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, AsyncStorage, Image } from 'react-native';
+import Modal from 'react-native-modal';
 import Axios from 'axios';
 const styles = require('../css/style');
 const logIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/log-icon-dark.png';
@@ -490,9 +491,9 @@ class Logs extends Component {
             </View>
 
             {(this.state.showGoal) && (
-              <View>
+              <Modal isVisible={this.state.modalIsOpen} style={[styles.modal]}>
                 <SubEditLog modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} navigation={this.props.navigation} editExisting={true} log={this.state.logs[this.state.selectedIndex]} logs={this.state.logs} passedLogType="Goal" selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logs[this.state.selectedIndex]._id} reloadScreen={this.reloadScreen} modalView={this.props.modalView} />
-              </View>
+              </Modal>
             )}
           </ScrollView>
 
