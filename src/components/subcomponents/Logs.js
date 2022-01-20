@@ -59,6 +59,14 @@ class Logs extends Component {
         console.log('what is the email of this user', email);
         this.setState({ emailId: email, cuFirstName, cuLastName, username, activeOrg, orgFocus, logs: [] });
 
+        this.props.navigation.setOptions({
+          headerTitle: 'Logs',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: [], reloadData: this.reloadData })}>
+              <Image source={{ uri: addIcon}} style={[styles.square20,styles.contain]}/>
+            </TouchableOpacity>
+        )})
+
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
           console.log('Org info query attempted', response.data);
@@ -434,9 +442,11 @@ class Logs extends Component {
 
       return (
           <ScrollView>
-            <View style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
+            <View style={(this.props.fromWalkthrough) ? [] : [styles.cardClearPadding]}>
+
                 {(!this.props.fromWalkthrough) && (
                   <View>
+                    {/*
                     <View style={[styles.row20,styles.rowDirection]}>
                       <View style={[styles.calcColumn80]}>
                         <Text style={[styles.headingText2]}>Logs</Text>
@@ -446,11 +456,11 @@ class Logs extends Component {
                           <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                         </TouchableOpacity>
                       </View>
-                    </View>
+                    </View>*/}
 
                     {(this.state.logs && this.state.logs.length > 0) && (
                       <View>
-                        <ScrollView style={[styles.carousel,styles.lightBackground,styles.rowDirection]} horizontal={true}>
+                        <ScrollView style={[styles.carousel,styles.rowDirection,styles.leftPadding30,styles.ctaHorizontalLine]} horizontal={true}>
                           {this.state.subNavCategories.map((value, index) =>
                             <View style={[styles.row15,styles.rightPadding20]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
@@ -470,10 +480,13 @@ class Logs extends Component {
                   </View>
                 )}
 
-                <View style={[styles.spacer]}/>
-                {this.renderLogs()}
+                {(this.props.fromWalkthrough) && (
+                  <View style={[styles.spacer]}/>
+                )}
 
-
+                <View style={(this.props.fromWalkthrough) ? [] : [styles.padding30]}>
+                  {this.renderLogs()}
+                </View>
             </View>
 
             {(this.state.showGoal) && (

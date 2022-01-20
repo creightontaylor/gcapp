@@ -508,7 +508,7 @@ class EmployerDetails extends Component {
                                   </View>
                                 )}
                                 <TouchableOpacity onPress={() => this.favoriteItem(item) }>
-                                  <Image source={(this.state.favorites.includes(this.state.item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]}/>
+                                  <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]}/>
                                 </TouchableOpacity>
                               </View>
                               <View>
@@ -592,7 +592,7 @@ class EmployerDetails extends Component {
                                   </View>
                                 )}
                                 <TouchableOpacity onPress={() => this.favoriteItem(item) }>
-                                  <Image source={(this.state.favorites.includes(this.state.item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]}/>
+                                  <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]}/>
                                 </TouchableOpacity>
                               </View>
                               <View>
@@ -685,7 +685,7 @@ class EmployerDetails extends Component {
                                 </View>
                               )}
                               <TouchableOpacity onPress={() => this.favoriteItem(item) }>
-                                <Image source={(this.state.favorites.includes(this.state.item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]} />
+                                <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]} />
                               </TouchableOpacity>
                             </View>
                           </View>
@@ -743,7 +743,7 @@ class EmployerDetails extends Component {
                             </View>
                             <View className="float-right right-padding-15">
                               <TouchableOpacity onPress={() => this.favoriteItem(item) }>
-                                <Image source={(this.state.favorites.includes(this.state.item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]} />
+                                <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoriteIconSelected} : { uri: favoritesIconDark}} style={[styles.square20,styles.contain]} />
                               </TouchableOpacity>
                             </View>
                           </View>

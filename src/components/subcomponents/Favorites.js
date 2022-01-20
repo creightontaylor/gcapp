@@ -206,12 +206,12 @@ class Favorites extends Component {
 
               <View style={[styles.rowDirection]}>
                 <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + item.url)} style={[styles.calcColumn120,styles.rowDirection]}>
-                  <View style={[styles.width70]}>
-                    <Image source={{ uri: item.image_125_H}} style={[styles.square60,styles.contain]}/>
+                  <View style={[styles.width50]}>
+                    <Image source={{ uri: item.image_125_H}} style={[styles.square40,styles.contain]}/>
                   </View>
-                  <View style={[styles.calcColumn180]}>
-                    <Text style={[styles.headingText5]}>{item.title}</Text>
-                    <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{item.headline}</Text>
+                  <View style={[styles.calcColumn160,styles.horizontalPadding3]}>
+                    <Text style={[styles.headingText6]}>{item.title}</Text>
+                    <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>{item.headline}</Text>
                     <View style={[styles.halfSpacer]} />
                   </View>
                 </TouchableOpacity>
@@ -251,20 +251,21 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.calcColumn60,styles.row20,styles.rowDirection]}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: item })} style={[styles.rowDirection,styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={(item.imageURL) ? { uri: careerMatchesIconBlue} : { uri: careerMatchesIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={(item.imageURL) ? { uri: careerMatchesIconBlue} : { uri: careerMatchesIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText5]}>{item.name}</Text>
+                        <Text style={[styles.headingText6]}>{item.name}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{item.jobFunction}{(item.jobFunction && item.industry) && ' | ' + item.industry}{(!item.jobFunction && item.industry) && item.industry}{(item.jobFamily) && ' | ' + item.jobFamily}</Text>
+                        <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.curtailText]}>{item.jobFunction}{(item.jobFunction && item.industry) && ' | ' + item.industry}{(!item.jobFunction && item.industry) && item.industry}{(item.jobFamily) && ' | ' + item.jobFamily}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -287,21 +288,22 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60]}>
                   <TouchableOpacity  onPress={() => this.props.navigation.navigate('AdvisorProfile', { selectedMentor: item })} style={[styles.rowDirection,styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: mentoringIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: mentoringIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText5]}>{item.title}</Text>
+                        <Text style={[styles.headingText6]}>{item.title}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.headingText6]}>{item.firstName} {item.lastName}</Text>
-                        <Text>{workLine}</Text>
+                        <Text style={[styles.standardText]}>{item.firstName} {item.lastName}</Text>
+                        <Text style={[styles.descriptionText2]}>{workLine}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -320,18 +322,19 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username })} style={[styles.rowDirection, styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: mentoringIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: mentoringIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText6]}>{item.firstName} {item.lastName}</Text>
-                        <Text>{item.school} {item.gradYear}</Text>
+                        <Text style={[styles.standardText]}>{item.firstName} {item.lastName}</Text>
+                        <Text style={[styles.descriptionText2]}>{item.school} {item.gradYear}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -376,24 +379,25 @@ class Favorites extends Component {
                 <View key={index}>
                   <View style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                     <TouchableOpacity  onPress={() => this.props.navigation.navigate('OpportunityDetails', passedState)} style={[styles.rowDirection,styles.calcColumn120]}>
-                      <View style={[styles.width60]}>
-                        <Image source={{ uri: imgSrc}} style={[styles.square50,styles.centerItem]}/>
+                      <View style={[styles.width50]}>
+                        <Image source={{ uri: imgSrc}} style={[styles.square40,styles.centerItem]}/>
                       </View>
-                      <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                      <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                         <View>
                           {(item.name) ? (
-                            <Text style={[styles.headingText5]}>{item.name}</Text>
+                            <Text style={[styles.headingText6]}>{item.name}</Text>
                           ) : (
-                            <Text style={[styles.headingText5]}>{item.title}</Text>
+                            <Text style={[styles.headingText6]}>{item.title}</Text>
                           )}
                         </View>
                         <View>
-                          <Text>{subtitle}</Text>
+                          <Text style={[styles.descriptionText2]}>{subtitle}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>
 
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -430,20 +434,21 @@ class Favorites extends Component {
                 rows.push(
                   <View key={index} style={[styles.row20,styles.calcColumn60]}>
                     <TouchableOpacity  onPress={() => Linking.openURL(item.jobLink)} style={[styles.rowDirection,styles.calcColumn120]}>
-                      <View style={[styles.width60]}>
-                        <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: jobsIconGrey}} style={[styles.square50,styles.contain]}/>
+                      <View style={[styles.width50]}>
+                        <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: jobsIconGrey}} style={[styles.square40,styles.contain]}/>
                       </View>
-                      <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                      <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                         <View>
-                          <Text>{item.title}</Text>
+                          <Text style={[styles.standardText]}>{item.title}</Text>
                         </View>
                         <View>
-                          <Text>{item.employerName}</Text>
+                          <Text style={[styles.descriptionText2]}>{item.employerName}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>
                     <View style={[styles.leftPadding]}>
                       <View style={[styles.width30,styles.rightPadding]}>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                         <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                           <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                         </TouchableOpacity>
@@ -461,24 +466,25 @@ class Favorites extends Component {
                   <View key={index}>
                     <View style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', passedState)} style={[styles.rowDirection,styles.calcColumn120]}>
-                        <View style={[styles.width60]}>
-                          <Image source={{ uri: imgSrc}} style={[styles.square50,styles.centerItem]}/>
+                        <View style={[styles.width50]}>
+                          <Image source={{ uri: imgSrc}} style={[styles.square40,styles.centerItem]}/>
                         </View>
-                        <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                        <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                           <View>
                             {(item.name) ? (
-                              <Text style={[styles.headingText5]}>{item.name}</Text>
+                              <Text style={[styles.headingText6]}>{item.name}</Text>
                             ) : (
-                              <Text style={[styles.headingText5]}>{item.title}</Text>
+                              <Text style={[styles.headingText6]}>{item.title}</Text>
                             )}
                           </View>
                           <View>
-                            <Text>{subtitle}</Text>
+                            <Text style={[styles.descriptionText2]}>{subtitle}</Text>
                           </View>
                         </View>
                       </TouchableOpacity>
 
                       <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                         <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                           <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                         </TouchableOpacity>
@@ -503,21 +509,22 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: item })} style={[styles.rowDirection,styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: projectsIconBlue}} style={[styles.square50,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={(item.imageURL) ? { uri: item.imageURL} : { uri: projectsIconBlue}} style={[styles.square40,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText5]}>{item.name}</Text>
+                        <Text style={[styles.headingText6]}>{item.name}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.headingText6]}>{item.userFirstName} {item.userLastName}</Text>
-                        <Text>{item.hours} Hours</Text>
+                        <Text style={[styles.standardText]}>{item.userFirstName} {item.userLastName}</Text>
+                        <Text style={[styles.descriptionText2]}>{item.hours} Hours</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -541,20 +548,21 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                   <TouchableOpacity  onPress={() => this.props.navigation.navigate('EmployerDetails', { selectedEmployer: item })} style={[styles.rowDirection,styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={(item.employerLogoURI) ? { uri: item.employerLogoURI} : { uri: employerIconBlue}} style={[styles.square50,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={(item.employerLogoURI) ? { uri: item.employerLogoURI} : { uri: employerIconBlue}} style={[styles.square40,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText5]}>{item.employerName}</Text>
+                        <Text style={[styles.headingText6]}>{item.employerName}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.standardText]}>{item.employerIndustry}</Text>
+                        <Text style={[styles.descriptionText1]}>{item.employerIndustry}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -573,23 +581,24 @@ class Favorites extends Component {
               rows.push(
                 <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('AdvisorExchange')} style={[styles.rowDirection,styles.calcColumn120]}>
-                    <View style={[styles.width60]}>
-                      <Image source={{ uri: courseIconBlue}} style={[styles.square50,styles.centerItem]}/>
+                    <View style={[styles.width50]}>
+                      <Image source={{ uri: courseIconBlue}} style={[styles.square40,styles.centerItem]}/>
                     </View>
-                    <View style={[styles.calcColumn180,styles.leftPadding20]}>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
                       <View>
-                        <Text style={[styles.headingText5]}>{item.itemName}</Text>
+                        <Text style={[styles.headingText6]}>{item.itemName}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.headingText6]}>by {item.firstName} {item.lastName}</Text>
+                        <Text style={[styles.standardText]}>by {item.firstName} {item.lastName}</Text>
                       </View>
                       <View>
-                        <Text style={[styles.descriptionText2]}>Curriculum Type: {item.exchangeType}</Text>
+                        <Text style={[styles.descriptionText3]}>Curriculum Type: {item.exchangeType}</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
                   <View style={[styles.rowDirection]}>
                     <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                       <TouchableOpacity onPress={() => this.favoriteItem(item) }>
                         <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
                       </TouchableOpacity>
@@ -640,16 +649,16 @@ class Favorites extends Component {
     return (
         <ScrollView style={wrapper}>
           <View style={[styles.card]}>
+            {/*
             <View style={topPadding}>
               <Text style={[styles.headingText2]}>Favorites</Text>
             </View>
 
-            <View style={[styles.spacer]} />
+            <View style={[styles.spacer]} />*/}
 
-            <Text style={[styles.descriptionText2]}>{subtitle}</Text>
+            <Text style={[styles.descriptionText2,styles.centerText]}>{subtitle}</Text>
 
             {this.renderFavorites()}
-
 
           </View>
         </ScrollView>

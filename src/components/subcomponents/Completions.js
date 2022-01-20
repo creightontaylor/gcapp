@@ -467,32 +467,32 @@ class Completions extends Component {
 
       return (
           <ScrollView>
+            {(this.state.completions && this.state.completions.length > 0) && (
+              <View>
+                <ScrollView style={[styles.carousel,styles.whiteBackground,styles.row15,styles.leftPadding30,styles.ctaHorizontalLine]} horizontal={true}>
+                  {this.state.subNavCategories.map((value, index) =>
+                    <View style={[styles.row10,styles.rightPadding20]}>
+                      {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
+                        <View style={[styles.selectedCarouselItem]}>
+                          <Text key={value} style={[styles.headingText6]}>{value}</Text>
+                        </View>
+                      ) : (
+                        <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                          <Text key={value} style={[styles.headingText6]}>{value}</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+                </ScrollView>
+              </View>
+            )}
             <View style={[styles.card]}>
+              {/*
               <View style={[styles.row20]}>
                 <Text style={[styles.headingText2]}>Completions</Text>
               </View>
 
-              {(this.state.completions && this.state.completions.length > 0) && (
-                <View>
-                  <ScrollView style={[styles.carousel,styles.lightBackground]} horizontal={true}>
-                    {this.state.subNavCategories.map((value, index) =>
-                      <View style={[styles.row10,styles.rightPadding20]}>
-                        {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
-                          <View style={[styles.selectedCarouselItem]}>
-                            <Text key={value} style={[styles.headingText6]}>{value}</Text>
-                          </View>
-                        ) : (
-                          <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
-                            <Text key={value} style={[styles.headingText6]}>{value}</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    )}
-                  </ScrollView>
-                </View>
-              )}
-
-              <View style={[styles.spacer]}/>
+              <View style={[styles.spacer]}/>*/}
               {this.renderCompletions()}
             </View>
           </ScrollView>

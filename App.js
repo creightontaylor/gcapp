@@ -329,7 +329,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="ResumeBuilder" component={ResumeBuilder} />
           <Stack.Screen name="FinancialPlanner" component={FinancialPlanner} />
           <Stack.Screen name="CareerPlanBuilder" component={CareerPlanBuilder} />
-          <Stack.Screen name="OpportunityDetails" component={OpportunityDetails} />
+          <Stack.Screen name="OpportunityDetails" component={OpportunityDetails}/>
           <Stack.Screen name="Apply" component={Apply} />
           <Stack.Screen name="CareerDetails" component={CareerDetails} />
           <Stack.Screen name="EmployerDetails" component={EmployerDetails} />

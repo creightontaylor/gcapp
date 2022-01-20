@@ -195,6 +195,8 @@ class TakeAssessment extends Component {
         this.setState({ emailId: email, username, cuFirstName, cuLastName, activeOrg, orgFocus, assessmentTitle,
         assessmentDescription, type, assessments, index, assessment, resultsData, remoteAuth })
 
+        this.props.navigation.setOptions({ headerTitle: assessmentTitle })
+
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
           console.log('Org info query attempted');
@@ -2122,7 +2124,7 @@ class TakeAssessment extends Component {
         }
 
         rows.push(
-          <View key={"question|" + i} style={[styles.row15]}>
+          <View key={"question|" + i} style={[styles.bottomMargin30]}>
 
             { (this.state.type === 'work preferences' || this.state.type === 'personality') && (
               <View>
@@ -2590,8 +2592,8 @@ class TakeAssessment extends Component {
     }
 
     return (
-        <ScrollView style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
-          <View>
+        <ScrollView>
+          <View style={(this.props.fromWalkthrough) ? [] : [styles.card,styles.topMargin30]}>
             {(this.state.animating) ? (
               <View style={[styles.flexCenter,styles.flex1]}>
                 <View>
@@ -2620,48 +2622,41 @@ class TakeAssessment extends Component {
                           <View>
                             {!this.props.fromWalkthrough && (
                               <View>
-                                {(!this.props.fromApply) && (
-                                  <View style={[styles.superSpacer]}/>
-                                )}
 
-                                <View style={[styles.rowDirection,styles.flex1]}>
-                                  <View style={[styles.flex10]}>
-                                    <View style={styles.spacer} /><View style={styles.spacer} />
-                                    {(this.props.fromApply) ? (
+                                {(this.props.fromApply) && (
+                                  <View style={[styles.rowDirection,styles.flex1]}>
+                                    <View style={[styles.flex10]}>
+                                      <View style={styles.spacer} /><View style={styles.spacer} />
                                       <TouchableOpacity onPress={() => this.props.closeModal()}>
                                         <View>
                                           <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
                                         </View>
                                       </TouchableOpacity>
-                                    ) : (
-                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('AssessmentDetails', { assessments: this.state.assessments, index: this.state.index, assessment, resultsData: this.state.resultsData })}>
+                                    </View>
+                                    <View style={[styles.flex80]}>
+                                      <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} />
+
+                                      <Text style={[styles.headingText2,styles.centerText]}>{this.state.assessmentTitle}</Text>
+
+                                      <View style={[styles.halfSpacer]} />
+                                      {(this.state.questions && this.state.type === 'skills') && (
                                         <View>
-                                          <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.rotate180]} />
+                                          {(this.props.fromApply) && (
+                                            <Text style={[styles.descriptionTextColor]}>{this.state.questions.length} Questions</Text>
+                                          )}
+
+
+                                          <View style={styles.spacer} />
+                                          <View style={styles.spacer} />
                                         </View>
-                                      </TouchableOpacity>
-                                    )}
+                                      )}
+                                    </View>
+                                    <View style={[styles.flex10, styles.row5]}>
+                                    </View>
+
                                   </View>
-                                  <View style={[styles.flex80]}>
-                                    <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} />
-                                    <Text style={[styles.headingText2,styles.centerText]}>{this.state.assessmentTitle}</Text>
+                                )}
 
-                                    <View style={[styles.halfSpacer]} />
-                                    {(this.state.questions && this.state.type === 'skills') && (
-                                      <View>
-                                        {(this.props.fromApply) && (
-                                          <Text style={[styles.descriptionTextColor]}>{this.state.questions.length} Questions</Text>
-                                        )}
-
-
-                                        <View style={styles.spacer} />
-                                        <View style={styles.spacer} />
-                                      </View>
-                                    )}
-                                  </View>
-                                  <View style={[styles.flex10, styles.row5]}>
-                                  </View>
-
-                                </View>
                               </View>
                             )}
 
@@ -2722,7 +2717,6 @@ class TakeAssessment extends Component {
 
                                     {(this.state.type === 'skills' && !this.props.fromApply) ? (
                                       <View>
-                                        {console.log('in it')}
                                         {this.renderTaggingAssessment()}
 
                                         <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />

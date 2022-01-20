@@ -372,6 +372,13 @@ class EditLog extends Component {
             goalStatusOptions,methodOptions,sessionMethodOptions,categoryOptions
         });
 
+        let headerTitle = 'Create Log'
+        if (editExisting) {
+          headerTitle = 'Edit ' + log.logType
+        }
+
+        this.props.navigation.setOptions({ headerTitle })
+
         Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: email } })
          .then((response2) => {
            console.log('query for assessment results worked');
@@ -3533,32 +3540,32 @@ class EditLog extends Component {
       <View key="everythingLogs">
         <View>
           <View>
-            <View style={[styles.row10,styles.rowDirection]}>
-              <View style={[styles.calcColumn100]}>
-                {this.state.editExisting ? (
-                  <View>
-                    <Text style={[styles.headingText2]}>Edit {this.state.logType}</Text>
-                  </View>
-                ) : (
-                  <View>
-                    {(this.state.logType && this.state.logType !== '') ? (
-                      <Text style={[styles.headingText2]}>New {(this.state.selectedGroup) && this.state.selectedGroup.name + " "}{this.state.logType}</Text>
-                    ) : (
-                      <Text style={[styles.headingText2]}>New Log</Text>
-                    )}
+            {(this.props.modalView) && (
+              <View style={[styles.row10,styles.rowDirection]}>
+                <View style={[styles.calcColumn100]}>
+                  {this.state.editExisting ? (
+                    <View>
+                      <Text style={[styles.headingText2]}>Edit {this.state.logType}</Text>
+                    </View>
+                  ) : (
+                    <View>
+                      {(this.state.logType && this.state.logType !== '') ? (
+                        <Text style={[styles.headingText2]}>New {(this.state.selectedGroup) && this.state.selectedGroup.name + " "}{this.state.logType}</Text>
+                      ) : (
+                        <Text style={[styles.headingText2]}>New Log</Text>
+                      )}
+                    </View>
+                  )}
+                </View>
+                {(this.props.modalView) && (
+                  <View style={[styles.width40]}>
+                    <TouchableOpacity onPress={() => this.closeModal()}>
+                      <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                    </TouchableOpacity>
                   </View>
                 )}
               </View>
-              {(this.props.modalView) && (
-                <View style={[styles.width40]}>
-                  <TouchableOpacity onPress={() => this.closeModal()}>
-                    <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
-                  </TouchableOpacity>
-                </View>
-              )}
-
-
-            </View>
+            )}
 
             {(!this.props.fromWalkthrough) && (
               <View>
@@ -3624,27 +3631,6 @@ class EditLog extends Component {
 
             {(this.state.logType === 'Goal') && (
               <View>
-                {(this.state.editExisting) && (
-                  <View>
-                    <View style={[styles.calcColumn60,styles.standardBorder,styles.topMargin]}>
-                      <ScrollView style={[styles.carousel]} horizontal={true}>
-                        {this.state.subNavCategories.map((value, index) =>
-                          <View style={[styles.rightPadding20]}>
-                            {(this.state.subNavCategories[index] === this.state.currentPage) ? (
-                              <View style={[styles.selectedCarouselItem]}>
-                                <Text key={value} style={[styles.standardText]}>{value}</Text>
-                              </View>
-                            ) : (
-                              <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
-                                <Text key={value} style={[styles.standardText]}>{value}</Text>
-                              </TouchableOpacity>
-                            )}
-                          </View>
-                        )}
-                      </ScrollView>
-                    </View>
-                  </View>
-                )}
 
                 {(this.state.currentPage === 'Details') && (
                   <View>
@@ -7264,6 +7250,31 @@ class EditLog extends Component {
             </Modal>
           ) : (
             <ScrollView>
+
+              {(this.state.logType === 'Goal' && this.state.editExisting) ? (
+                <View>
+                  <View style={[styles.fullScreenWidth,styles.ctaHorizontalLine,styles.row15,styles.whiteBackground, styles.leftPadding30]}>
+                    <ScrollView style={[styles.carousel]} horizontal={true}>
+                      {this.state.subNavCategories.map((value, index) =>
+                        <View style={[styles.rightPadding20]}>
+                          {(this.state.subNavCategories[index] === this.state.currentPage) ? (
+                            <View style={[styles.selectedCarouselItem]}>
+                              <Text key={value} style={[styles.standardText]}>{value}</Text>
+                            </View>
+                          ) : (
+                            <TouchableOpacity style={[styles.menuButton]} onPress={() => this.subNavClicked(value)}>
+                              <Text key={value} style={[styles.standardText]}>{value}</Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      )}
+                    </ScrollView>
+                  </View>
+                </View>
+              ) : (
+                <View />
+              )}
+
               <View style={[styles.fullScreenWidth,styles.card,styles.topMargin]}>
                 {this.renderDetails()}
               </View>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ScrollView, View, Text, TextInput, Image, FlatList, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
+import Modal from 'react-native-modal';
 const styles = require('./css/style');
 import * as Progress from 'react-native-progress';
 
@@ -10,6 +11,7 @@ const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.
 const careerIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-blue.png';
 const employerIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/employer-icon.png';
 const courseIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png';
+const infoIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/info-icon-dark.png';
 
 class Matches extends Component {
   constructor(props) {
@@ -36,6 +38,7 @@ class Matches extends Component {
     this.renderMatches = this.renderMatches.bind(this)
     this.calculateMatches = this.calculateMatches.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   componentDidMount() {
@@ -58,6 +61,16 @@ class Matches extends Component {
         const orgFocus = await AsyncStorage.getItem('orgFocus')
 
         this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus })
+
+        this.props.navigation.setOptions({ headerRight: () => (
+          <View>
+            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showCalcExplanation: true })}>
+              <View style={{ marginLeft: 10, paddingLeft: 5, paddingRight: 5 }}>
+                <Image source={{ uri: infoIconDark }} style={[styles.square23,styles.contain]} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )})
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: emailId } })
          .then((response) => {
@@ -639,55 +652,57 @@ class Matches extends Component {
 
     return (
       <View key="matchesView">
+        {/*
         <View style={[styles.spacer]} /><View style={[styles.spacer]} />
         <View style={[styles.row10]}>
           <Text style={[styles.headingText2,styles.centerText]}>My Top Matches</Text>
           <Text style={[styles.centerText,styles.bottomPadding,styles.calcColumn60]}>Matches are calculated based on your <Text style={[styles.boldText]}>career assessments, endorsements, goals, favorites, projects, work experience, education, and completed items.</Text></Text>
         </View>
 
-        <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+        <Text style={[styles.centerText,styles.bottomPadding,styles.calcColumn60]}>Matches are calculated based on your <Text style={[styles.boldText]}>career assessments, endorsements, goals, favorites, projects, work experience, education, and completed items.</Text></Text>
+        <View style={[styles.spacer]} /><View style={[styles.spacer]} />*/}
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Career Paths</Text>
           {this.renderMatches('careerPaths')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Employers</Text>
           {this.renderMatches('employers')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Courses</Text>
           {this.renderMatches('courses')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Events</Text>
           {this.renderMatches('events')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Projects</Text>
           {this.renderMatches('projects')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Work</Text>
           {this.renderMatches('work')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Peers</Text>
           {this.renderMatches('peers')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Mentors</Text>
           {this.renderMatches('mentors')}
         </View>
 
-        <View style={[styles.row20,styles.calcColumn60]}>
+        <View style={[styles.card,styles.topMargin30]}>
           <Text style={[styles.headingText4]}>Groups</Text>
           {this.renderMatches('groups')}
         </View>
@@ -974,13 +989,35 @@ class Matches extends Component {
     }
   }
 
+  closeModal() {
+    console.log('closeModal called')
+
+    this.setState({ modalIsOpen: false, showCalcExplanation: false })
+
+  }
+
   render() {
 
       return (
           <ScrollView>
-            <View style={[styles.card,styles.topMargin20]}>
+            <View>
               {this.renderMatchesView()}
             </View>
+
+            <Modal isVisible={this.state.modalIsOpen} style={[styles.modal]}>
+              {(this.state.showCalcExplanation) && (
+                <View style={[styles.flex1,styles.padding30,styles.topMargin20]}>
+                  <Text style={[styles.centerText,styles.bottomPadding,styles.calcColumn100,styles.headingText4]}>How Matches are Calculated</Text>
+                  <Text style={[styles.centerText,styles.bottomPadding,styles.calcColumn100,styles.standardText,styles.topMargin20]}>Matches are calculated based on your <Text style={[styles.boldText]}>career assessments, endorsements, goals, favorites, projects, work experience, education, and completed items.</Text></Text>
+
+                  <View style={[styles.horizontalPadding20,styles.topPadding20]}>
+                    <TouchableOpacity onPress={() => this.closeModal()} style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]}>
+                      <Text style={[styles.standardText,styles.ctaColor]}>Close Modal</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </Modal>
           </ScrollView>
 
       )
