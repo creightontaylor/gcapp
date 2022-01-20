@@ -83,9 +83,11 @@ class EmployerDetails extends Component {
           roleName, activeOrg, orgFocus, orgName, remoteAuth
         })
 
+
         let employerId = this.props.employerId
         if (this.props.selectedEmployer) {
           employerId = this.props.selectedEmployer._id
+          this.props.navigation.setOptions({ headerTitle: this.props.selectedEmployer.employerName })
         }
 
         if (employerId || this.props.accountCode) {

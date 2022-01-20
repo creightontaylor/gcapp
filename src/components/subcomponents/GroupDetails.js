@@ -130,6 +130,8 @@ class GroupDetails extends Component {
         if (this.props.selectedGroup) {
           console.log('show selectedGroup in props: ', this.props.selectedGroup)
 
+          this.props.navigation.setOptions({ headerTitle: this.props.selectedGroup.name })
+
           groupId = this.props.selectedGroup._id
           console.log('show id: ', groupId)
 

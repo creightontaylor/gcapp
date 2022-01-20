@@ -131,6 +131,7 @@ class CareerDetails extends Component {
         console.log('what is the email of this user', emailId);
 
         if (this.props.careerSelected) {
+
           const careerSelected = this.props.careerSelected
 
           this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
@@ -184,6 +185,8 @@ class CareerDetails extends Component {
                 console.log('Career details query attempted 1', response.data.success, response.data.career);
 
                 if (response.data.success) {
+
+                  this.props.navigation.setOptions({ headerTitle: response.data.career.name })
 
                   let careerDetailsPath = '/app/careers/' + response.data.career.name
                   if (this.props.fromAdvisor) {
@@ -247,6 +250,8 @@ class CareerDetails extends Component {
                 console.log('Career details query attempted 2');
 
                 if (response.data.success) {
+
+                  this.props.navigation.setOptions({ headerTitle: response.data.career.name })
 
                   let careerDetailsPath = '/app/careers/' + response.data.career.name
                   if (this.props.fromAdvisor) {

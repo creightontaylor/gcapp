@@ -2631,39 +2631,22 @@ class Opportunities extends Component {
           }
         }
 
-        // if (posting.createdAt) {
-        //   if (subtitle2 === '') {
-        //     subtitle2 = 'Created :' + convertDateToString(posting.createdAt,"datetime")
-        //   } else {
-        //     subtitle2 = subtitle2 + ' | Created: ' + convertDateToString(posting.createdAt,"datetime")
-        //   }
-        // }
-
-        if (this.state.pageSource === 'landingPage') {
-          if (this.state.activeOrg && this.state.activeOrg !== '') {
-            pathname = '/opportunities/organizations/' + this.state.activeOrg + '/' + posting._id
-          } else {
-            pathname = '/opportunities/' + posting._id
-          }
-        }
-
-
         rows.push(
           <View key={i}>
             <View style={styles.spacer} />
 
             <View style={[styles.rowDirection]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
-                <View style={[styles.width70]}>
+                <View style={[styles.width50]}>
                   {(posting.matchScore) ? (
-                    <View style={styles.padding10}>
-                      <Progress.Circle progress={posting.matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                    <View style={styles.padding5}>
+                      <Progress.Circle progress={posting.matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                     </View>
                   ) : (
-                    <Image source={{ uri: postingIcon}} style={[styles.square50,styles.topMargin5,styles.centerItem,styles.contain]} />
+                    <Image source={{ uri: postingIcon}} style={[styles.square40,styles.topMargin5,styles.centerItem,styles.contain]} />
                   )}
                 </View>
-                <View style={[styles.calcColumn180]}>
+                <View style={[styles.calcColumn160]}>
                   <Text style={[styles.headingText5]}>{title}</Text>
                   <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
                   <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
@@ -2696,14 +2679,13 @@ class Opportunities extends Component {
                       </View>
                     )}
 
-                    <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(posting) }>
+                    <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(posting) }>
                       <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
                     </TouchableOpacity>
                   </View>
                   <View>
-                    <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
-                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
+                    <TouchableOpacity style={[styles.topMargin]} onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
+                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain,styles.pinRight]}/>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -2757,13 +2739,13 @@ class Opportunities extends Component {
           <View key={"past|" +i}>
             <View style={styles.spacer} />
             <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
-              <View style={[styles.width70]}>
+              <View style={[styles.width50]}>
                 {(this.state.filteredPastEvents[index].matchScore) ? (
-                  <View style={styles.padding10}>
-                    <Progress.Circle progress={this.state.filteredPastEvents[index].matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                  <View style={styles.padding5}>
+                    <Progress.Circle progress={this.state.filteredPastEvents[index].matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                   </View>
                 ) : (
-                  <Image source={(this.state.filteredPastEvents[index].imageURL) ? { uri: this.state.filteredPastEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square50,styles.contain,styles.centerItem]} />
+                  <Image source={(this.state.filteredPastEvents[index].imageURL) ? { uri: this.state.filteredPastEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]} />
                 )}
                 {(this.state.filteredPastEvents[index].createdAt) && (
                   <View style={[styles.topPadding,styles.horizontalPadding5]}>
@@ -2771,7 +2753,7 @@ class Opportunities extends Component {
                   </View>
                 )}
               </View>
-              <View style={[styles.calcColumn150]}>
+              <View style={[styles.calcColumn130]}>
                 <Text style={[styles.headingText5]}>{filteredPastEvents[i - 1].title}</Text>
                 <Text style={[styles.descriptionText1]}>{filteredPastEvents[i - 1].orgName}</Text>
                 <Text style={[styles.descriptionText2]}>{convertDateToString(filteredPastEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredPastEvents[i - 1].endDate,"datetime")}</Text>
@@ -2784,7 +2766,7 @@ class Opportunities extends Component {
             </TouchableOpacity>
             <View style={[styles.leftPadding,styles.rowDirection]}>
               <View>
-                <View style={styles.spacer}/><View style={styles.halfSpacer}/><View style={styles.halfSpacer}/>
+                <View style={styles.spacer}/>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} >
                   <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
                 </TouchableOpacity>
@@ -2792,11 +2774,11 @@ class Opportunities extends Component {
               {(this.state.path && this.state.path.includes('/app')) && (
                 <View style={[styles.rightPadding15]}>
                   {(this.state.rsvps && this.state.rsvps.some(app => app.postingId === this.state.filteredPastEvents[index]._id)) && (
-                    <View style={[styles.topMargin]}>
+                    <View>
                       <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]} />
                     </View>
                   )}
-                  <TouchableOpacity style={[styles.topMargin20]} onPress={() => this.favoriteItem(this.state.filteredPastEvents[i - 1]) }>
+                  <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.filteredPastEvents[i - 1]) }>
                     <Image source={(this.state.favorites.includes(this.state.filteredPastEvents[index]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
                   </TouchableOpacity>
                 </View>
@@ -4549,25 +4531,25 @@ class Opportunities extends Component {
                       <View style={[styles.fullScreenWidth]}>
                         <ScrollView horizontal={true}>
                           {this.state.subNavCategories.map((value, index) =>
-                            <View style={[styles.row10,styles.rightPadding20]}>
+                            <View style={[styles.row10,styles.rightPadding]}>
                               {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
-                                <View key={value} style={[styles.selectedCarouselItem,styles.height40,styles.flexCenter,styles.horizontalPadding10]}>
-                                  <Text style={[styles.standardText]}>{value}</Text>
+                                <View key={value} style={[styles.selectedCarouselItem,styles.height40,styles.flexCenter,styles.horizontalPadding15]}>
+                                  <Text style={[styles.descriptionText1]}>{value}</Text>
                                 </View>
                               ) : (
                                 <View>
                                   {(value === 'All') && (
                                     <View>
                                       {(this.state.filteredPostings.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
-                                            <Text style={styles.leftMargin18}>{value}</Text>
+                                            <Text style={[styles.descriptionText1]}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.lightBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredPostings.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
-                                          <Text style={[styles.standardText]}>{value}</Text>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
+                                          <Text style={[styles.descriptionText1]}>{value}</Text>
                                         </TouchableOpacity>
                                       )}
                                     </View>
@@ -4575,15 +4557,15 @@ class Opportunities extends Component {
                                   {(value === 'Featured') && (
                                     <View>
                                       {(this.state.filteredFeaturedOpportunities.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
-                                            <Text style={styles.leftMargin18}>{value}</Text>
+                                            <Text style={[styles.descriptionText1]}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredFeaturedOpportunities.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
-                                          <Text style={[styles.standardText]}>{value}</Text>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
+                                          <Text style={[styles.descriptionText1]}>{value}</Text>
                                         </TouchableOpacity>
                                       )}
                                     </View>
@@ -4591,15 +4573,15 @@ class Opportunities extends Component {
                                   {(value === 'Work') && (
                                     <View>
                                       {(this.state.filteredWork.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
-                                            <Text style={styles.leftMargin18}>{value}</Text>
+                                            <Text style={[styles.descriptionText1]}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
-                                          <Text style={[styles.standardText]}>{value}</Text>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
+                                          <Text style={[styles.descriptionText1]}>{value}</Text>
                                         </TouchableOpacity>
                                       )}
                                     </View>
@@ -4607,15 +4589,15 @@ class Opportunities extends Component {
                                   {(value === 'Projects') && (
                                     <View>
                                       {(this.state.filteredProjectWork.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
-                                            <Text style={styles.leftMargin18}>{value}</Text>
+                                            <Text style={[styles.descriptionText1]}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredProjectWork.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
-                                          <Text style={[styles.standardText]}>{value}</Text>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
+                                          <Text style={[styles.descriptionText1]}>{value}</Text>
                                         </TouchableOpacity>
                                       )}
                                     </View>
@@ -4623,15 +4605,15 @@ class Opportunities extends Component {
                                   {(value === 'Events') && (
                                     <View>
                                       {(this.state.filteredEvents.length > 0) ? (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
                                           <View style={styles.rowDirection}>
-                                            <Text style={styles.leftMargin18}>{value}</Text>
+                                            <Text style={[styles.descriptionText1]}>{value}</Text>
                                             <View style={[styles.notiBubbleSmall,styles.unselectedBackground,styles.leftMargin3]}><Text style={styles.descriptionText6}>{this.state.filteredEvents.length}</Text></View>
                                           </View>
                                         </TouchableOpacity>
                                       ) : (
-                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding10]} onPress={() => this.subNavClicked(value)}>
-                                          <Text style={[styles.standardText]}>{value}</Text>
+                                        <TouchableOpacity key={value} style={[styles.menuButton,styles.height40,styles.flexCenter,styles.horizontalPadding5]} onPress={() => this.subNavClicked(value)}>
+                                          <Text style={[styles.descriptionText1]}>{value}</Text>
                                         </TouchableOpacity>
                                       )}
                                     </View>

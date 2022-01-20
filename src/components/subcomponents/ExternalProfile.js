@@ -107,7 +107,7 @@ class ExternalProfile extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called in SubExternalProfile', this.props, prevProps)
+    console.log('componentDidUpdate called in SubExternalProfile')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       console.log('t0 will update')
@@ -168,8 +168,10 @@ class ExternalProfile extends Component {
           .then((response) => {
             if (response.data) {
 
-              console.log('User details fetch worked', response.data)
+              console.log('User details fetch worked')
               if (response.data.success) {
+
+                this.props.navigation.setOptions({ headerTitle: response.data.user.firstName + ' ' + response.data.user.lastName })
 
                 let publicProfile = response.data.user.publicProfile
                 let publicProfileExtent = response.data.user.publicProfileExtent
@@ -249,7 +251,7 @@ class ExternalProfile extends Component {
 
                 Axios.get('https://www.guidedcompass.com/api/friends', { params: { orgCode: activeOrg, emailId } })
                 .then((response) => {
-                  console.log('Friends query attempted', response.data);
+                  console.log('Friends query attempted');
 
                     if (response.data.success) {
                       console.log('friends query worked')
@@ -283,7 +285,7 @@ class ExternalProfile extends Component {
                 if (postPublicPreference === 'All' || postPublicPreference === 'Some') {
                   Axios.get('https://www.guidedcompass.com/api/group-posts', { params: { emailId: profileEmail, onlyCUPosts: true } })
                   .then((response) => {
-                    console.log('Group posts query attempted', response.data);
+                    console.log('Group posts query attempted');
 
                       if (response.data.success) {
                         console.log('successfully retrieved posts')
@@ -319,7 +321,7 @@ class ExternalProfile extends Component {
                 if (projectPublicPreference === 'All' || projectPublicPreference === 'Some') {
                   Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: profileEmail, includeCollaborations: true } })
                   .then((response) => {
-                    console.log('Projects query attempted', response.data);
+                    console.log('Projects query attempted');
 
                       if (response.data.success) {
                         console.log('successfully retrieved projects')
@@ -356,7 +358,7 @@ class ExternalProfile extends Component {
                 if (myOrgs) {
                   Axios.get('https://www.guidedcompass.com/api/org/details', { params: { orgCodes: myOrgs } })
                   .then((response) => {
-                      console.log('Org details worked', response.data);
+                      console.log('Org details worked');
 
                       if (response.data.success) {
                         const orgs = response.data.orgs
@@ -374,7 +376,7 @@ class ExternalProfile extends Component {
                   .then((response) => {
 
                       if (response.data.success) {
-                        console.log('Goals received query worked', response.data);
+                        console.log('Goals received query worked');
 
                         let goals = []
                         if (goalPublicPreference === 'Some') {
@@ -405,7 +407,7 @@ class ExternalProfile extends Component {
                   .then((response) => {
 
                       if (response.data.success) {
-                        console.log('Passions received query worked', response.data);
+                        console.log('Passions received query worked');
 
                         let passions = []
                         if (passionPublicPreference === 'Some') {
@@ -438,7 +440,7 @@ class ExternalProfile extends Component {
 
                      if (response.data.success) {
 
-                       console.log('actual assessment results', response.data)
+                       console.log('actual assessment results')
 
                        if (response.data.results) {
 
@@ -524,7 +526,7 @@ class ExternalProfile extends Component {
                   // retrieve endorsements
                   Axios.get('https://www.guidedcompass.com/api/story', { params: { emailId: profileEmail } })
                   .then((response) => {
-                      console.log('Story query worked', response.data);
+                      console.log('Story query worked');
 
                       if (response.data.success) {
 
@@ -552,7 +554,7 @@ class ExternalProfile extends Component {
 
                 Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: emailId } })
                 .then((response) => {
-                  console.log('User details query 1 attempted', response.data);
+                  console.log('User details query 1 attempted');
 
                   if (response.data.success) {
                      console.log('successfully retrieved user details')
@@ -575,7 +577,7 @@ class ExternalProfile extends Component {
 
                         if (response2.data.success) {
 
-                          console.log('actual assessment results', response2.data)
+                          console.log('actual assessment results')
 
                           // let profile = { firstName: cuFirstName, lastName: cuLastName, email: emailId }
                           cuProfile['workPreferences'] = response2.data.results.workPreferenceAnswers
@@ -613,7 +615,7 @@ class ExternalProfile extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId } })
          .then((response) => {
-           console.log('Favorites query attempted', response.data);
+           console.log('Favorites query attempted');
 
            if (response.data.success) {
              console.log('successfully retrieved favorites')
@@ -855,12 +857,12 @@ class ExternalProfile extends Component {
   }
 
   testActiveFriendship(friends) {
-    console.log('testActiveFriendship called', friends)
+    console.log('testActiveFriendship called')
 
     let friendshipIsActive = false
-    const index = friends.findIndex(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email);
-
-    if (index || index === 0) {
+    const index = friends.findIndex(friend => (friend.friend1Email === this.state.profileData.email || friend.friend2Email === this.state.profileData.email) && friend.active);
+    console.log('show index in test: ', index)
+    if (index > -1) {
       friendshipIsActive = true
     }
 
@@ -1333,8 +1335,22 @@ class ExternalProfile extends Component {
             <View>
               <View style={[styles.card]}>
                 <View style={[styles.rowDirection]}>
-                  <View style={[styles.width100,styles.topPadding5]}>
-                    <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square80,styles.contain, { borderRadius: 40 }]}/>
+                  <View style={[styles.width85,styles.topPadding5]}>
+                    <View>
+                      <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square70,styles.contain, { borderRadius: 40 }]}/>
+                      {(this.testActiveFriendship(this.state.friends)) ? (
+                        <View style={[styles.rowDirection,styles.topMargin]}>
+                          <View>
+                            <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                            <Image source={{ uri: checkmarkIcon }} style={[styles.square10,styles.contain]} />
+                          </View>
+
+                          <Text style={[styles.descriptionText4,styles.ctaColor,styles.leftMargin3]}>Connected</Text>
+                        </View>
+                      ) : (
+                        <View />
+                      )}
+                    </View>
 
                     {(this.state.publicProfile || this.state.viewableProfile) ? (
                       <View>
@@ -1363,27 +1379,27 @@ class ExternalProfile extends Component {
                     )}
                   </View>
 
-                  <View style={[styles.calcColumn220]}>
-                    <Text style={[styles.headingText2]}>{this.state.profileData.firstName} {this.state.profileData.lastName}</Text>
+                  <View style={[styles.calcColumn205]}>
+                    <Text style={[styles.headingText3]}>{this.state.profileData.firstName} {this.state.profileData.lastName}</Text>
 
                     <View style={[styles.topMargin5]}>
                       {(this.state.profileData.roleName === 'Student' || this.state.profileData.roleName === 'Career-Seeker') ? (
                         <View>
                           {(this.state.profileData.jobTitle && this.state.profileData.jobTitle !== '' && this.state.profileData.jobTitle !== 'Student' && this.state.profileData.employerName) ? (
-                            <Text style={[styles.descriptionText1]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName} | </Text>
+                            <Text style={[styles.descriptionText2]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName} | </Text>
                           ) : (
                             <View />
                           )}
-                          <Text style={[styles.descriptionText1]}>{this.state.profileData.school} {(this.state.profileData.gradYear) ? "'" + this.state.profileData.gradYear.substring(2,4) : 'Student'}</Text>
+                          <Text style={[styles.descriptionText2]}>{this.state.profileData.school} {(this.state.profileData.gradYear) ? "'" + this.state.profileData.gradYear.substring(2,4) : 'Student'}</Text>
                         </View>
                       ) : (
-                        <Text style={[styles.descriptionText1]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName}</Text>
+                        <Text style={[styles.descriptionText2]}>{this.state.profileData.jobTitle} @ {this.state.profileData.employerName}</Text>
                       )}
                     </View>
 
                     {(this.state.profileData.headline) && (
                       <View style={[styles.row5]}>
-                        <Text style={[styles.descriptionText1]}>{this.state.profileData.headline}</Text>
+                        <Text style={[styles.descriptionText2]}>{this.state.profileData.headline}</Text>
                       </View>
                     )}
                   </View>
@@ -1397,7 +1413,7 @@ class ExternalProfile extends Component {
                 </View>
 
                 {((this.state.publicProfile || this.state.viewableProfile) || this.state.friends.some(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email)) ? (
-                  <View style={[styles.topPadding]}>
+                  <View style={[styles.topPadding,styles.leftPadding85]}>
 
                     {(this.testActiveFriendship(this.state.friends)) ? (
                       <View style={[styles.rowDirection]}>
@@ -1414,6 +1430,7 @@ class ExternalProfile extends Component {
                             </View>
                           </TouchableOpacity>
                         </View>
+                        {/*
                         <View>
                           <TouchableOpacity style={[styles.btnSquarish,styles.whiteBackground,styles.ctaBorder,styles.flexCenter]} onPress={(e) => this.favoriteItem(e, this.state.profileData) }>
                             <View style={[styles.rowDirection]}>
@@ -1425,18 +1442,29 @@ class ExternalProfile extends Component {
                               </View>
                             </View>
                           </TouchableOpacity>
-                        </View>
+                        </View>*/}
 
 
                       </View>
                     ) : (
-                      <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText3,styles.rightMargin5,styles.mediumBackground]} disabled={true}><Text style={[styles.descriptionText1,styles.whiteColor]}>Pending</Text></TouchableOpacity>
+                      <View>
+                        {(this.state.friends.some(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email)) ? (
+                          <View>
+                            <TouchableOpacity style={[styles.btnSquarish,styles.mediumBackground,styles.flexCenter]} disabled={true}><Text style={[styles.descriptionText1,styles.whiteColor]}>Pending</Text></TouchableOpacity>
+                          </View>
+                        ) : (
+                          <View>
+                            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.followPerson(this.state.profileData)}><Text style={[styles.whiteColor,styles.descriptionText1]}>Connect</Text></TouchableOpacity>
+                          </View>
+                        )}
+                      </View>
+
                     )}
 
                   </View>
                 ) : (
                   <View style={[styles.topPadding]}>
-                    <TouchableOpacity style={[styles.btnSquarish,styles.descriptionText3,styles.rightMargin5]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.followPerson(this.state.profileData)}><Text style={[styles.whiteColor,styles.descriptionText1]}>Connect</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={() => this.followPerson(this.state.profileData)}><Text style={[styles.whiteColor,styles.descriptionText1]}>Connect</Text></TouchableOpacity>
                   </View>
                 )}
               </View>

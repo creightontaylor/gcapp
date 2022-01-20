@@ -191,6 +191,8 @@ class OpportunityDetails extends Component {
       //const email = 'harry@potter.com'
       this.setState({ emailId, postsAreLoading: true })
 
+
+
       // let activeOrg = this.props.activeOrg
       // const postings = this.props.postings
 
@@ -211,6 +213,12 @@ class OpportunityDetails extends Component {
           this.setState({ emailId: email, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
             roleName, activeOrg, selectedOpportunity, workMode
           })
+
+          let headerTitle = selectedOpportunity.title
+          if (!selectedOpportunity.title && selectedOpportunity.name) {
+            headerTitle = selectedOpportunity.name
+          }
+          this.props.navigation.setOptions({ headerTitle })
 
           Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
           .then((response) => {

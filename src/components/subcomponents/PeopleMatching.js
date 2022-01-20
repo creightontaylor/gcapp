@@ -54,7 +54,7 @@ class PeopleMatching extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props, prevProps)
+    console.log('componentDidUpdate called ')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       console.log('t0 will update')
@@ -127,7 +127,7 @@ class PeopleMatching extends Component {
         if (this.props.pageSource !== 'Goal') {
           Axios.get('https://www.guidedcompass.com/api/org/members', { params: { orgCode, roleNames, onlyPics, limit } })
           .then((response) => {
-            console.log('Members query attempted', response.data);
+            console.log('Members query attempted');
 
               if (response.data.success) {
                 console.log('members query worked')
@@ -146,7 +146,7 @@ class PeopleMatching extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/friends', { params: { orgCode: activeOrg, emailId } })
         .then((response) => {
-          console.log('Friends query attempted', response.data);
+          console.log('Friends query attempted');
 
             if (response.data.success) {
               console.log('friends query worked')
@@ -164,7 +164,7 @@ class PeopleMatching extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: emailId } })
         .then((response) => {
-          console.log('User details query 1 attempted', response.data);
+          console.log('User details query 1 attempted');
 
           if (response.data.success) {
              console.log('successfully retrieved user details')
@@ -184,7 +184,7 @@ class PeopleMatching extends Component {
 
                 if (response2.data.success) {
 
-                  console.log('actual assessment results', response2.data)
+                  console.log('actual assessment results')
 
                   // let profile = { firstName: cuFirstName, lastName: cuLastName, email: emailId }
                   profile['workPreferences'] = response2.data.results.workPreferenceAnswers
@@ -220,7 +220,7 @@ class PeopleMatching extends Component {
 
          Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId } })
         .then((response) => {
-          console.log('Favorites query attempted', response.data);
+          console.log('Favorites query attempted');
 
           if (response.data.success) {
             console.log('successfully retrieved favorites')
@@ -238,7 +238,7 @@ class PeopleMatching extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/workoptions')
         .then((response) => {
-          console.log('Work options query tried', response.data);
+          console.log('Work options query tried');
 
           if (response.data.success) {
             console.log('Work options query succeeded')
@@ -352,7 +352,7 @@ class PeopleMatching extends Component {
       if (search) {
         Axios.get('https://www.guidedcompass.com/api/members/search', { params: { searchString, orgCode, roleNames, excludeCurrentUser, emailId } })
         .then((response) => {
-          console.log('Opportunity search query attempted', response.data);
+          console.log('Opportunity search query attempted');
 
             if (response.data.success) {
               console.log('member search query worked')
@@ -385,7 +385,7 @@ class PeopleMatching extends Component {
         // eventually query members from back-end
         Axios.put('https://www.guidedcompass.com/api/members/filter', { searchString, orgCode, filterName, filterValue, roleNames, onlyPics, profile, users })
         .then((response) => {
-          console.log('Opportunity search query attempted', response.data);
+          console.log('Opportunity search query attempted');
 
             if (response.data.success) {
               console.log('opportunity search query worked')
@@ -450,7 +450,7 @@ class PeopleMatching extends Component {
           // query postings on back-end
           Axios.put('https://www.guidedcompass.com/api/members/matches', { profile, matchingCriteria, similarityCriteria, roleNames, orgCode, onlyPics, specificCriteria, resLimit })
           .then((response) => {
-            console.log('Member matches attempted', response.data);
+            console.log('Member matches attempted');
 
               if (response.data.success) {
                 console.log('opportunity match query worked')
@@ -614,14 +614,20 @@ class PeopleMatching extends Component {
                           {(this.state.members[i - 1].publicProfile) ? (
                             <View>
                               {(this.state.members[i - 1].publicProfileExtent) ? (
-                                <Text style={[styles.ctaColor,styles.descriptionText4]}>{this.state.members[i - 1].publicProfileExtent}</Text>
+                                <View>
+                                  {(this.state.members[i - 1].publicProfileExtent === 'Public') ? (
+                                    <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>{this.state.members[i - 1].publicProfileExtent}</Text>
+                                  ) : (
+                                    <Text style={[styles.middleColor,styles.descriptionText4,styles.rightText]}>{this.state.members[i - 1].publicProfileExtent}</Text>
+                                  )}
+                                </View>
                               ) : (
-                                <Text style={[styles.ctaColor,styles.descriptionText4]}>PUBLIC</Text>
+                                <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>Public</Text>
                               )}
                             </View>
                           ) : (
                             <View>
-                              <Text style={[styles.errorColor,styles.descriptionText4]}>PRIVATE</Text>
+                              <Text style={[styles.errorColor,styles.descriptionText4,styles.rightText]}>Private</Text>
                             </View>
                           )}
                         </View>
@@ -635,12 +641,12 @@ class PeopleMatching extends Component {
 
                   <Text style={[styles.centerText,styles.headingText5,styles.topPadding]}>{this.state.members[i - 1].firstName} {this.state.members[i - 1].lastName}</Text>
                   {(this.state.members[i - 1].school) ? (
-                    <Text style={[styles.centerText,styles.descriptionText2,styles.topPadding]}>{this.state.members[i - 1].school}{this.state.members[i - 1].gradYear && " '" + this.state.members[i - 1].gradYear}</Text>
+                    <Text style={[styles.centerText,styles.descriptionText1,styles.topPadding]}>{this.state.members[i - 1].school}{this.state.members[i - 1].gradYear && " '" + this.state.members[i - 1].gradYear}</Text>
                   ) : (
                     <View />
                   )}
                   {(this.state.members[i - 1].major) ? (
-                    <Text style={[styles.centerText,styles.descriptionText1,styles.topPadding5]}>{this.state.members[i - 1].major}</Text>
+                    <Text style={[styles.centerText,styles.descriptionText2,styles.topPadding5]}>{this.state.members[i - 1].major}</Text>
                   ) : (
                     <View />
                   )}
@@ -648,9 +654,10 @@ class PeopleMatching extends Component {
                   <View style={[styles.topPadding20]}>
                     {(this.props.pageSource === 'Profiles') ? (
                       <View>
-                        {(this.state.friends.some(friend => (friend.friend1Email === this.state.members[i - 1].email) || friend.friend2Email === this.state.members[i - 1].email)) ? (
+                        {(this.state.friends.some(friend => (friend.friend1Email === this.state.members[i - 1].email || friend.friend2Email === this.state.members[i - 1].email))) ? (
                           <View>
-                            {(this.state.friends.some(friend => friend.active)) ? (
+
+                            {(this.state.friends.some(friend => (friend.friend1Email === this.state.members[i - 1].email || friend.friend2Email === this.state.members[i - 1].email) && friend.active)) ? (
                               <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: this.state.members[i - 1]})}>
                                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
                                   <Text style={[styles.descriptionText1,styles.ctaColor]}>Message</Text>
@@ -661,7 +668,10 @@ class PeopleMatching extends Component {
                             )}
                           </View>
                         ) : (
-                          <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,this.state.members[i - 1])}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
+                          <View>
+                            {console.log('email in question: ', this.state.members[i - 1].email, this.state.members[i - 1].firstName, this.state.members[i - 1].lastName)}
+                            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,this.state.members[i - 1])}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
+                          </View>
                         )}
                       </View>
                     ) : (

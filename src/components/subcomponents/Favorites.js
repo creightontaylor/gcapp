@@ -20,15 +20,20 @@ const internIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-blue.png';
 const courseIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png';
 
+import SubTableView from '../common/TableView';
+
 class Favorites extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      useTableView: false,
+
       favorites: [],
     }
 
     this.retrieveData = this.retrieveData.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
+    this.testFunction = this.testFunction.bind(this)
 
   }
 
@@ -40,9 +45,9 @@ class Favorites extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+    console.log('componentDidUpdate called ')
 
-    if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
+    if (this.props.activeOrg !== prevProps.activeOrg) {
       this.retrieveData()
     }
   }
@@ -77,23 +82,79 @@ class Favorites extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId } })
         .then((response) => {
-          console.log('Favorites query attempted', response.data);
+          console.log('Favorites query attempted');
 
             if (response.data.success) {
-              console.log('successfully retrieved favorites', response.data.favorites.length)
+              console.log('successfully retrieved favorites')
 
               if (response.data.favorites.length > 0) {
-                console.log('the array is greater than 0', response.data.favorites.length)
+                console.log('the array is greater than 0')
 
                 const orgCode = activeOrg
 
                 //query info on those favorites
                 Axios.get('https://www.guidedcompass.com/api/favorites/detail', { params: { favorites: response.data.favorites, orgCode, orgFocus } })
                 .then((response2) => {
-                  console.log('Favorites detail query attempted', response2.data);
+                  console.log('Favorites detail query attempted');
 
                   if (response2.data.success) {
-                    console.log('successfully retrieved favorites detail', response2.data.favorites)
+                    console.log('successfully retrieved favorites detail')
+
+                    let tableData = null
+                    if (this.state.useTableView && response2.data.favorites) {
+                      tableData = []
+                      for (let i = 1; i <= response2.data.favorites.length; i++) {
+                        if (response2.data.types[i - 1] === 'career') {
+
+                          let subtitle = response2.data.favorites[i - 1].jobFunction
+                          if (response2.data.favorites[i - 1].jobFunction && response2.data.favorites[i - 1].industry) {
+                            subtitle = subtitle + ' | ' + response2.data.favorites[i - 1].industry
+                          }
+                          if (!response2.data.favorites[i - 1].jobFunction && response2.data.favorites[i - 1].industry) {
+                            subtitle = subtitle + response2.data.favorites[i - 1].industry
+                          }
+                          if (response2.data.favorites[i - 1].jobFamily) {
+                            subtitle = subtitle + ' | ' + response2.data.favorites[i - 1].jobFamily
+                          }
+                          tableData.push({
+                            imageURL: careerMatchesIconBlue,
+                            title: response2.data.favorites[i - 1].name, subtitle,
+                            pathname: 'CareerDetails', passedState: { careerSelected: response2.data.favorites[i - 1] },
+                            rightButton1: { imageURL: favoritesIconBlue, buttonPressed: this.testFunction },
+                            rightButton2: { imageURL: arrowIndicatorIcon, buttonPressed: 'navigate' },
+                          })
+                          // rows.push(
+                          //   <View key={index} style={[styles.calcColumn60,styles.row20,styles.rowDirection]}>
+                          //     <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: item })} style={[styles.rowDirection,styles.calcColumn120]}>
+                          //       <View style={[styles.width50]}>
+                          //         <Image source={(item.imageURL) ? { uri: careerMatchesIconBlue} : { uri: careerMatchesIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]}/>
+                          //       </View>
+                          //       <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
+                          //         <View>
+                          //           <Text style={[styles.headingText6]}>{item.name}</Text>
+                          //         </View>
+                          //         <View>
+                          //           <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.curtailText]}>{item.jobFunction}{(item.jobFunction && item.industry) && ' | ' + item.industry}{(!item.jobFunction && item.industry) && item.industry}{(item.jobFamily) && ' | ' + item.jobFamily}</Text>
+                          //         </View>
+                          //       </View>
+                          //     </TouchableOpacity>
+                          //     <View style={[styles.rowDirection]}>
+                          //       <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                          //         <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                          //         <TouchableOpacity onPress={() => this.favoriteItem(item) }>
+                          //           <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
+                          //         </TouchableOpacity>
+                          //       </View>
+                          //       <View style={[styles.width20,styles.topMargin15]}>
+                          //         <TouchableOpacity  onPress={() => this.props.navigation.navigate('CareerDetails', { selectedCareer: item })}>
+                          //           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain]}/>
+                          //         </TouchableOpacity>
+                          //       </View>
+                          //
+                          //     </View>
+                        }
+                      }
+                    }
 
                     //query info on those favorites
                     this.setState({
@@ -101,7 +162,8 @@ class Favorites extends Component {
                       filteredTypes: response2.data.types,
                       favorites: response2.data.favorites,
                       filteredFavorites: response2.data.favorites,
-                      favoriteIds: response.data.favorites
+                      favoriteIds: response.data.favorites,
+                      tableData
                     })
 
                   } else {
@@ -158,7 +220,7 @@ class Favorites extends Component {
       }).then((response) => {
         console.log('attempting to remove favorites')
         if (response.data.success) {
-          console.log('saved removal from favorites', response.data)
+          console.log('saved removal from favorites')
           //clear values
           this.setState({
             serverSuccessPlan: true,
@@ -635,6 +697,10 @@ class Favorites extends Component {
 
   }
 
+  testFunction() {
+    console.log('testFunction called')
+  }
+
   render() {
 
     let topPadding = [styles.topPadding40]
@@ -658,7 +724,15 @@ class Favorites extends Component {
 
             <Text style={[styles.descriptionText2,styles.centerText]}>{subtitle}</Text>
 
-            {this.renderFavorites()}
+            {(this.state.useTableView) ? (
+              <View>
+                <SubTableView navigation={this.props.navigation} tableData={this.state.tableData} />
+              </View>
+            ) : (
+              <View>
+                {this.renderFavorites()}
+              </View>
+            )}
 
           </View>
         </ScrollView>

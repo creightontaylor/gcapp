@@ -1159,84 +1159,74 @@ class Careers extends Component {
 
                       <View style={[styles.rowDirection]}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })} style={[styles.rowDirection,styles.calcColumn110]}>
-                          <View style={styles.width70}>
+                          <View style={styles.width50}>
                             {(this.state.matchScores && this.state.matchScores[index]) ? (
-                              <View style={[styles.padding10]}>
-                                {/*
-                                <CircularProgressBar
-                                  percentage={this.state.matchScores[index]}
-                                  text={`${this.state.matchScores[index]}%`}
-                                  styles={{
-                                    path: { stroke: `rgba(110, 190, 250, ${this.state.matchScores[index] / 100})` },
-                                    text: { fill: '#6EBEFA', fontSize: '26px' },
-                                    trail: { stroke: 'transparent' }
-                                  }}
-                                />*/}
-                                <Progress.Circle progress={this.state.matchScores[index] / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                              <View style={[styles.padding5]}>
+                                <Progress.Circle progress={this.state.matchScores[index] / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                               </View>
                             ) : (
-                              <Image source={{uri: careerIcon}} style={[styles.square50,styles.contain,styles.topMargin5,styles.centerItem]}/>
+                              <Image source={{uri: careerIcon}} style={[styles.square40,styles.contain,styles.topMargin5,styles.centerItem]}/>
                             )}
 
                           </View>
-                          <View style={[styles.calcColumn180]}>
+                          <View style={[styles.calcColumn160]}>
                             <Text style={[styles.headingText5]}>{value.name}</Text>
                             <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.jobFunction}{(value.jobFunction && value.industry) && ' | ' + value.industry}{(!value.jobFunction && value.industry) && value.industry}{(value.jobFamily) && ' | ' + value.jobFamily}</Text>
 
                             {(value.marketData) && (
-                              <View style={[styles.calcColumn110,styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection,styles.flexWrap]}>
+                              <View style={[styles.calcColumn110,styles.row7,styles.descriptionText2,styles.boldText, styles.rowDirection,styles.flexWrap]}>
                                 <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
-                                    <Image source={{uri: trendingUpIcon}} style={[styles.square15,styles.contain]}/>
+                                    <Image source={{uri: trendingUpIcon}} style={[styles.square14,styles.contain]}/>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.marketData.growth}</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{value.marketData.growth}</Text>
                                   </View>
                                 </View>
 
                                 <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
-                                    <Image source={{uri: moneyIconBlue}} style={[styles.square20,styles.contain]}/>
+                                    <Image source={{uri: moneyIconBlue}} style={[styles.square18,styles.contain]}/>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>${Number(value.marketData.pay).toLocaleString()}</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>${Number(value.marketData.pay).toLocaleString()}</Text>
                                   </View>
                                 </View>
 
                                 <View style={[styles.rowDirection]}>
                                   <View style={styles.rightPadding}>
-                                    <Image source={{uri: membersIconBlue}} style={[styles.square22,styles.contain]}/>
+                                    <Image source={{uri: membersIconBlue}} style={[styles.square20,styles.contain]}/>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{Number(value.marketData.totalEmployment).toLocaleString()}</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{Number(value.marketData.totalEmployment).toLocaleString()}</Text>
                                   </View>
                                 </View>
                               </View>
                             )}
 
                             {(value.onetInterests) && (
-                              <View style={[styles.calcColumn110,styles.row5,styles.descriptionText2,styles.boldText, styles.rowDirection]}>
+                              <View style={[styles.calcColumn110,styles.row7,styles.descriptionText2,styles.boldText, styles.rowDirection]}>
                                 <View style={[styles.rowDirection,styles.flexWrap]}>
                                   <View style={styles.rightPadding}>
-                                    <Image source={{uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
+                                    <Image source={{uri: favoritesIconBlue}} style={[styles.square18,styles.contain]}/>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.realistic / 7) * 100).toFixed()}% R  -</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.realistic / 7) * 100).toFixed()}% R  -</Text>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.investigative / 7) * 100).toFixed()}% I  -</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.investigative / 7) * 100).toFixed()}% I  -</Text>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.artistic / 7) * 100).toFixed()}% A  -</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.artistic / 7) * 100).toFixed()}% A  -</Text>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.social / 7) * 100).toFixed()}% S  -</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.social / 7) * 100).toFixed()}% S  -</Text>
                                   </View>
                                   <View style={styles.rightPadding}>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.enterprising / 7) * 100).toFixed()}% E  -</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.enterprising / 7) * 100).toFixed()}% E  -</Text>
                                   </View>
                                   <View>
-                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{((value.onetInterests.conventional / 7) * 100).toFixed()}% C</Text>
+                                    <Text style={[styles.descriptionText3,styles.standardColor,styles.curtailText]}>{((value.onetInterests.conventional / 7) * 100).toFixed()}% C</Text>
                                   </View>
                                 </View>
                               </View>
@@ -1244,17 +1234,16 @@ class Careers extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <View style={[styles.width25,styles.topMargin15]}>
+                        <View style={[styles.width25,styles.topMargin5]}>
                           <TouchableOpacity onPress={() => this.favoriteItem(value) }>
                             <Image source={(this.state.favorites.includes(value._id)) ? {uri: favoritesIconBlue} : {uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.pinRight]}/>
                           </TouchableOpacity>
                         </View>
 
-                        <View style={[styles.width25,styles.leftPadding]}>
+                        <View style={[styles.width25,styles.topMargin5,styles.leftPadding]}>
                           <View style={styles.alignEnd}>
-                            <View style={[styles.spacer]} /><View style={[styles.halfSpacer]}/>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: value })}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.pinRight]}/>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain,styles.pinRight]}/>
                             </TouchableOpacity>
                           </View>
                         </View>

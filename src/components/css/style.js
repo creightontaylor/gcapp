@@ -11,6 +11,7 @@ const faintColor = '#D2D2D2'
 const slightFaintColor = '#BEBEBE'
 const extremelyFaintColor = '#F5F5F5'
 const errorColor = '#F5A623'
+const middleColor = '#4C0099'
 const mainFont = "Tisa"
 const baseFontSize = 20
 
@@ -573,6 +574,9 @@ module.exports = StyleSheet.create({
   leftPadding70: {
     paddingLeft: 70
   },
+  leftPadding85: {
+    paddingLeft: 85
+  },
   leftPadding110: {
     paddingLeft: 110
   },
@@ -980,6 +984,9 @@ module.exports = StyleSheet.create({
   calcColumn202: {
     width: Dimensions.get('window').width - 202
   },
+  calcColumn205: {
+    width: Dimensions.get('window').width - 205
+  },
   calcColumn208: {
     width: Dimensions.get('window').width - 208
   },
@@ -1229,6 +1236,9 @@ module.exports = StyleSheet.create({
   },
   ctaColor: {
     color: primaryColor
+  },
+  middleColor: {
+    color: middleColor
   },
   errorColor: {
     color: errorColor

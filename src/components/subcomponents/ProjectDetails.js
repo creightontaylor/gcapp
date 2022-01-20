@@ -87,7 +87,7 @@ class ProjectDetails extends Component {
           const orgCode = this.props.orgCode
 
           // console.log('show passedState: ', creatorProfileLink, passedState)
-
+          this.props.navigation.setOptions({ headerTitle: selectedProject.name })
 
           if (this.props.objectId && !this.props.selectedProject) {
 

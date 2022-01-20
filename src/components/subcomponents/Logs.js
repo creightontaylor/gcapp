@@ -371,7 +371,7 @@ class Logs extends Component {
               <TouchableOpacity style={(this.props.fromWalkthrough) ? [styles.fullScreenWidth,styles.ctaColor,styles.rowDirection] : [styles.calcColumn60,styles.ctaColor,styles.rowDirection]} onPress={() => this.segueToLink('EditLog', index)}>
                 <View style={(this.props.fromWalkthrough) ? [styles.calcColumn100] : [styles.calcColumn90]}>
                   <View style={[styles.headingText6]}>
-                      <Text style={[styles.standardText]}>{title}</Text>
+                      <Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>{title}</Text>
                   </View>
 
                   <Text style={[styles.descriptionText2]}>{subtitle}</Text>
