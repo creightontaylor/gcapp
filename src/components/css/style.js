@@ -102,6 +102,10 @@ module.exports = StyleSheet.create({
     height: 12,
     width: 12
   },
+  square13: {
+    height: 13,
+    width: 13
+  },
   square14: {
     height: 14,
     width: 14
@@ -425,6 +429,9 @@ module.exports = StyleSheet.create({
   },
   bottomMargin20: {
     marginBottom: 20
+  },
+  bottomMargin30: {
+    marginBottom: 30
   },
   bottomMargin50: {
     marginBottom: 50

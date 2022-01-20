@@ -58,7 +58,7 @@ import OrgDetails from './src/components/OrgDetails';
 const orgLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"
 const notificationsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/notifications-icon-dark.png"
 const chatbubblesIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/chatbubbles-icon.png"
-const searchIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png"
+const searchIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon-dark.png"
 const addIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png"
 const settingsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/settings-icon-dark.png"
 const homeIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/home-icon-dark.png"
@@ -255,7 +255,7 @@ export default class App extends Component<Props> {
                 <View style={{ flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => navigation.navigate('SearchItems')}>
                     <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                      <Image source={{ uri: searchIcon }} style={[styles.square23,styles.contain]} />
+                      <Image source={{ uri: searchIconDark }} style={[styles.square23,styles.contain]} />
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>

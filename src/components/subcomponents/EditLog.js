@@ -223,7 +223,8 @@ class EditLog extends Component {
   retrieveData = async() => {
     try {
 
-      console.log('this is causing the error')
+      console.log('retrieveData called in EditLog')
+
       const emailId = await AsyncStorage.getItem('email')
       const email = emailId
       const username = await AsyncStorage.getItem('username');
@@ -613,7 +614,6 @@ class EditLog extends Component {
             } else if (logType === 'Meeting') {
               const meetingId = log._id
 
-              // const startTime = convertDateToString(new Date(log.startTime),"rawDateTimeForInput")
               let startTime = null
               if (log.startTime) {
                 if (Platform.OS === 'ios') {
@@ -1221,7 +1221,7 @@ class EditLog extends Component {
       } else if (mode === 'datetime') {
         //date component
 
-        eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
+        // eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
         this.setState({ [eventName]: eventValue })
       }
     } else {
@@ -1908,6 +1908,9 @@ class EditLog extends Component {
               serverPostSuccess: true,
               serverSuccessMessage: 'Session saved successfully!'
             })
+
+            this.props.reloadData()
+
           } else {
             console.error('there was an error saving the session');
             this.setState({
@@ -2122,6 +2125,8 @@ class EditLog extends Component {
                 serverPostSuccess: true,
                 serverSuccessMessage: 'Thank you for adding your goal!'
               })
+              console.log('show possibilities: ', this.props.navigation.state, this.props.route)
+              this.props.reloadData()
             }
 
           } else {
@@ -2217,6 +2222,9 @@ class EditLog extends Component {
               serverPostSuccess: true,
               serverSuccessMessage: 'Application saved successfully!'
             })
+
+            this.props.reloadData()
+
           } else {
             console.error('there was an error saving the application', response.data.message);
             this.setState({
@@ -2327,6 +2335,9 @@ class EditLog extends Component {
               serverPostSuccess: true,
               serverSuccessMessage: 'Interview saved successfully!'
             })
+
+            this.props.reloadData()
+
           } else {
             console.error('there was an error saving the interview', response.data.message);
             this.setState({
@@ -2423,6 +2434,9 @@ class EditLog extends Component {
               serverPostSuccess: true,
               serverSuccessMessage: 'Offer saved successfully!'
             })
+
+            this.props.reloadData()
+
           } else {
             console.error('there was an error saving the interview', response.data.message);
             this.setState({
@@ -2481,6 +2495,9 @@ class EditLog extends Component {
               serverPostSuccess: true,
               serverSuccessMessage: 'Passion saved successfully!'
             })
+
+            this.props.reloadData()
+
           } else {
             console.error('there was an error saving the interview', response.data.message);
             this.setState({
@@ -5554,7 +5571,7 @@ class EditLog extends Component {
                           <View style={[styles.width200,styles.topPadding5]}>
                             <DateTimePicker
                               testID="startTime"
-                              value={(this.state.startTime) ? this.prepareDate(this.state.startTime) : new Date()}
+                              value={(this.state.startTime) ? new Date(this.state.startTime) : new Date()}
                               mode={'datetime'}
                               is24Hour={true}
                               display="default"
@@ -7187,17 +7204,6 @@ class EditLog extends Component {
         </View>
       </View>
     )
-  }
-
-  prepareDate(passedDate) {
-    console.log('passedDate called', passedDate)
-
-    passedDate = new Date(passedDate)
-    const returnedDate = new Date(passedDate.getTime() + new Date().getTimezoneOffset()*60000)
-    // startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
-    // const returnedDate = convertStringToDate(passedDate,'toLocal')
-    // console.log('compare dates: ', passedDate, returnedDate, typeof returnedDate, new Date().getTimezoneOffset()*60000)
-    return returnedDate
   }
 
   render() {

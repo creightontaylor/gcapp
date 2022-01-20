@@ -25,19 +25,21 @@ class EditLog extends Component {
 
       if (email !== null) {
         // We have data!!
-        console.log('what is the email of this user', email);
+        console.log('retrieveData of EditLog parent', this.props);
 
         let editExisting = false
         let log = null
         let logs = null
         let selectedAdvisor = null
         let passedLogType = null
+        let reloadData
         if (this.props.route.params) {
           editExisting = this.props.route.params.editExisting
           log = this.props.route.params.log
           logs = this.props.route.params.logs
           selectedAdvisor = this.props.route.params.selectedAdvisor
           passedLogType = this.props.route.params.passedLogType
+          reloadData = this.props.route.params.reloadData
         }
 
         // const { logId } = this.props.match.params
@@ -46,7 +48,7 @@ class EditLog extends Component {
         //   logId = this.props.match.params.logId
         // }
 
-        this.setState({ editExisting, log, logs, passedLogType, selectedAdvisor });
+        this.setState({ editExisting, log, logs, passedLogType, selectedAdvisor, reloadData });
 
       }
      } catch (error) {
@@ -58,7 +60,7 @@ class EditLog extends Component {
   render() {
     return (
       <View>
-        <SubEditLog navigation={this.props.navigation} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType={this.state.passedLogType} selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId}/>
+        <SubEditLog navigation={this.props.navigation} editExisting={this.state.editExisting} log={this.state.log} logs={this.state.logs} passedLogType={this.state.passedLogType} selectedAdvisor={this.state.selectedAdvisor} logId={this.state.logId} reloadData={this.state.reloadData}/>
       </View>
     )
   }

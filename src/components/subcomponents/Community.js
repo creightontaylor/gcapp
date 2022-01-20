@@ -913,7 +913,7 @@ class Community extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={styles.spacer} />
+                  <View style={styles.spacer} /><View style={styles.spacer} />
                 </View>
               )}
 
@@ -1016,7 +1016,7 @@ class Community extends Component {
                     </TouchableOpacity>
                   </View>
 
-                  <View style={styles.spacer} />
+                  <View style={styles.spacer} /><View style={styles.spacer} />
 
                 </View>
               )}
@@ -1103,7 +1103,7 @@ class Community extends Component {
                                 )}
                                 <Text style={[styles.descriptionText5,styles.roundedCorners, styles.horizontalPadding10,styles.row5,styles.whiteBorder,styles.whiteColor,styles.boldText]}>{item.category}</Text>
                               </View>
-
+                              {/*
                               <TouchableOpacity style={[styles.absolutePosition,styles.absoluteTop5,styles.absoluteRight5,styles.whiteBackground,styles.roundedCorners]} onPress={(e) => this.voteOnItem(e, item, 'up', optionIndex) }>
                                 <View style={[styles.standardBorder,styles.roundedCorners,styles.rowDirection]}>
                                   <View style={styles.padding7}>
@@ -1116,7 +1116,7 @@ class Community extends Component {
                                   </View>
 
                                 </View>
-                              </TouchableOpacity>
+                              </TouchableOpacity>*/}
                             </View>
 
                             <View style={styles.spacer} />
@@ -1173,7 +1173,7 @@ class Community extends Component {
                         </TouchableOpacity>
                       </View>
 
-                      <View style={styles.spacer} />
+                      <View style={styles.spacer} /><View style={styles.spacer} />
                     </View>
                   )}
                 </View>
@@ -1192,7 +1192,7 @@ class Community extends Component {
       <ScrollView>
         <View style={[styles.topMargin20]}>
         <View style={[styles.fullScreenWidth]}>
-          <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin20]}>
+          <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.bottomMargin30]}>
             <View style={[styles.fullScreenWidth,styles.height5,styles.ctaBackgroundColor]} />
             <View style={[styles.padding20]}>
               <Text style={[styles.headingText5]}>My Community</Text>
@@ -1412,12 +1412,30 @@ class Community extends Component {
             </View>
           )}
 
-          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin30]}>
             <View style={styles.rowDirection}>
-              <View style={[styles.calcColumn80]}>
-                <Text style={[styles.headingText5]}>Recommended People to Follow</Text>
+              <View style={[styles.calcColumn130]}>
+                <Text style={[styles.headingText5]}>People to Follow</Text>
                 <View style={styles.spacer} />
               </View>
+              {(!this.state.remoteAuth) && (
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.width80,styles.rightText,styles.rowDirection,styles.justifyEnd]}>
+                  <View style={[styles.rightPadding,styles.topMargin5]}>
+                    <Text style={[styles.descriptionText2,styles.rightText]}>Browse</Text>
+                  </View>
+                  <View style={[styles.topMargin]}>
+                    <Image source={{ uri: rightCarrotBlue}} style={[styles.square10,styles.contain]} />
+                  </View>
+
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('people','recommended')}
+
+            <View style={[styles.row10,styles.rowDirection]}>
               {(!this.state.remoteAuth) && (
                 <View style={styles.width40}>
                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showInviteMembersWidget: true })}>
@@ -1425,15 +1443,8 @@ class Community extends Component {
                   </TouchableOpacity>
                 </View>
               )}
-
-            </View>
-
-            <View style={styles.spacer} /><View style={styles.spacer} />
-
-            {this.renderItems('people','recommended')}
-
-            <View style={[styles.row10]}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
+              {/*
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Profiles')} style={[styles.calcColumn80,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
                 <View style={[styles.rightPadding,styles.topMargin5]}>
                   <Text style={[styles.descriptionText2]}>Browse All Profiles</Text>
                 </View>
@@ -1442,18 +1453,34 @@ class Community extends Component {
                   <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
                 </View>
 
-              </TouchableOpacity>
+              </TouchableOpacity>*/}
             </View>
 
           </View>
 
-          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-            <Text style={[styles.headingText5]}>Recommended Projects to Follow</Text>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin30]}>
+            <View style={styles.rowDirection}>
+              <View style={[styles.calcColumn130]}>
+                <Text style={[styles.headingText5]}>Projects to Follow</Text>
+                <View style={styles.spacer} />
+              </View>
+              {(!this.state.remoteAuth) && (
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.width80,styles.rightText,styles.rowDirection,styles.justifyEnd]}>
+                  <View style={[styles.rightPadding,styles.topMargin5]}>
+                    <Text style={[styles.descriptionText2,styles.rightText]}>Browse</Text>
+                  </View>
+                  <View style={[styles.topMargin]}>
+                    <Image source={{ uri: rightCarrotBlue}} style={[styles.square10,styles.contain]} />
+                  </View>
+
+                </TouchableOpacity>
+              )}
+            </View>
 
             <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
 
             {this.renderItems('projects','recommended')}
-
+            {/*
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Projects')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
                 <View style={[styles.rightPadding,styles.topMargin5]}>
@@ -1465,15 +1492,31 @@ class Community extends Component {
                 </View>
 
               </TouchableOpacity>
-            </View>
+            </View>*/}
           </View>
-          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-            <Text style={[styles.headingText5]}>Recommended Groups to Join</Text>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin30]}>
+            <View style={styles.rowDirection}>
+              <View style={[styles.calcColumn130]}>
+                <Text style={[styles.headingText5]}>Groups to Join</Text>
+                <View style={styles.spacer} />
+              </View>
+              {(!this.state.remoteAuth) && (
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.width80,styles.rightText,styles.rowDirection,styles.justifyEnd]}>
+                  <View style={[styles.rightPadding,styles.topMargin5]}>
+                    <Text style={[styles.descriptionText2,styles.rightText]}>Browse</Text>
+                  </View>
+                  <View style={[styles.topMargin]}>
+                    <Image source={{ uri: rightCarrotBlue}} style={[styles.square10,styles.contain]} />
+                  </View>
+
+                </TouchableOpacity>
+              )}
+            </View>
 
             <View style={styles.spacer} /><View style={styles.spacer} />
 
             {this.renderItems('groups','recommended')}
-
+            {/*
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Groups')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
                 <View style={[styles.rightPadding,styles.topMargin5]}>
@@ -1484,17 +1527,33 @@ class Community extends Component {
                   <Image source={{ uri: rightCarrotBlue}} style={[styles.square15,styles.contain]} />
                 </View>
               </TouchableOpacity>
-            </View>
+            </View>*/}
           </View>
-          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin20]}>
-            <Text style={[styles.headingText5]}>Recommended Employers to Follow</Text>
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin30]}>
+            <View style={styles.rowDirection}>
+              <View style={[styles.calcColumn130]}>
+                <Text style={[styles.headingText5]}>Employers to Follow</Text>
+                <View style={styles.spacer} />
+              </View>
+              {(!this.state.remoteAuth) && (
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.width80,styles.rightText,styles.rowDirection,styles.justifyEnd]}>
+                  <View style={[styles.rightPadding,styles.topMargin5]}>
+                    <Text style={[styles.descriptionText2,styles.rightText]}>Browse</Text>
+                  </View>
+                  <View style={[styles.topMargin]}>
+                    <Image source={{ uri: rightCarrotBlue}} style={[styles.square10,styles.contain]} />
+                  </View>
+
+                </TouchableOpacity>
+              )}
+            </View>
 
             <View style={styles.spacer} /><View style={styles.spacer} />
 
             {this.renderItems('employers','recommended')}
 
             <View style={styles.spacer} />
-
+            {/*
             <View style={[styles.row10]}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Employers')} style={[styles.calcColumn40,styles.rightText,styles.headingText5,styles.rowDirection,styles.justifyEnd]}>
                 <View style={[styles.rightPadding,styles.topMargin5]}>
@@ -1506,7 +1565,7 @@ class Community extends Component {
                 </View>
 
               </TouchableOpacity>
-            </View>
+            </View>*/}
           </View>
         </View>
       </View>

@@ -25,7 +25,7 @@ const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appIm
 const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon-blue.png';
 const mentoringIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/mentoring-icon-blue.png';
 const gcSquareLogo = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/gc-square-logo.png';
-const searchIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon.png"
+const searchIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/search-icon-dark.png"
 const addIcon = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png"
 
 import SubSearchItems from '../../components/common/SearchItems';
@@ -90,7 +90,7 @@ class NewsFeed extends Component {
           <View style={{ flexDirection: 'row'}}>
             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showSearch: true })}>
               <View style={{ marginRight: 10, paddingLeft: 5, paddingRight: 5 }}>
-                <Image source={{ uri: searchIcon }} style={[styles.square23,styles.contain]} />
+                <Image source={{ uri: searchIconDark }} style={[styles.square23,styles.contain]} />
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showCreatePost: true })}>

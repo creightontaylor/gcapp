@@ -304,9 +304,9 @@ class EditGroup extends Component {
           this.setState({ [eventName]: eventValue })
         } else if (mode === 'datetime') {
           //date component
-          console.log('show eventValue 1: ', eventValue)
-
-          eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
+          // console.log('show eventValue 1: ', eventValue)
+          //
+          // eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
           // let doNotAdjust = true
           // if (doNotAdjust) {
           //   eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
@@ -318,7 +318,7 @@ class EditGroup extends Component {
           // }
 
           // 15, 23, 7
-          console.log('show eventValue 2: ', eventValue)
+          // console.log('show eventValue 2: ', eventValue)
           this.setState({ [eventName]: eventValue })
         }
       } else {

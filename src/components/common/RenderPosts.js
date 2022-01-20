@@ -283,11 +283,21 @@ class RenderPosts extends Component {
           <View key={value + index}>
             {(inModal) && (
               <View style={[styles.calcColumn80, styles.row20]}>
-                <TouchableOpacity onPress={() => this.closeModal()}>
-                  <View style={[styles.row5,styles.horizontalPadding10]}>
-                    <Image source={{ uri: closeIcon }} style={[styles.square15,styles.contain,styles.pinRight]} />
+                <View>
+                  <View style={[styles.row10,styles.rowDirection,styles.topMargin20]}>
+
+                    <View style={[styles.calcColumn160]}>
+                      <Text style={[styles.standardText]}>Comment on This Post</Text>
+                    </View>
+                    <View style={[styles.width60,styles.topMargin5]}>
+                      <TouchableOpacity onPress={() => this.closeModal()}>
+                        <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.rightText]}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </TouchableOpacity>
+                  <View style={[styles.lightHorizontalLine]} />
+                  <View style={[styles.spacer]} />
+                </View>
               </View>
             )}
             <View style={(!inModal) && [styles.card, styles.topMargin20,styles.fullScreenWidth]}>
@@ -1624,6 +1634,7 @@ class RenderPosts extends Component {
                           {(this.state.posts && this.state.activeOrg) && (
                             <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} navigation={this.props.navigation} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
                           )}
+
                         </View>
                       )}
 

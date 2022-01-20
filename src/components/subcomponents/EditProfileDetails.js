@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch, Linking } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from "react-native-modal";
@@ -269,6 +269,17 @@ class EditProfileDetails extends Component {
       if (emailId !== null) {
         // We have data!!
         console.log('what is the email of this user', emailId);
+
+        let headerTitle = 'Edit Profile Details'
+        if (this.props.category === 'Basics') {
+          headerTitle = "Edit Basic Info"
+        } else if (this.props.categry === 'Details') {
+          headerTitle = "Edit Profile Details"
+        } else if (this.props.category === 'Visibility Preferences') {
+          headerTitle = "Edit Visibility Preferences"
+        }
+
+        this.props.navigation.setOptions({ headerTitle })
 
         this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
           roleName, activeOrg, orgFocus, orgName, remoteAuth

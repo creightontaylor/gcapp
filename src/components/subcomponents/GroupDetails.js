@@ -1789,7 +1789,7 @@ class GroupDetails extends Component {
 
            {(this.state.showPost || this.state.sharePosting) && (
              <View key="showPost" style={[styles.flex1,styles.padding20]}>
-                <SubCreatePost sharePosting={this.state.sharePosting} originalPost={this.state.originalPost}  posts={this.state.groupPosts} passPosts={this.passPosts} closeModal={this.closeModal} pictureURL={this.state.pictureURL} groupId={this.state.selectedGroup._id} groupName={this.state.selectedGroup.name} />
+                <SubCreatePost sharePosting={this.state.sharePosting} originalPost={this.state.originalPost}  posts={this.state.groupPosts} passPosts={this.passPosts} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} pictureURL={this.state.pictureURL} groupId={this.state.selectedGroup._id} groupName={this.state.selectedGroup.name} />
               </View>
            )}
 

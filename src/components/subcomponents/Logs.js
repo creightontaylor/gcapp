@@ -24,6 +24,7 @@ class Logs extends Component {
       serverSuccessMessage: ''
     }
 
+    this.reloadData = this.reloadData.bind(this)
     this.retrieveData = this.retrieveData.bind(this)
     this.renderLogs = this.renderLogs.bind(this)
     this.subNavClicked = this.subNavClicked.bind(this)
@@ -34,6 +35,12 @@ class Logs extends Component {
 
   componentDidMount() {
     console.log('componentDidMount pathways')
+
+    this.retrieveData()
+  }
+
+  reloadData() {
+    console.log('reloadData called')
 
     this.retrieveData()
   }
@@ -384,7 +391,7 @@ class Logs extends Component {
               <Text style={[styles.headingText3,styles.centerText,styles.topMargin20]}>No Logs Yet</Text>
               <Text style={[styles.standardText,styles.descriptionTextColor,styles.centerText,styles.topMargin]}>Log information (e.g. goals, advising sessions, work applications) so that mentors and {this.state.orgName} staff can better help.</Text>
 
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.topMargin30]}><Text style={[styles.standardText,styles.whiteColor]}>Add New Log</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs, reloadData: this.reloadData })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.topMargin30]}><Text style={[styles.standardText,styles.whiteColor]}>Add New Log</Text></TouchableOpacity>
             </View>
           </View>
         )
@@ -400,7 +407,7 @@ class Logs extends Component {
     if (this.props.fromWalkthrough) {
       this.setState({ modalIsOpen: true, showGoal: true, logLink, selectedIndex: index })
     } else {
-      this.props.navigation.navigate(logLink, { editExisting: true, logs: this.state.logs, log: this.state.logs[index] })
+      this.props.navigation.navigate(logLink, { editExisting: true, logs: this.state.logs, log: this.state.logs[index], reloadData: this.reloadData })
     }
   }
 
@@ -435,7 +442,7 @@ class Logs extends Component {
                         <Text style={[styles.headingText2]}>Logs</Text>
                       </View>
                       <View style={[styles.width50,styles.topPadding5]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs })}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditLog', { editExisting: false, logs: this.state.logs, reloadData: this.reloadData })}>
                           <Image source={{ uri: addIcon}} style={[styles.square25,styles.contain]}/>
                         </TouchableOpacity>
                       </View>

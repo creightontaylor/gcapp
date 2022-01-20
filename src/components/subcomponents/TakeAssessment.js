@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, TextInput, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -2686,7 +2686,7 @@ class TakeAssessment extends Component {
                                             <View>
                                               <Text style={[styles.standardText]}>View your results on the previous screen.</Text>
                                               <View style={styles.spacer} />
-                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.navigation.navigate(resultsPath, { assessment, resultsData: this.state.resultsData, assessments: this.state.assessments, index: this.state.index })}><Text style={[styles.whiteColor]}>View Results</Text></TouchableOpacity>
+                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor, styles.flexCenter]} onPress={() => this.props.navigation.navigate(resultsPath, { assessment, resultsData: this.state.resultsData, assessments: this.state.assessments, index: this.state.index })}><Text style={[styles.standardText,styles.whiteColor]}>View Results</Text></TouchableOpacity>
                                             </View>
                                           )}
 
