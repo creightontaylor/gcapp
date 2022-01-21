@@ -1090,15 +1090,28 @@ class Careers extends Component {
                         <View style={[styles.row7,styles.horizontalPadding3]}>
                           <Image source={{uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                         </View>
-                        <View style={[styles.calcColumn140,styles.topPadding5,styles.leftPadding5]}>
-                          <TextInput
-                            style={[styles.descriptionText2]}
-                            onChangeText={(text) => this.formChangeHandler('search',text)}
-                            value={this.state.searchString}
-                            placeholder="Search 1,000+ career paths..."
-                            placeholderTextColor="grey"
-                          />
-                        </View>
+
+                        {(Platform.OS === 'ios') ? (
+                          <View style={[styles.calcColumn140,styles.topPadding5,styles.leftPadding5]}>
+                            <TextInput
+                              style={[styles.descriptionText2]}
+                              onChangeText={(text) => this.formChangeHandler('search',text)}
+                              value={this.state.searchString}
+                              placeholder="Search 1,000+ career paths..."
+                              placeholderTextColor="grey"
+                            />
+                          </View>
+                        ) : (
+                          <View style={[styles.calcColumn140,styles.topPadding3,styles.leftPadding5]}>
+                            <TextInput
+                              style={[styles.height40,styles.descriptionText2,styles.topMarginNegative5]}
+                              onChangeText={(text) => this.formChangeHandler('search', text)}
+                              value={this.state.searchString}
+                              placeholder="Search 1,000+ career paths..."
+                              placeholderTextColor="grey"
+                            />
+                          </View>
+                        )}
                       </View>
                       <View style={[styles.width50,styles.centerItem,styles.leftMargin]}>
                         <TouchableOpacity style={[styles.fullScreenWidth,styles.bottomPadding]} onPress={() => this.toggleSearchBar('show')}>

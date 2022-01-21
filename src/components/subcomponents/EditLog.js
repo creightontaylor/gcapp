@@ -198,6 +198,7 @@ class EditLog extends Component {
     this.subNavClicked = this.subNavClicked.bind(this)
     this.closeModal = this.closeModal.bind(this)
     this.renderDetails = this.renderDetails.bind(this)
+    this.prepareDate = this.prepareDate.bind(this)
 
   }
 
@@ -626,9 +627,7 @@ class EditLog extends Component {
                 if (Platform.OS === 'ios') {
                   startTime = log.startTime
                 } else {
-                  startTime = new Date(log.startTime)
-                  const newStartTime = new Date(startTime.getTime() + new Date().getTimezoneOffset()*60000)
-                  startTime = convertDateToString(newStartTime,"hyphenatedDateTime")
+                  startTime = log.startTime
                 }
               }
 
@@ -638,9 +637,7 @@ class EditLog extends Component {
                 if (Platform.OS === 'ios') {
                   endTime = log.endTime
                 } else {
-                  endTime = new Date(log.endTime)
-                  const newEndTime = new Date(endTime.getTime() + new Date().getTimezoneOffset()*60000)
-                  endTime = convertDateToString(newEndTime,"hyphenatedDateTime")
+                  endTime = log.endTime
                 }
               }
 
@@ -985,10 +982,10 @@ class EditLog extends Component {
       // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
       if (this.state.mode === 'datetime') {
         if (eventValue) {
-          eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
-          if (this.state[eventName] && this.state[eventName].split("T")) {
-            eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
-          }
+          // eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+          // if (this.state[eventName] && this.state[eventName].split("T")) {
+          //   eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
+          // }
           this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
         } else {
           this.setState({ showDateTimePicker: false, modalIsOpen: false })
@@ -5575,7 +5572,7 @@ class EditLog extends Component {
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'datetime' })}>
                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                   <View style={[styles.calcColumn115]}>
-                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? (this.state.startTime.split("T")[0]) : ""}</Text>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? this.prepareDate(this.state.startTime,'date') : ""}</Text>
                                   </View>
                                   <View style={[styles.width20,styles.topMargin5]}>
                                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -5587,7 +5584,7 @@ class EditLog extends Component {
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "startTime", selectedValue: this.state.startTime, mode: 'time' })}>
                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                   <View style={[styles.calcColumn115]}>
-                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? (this.state.startTime.split("T")[1]) : ""}</Text>
+                                    <Text style={[styles.descriptionText1]}>{(this.state.startTime) ? this.prepareDate(this.state.startTime,'time') : ""}</Text>
                                   </View>
                                   <View style={[styles.width20,styles.topMargin5]}>
                                     <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -7190,6 +7187,21 @@ class EditLog extends Component {
         </View>
       </View>
     )
+  }
+
+  prepareDate(passedDate,type) {
+    console.log('prepareDate called', passedDate,type)
+
+    // console.log('see date: ', new Date(passedDate), new Date(passedDate).toString())
+    let returnedDate = new Date(passedDate)
+    if (type === 'date') {
+      returnedDate = convertDateToString(returnedDate,"hyphenatedDate")
+    } else if (type === 'time') {
+      returnedDate = convertDateToString(returnedDate,"hyphenatedDateTime").split("T")[1]
+    }
+    console.log('see date: ', returnedDate)
+
+    return returnedDate
   }
 
   render() {

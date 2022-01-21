@@ -4496,25 +4496,47 @@ class Opportunities extends Component {
                                 <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin3,styles.leftMargin5]}>
                                   <Image source={{ uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                                 </View>
-                                <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
-                                  {(this.props.passedType) ? (
-                                    <TextInput
-                                      style={[styles.height30,styles.descriptionText2]}
-                                      onChangeText={(text) => this.formChangeHandler('search', text)}
-                                      value={this.state.searchString}
-                                      placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
-                                      placeholderTextColor="grey"
-                                    />
-                                  ) : (
-                                    <TextInput
-                                      style={[styles.height30,styles.descriptionText2]}
-                                      onChangeText={(text) => this.formChangeHandler('search', text)}
-                                      value={this.state.searchString}
-                                      placeholder={"Search " + postings.length + ' Opportunities...'}
-                                      placeholderTextColor="grey"
-                                    />
-                                  )}
-                                </View>
+                                {(Platform.OS === 'ios') ? (
+                                  <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
+                                    {(this.props.passedType) ? (
+                                      <TextInput
+                                        style={[styles.height30,styles.descriptionText2]}
+                                        onChangeText={(text) => this.formChangeHandler('search', text)}
+                                        value={this.state.searchString}
+                                        placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
+                                        placeholderTextColor="grey"
+                                      />
+                                    ) : (
+                                      <TextInput
+                                        style={[styles.height30,styles.descriptionText2]}
+                                        onChangeText={(text) => this.formChangeHandler('search', text)}
+                                        value={this.state.searchString}
+                                        placeholder={"Search " + postings.length + ' Opportunities...'}
+                                        placeholderTextColor="grey"
+                                      />
+                                    )}
+                                  </View>
+                                ) : (
+                                  <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
+                                    {(this.props.passedType) ? (
+                                      <TextInput
+                                        style={[styles.height40,styles.descriptionText2,styles.topMarginNegative5]}
+                                        onChangeText={(text) => this.formChangeHandler('search', text)}
+                                        value={this.state.searchString}
+                                        placeholder={"Search " + this.props.passedType.toLowerCase() + "s..."}
+                                        placeholderTextColor="grey"
+                                      />
+                                    ) : (
+                                      <TextInput
+                                        style={[styles.height40,styles.descriptionText2,styles.topMarginNegative5]}
+                                        onChangeText={(text) => this.formChangeHandler('search', text)}
+                                        value={this.state.searchString}
+                                        placeholder={"Search " + postings.length + ' Opportunities...'}
+                                        placeholderTextColor="grey"
+                                      />
+                                    )}
+                                  </View>
+                                )}
 
                               </View>
 
