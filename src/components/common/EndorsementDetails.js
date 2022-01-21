@@ -29,7 +29,7 @@ class EndorsementDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called in endorsementDetails! ', this.props, prevProps)
+    console.log('componentDidUpdate called in endorsementDetails! ')
 
     if (this.props.selectedEndorsement !== prevProps.selectedEndorsement) {
       console.log('t0')
@@ -39,7 +39,7 @@ class EndorsementDetails extends Component {
       this.retrieveData()
     } else if (this.props.selectedEndorsement) {
       // look for changes in the following
-      console.log('transparent compare: ', this.props.selectedEndorsement.isTransparent, prevProps.selectedEndorsement.isTransparent)
+      // console.log('transparent compare: ', this.props.selectedEndorsement.isTransparent, prevProps.selectedEndorsement.isTransparent)
 
       if (this.props.selectedEndorsement.senderFirstName !== prevProps.selectedEndorsement.senderFirstName) {
         this.retrieveData()
@@ -149,7 +149,7 @@ class EndorsementDetails extends Component {
   }
 
   renderSpecificSkillTraits(endorsement) {
-    console.log('renderSpecificSkillTraits called', endorsement)
+    console.log('renderSpecificSkillTraits called')
 
     let rows = []
 
@@ -163,7 +163,7 @@ class EndorsementDetails extends Component {
       let traits = []
 
       for (let i = 1; i <= competencies.length; i++) {
-        console.log('looping competencies: ', competencies[i - 1])
+        // console.log('looping competencies: ', competencies[i - 1])
         let competency = competencies[i - 1]
 
         if (!competency.rating) {
@@ -482,7 +482,7 @@ class EndorsementDetails extends Component {
   }
 
   renderEndorsement(endorsement) {
-    console.log('renderEndorsement called', this.props.modalIsOpen)
+    console.log('renderEndorsement called')
 
     return (
       <View key="endorsementDetail">
@@ -603,6 +603,7 @@ class EndorsementDetails extends Component {
 
             {(this.state.modalIsOpen && this.props.selectedEndorsement) && (
               <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+
                {(this.state.confirmDelete === true && this.state.deleteIndex === this.state.detailIndex) ? (
                  <View style={[styles.padding30]}>
                   <Text style={[styles.headingText4]}>Delete {this.props.selectedEndorsement.senderFirstName} {this.props.selectedEndorsement.senderLastName}'s Endorsement</Text>
@@ -628,6 +629,7 @@ class EndorsementDetails extends Component {
                  </View>
                ) : (
                  <ScrollView style={[styles.flex1]}>
+
                    {(this.props.selectedEndorsement.isTransparent && this.props.selectedEndorsement.isTransparent !== 'false') ? (
                      <View style={[styles.padding20]}>
                       {this.renderEndorsement(this.props.selectedEndorsement)}

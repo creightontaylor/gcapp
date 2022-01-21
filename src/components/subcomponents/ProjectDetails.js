@@ -42,7 +42,7 @@ class ProjectDetails extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in projectDetails', this.props, prevProps)
+      console.log('componentDidUpdate called in projectDetails')
 
       if (this.props.modalIsOpen !== prevProps.modalIsOpen) {
         this.retrieveData()
@@ -60,9 +60,10 @@ class ProjectDetails extends Component {
     retrieveData = async() => {
       try {
 
-        if (!this.props.selectedProject) {
+        if (!this.props.selectedProject && !this.props.objectId) {
           console.log('there was an error retrieving the project')
         } else {
+          // console.log('show me params: ', this.props.objectId)
           let creatorProfileLink = ''
           let passedState = {}
 
@@ -86,18 +87,17 @@ class ProjectDetails extends Component {
           let selectedProject = this.props.selectedProject
           const orgCode = this.props.orgCode
 
-          // console.log('show passedState: ', creatorProfileLink, passedState)
-          this.props.navigation.setOptions({ headerTitle: selectedProject.name })
-
           if (this.props.objectId && !this.props.selectedProject) {
 
             Axios.get('https://www.guidedcompass.com/api/projects/byid', { params: { _id: this.props.objectId } })
             .then((response) => {
 
                 if (response.data.success) {
-                  console.log('Project query by query worked', response.data);
+                  console.log('Project query by query worked');
 
                   selectedProject = response.data.project
+                  this.props.navigation.setOptions({ headerTitle: selectedProject.name })
+
                   this.setState({ modalIsOpen, selectedProject, orgCode, creatorProfileLink, passedState })
 
                   // pull username
@@ -105,7 +105,7 @@ class ProjectDetails extends Component {
                   .then((response) => {
 
                       if (response.data.success) {
-                        console.log('User profile query worked', response.data);
+                        console.log('User profile query worked');
 
                         const selectedProjectUsername = response.data.user.username
                         this.setState({ selectedProjectUsername })
@@ -129,6 +129,8 @@ class ProjectDetails extends Component {
             });
 
           } else {
+            this.props.navigation.setOptions({ headerTitle: selectedProject.name })
+
             this.setState({ modalIsOpen, selectedProject, orgCode, creatorProfileLink, passedState })
 
             // pull username
@@ -136,7 +138,7 @@ class ProjectDetails extends Component {
             .then((response) => {
 
                 if (response.data.success) {
-                  console.log('User profile query worked', response.data);
+                  console.log('User profile query worked');
 
                   const selectedProjectUsername = response.data.user.username
                   this.setState({ selectedProjectUsername })
@@ -193,44 +195,44 @@ class ProjectDetails extends Component {
         <View key="projectDetails" style={[styles.calcColumn60]}>
           <View style={[styles.row10,styles.rowDirection]}>
             <View style={[styles.width60]}>
-              <Image style={[styles.square50,styles.contain, { borderRadius: 25 }]} source={(this.props.selectedProject.userPic) ? { uri: this.props.selectedProject.userPic} : { uri: profileIconGrey}} />
+              <Image style={[styles.square50,styles.contain, { borderRadius: 25 }]} source={(this.state.selectedProject.userPic) ? { uri: this.state.selectedProject.userPic} : { uri: profileIconGrey}} />
             </View>
             <View style={[styles.calcColumn120]}>
-              <Text style={[styles.headingText5]}>{this.props.selectedProject.name}</Text>
-              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <Text onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedProjectUsername})} style={[styles.ctaColor,styles.boldText,styles.topPadding5,styles.descriptionText3]}>{this.props.selectedProject.userFirstName} {this.props.selectedProject.userLastName}</Text></Text>
+              <Text style={[styles.headingText5]}>{this.state.selectedProject.name}</Text>
+              <Text style={[styles.descriptionText3,styles.leftPadding5]}>by <Text onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedProjectUsername})} style={[styles.ctaColor,styles.boldText,styles.topPadding5,styles.descriptionText3]}>{this.state.selectedProject.userFirstName} {this.state.selectedProject.userLastName}</Text></Text>
             </View>
           </View>
 
-          {(this.props.selectedProject.createdAt) && (
+          {(this.state.selectedProject.createdAt) && (
             <View style={[styles.bottomPadding,styles.leftPadding60]}>
-              <Text style={[styles.descriptionText4]}>Created: {this.props.selectedProject.createdAt.substring(0,10)}</Text>
+              <Text style={[styles.descriptionText4]}>Created: {this.state.selectedProject.createdAt.substring(0,10)}</Text>
             </View>
           )}
 
           <View style={[styles.row10]}>
-            {(this.props.selectedProject.imageURL) && (
+            {(this.state.selectedProject.imageURL) && (
               <View>
-                {(!this.props.selectedProject.videoURL || this.state.imageIndex === 0) && (
-                  <Image source={{ uri: this.props.selectedProject.imageURL}} style={[styles.flex70,styles.height150]} />
+                {(!this.state.selectedProject.videoURL || this.state.imageIndex === 0) && (
+                  <Image source={{ uri: this.state.selectedProject.imageURL}} style={[styles.flex70,styles.height150]} />
                 )}
               </View>
             )}
 
-            {(this.props.selectedProject.videoURL) && (
+            {(this.state.selectedProject.videoURL) && (
               <View>
-                {(!this.props.selectedProject.imageURL || this.state.imageIndex === 1) && (
+                {(!this.state.selectedProject.imageURL || this.state.imageIndex === 1) && (
                   <View>
                     <WebView
                       style={[styles.calcColumn60,styles.screenHeight20]}
                       javaScriptEnabled={true}
-                      source={{uri: this.props.selectedProject.videoURL}}
+                      source={{uri: this.state.selectedProject.videoURL}}
                     />
                   </View>
                 )}
               </View>
             )}
 
-            {(this.props.selectedProject.imageURL && this.props.selectedProject.videoURL) && (
+            {(this.state.selectedProject.imageURL && this.state.selectedProject.videoURL) && (
               <View style={[styles.rowDirection,styles.flexCenter]}>
                 <TouchableOpacity onPress={() => this.setState({ imageIndex: 0 })}><View style={(this.state.imageIndex === 0) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: imageIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
                 <TouchableOpacity onPress={() => this.setState({ imageIndex: 1 })}><View style={(this.state.imageIndex === 1) ? [styles.ctaBorder,styles.padding5] : [styles.padding5]}><Image source={{ uri: videoIcon}} style={[styles.square22,styles.contain,styles.horizontalMargin5]}/></View></TouchableOpacity>
@@ -244,7 +246,7 @@ class ProjectDetails extends Component {
                 <Image style={[styles.square17,styles.contain]} source={{ uri: linkIconBlue}} />
               </View>
               <View style={[styles.calcColumn90]}>
-                <TouchableOpacity onPress={() => Linking.openURL(this.props.selectedProject.url)}><Text style={[styles.descriptionText2]}>Click Here for Details</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedProject.url)}><Text style={[styles.descriptionText2]}>Click Here for Details</Text></TouchableOpacity>
               </View>
 
             </View>
@@ -254,7 +256,7 @@ class ProjectDetails extends Component {
                 <Image style={[styles.square17,styles.contain]} source={{ uri: calendarIconBlue}} />
               </View>
               <View style={[styles.calcColumn90]}>
-                <Text style={[styles.descriptionText2]}>{this.props.selectedProject.startDate} - {this.props.selectedProject.endDate}</Text>
+                <Text style={[styles.descriptionText2]}>{this.state.selectedProject.startDate} - {this.state.selectedProject.endDate}</Text>
               </View>
 
             </View>
@@ -264,7 +266,7 @@ class ProjectDetails extends Component {
                 <Image style={[styles.square17,styles.contain]} source={{ uri: timeIconBlue}} />
               </View>
               <View style={[styles.calcColumn90]}>
-                <Text style={[styles.descriptionText2]}>{this.props.selectedProject.hours} Hours Invested</Text>
+                <Text style={[styles.descriptionText2]}>{this.state.selectedProject.hours} Hours Invested</Text>
               </View>
 
             </View>
@@ -274,30 +276,30 @@ class ProjectDetails extends Component {
                 <Image style={[styles.square17,styles.contain]} source={{ uri: industryIcon}} />
               </View>
               <View style={[styles.calcColumn90]}>
-                <Text style={[styles.descriptionText2]}>this.props.selectedProject.category}{this.props.selectedProject.jobFunction && " | " + this.props.selectedProject.jobFunction}{this.props.selectedProject.industry && " | " + this.props.selectedProject.industry}</Text>
+                <Text style={[styles.descriptionText2]}>{this.state.selectedProject.category}{this.state.selectedProject.jobFunction && " | " + this.state.selectedProject.jobFunction}{this.state.selectedProject.industry && " | " + this.state.selectedProject.industry}</Text>
               </View>
 
             </View>
 
-            {(this.props.selectedProject.skillTags) && (
+            {(this.state.selectedProject.skillTags) && (
               <View style={[styles.row10,styles.rowDirection]}>
                 <View style={[styles.width30]}>
                   <Image style={[styles.square17,styles.contain]} source={{ uri: tagIcon}} />
                 </View>
                 <View style={[styles.calcColumn90]}>
-                  <Text style={[styles.descriptionText2]}>{this.props.selectedProject.skillTags}</Text>
+                  <Text style={[styles.descriptionText2]}>{this.state.selectedProject.skillTags}</Text>
                 </View>
 
               </View>
             )}
 
-            {(this.props.selectedProject.collaborators && this.props.selectedProject.collaborators.length > 0) && (
+            {(this.state.selectedProject.collaborators && this.state.selectedProject.collaborators.length > 0) && (
               <View style={[styles.row10,styles.rowDirection]}>
                 <View style={[styles.width30]}>
                   <Image style={[styles.square17,styles.contain]} source={{ uri: collaborationIconBlue}} />
                 </View>
                 <View style={[styles.calcColumn90]}>
-                  {this.props.selectedProject.collaborators.map((value, index) =>
+                  {this.state.selectedProject.collaborators.map((value, index) =>
                     <View key={value}>
                       <View>
                         <View>
@@ -323,10 +325,10 @@ class ProjectDetails extends Component {
 
           <View style={[styles.row10]}>
             <View>
-              <Text style={[styles.standardText]}>{this.props.selectedProject.description}</Text>
+              <Text style={[styles.standardText]}>{this.state.selectedProject.description}</Text>
             </View>
 
-            {(this.props.private && this.props.selectedProject.grades && this.props.selectedProject.grades.length > 0) && (
+            {(this.props.private && this.state.selectedProject.grades && this.state.selectedProject.grades.length > 0) && (
               <View>
 
                 <View style={[styles.spacer]} /><View style={[styles.spacer]} />
@@ -341,7 +343,7 @@ class ProjectDetails extends Component {
 
                 <View>
 
-                  {this.props.selectedProject.grades.map((value, index) =>
+                  {this.state.selectedProject.grades.map((value, index) =>
                     <View key={value}>
                       {(value.grade || value.feedback) && (
                         <View>
@@ -387,11 +389,11 @@ class ProjectDetails extends Component {
 
     render() {
 
-      console.log('rendering projectDetails ')
+      // console.log('rendering projectDetails ', this.state.selectedProject)
 
       return (
           <ScrollView>
-            {(this.props.selectedProject) && (
+            {(this.state.selectedProject) && (
               <View>
                 {(this.props.excludeModal) ? (
                   <View style={[styles.card,styles.topMargin20]}>

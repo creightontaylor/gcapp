@@ -46,6 +46,16 @@ class Logs extends Component {
     this.retrieveData()
   }
 
+  componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+
+    if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
+      this.retrieveData()
+    } else if (this.props.passedGoal !== prevProps.passedGoal) {
+      this.retrieveData()
+    }
+  }
+
   retrieveData = async() => {
     try {
       const email = await AsyncStorage.getItem('email')

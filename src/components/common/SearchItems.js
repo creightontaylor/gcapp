@@ -38,7 +38,7 @@ class SearchItems extends Component {
     }
 
     componentDidUpdate(prevProps) {
-      console.log('componentDidUpdate called in commonEditGroup', this.props.activeOrg, prevProps)
+      console.log('componentDidUpdate called in commonEditGroup')
 
       if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
         console.log('t0 will update')
@@ -70,10 +70,11 @@ class SearchItems extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('User profile query worked', response.data);
+              console.log('User profile query worked');
 
               if (response.data.user.searches && response.data.user.searches.length > 0) {
                 const previousSearches = response.data.user.searches
+                // console.log('previiosSearches: ', previousSearches)
                 this.setState({ previousSearches })
               }
 

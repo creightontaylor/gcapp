@@ -474,7 +474,7 @@ class Walkthrough extends Component {
   }
 
   passGoal(goal) {
-    console.log('passGoal called', goal)
+    console.log('passGoal called')
 
     this.setState({ passedGoal: goal })
   }
@@ -533,6 +533,7 @@ class Walkthrough extends Component {
                 <Text style={[styles.ctaColor,styles.descriptionText2,styles.boldText]}>Back</Text>
               </TouchableOpacity>
             </View>
+
             <View style={[styles.flex60,styles.alignCenter]}>
               <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
             </View>

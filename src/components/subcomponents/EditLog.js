@@ -2124,7 +2124,7 @@ class EditLog extends Component {
             // console.log('goalId here: ', goalId)
 
             if (this.props.fromWalkthrough) {
-              this.closeModal()
+              this.props.closeModal()
               this.props.passGoal(selectedGoal)
             } else {
               this.setState({ goalId, editExisting: true, currentPage, selectedGoal,

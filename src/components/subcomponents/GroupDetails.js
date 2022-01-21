@@ -1406,7 +1406,7 @@ class GroupDetails extends Component {
 
                 {(this.state.groupPosts) && (
                   <View>
-                    <SubRenderPosts posts={this.state.groupPosts} passedGroupPost={this.state.passedGroupPost} />
+                    <SubRenderPosts navigation={this.props.navigation} posts={this.state.groupPosts} passedGroupPost={this.state.passedGroupPost} />
                   </View>
                 )}
               </View>

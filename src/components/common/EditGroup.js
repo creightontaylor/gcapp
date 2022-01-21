@@ -420,7 +420,7 @@ class EditGroup extends Component {
 
               <View style={[styles.rowDirection,styles.flexWrap]}>
                 {items.map((value, optionIndex) =>
-                  <View key={"items|" + optionIndex}>
+                  <View key={"items|" + optionIndex} style={[styles.rowDirection]}>
 
                     <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
                       <TouchableOpacity onPress={() => this.removeTag(optionIndex,type)}>
@@ -946,7 +946,7 @@ class EditGroup extends Component {
                     <View style={styles.spacer} /><View style={styles.spacer} />
                   </View>
                 ) : (
-                  <View style={(this.props.modalIsOpen) ? [styles.rowDirection] : []}>
+                  <View style={[(this.props.modalIsOpen) ? [styles.rowDirection] : []]}>
                     <View style={(this.props.modalIsOpen) ? [styles.calcColumn110] : []}>
                       <Text style={[styles.headingText2,styles.bottomPadding]}>Create an Acccountability Group</Text>
                       <Text style={[styles.topPadding]}>An accountability group is a small group of like-minded people (6 max) who meet regularly to support each other toward reaching their goals.</Text>
@@ -1520,7 +1520,6 @@ class EditGroup extends Component {
 
                          <View>
                            {this.renderTags('member')}
-
                          </View>
                        </View>
                      </View>

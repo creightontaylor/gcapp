@@ -2362,6 +2362,30 @@ class TakeAssessment extends Component {
             />
           </View>
 
+          {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.row5,styles.errorColor]}>{this.state.errorMessage}</Text>}
+          {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.row5,styles.ctaColor]}>{this.state.successMessage}</Text>}
+
+          {(this.state.competencyOptions) && (
+            <View>
+              <View style={styles.spacer} />
+
+              {this.state.competencyOptions.map((value, optionIndex) =>
+                <View key={value.name} style={[styles.calcColumn60]}>
+                  <TouchableOpacity style={[styles.calcColumn60,styles.rowDirection]} onPress={() => this.competencyClicked(optionIndex, null)}>
+                    <View style={[styles.calcColumn60,styles.rowDirection]}>
+                      <View style={[styles.rightPadding,styles.topMargin]}>
+                        <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
+                      </View>
+                      <View>
+                        <Text style={[styles.ctaColor,styles.row10]}>{value.name}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          )}
+
           <View>
             <View style={[styles.calcColumn130,styles.topMargin5,styles.rowDirection]}>
               <View style={[styles.rightMargin]}>
@@ -2406,30 +2430,6 @@ class TakeAssessment extends Component {
           </View>
 
         </View>
-
-        {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.row5,styles.errorColor]}>{this.state.errorMessage}</Text>}
-        {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.row5,styles.ctaColor]}>{this.state.successMessage}</Text>}
-
-        {(this.state.competencyOptions) && (
-          <View>
-            <View style={styles.spacer} />
-
-            {this.state.competencyOptions.map((value, optionIndex) =>
-              <View key={value._id} style={[styles.calcColumn60]}>
-                <TouchableOpacity style={[styles.calcColumn60,styles.rowDirection]} onPress={() => this.competencyClicked(optionIndex, null)}>
-                  <View style={[styles.calcColumn60]}>
-                    <View style={[styles.rightPadding,styles.topMargin]}>
-                      <Image source={{ uri: skillsIcon}} style={[styles.square22,styles.contain]} />
-                    </View>
-                    <View>
-                      <Text style={[styles.ctaColor,styles.row10]}>{value.name}</Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        )}
 
         {(this.state.resultsData && this.state.resultsData[3] && this.state.resultsData[3].length > 0) && (
           <View style={[styles.row20, styles.rowDirection,styles.flexWrap]}>

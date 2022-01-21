@@ -752,20 +752,17 @@ class Messages extends Component {
                                       <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconDark}} style={[styles.square40,styles.contain,{ borderRadius: 20 }]} />
                                     </TouchableOpacity>
                                   </View>
-                                  <View style={[styles.calcColumn130]}>
-                                    <View style={[styles.rowDirection]}>
-                                      <View style={[styles.calcColumn180]}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
-                                          <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
-                                        </TouchableOpacity>
-                                      </View>
-                                      <View style={[styles.width50]}>
-                                        <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
-                                      </View>
-
+                                  <View style={[styles.calcColumn140]}>
+                                    <View style={[styles.bottomMargin5]}>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })}>
+                                        <Text style={[styles.descriptionText2,styles.boldText]}>{this.state.cuFirstName} {this.state.cuLastName}</Text>
+                                      </TouchableOpacity>
                                     </View>
 
                                     <Text style={[styles.descriptionText3]}>{value.message}</Text>
+                                  </View>
+                                  <View style={[styles.width50]}>
+                                    <Text style={[styles.descriptionText5,styles.boldText,styles.descriptionTextColor,styles.topPadding,styles.rightText]}>{convertDateToString(value.createdAt,"daysAgo")}</Text>
                                   </View>
 
                                 </View>

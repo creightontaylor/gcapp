@@ -31,11 +31,11 @@ class ProjectDetails extends Component {
         let selectedProject = null
         let objectId = null
         if (this.props.route && this.props.route.params) {
-          // console.log('show params: ', this.props.route)
+          console.log('show params: ', this.props.route)
 
           selectedProject = this.props.route.params.selectedProject
           objectId = this.props.route.params.objectId
-
+          // console.log('show objectId: ', objectId)
         }
 
         this.setState({ selectedProject, objectId })

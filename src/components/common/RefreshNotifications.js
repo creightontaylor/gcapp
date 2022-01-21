@@ -97,7 +97,7 @@ class RenderMyGroups extends Component {
 
             } else {
               console.log('no notifications found', response.data.message)
-              this.updateView('Notifications',unreadNotificationsCount)
+              this.updateView('Notifications',0)
             }
 
           }).catch((error) => {

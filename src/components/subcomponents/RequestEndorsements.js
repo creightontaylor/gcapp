@@ -99,7 +99,7 @@ class RequestEndorsements extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+    console.log('componentDidUpdate called ')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       this.retrieveData()
@@ -161,7 +161,7 @@ class RequestEndorsements extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
        .then((response) => {
-         console.log('Favorites query attempted', response.data);
+         console.log('Favorites query attempted');
 
          if (response.data.success) {
            console.log('successfully retrieved favorites')
@@ -171,7 +171,7 @@ class RequestEndorsements extends Component {
            if (favorites && favorites.length > 0) {
              Axios.get('https://www.guidedcompass.com/api/favorites/detail', { params: { favorites, orgCode: activeOrg } })
              .then((response2) => {
-               console.log('Favorites detail query attempted', response2.data);
+               console.log('Favorites detail query attempted');
 
                if (response2.data.success) {
                  console.log('successfully retrieved favorites detail', response2.data.favorites)
@@ -239,7 +239,7 @@ class RequestEndorsements extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
-          console.log('Org info query attempted', response.data);
+          console.log('Org info query attempted');
 
             if (response.data.success) {
               console.log('org info query worked')
@@ -269,7 +269,7 @@ class RequestEndorsements extends Component {
         .then((response) => {
 
           if (response.data.success) {
-            console.log('Benchmark query worked', response.data);
+            console.log('Benchmark query worked');
 
             let pathwayOptions = [{value: 'Custom', skillTraits: []}]
             let values = []
@@ -381,13 +381,13 @@ class RequestEndorsements extends Component {
                       }
                     }
                   }
-                  console.log('show lol: ', skillTraitsObject, competencies)
+                  // console.log('show lol: ', skillTraitsObject, competencies)
                   pathwayOptions.push({ value, skillTraits: skillTraitsObject, competencies })
                 } else {
 
 
                 }
-                console.log('show pathwayOptions: ', pathwayOptions)
+                // console.log('show pathwayOptions: ', pathwayOptions)
 
               }
             }
@@ -404,7 +404,7 @@ class RequestEndorsements extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
         .then((response) => {
-          console.log('Profile query attempted', response.data);
+          console.log('Profile query attempted');
 
            if (response.data.success) {
              console.log('successfully retrieved profile information')
@@ -563,7 +563,7 @@ class RequestEndorsements extends Component {
 
           Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, search, excludeMissingOutlookData, excludeMissingJobZone })
           .then((response) => {
-            console.log('Careers query attempted', response.data);
+            console.log('Careers query attempted');
 
               if (response.data.success) {
                 console.log('successfully retrieved careers')
@@ -616,7 +616,7 @@ class RequestEndorsements extends Component {
           // console.log('show the params: ', searchString, orgCode, placementPartners, accountCode, search, postTypes)
           Axios.get('https://www.guidedcompass.com/api/postings/search', { params: { searchString, orgCode, placementPartners, accountCode, search, postTypes } })
           .then((response) => {
-            console.log('Opportunity search query attempted', response.data);
+            console.log('Opportunity search query attempted');
 
               if (response.data.success) {
                 console.log('opportunity search query worked')
@@ -662,7 +662,7 @@ class RequestEndorsements extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/competency/search', { params: { searchString, search, types } })
           .then((response) => {
-            console.log('Opportunity search query attempted', response.data);
+            console.log('Opportunity search query attempted');
 
               if (response.data.success) {
                 console.log('opportunity search query worked')
@@ -709,7 +709,7 @@ class RequestEndorsements extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/members/search', { params: { searchString, orgCode, roleNames, excludeCurrentUser, emailId } })
           .then((response) => {
-            console.log('Opportunity search query attempted', response.data);
+            console.log('Opportunity search query attempted');
 
               if (response.data.success) {
                 console.log('opportunity search query worked')
@@ -754,7 +754,7 @@ class RequestEndorsements extends Component {
       } else {
         Axios.get('https://www.guidedcompass.com/api/skilltrait/search', { params: { skillTrait, type } })
         .then((response) => {
-          console.log('Skilltrait search query attempted', response.data);
+          console.log('Skilltrait search query attempted');
 
             if (response.data.success) {
               console.log('skillTrait search query worked')
@@ -808,7 +808,7 @@ class RequestEndorsements extends Component {
           //check if invite someone who can provide an endorsement in the portal
           Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: this.state.recipientEmail } })
           .then((response) => {
-            console.log('Profile query attempted', response.data);
+            console.log('Profile query attempted');
 
              if (response.data.success) {
                console.log('successfully retrieved profile information')
@@ -1317,7 +1317,7 @@ class RequestEndorsements extends Component {
 
       Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: benchmarkId, jobFunction } })
       .then((response) => {
-        console.log('Benchmarks query by id attempted', response.data);
+        console.log('Benchmarks query by id attempted');
 
           if (response.data.success) {
             console.log('successfully retrieved benchmarks for individual')
@@ -1397,7 +1397,7 @@ class RequestEndorsements extends Component {
 
       Axios.put('https://www.guidedcompass.com/api/learning-objectives', { profile, category: type })
       .then((response) => {
-        console.log('Learning objectives query attempted', response.data);
+        console.log('Learning objectives query attempted');
 
         if (response.data.success) {
           console.log('learning objectives query worked')
@@ -1532,7 +1532,6 @@ class RequestEndorsements extends Component {
       skillTrait: 'Critical Thinking',
       example: "I've worked with this student for 3 years on a project. Never in my 20 years of teaching having I seen someone demonstrate a mastery of critical thinking with little-to-no experience.",
     })
-
 
     const selectedEndorsement = {
       senderFirstName: 'Jon', senderLastName: 'Doe', senderEmail: 'jondoe@gmail.com',
@@ -1869,7 +1868,7 @@ class RequestEndorsements extends Component {
                                             <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'opportunity')}>
                                               <View style={[styles.calcColumn60,styles.rowDirection]}>
                                                 <View style={[styles.width40]}>
-                                                  <View style={[styles.card,styles.miniSpacer]} />
+                                                  <View style={[styles.miniSpacer]} />
                                                   <Image source={{ uri: experienceIcon}} style={[styles.square22,styles.contain]} />
                                                 </View>
                                                 <View style={[styles.calcColumn100]}>
@@ -1972,12 +1971,6 @@ class RequestEndorsements extends Component {
                     </View>
                   )}
 
-                  {(this.state.showEndorsementDetails) && (
-                    <View>
-                      <SubEndorsementDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedEndorsement={this.state.selectedEndorsement} orgCode={this.state.activeOrg} />
-                    </View>
-                  )}
-
               </View>
 
               {(this.state.extraPaddingForKeyboard) && (
@@ -1987,22 +1980,29 @@ class RequestEndorsements extends Component {
                 </View>
               )}
 
-              <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
-                {(this.state.showPicker) && (
-                  <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
-                    <SubPicker
-                      selectedSubKey={this.state.selectedSubKey}
-                      selectedName={this.state.selectedName}
-                      selectedOptions={this.state.selectedOptions}
-                      selectedValue={this.state.selectedValue}
-                      differentLabels={this.state.differentLabels}
-                      pickerName={this.state.pickerName}
-                      formChangeHandler={this.formChangeHandler}
-                      closeModal={this.closeModal}
-                    />
-                  </View>
-                )}
-             </Modal>
+              {(this.state.showEndorsementDetails) ? (
+                <View>
+                  <SubEndorsementDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedEndorsement={this.state.selectedEndorsement} orgCode={this.state.activeOrg} />
+                </View>
+              ) : (
+                <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+                  {(this.state.showPicker) && (
+                    <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      <SubPicker
+                        selectedSubKey={this.state.selectedSubKey}
+                        selectedName={this.state.selectedName}
+                        selectedOptions={this.state.selectedOptions}
+                        selectedValue={this.state.selectedValue}
+                        differentLabels={this.state.differentLabels}
+                        pickerName={this.state.pickerName}
+                        formChangeHandler={this.formChangeHandler}
+                        closeModal={this.closeModal}
+                      />
+                    </View>
+                  )}
+               </Modal>
+              )}
+
           </ScrollView>
 
       )

@@ -28,7 +28,7 @@ class Notifications extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+    console.log('componentDidUpdate called ')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode || this.props.roleName !== prevProps.roleName) {
       this.retrieveData()
@@ -66,7 +66,7 @@ class Notifications extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('Notification query worked', response.data);
+              console.log('Notification query worked');
 
               this.setState({ notifications: response.data.notifications })
               this.clearUnreadNotifications(response.data.notifications)
@@ -106,7 +106,7 @@ class Notifications extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Notification update worked', response.data);
+          console.log('Notification update worked');
 
           AsyncStorage.setItem('unreadNotificationsCount', 0)
 
