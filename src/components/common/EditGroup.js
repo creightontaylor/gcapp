@@ -56,6 +56,7 @@ class EditGroup extends Component {
         this.addItem = this.addItem.bind(this)
         this.itemClicked = this.itemClicked.bind(this)
         this.adjustForTimeDifference = this.adjustForTimeDifference.bind(this)
+        this.prepareDate = this.prepareDate.bind(this)
 
     }
 
@@ -135,18 +136,20 @@ class EditGroup extends Component {
             if (Platform.OS === 'ios') {
               meetingStartTime = this.props.selectedGroup.meetingStartTime
             } else {
-              meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
-              const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
-              meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
+              meetingStartTime = this.props.selectedGroup.meetingStartTime
+              // meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
+              // const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
+              // meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
             }
           }
           if (this.props.selectedGroup.meetingEndTime) {
             if (Platform.OS === 'ios') {
               meetingEndTime = this.props.selectedGroup.meetingEndTime
             } else {
-              meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
-              const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
-              meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
+              meetingEndTime = this.props.selectedGroup.meetingEndTime
+              // meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
+              // const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
+              // meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
             }
           }
           // console.log('show meeting times: ', meetingStartTime,meetingEndTime)
@@ -208,10 +211,10 @@ class EditGroup extends Component {
         // {"nativeEvent": {"timestamp": 2022-01-15T23:17:05.451Z}, "type": "set"}
         if (this.state.mode === 'datetime') {
           if (eventValue) {
-            eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
-            if (this.state[eventName] && this.state[eventName].split("T")) {
-              eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
-            }
+            // eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
+            // if (this.state[eventName] && this.state[eventName].split("T")) {
+            //   eventValue = eventValue + "T" + this.state[eventName].split("T")[1]
+            // }
             this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
           } else {
             this.setState({ showDateTimePicker: false, modalIsOpen: false })
@@ -219,13 +222,13 @@ class EditGroup extends Component {
         } else if (this.state.mode === 'time') {
           if (eventValue) {
 
-            eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
-            eventValue = eventValue.split("T")[1]
-            console.log('is this working? ', eventValue, eventName, this.state[eventName])
-            if (this.state[eventName] && this.state[eventName].split("T")) {
-              eventValue = this.state[eventName].split("T")[0] + "T" + eventValue
-
-            }
+            // eventValue = convertDateToString(new Date(eventValue),'hyphenatedDateTime')
+            // eventValue = eventValue.split("T")[1]
+            // console.log('is this working? ', eventValue, eventName, this.state[eventName])
+            // if (this.state[eventName] && this.state[eventName].split("T")) {
+            //   eventValue = this.state[eventName].split("T")[0] + "T" + eventValue
+            //
+            // }
             this.setState({ [eventName]: eventValue,  selectedValue: eventValue, textFormHasChanged: true, showDateTimePicker: false, modalIsOpen: false })
           } else {
             this.setState({ showDateTimePicker: false, modalIsOpen: false })
@@ -924,6 +927,21 @@ class EditGroup extends Component {
       return passedDate
     }
 
+    prepareDate(passedDate,type) {
+      console.log('prepareDate called', passedDate,type)
+
+      // console.log('see date: ', new Date(passedDate), new Date(passedDate).toString())
+      let returnedDate = new Date(passedDate)
+      if (type === 'date') {
+        returnedDate = convertDateToString(returnedDate,"hyphenatedDate")
+      } else if (type === 'time') {
+        returnedDate = convertDateToString(returnedDate,"hyphenatedDateTime").split("T")[1]
+      }
+      console.log('see date: ', returnedDate)
+
+      return returnedDate
+    }
+
     render() {
 
       return (
@@ -1202,7 +1220,7 @@ class EditGroup extends Component {
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'datetime' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
-                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? (this.state.meetingStartTime.split("T")[0]) : ""}</Text>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? this.prepareDate(this.state.meetingStartTime,'date') : ""}</Text>
                                          </View>
                                          <View style={[styles.width20,styles.topMargin5]}>
                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -1214,7 +1232,7 @@ class EditGroup extends Component {
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingStartTime", selectedValue: this.state.meetingStartTime, mode: 'time' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
-                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? (this.state.meetingStartTime.split("T")[1]) : ""}</Text>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingStartTime) ? this.prepareDate(this.state.meetingStartTime,'time') : ""}</Text>
                                          </View>
                                          <View style={[styles.width20,styles.topMargin5]}>
                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -1255,7 +1273,7 @@ class EditGroup extends Component {
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Start Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'datetime' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
-                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ? (this.state.meetingEndTime.split("T")[0]) : ""}</Text>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ?  this.prepareDate(this.state.meetingEndTime,'date') : ""}</Text>
                                          </View>
                                          <View style={[styles.width20,styles.topMargin5]}>
                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -1267,7 +1285,7 @@ class EditGroup extends Component {
                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'End Time', selectedIndex: null, selectedName: "meetingEndTime", selectedValue: this.state.meetingEndTime, mode: 'time' })}>
                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                          <View style={[styles.calcColumn115]}>
-                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ? (this.state.meetingEndTime.split("T")[1]) : ""}</Text>
+                                           <Text style={[styles.descriptionText1]}>{(this.state.meetingEndTime) ?  this.prepareDate(this.state.meetingEndTime,'time') : ""}</Text>
                                          </View>
                                          <View style={[styles.width20,styles.topMargin5]}>
                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
