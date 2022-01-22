@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Image, Platform, ActivityIndicator, Linking } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
@@ -8,6 +8,11 @@ import { WebView } from 'react-native-webview';
 const benchmarksIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/benchmarks-icon-dark.png';
 const approvedIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/approved-icon-blue.png';
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
+const favoritesIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-white.png';
+const shareIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/share-icon-dark.png';
+const questionMarkBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/question-mark-blue.png';
+const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
+const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
 
 import SubEndorsementDetails from '../common/EndorsementDetails';
 
@@ -15,12 +20,14 @@ class BenchmarkDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      viewMode: 'List',
-      subNavSelected: 'All',
+      favorites: [],
+      subNavSelected: 'Ideal Profile',
       totalPercent: 100,
       // benchmarkCategories: ['Overall Weights','Work Preferences','Interests','Personality','Values','Skills','Endorsements','Education','Projects','Experience','Interview'],
       benchmarkCategories: ['All','Weights','Work Preferences SA','Interests SA','Personality SA','Values SA','Skills SA','Endorsements','Education','Projects','Experience','Interview','Diversity'],
       viewOptions: ['','List','Profile Card'],
+
+      subNavCategories: ['Ideal Profile','About','People','Courses','Projects','Similar']
     }
 
     this.retrieveData = this.retrieveData.bind(this)
@@ -78,14 +85,10 @@ class BenchmarkDetails extends Component {
         activeOrg = 'guidedcompass'
       }
       //const email = 'harry@potter.com'
-      this.setState({ emailId, postsAreLoading: true })
-
-      const accountCode = this.props.accountCode
-      let isLoading = true
-
+      // this.setState({ emailId, postsAreLoading: true })
+      const isLoading = true
       this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
-        roleName, activeOrg, orgFocus, orgName, remoteAuth,
-        accountCode, isLoading
+        roleName, activeOrg, orgFocus, orgName, remoteAuth, isLoading
       })
 
       Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
@@ -128,23 +131,6 @@ class BenchmarkDetails extends Component {
          console.log('User details query did not work', error);
       });
 
-      Axios.get('https://www.guidedcompass.com/api/account', { params: { accountCode } })
-      .then((response) => {
-        console.log('Account info query attempted within sub settings');
-
-        if (response.data.success) {
-          console.log('account info query worked in sub settings')
-
-          const employerName = response.data.accountInfo.employerName
-          const employerLogoURI = response.data.accountInfo.employerLogoURI
-          this.setState({ employerName, employerLogoURI });
-
-        }
-
-      }).catch((error) => {
-        console.log('Account info query did not work for some reason', error);
-      });
-
       if (this.props.benchmarkId) {
         Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: this.props.benchmarkId } })
         .then((response) => {
@@ -154,7 +140,9 @@ class BenchmarkDetails extends Component {
             console.log('benchmark query worked')
 
             const selectedBenchmark = response.data.benchmark
-            this.setState({ selectedBenchmark, isLoading: false })
+            const shareURL = 'https://guidedcompass.com/employers/pages/' + selectedBenchmark.accountCode + '/benchmarks/' + selectedBenchmark._id
+            this.setState({ selectedBenchmark, isLoading: false, shareURL })
+            this.props.navigation.setOptions({ headerTitle: selectedBenchmark.title })
 
             let selectedApplication = null
             let selectedJob = null
@@ -441,7 +429,7 @@ class BenchmarkDetails extends Component {
             // console.log('show ir: ', selectedBenchmark)
             this.setState({ selectedApplication, selectedJob, workPreferenceTags, interests, traits, knowledge });
 
-            Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { accountCode, pathwayLevel: true } })
+            Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { accountCode: selectedBenchmark.accountCode, pathwayLevel: true } })
             .then((response) => {
               console.log('Benchmarks query within employerDetails attempted');
 
@@ -468,6 +456,27 @@ class BenchmarkDetails extends Component {
             }).catch((error) => {
                 console.log('Benchmark query did not work for some reason', error);
             });
+
+            if (selectedBenchmark.accountCode) {
+              Axios.get('https://www.guidedcompass.com/api/account', { params: { accountCode: selectedBenchmark.accountCode } })
+              .then((response) => {
+                console.log('Account info query attempted within sub settings');
+
+                if (response.data.success) {
+                  console.log('account info query worked in sub settings')
+
+                  const selectedEmployer = response.data.accountInfo
+                  const employerId = response.data.accountInfo._id
+                  const employerName = response.data.accountInfo.employerName
+                  const employerLogoURI = response.data.accountInfo.employerLogoURI
+                  this.setState({ selectedEmployer, employerId, employerName, employerLogoURI });
+
+                }
+
+              }).catch((error) => {
+                console.log('Account info query did not work for some reason', error);
+              });
+            }
 
           } else {
             console.log('benchmark query did not work', response.data.message)
@@ -617,7 +626,7 @@ class BenchmarkDetails extends Component {
   }
 
   renderTags(type, passedArray, limit) {
-    console.log('renderTags: ', type, passedArray, limit)
+    console.log('renderTags: ')
 
     let backgroundColorClass = styles.primaryBackground
     if (type === 'gravitateValues') {
@@ -811,7 +820,7 @@ class BenchmarkDetails extends Component {
 
   closeModal() {
     console.log('closeModal called')
-    this.setState({ modalIsOpen: false, showEndorsementDetails: false  })
+    this.setState({ modalIsOpen: false, showEndorsementDetails: false, showShareButtons: false, showApprovedInfo: false, showBenchmarkInfo: false  })
   }
 
   subNavClicked(subNavSelected) {
@@ -819,28 +828,6 @@ class BenchmarkDetails extends Component {
 
     this.setState({ subNavSelected })
 
-  }
-
-  questionFilterClicked(questionFilterSelected, type) {
-    console.log('questionFilterClicked called', questionFilterSelected, type)
-
-    if (type === 'question') {
-      this.setState({ questionFilterSelected })
-      if (questionFilterSelected === 'Hot') {
-        this.pullGroupPosts(this.state.careerDetails._id, this.state.activeOrg, true)
-      } else {
-        // new
-        this.pullGroupPosts(this.state.careerDetails._id, this.state.activeOrg, false)
-      }
-    } else if (type === 'project') {
-      this.setState({ projectFilterSelected: questionFilterSelected })
-      if (questionFilterSelected === 'Hot') {
-        this.pullProjects(this.state.careerDetails.name, this.state.activeOrg, true)
-      } else {
-        // new
-        this.pullProjects(this.state.careerDetails.name, this.state.activeOrg, false)
-      }
-    }
   }
 
   favoriteItem(item) {
@@ -918,12 +905,12 @@ class BenchmarkDetails extends Component {
     console.log('favorites', favoritesArray)
     this.setState({ favorites: favoritesArray })
   }
-
-  closeModal() {
-    console.log('closeModal called')
-
-    this.setState({ modalIsOpen: false, howShareButtons: false, addQuestion: false, addProject: false, showUpvotes: false, showComments: false })
-  }
+  //
+  // closeModal() {
+  //   console.log('closeModal called')
+  //
+  //   this.setState({ modalIsOpen: false, howShareButtons: false, addQuestion: false, addProject: false, showUpvotes: false, showComments: false })
+  // }
 
   render() {
 
@@ -962,14 +949,19 @@ class BenchmarkDetails extends Component {
                           <View style={[styles.padding30]}>
                             <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
                               <View style={[styles.width50]}>
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showApprovedInfo: true })}>
+                                  <Image source={{ uri: approvedIconBlue}} style={[styles.square25,styles.contain]}/>
+                                </TouchableOpacity>
                               </View>
                               <View style={[styles.calcColumn160,styles.flexCenter]}>
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { objectId: this.state.selectedBenchmark.accountCode })}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { objectId: this.state.employerId })}>
                                   <Image source={(this.state.employerLogoURI) ? { uri: this.state.employerLogoURI} : { uri: benchmarksIconDark}} style={[styles.square80,styles.contain]} />
                                 </TouchableOpacity>
                               </View>
                               <View style={[styles.width50,styles.alignEnd]}>
-                                <Image source={{ uri: approvedIconBlue}} style={[styles.square25,styles.contain]}/>
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showBenchmarkInfo: true })}>
+                                  <Image source={{ uri: questionMarkBlue}} style={[styles.square20,styles.contain]}/>
+                                </TouchableOpacity>
                               </View>
                             </View>
                             <View style={[styles.row10,styles.rowDirection]}>
@@ -979,143 +971,188 @@ class BenchmarkDetails extends Component {
                                 <Text style={[styles.descriptionText2,styles.topPadding15,styles.bottomPadding5,styles.centerText]}>Note: The "perfect candidate" will not be guaranteed a job. This is meant to be a guide for career-seekers, educators, and workforce professionals.</Text>
                               </View>
                             </View>
+                            <View style={[styles.topPadding20,styles.centerText,styles.rowDirection,styles.flex1]}>
+                              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.rightMargin5,styles.rowDirection,styles.flexCenter,styles.flex50]} onPress={() => this.favoriteItem(this.state.selectedBenchmark)}>
+                                <View>
+                                  <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                  {(this.state.favorites.includes(this.state.selectedBenchmark._id)) ? <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} /> : <Image source={{ uri: favoritesIconWhite}} style={[styles.square15,styles.contain]} />}
+                                </View>
+                                <View style={[styles.leftPadding]}>
+                                  <Text style={[styles.standardText,styles.whiteColor]}>{(this.state.favorites.includes(this.state.selectedBenchmark._id)) ? "Favorited" : "Favorite"}</Text>
+                                </View>
+
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={[styles.btnSquarish,styles.whiteBackground,styles.ctaBorder,styles.leftMargin5,styles.rowDirection, styles.flexCenter,styles.flex50]} onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true })}>
+                                <View>
+                                  <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                  <Image source={{ uri: shareIconDark}} style={[styles.square15,styles.contain]} />
+                                </View>
+                                <View style={[styles.leftPadding]}><Text style={[styles.standardText,styles.ctaColor]}>Share</Text></View>
+
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
 
-                        {(this.state.viewMode === 'List') && (
-                          <View>
-                            <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.topMargin30]}>
-                              <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.leftPadding30]}>
-                                {this.state.benchmarkCategories.map((value, index) =>
-                                  <View style={[styles.row15,styles.rightPadding30]}>
-                                    {(value === this.state.subNavSelected) ? (
-                                      <View style={[styles.selectedCarouselItem]}>
-                                        <Text key={value} style={[styles.headingText6]}>{value}</Text>
-                                      </View>
-                                    ) : (
-                                      <TouchableOpacity style={[styles.menuButton]} onPress={() => this.setState({ subNavSelected: value })}>
-                                        <Text key={value} style={[styles.headingText6]}>{value}</Text>
-                                      </TouchableOpacity>
-                                    )}
-                                  </View>
-                                )}
-                              </ScrollView>
+                        <View>
+                          <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.topMargin30]}>
+                            <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.leftPadding30]}>
+                              {this.state.subNavCategories.map((value, index) =>
+                                <View style={[styles.row15,styles.rightPadding30]}>
+                                  {(value === this.state.subNavSelected) ? (
+                                    <View style={[styles.selectedCarouselItem]}>
+                                      <Text key={value} style={[styles.headingText6]}>{value}</Text>
+                                    </View>
+                                  ) : (
+                                    <TouchableOpacity style={[styles.menuButton]} onPress={() => this.setState({ subNavSelected: value })}>
+                                      <Text key={value} style={[styles.headingText6]}>{value}</Text>
+                                    </TouchableOpacity>
+                                  )}
+                                </View>
+                              )}
+                            </ScrollView>
+                          </View>
+                          {/*
+                          <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.headingText3]}>Benchmark Details</Text>
+                              <View style={[styles.spacer]} />
                             </View>
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Weights') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.headingText3]}>Weights</Text>
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>How much does each category matter?</Text>
-                                  <View style={[styles.spacer]} />
+                            {this.state.benchmarkCategories.map((value, optionIndex) =>
+                              <View key={value}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.width30,styles.topPadding5]}>
+                                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.width40]}>
+                                    <Text style={[styles.headingText4,styles.ctaColor]}>{optionIndex + 1}.</Text>
+                                  </View>
+                                  <View style={[styles.calcColumn130]}>
+                                    <Text style={[styles.headingText4,styles.ctaColor]}>{value}</Text>
+                                  </View>
                                 </View>
-
-                                {this.renderAllocation()}
 
                               </View>
                             )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Work Preferences SA') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Work Preferences (Self-Assessment)</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.workPreferenceWeight) ? "(" + this.state.selectedBenchmark.workPreferenceWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
+                          </View>*/}
 
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What the ideal candidate explicitly says they want in their work, work style, and work environment</Text>
-                                </View>
-
-                                {(this.state.workPreferenceTags && this.state.workPreferenceTags.length > 0) && (
-                                  <View style={[styles.row10]}>
-                                    {this.renderTags('workPreferenceTags', this.state.workPreferenceTags)}
-
-                                  </View>
-                                )}
-
-                                {(this.state.selectedBenchmark.workPreferencesMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.workPreferencesMessage}"</Text>
-                                  </View>
-                                )}
-
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Weights') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.headingText3]}>Weights</Text>
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>How much does each category matter?</Text>
+                                <View style={[styles.spacer]} />
                               </View>
-                            )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Interests SA') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              {this.renderAllocation()}
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Work Preferences SA') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
                               <View style={[styles.row10]}>
                                 <View style={[styles.rowDirection]}>
                                   <View style={[styles.calcColumn140]}>
-                                    <Text style={[styles.headingText3]}>Interests (Self-Assessment)</Text>
+                                    <Text style={[styles.headingText3]}>Work Preferences (Self-Assessment)</Text>
                                   </View>
                                   <View style={[styles.width80]}>
-                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interestsWeight) ? "(" + this.state.selectedBenchmark.interestsWeight + "%)" : "(0%)"}</Text>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.workPreferenceWeight) ? "(" + this.state.selectedBenchmark.workPreferenceWeight + "%)" : "(0%)"}</Text>
                                   </View>
                                 </View>
 
-                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Candidate general interests and strong interest inventory</Text>
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What the ideal candidate explicitly says they want in their work, work style, and work environment</Text>
                               </View>
 
-                              {(this.state.selectedBenchmark.generalInterests && this.state.selectedBenchmark.generalInterests.length > 0) && (
+                              {(this.state.workPreferenceTags && this.state.workPreferenceTags.length > 0) && (
                                 <View style={[styles.row10]}>
-                                  {this.renderTags('generalInterests', this.state.selectedBenchmark.generalInterests)}
+                                  {this.renderTags('workPreferenceTags', this.state.workPreferenceTags)}
 
                                 </View>
                               )}
 
-                              {(this.state.interests && this.state.interests.length > 0) && (
-                                <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
-                                  <Text style={[styles.headingText5]}>Strong Interest Inventory Results</Text>
-                                  <Text style={[styles.row5,styles.descriptionText2]}>Strong Interest Inventory is a popular interest assessment used by career counselors. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Strong_Interest_Inventory")}>here</Text>.</Text>
-                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                                  {this.state.interests.map((value, optionIndex) =>
-                                    <View key={value}>
-                                      <View style={[styles.rowDirection]}>
-                                        <View style={[styles.calcColumn190]}>
-                                          <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
-                                        </View>
-                                        <View style={[styles.width70,styles.alignEnd]}>
-                                          <Text style={[styles.rightText,this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
-                                        </View>
-                                      </View>
-                                      <View style={[styles.calcColumn120,styles.topPadding5]}>
-                                        <View style={[styles.miniSpacer]} />
-                                        <View style={[styles.progressBar]} >
-                                          <View style={[styles.filler,this.returnColorClass(optionIndex,'background'), (value.score) ? { flex: value.score * 20 } : { flex: 0 }]} />
-                                        </View>
-                                      </View>
-
-                                      {(optionIndex + 1 !== this.state.interests.length) && (
-                                        <View style={[styles.row10]}>
-                                          <View style={[styles.horizontalLine]} />
-                                        </View>
-                                      )}
-                                    </View>
-                                  )}
-
-                                </View>
-                              )}
-
-                              <View style={[styles.spacer]} />
-
-                              {(this.state.selectedBenchmark.interestsMessage) && (
+                              {(this.state.selectedBenchmark.workPreferencesMessage) && (
                                 <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interestsMessage}"</Text>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.workPreferencesMessage}"</Text>
                                 </View>
                               )}
 
-                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Interests SA') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn140]}>
+                                  <Text style={[styles.headingText3]}>Interests (Self-Assessment)</Text>
+                                </View>
+                                <View style={[styles.width80]}>
+                                  <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interestsWeight) ? "(" + this.state.selectedBenchmark.interestsWeight + "%)" : "(0%)"}</Text>
+                                </View>
+                              </View>
+
+                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Candidate general interests and strong interest inventory</Text>
+                            </View>
+
+                            {(this.state.selectedBenchmark.generalInterests && this.state.selectedBenchmark.generalInterests.length > 0) && (
+                              <View style={[styles.row10]}>
+                                {this.renderTags('generalInterests', this.state.selectedBenchmark.generalInterests)}
 
                               </View>
                             )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Personality SA') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            {(this.state.interests && this.state.interests.length > 0) && (
+                              <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
+                                <Text style={[styles.headingText5]}>Strong Interest Inventory Results</Text>
+                                <Text style={[styles.row5,styles.descriptionText2]}>Strong Interest Inventory is a popular interest assessment used by career counselors. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Strong_Interest_Inventory")}>here</Text>.</Text>
+                                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                {this.state.interests.map((value, optionIndex) =>
+                                  <View key={value}>
+                                    <View style={[styles.rowDirection]}>
+                                      <View style={[styles.calcColumn190]}>
+                                        <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
+                                      </View>
+                                      <View style={[styles.width70,styles.alignEnd]}>
+                                        <Text style={[styles.rightText,this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
+                                      </View>
+                                    </View>
+                                    <View style={[styles.calcColumn120,styles.topPadding5]}>
+                                      <View style={[styles.miniSpacer]} />
+                                      <View style={[styles.progressBar]} >
+                                        <View style={[styles.filler,this.returnColorClass(optionIndex,'background'), (value.score) ? { flex: value.score * 20 } : { flex: 0 }]} />
+                                      </View>
+                                    </View>
+
+                                    {(optionIndex + 1 !== this.state.interests.length) && (
+                                      <View style={[styles.row10]}>
+                                        <View style={[styles.horizontalLine]} />
+                                      </View>
+                                    )}
+                                  </View>
+                                )}
+
+                              </View>
+                            )}
+
+                            <View style={[styles.spacer]} />
+
+                            {(this.state.selectedBenchmark.interestsMessage) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interestsMessage}"</Text>
+                              </View>
+                            )}
+
+                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Personality SA') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
                               <View style={[styles.row10]}>
                                 <View style={[styles.rowDirection]}>
                                   <View style={[styles.calcColumn140]}>
@@ -1129,13 +1166,15 @@ class BenchmarkDetails extends Component {
                                 <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The big five, 16 personalities, and other personality traits</Text>
                               </View>
 
-                              {(this.state.selectedBenchmark.additionalTraits && this.state.selectedBenchmark.additionalTraits.length > 0) && (
+                              {(this.state.selectedBenchmark.additionalTraits && this.state.selectedBenchmark.additionalTraits.length > 0) ? (
                                 <View style={[styles.row10]}>
                                   {this.renderTags('additionalTraits', this.state.selectedBenchmark.additionalTraits)}
                                 </View>
+                              ) : (
+                                <View />
                               )}
 
-                              {(this.state.selectedBenchmark.myersBriggs) && (
+                              {(this.state.selectedBenchmark.myersBriggs) ? (
                                 <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
                                   <Text style={[styles.headingText5]}>16 Personalities Results</Text>
                                   <Text style={[styles.row5,styles.descriptionText2]}>16 personalities / myers briggs is a popular way for career counselors to distinguish how people have different personalities. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Myers–Briggs_Type_Indicator")}>here</Text>.</Text>
@@ -1143,26 +1182,33 @@ class BenchmarkDetails extends Component {
                                   <Text style={[styles.headingText2,styles.ctaColor]}>{this.state.selectedBenchmark.myersBriggs}</Text>
 
                                 </View>
+                              ) : (
+                                <View />
                               )}
 
-                              {(this.state.traits && this.state.traits.length > 0) && (
+                              {(this.state.traits && this.state.traits.length > 0) ? (
                                 <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
                                   <Text style={[styles.headingText5]}>Big Five Results</Text>
                                   <Text style={[styles.row5,styles.descriptionText2]}>The Big Five personality traits is a popular way for career counselors and psychologists to distinguish how people have different personalities. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}>here</Text>.</Text>
                                   <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                   {this.state.traits.map((value, optionIndex) =>
                                     <View key={value}>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn190]}>
+                                          <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
+                                        </View>
+                                        <View style={[styles.width70,styles.alignEnd]}>
+                                          <Text style={[this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
+                                        </View>
+                                      </View>
                                       <View>
-                                        <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
+
                                       </View>
                                       <View style={[styles.topPadding5]}>
                                         <View style={[styles.miniSpacer]} />
                                         <View style={[styles.progressBar]} >
                                           <View style={[styles.filler,this.returnColorClass(optionIndex,'background'),(value.score) ? { flex: value.score } : { flex: 0 }]} />
                                         </View>
-                                      </View>
-                                      <View style={[styles.width60]}>
-                                        <Text style={[this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
                                       </View>
 
                                       {(optionIndex + 1 !== this.state.traits.length) && (
@@ -1174,126 +1220,252 @@ class BenchmarkDetails extends Component {
                                   )}
 
                                 </View>
+                              ) : (
+                                <View />
                               )}
 
-                              {(this.state.selectedBenchmark.personalityMessage) && (
+                              {(this.state.selectedBenchmark.personalityMessage) ? (
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.personalityMessage}"</Text>
                                 </View>
+                              ) : (
+                                <View />
                               )}
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Values SA') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn140]}>
+                                  <Text style={[styles.headingText3]}>Values (Self-Assessment)</Text>
+                                </View>
+                                <View style={[styles.width80]}>
+                                  <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.valuesWeight) ? "(" + this.state.selectedBenchmark.valuesWeight + "%)" : "(0%)"}</Text>
+                                </View>
+                              </View>
+
+                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Ranked values on who candidate gravitates towards and what their employer prefers</Text>
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                            </View>
+
+                            {(this.state.selectedBenchmark.gravitateValues && this.state.selectedBenchmark.gravitateValues.length > 0) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate gravitates toward people who are:</Text>
+                                {this.renderTags('gravitateValues', this.state.selectedBenchmark.gravitateValues, 5)}
+
                               </View>
                             )}
-
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Values SA') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            {(this.state.selectedBenchmark.employerValues && this.state.selectedBenchmark.employerValues.length > 0) && (
                               <View style={[styles.row10]}>
-                                <View style={[styles.rowDirection]}>
-                                  <View style={[styles.calcColumn140]}>
-                                    <Text style={[styles.headingText3]}>Values (Self-Assessment)</Text>
-                                  </View>
-                                  <View style={[styles.width80]}>
-                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.valuesWeight) ? "(" + this.state.selectedBenchmark.valuesWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                </View>
-
-                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Ranked values on who candidate gravitates towards and what their employer prefers</Text>
-                                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                              </View>
-
-                              {(this.state.selectedBenchmark.gravitateValues && this.state.selectedBenchmark.gravitateValues.length > 0) && (
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate gravitates toward people who are:</Text>
-                                  {this.renderTags('gravitateValues', this.state.selectedBenchmark.gravitateValues, 5)}
-
-                                </View>
-                              )}
-                              {(this.state.selectedBenchmark.employerValues && this.state.selectedBenchmark.employerValues.length > 0) && (
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate wants to work with employers that provide:</Text>
-                                  {this.renderTags('employerValues', this.state.selectedBenchmark.employerValues, 5)}
-
-                                </View>
-                              )}
-
-                              {(this.state.selectedBenchmark.valuesMessage) && (
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.valuesMessage}"</Text>
-                                </View>
-                              )}
-
-                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                                <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate wants to work with employers that provide:</Text>
+                                {this.renderTags('employerValues', this.state.selectedBenchmark.employerValues, 5)}
 
                               </View>
                             )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Skills SA') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            {(this.state.selectedBenchmark.valuesMessage) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.valuesMessage}"</Text>
+                              </View>
+                            )}
+
+                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Skills SA') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                            <View style={[styles.row10]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn140]}>
+                                  <Text style={[styles.headingText3]}>Skills (Self-Assessment)</Text>
+                                </View>
+                                <View style={[styles.width80]}>
+                                  <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.skillsWeight) ? "(" + this.state.selectedBenchmark.skillsWeight + "%)" : "(0%)"}</Text>
+                                </View>
+                              </View>
+
+                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The top skills that matter</Text>
+                              <View style={[styles.spacer]} />
+                            </View>
+
+                            <View>
+                              <View style={[styles.row10]}>
+                                {((this.state.selectedBenchmark.highPriorityHardSkills && this.state.selectedBenchmark.highPriorityHardSkills.length > 0) || (this.state.selectedBenchmark.lowPriorityHardSkills && this.state.selectedBenchmark.lowPriorityHardSkills.length > 0)) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}>Top hard skills:</Text>
+
+                                    {(this.state.selectedBenchmark.lowPriorityHardSkills) ? (
+                                      <View>
+                                        {this.renderTags('hardSkills', this.state.selectedBenchmark.highPriorityHardSkills.concat(this.state.selectedBenchmark.lowPriorityHardSkills), 6)}
+                                      </View>
+                                    ) : (
+                                      <View>
+                                        {this.renderTags('hardSkills', this.state.selectedBenchmark.highPriorityHardSkills, 6)}
+                                      </View>
+                                    )}
+
+                                  </View>
+                                )}
+                              </View>
+                              <View style={[styles.row10]}>
+                                {((this.state.selectedBenchmark.highPrioritySoftSkills && this.state.selectedBenchmark.highPrioritySoftSkills.length > 0) || (this.state.selectedBenchmark.lowPrioritySoftSkills && this.state.selectedBenchmark.lowPrioritySoftSkills.length > 0)) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}>Top soft skills:</Text>
+
+                                    {(this.state.selectedBenchmark.lowPrioritySoftSkills) ? (
+                                      <View>
+                                        {this.renderTags('softSkills', this.state.selectedBenchmark.highPrioritySoftSkills.concat(this.state.selectedBenchmark.lowPrioritySoftSkills), 6)}
+                                      </View>
+                                    ) : (
+                                      <View>
+                                        {this.renderTags('softSkills', this.state.selectedBenchmark.highPrioritySoftSkills, 6)}
+                                      </View>
+                                    )}
+
+                                  </View>
+                                )}
+                              </View>
+
+                            </View>
+
+                            {(this.state.selectedBenchmark.skillCourses && this.state.selectedBenchmark.skillCourses.length > 0) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.boldText]}>Suggested Courses: </Text>
+
+                                <View style={[styles.rowDirection,styles.flexWrap]}>
+                                  {this.state.selectedBenchmark.skillCourses.map((value, optionIndex) =>
+                                    <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                      <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.underlineText]}>{value.name}</Text>
+                                      {(optionIndex + 1 !== this.state.selectedBenchmark.skillCourses.length) && (
+                                        <Text style={[styles.standardText]}>,</Text>
+                                      )}
+                                    </View>
+                                  )}
+                                </View>
+
+                              </View>
+                            )}
+
+                            {(this.state.selectedBenchmark.skillCertifications && this.state.selectedBenchmark.skillCertifications.length > 0) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.boldText]}>Suggested Certifications / Badges: </Text>
+
+                                <View style={[styles.rowDirection,styles.flexWrap]}>
+                                  {this.state.selectedBenchmark.skillCertifications.map((value, optionIndex) =>
+                                    <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                      <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.underlineText]}>{value.name}</Text>
+                                      {(optionIndex + 1 !== this.state.selectedBenchmark.skillCertifications.length) && (
+                                        <Text style={[styles.standardText]}>,</Text>
+                                      )}
+                                    </View>
+                                  )}
+                                </View>
+
+                              </View>
+                            )}
+
+                            {(this.state.selectedBenchmark.skillsMessage) && (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.skillsMessage}"</Text>
+                              </View>
+                            )}
+
+                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Education') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
                               <View style={[styles.row10]}>
                                 <View style={[styles.rowDirection]}>
                                   <View style={[styles.calcColumn140]}>
-                                    <Text style={[styles.headingText3]}>Skills (Self-Assessment)</Text>
+                                    <Text style={[styles.headingText3]}>Education</Text>
                                   </View>
                                   <View style={[styles.width80]}>
-                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.skillsWeight) ? "(" + this.state.selectedBenchmark.skillsWeight + "%)" : "(0%)"}</Text>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.educationWeight) ? "(" + this.state.selectedBenchmark.educationWeight + "%)" : "(0%)"}</Text>
                                   </View>
                                 </View>
 
-                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The top skills that matter</Text>
-                                <View style={[styles.spacer]} />
-                              </View>
-
-                              <View>
-                                <View style={[styles.row10]}>
-                                  {((this.state.selectedBenchmark.highPriorityHardSkills && this.state.selectedBenchmark.highPriorityHardSkills.length > 0) || (this.state.selectedBenchmark.lowPriorityHardSkills && this.state.selectedBenchmark.lowPriorityHardSkills.length > 0)) && (
-                                    <View style={[styles.row10]}>
-                                      <Text style={[styles.standardText]}>Top hard skills:</Text>
-
-                                      {(this.state.selectedBenchmark.lowPriorityHardSkills) ? (
-                                        <View>
-                                          {this.renderTags('hardSkills', this.state.selectedBenchmark.highPriorityHardSkills.concat(this.state.selectedBenchmark.lowPriorityHardSkills), 6)}
-                                        </View>
-                                      ) : (
-                                        <View>
-                                          {this.renderTags('hardSkills', this.state.selectedBenchmark.highPriorityHardSkills, 6)}
-                                        </View>
-                                      )}
-
-                                    </View>
-                                  )}
-                                </View>
-                                <View style={[styles.row10]}>
-                                  {((this.state.selectedBenchmark.highPrioritySoftSkills && this.state.selectedBenchmark.highPrioritySoftSkills.length > 0) || (this.state.selectedBenchmark.lowPrioritySoftSkills && this.state.selectedBenchmark.lowPrioritySoftSkills.length > 0)) && (
-                                    <View style={[styles.row10]}>
-                                      <Text style={[styles.standardText]}>Top soft skills:</Text>
-
-                                      {(this.state.selectedBenchmark.lowPrioritySoftSkills) ? (
-                                        <View>
-                                          {this.renderTags('softSkills', this.state.selectedBenchmark.highPrioritySoftSkills.concat(this.state.selectedBenchmark.lowPrioritySoftSkills), 6)}
-                                        </View>
-                                      ) : (
-                                        <View>
-                                          {this.renderTags('softSkills', this.state.selectedBenchmark.highPrioritySoftSkills, 6)}
-                                        </View>
-                                      )}
-
-                                    </View>
-                                  )}
-                                </View>
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The educational components that matter</Text>
 
                               </View>
 
-                              {(this.state.selectedBenchmark.skillCourses && this.state.selectedBenchmark.skillCourses.length > 0) && (
+                              {(this.state.knowledge && this.state.knowledge.length > 0) ? (
+                                <View style={[styles.row10]}>
+                                  {this.renderTags('knowledge', this.state.knowledge)}
+
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              <View style={[styles.spacer]}/>
+
+                              {(this.state.selectedBenchmark.degreeRequirements) ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Degree Requirements:</Text> {this.state.selectedBenchmark.degreeRequirements}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.idealMajors && this.state.selectedBenchmark.idealMajors.length > 0) ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Ideal Majors:</Text> {this.state.selectedBenchmark.idealMajors.toString().replace(/,/g,", ")}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.gpaRange && this.state.selectedBenchmark.gpaRange !== '') ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>GPA Range:</Text> {this.state.selectedBenchmark.gpaRange}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.gradYearRange && this.state.selectedBenchmark.gradYearRange !== '') ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Grad Year Range:</Text> {this.state.selectedBenchmark.gradYearRange}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.testScores && this.state.selectedBenchmark.testScores !== '') ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Standardized Test Scores:</Text> {this.state.selectedBenchmark.testScores}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.courseHours && this.state.selectedBenchmark.courseHours !== '') ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Hours of Relevant Coursework Completed:</Text> {this.state.selectedBenchmark.courseHours}</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              {(this.state.selectedBenchmark.courses && this.state.selectedBenchmark.courses.length > 0) ? (
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.boldText]}>Suggested Courses: </Text>
 
                                   <View style={[styles.rowDirection,styles.flexWrap]}>
-                                    {this.state.selectedBenchmark.skillCourses.map((value, optionIndex) =>
+                                    {this.state.selectedBenchmark.courses.map((value, optionIndex) =>
                                       <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
-                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
-                                        {(optionIndex + 1 !== this.state.selectedBenchmark.skillCourses.length) && (
+                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.underlineText]}>{value.name}</Text>
+                                        {(optionIndex + 1 !== this.state.selectedBenchmark.courses.length) && (
                                           <Text style={[styles.standardText]}>,</Text>
                                         )}
                                       </View>
@@ -1301,17 +1473,111 @@ class BenchmarkDetails extends Component {
                                   </View>
 
                                 </View>
+                              ) : (
+                                <View />
                               )}
 
-                              {(this.state.selectedBenchmark.skillCertifications && this.state.selectedBenchmark.skillCertifications.length > 0) && (
+                              {(this.state.selectedBenchmark.certifications && this.state.selectedBenchmark.certifications.length > 0) ? (
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.boldText]}>Suggested Certifications / Badges: </Text>
 
                                   <View style={[styles.rowDirection,styles.flexWrap]}>
-                                    {this.state.selectedBenchmark.skillCertifications.map((value, optionIndex) =>
+                                    {this.state.selectedBenchmark.certifications.map((value, optionIndex) =>
                                       <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
-                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
-                                        {(optionIndex + 1 !== this.state.selectedBenchmark.skillCertifications.length) && (
+                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.underlineText]}>{value.name}</Text>
+                                        {(optionIndex + 1 !== this.state.selectedBenchmark.certifications.length) && (
+                                          <Text style={[styles.standardText]}>,</Text>
+                                        )}
+                                      </View>
+                                    )}
+                                  </View>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              <View style={[styles.spacer]}/>
+
+                              {(this.state.selectedBenchmark.educationMessage) ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.educationMessage}"</Text>
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Endorsements') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Endorsements</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.endorsementWeight) ? "(" + this.state.selectedBenchmark.endorsementWeight + "%)" : "(0%)"}</Text>
+                                  </View>
+                                </View>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of 3rd party skill and knowledge endorsements</Text>
+                              </View>
+
+                              {(this.state.selectedBenchmark.endorsementsMessage) && (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.endorsementsMessage}"</Text>
+                                </View>
+                              )}
+
+                              <View style={[styles.row10]}>
+                                <TouchableOpacity onPress={() => this.prepareEndorsement()}><Text style={[styles.standardText,styles.ctaColor,styles.underlineText,styles.offsetUnderline]}>See Example Endorsement</Text></TouchableOpacity>
+                              </View>
+
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Projects') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Projects</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.projectWeight) ? "(" + this.state.selectedBenchmark.projectWeight + "%)" : "(0%)"}</Text>
+                                  </View>
+                                </View>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant projects, and what type of project work</Text>
+                              </View>
+
+                              {(this.state.projectTags && this.state.projectTags.length > 0) && (
+                                <View style={[styles.row10]}>
+                                  {this.renderTags('projectTags', this.state.projectTags)}
+
+                                </View>
+                              )}
+
+                              {(this.state.selectedBenchmark.projectHours && this.state.selectedBenchmark.projectHours !== '') && (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Recommended Invested Hours:</Text> {this.state.selectedBenchmark.projectHours}</Text>
+                                </View>
+                              )}
+
+                              {(this.state.selectedBenchmark.exampleProjects && this.state.selectedBenchmark.exampleProjects.length > 0) && (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.boldText]}>Example Impressive Projects: </Text>
+
+                                  <View style={[styles.rowDirection,styles.flexWrap]}>
+                                    {this.state.selectedBenchmark.exampleProjects.map((value, optionIndex) =>
+                                      <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.underlineText]}>{value.name}</Text>
+                                        {(optionIndex + 1 !== this.state.selectedBenchmark.exampleProjects.length) && (
                                           <Text style={[styles.standardText]}>,</Text>
                                         )}
                                       </View>
@@ -1321,417 +1587,268 @@ class BenchmarkDetails extends Component {
                                 </View>
                               )}
 
-                              {(this.state.selectedBenchmark.skillsMessage) && (
+                              {(this.state.selectedBenchmark.projectsMessage) && (
                                 <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.skillsMessage}"</Text>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.projectsMessage}"</Text>
                                 </View>
                               )}
 
                               <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Experience') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Experience</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.experienceWeight) ? "(" + this.state.selectedBenchmark.experienceWeight + "%)" : "(0%)"}</Text>
+                                  </View>
+                                </View>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant experience, and what type of experience</Text>
                               </View>
-                            )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Education') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              {(this.state.selectedBenchmark.experienceMessage) && (
                                 <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Education</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.educationWeight) ? "(" + this.state.selectedBenchmark.educationWeight + "%)" : "(0%)"}</Text>
-                                    </View>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.experienceMessage}"</Text>
+                                </View>
+                              )}
+
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Resume') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Resume</Text>
                                   </View>
-
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The educational components that matter</Text>
-
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.resumeWeight) ? "(" + this.state.selectedBenchmark.resumeWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
 
-                                {(this.state.knowledge && this.state.knowledge.length > 0) ? (
-                                  <View style={[styles.row10]}>
-                                    {this.renderTags('knowledge', this.state.knowledge)}
-
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                <View style={[styles.spacer]}/>
-
-                                {(this.state.selectedBenchmark.degreeRequirements) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Degree Requirements:</Text> {this.state.selectedBenchmark.degreeRequirements}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.idealMajors && this.state.selectedBenchmark.idealMajors.length > 0) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Ideal Majors:</Text> {this.state.selectedBenchmark.idealMajors.toString().replace(/,/g,", ")}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.gpaRange && this.state.selectedBenchmark.gpaRange !== '') ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>GPA Range:</Text> {this.state.selectedBenchmark.gpaRange}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.gradYearRange && this.state.selectedBenchmark.gradYearRange !== '') ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Grad Year Range:</Text> {this.state.selectedBenchmark.gradYearRange}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.testScores && this.state.selectedBenchmark.testScores !== '') ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Standardized Test Scores:</Text> {this.state.selectedBenchmark.testScores}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.courseHours && this.state.selectedBenchmark.courseHours !== '') ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Hours of Relevant Coursework Completed:</Text> {this.state.selectedBenchmark.courseHours}</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.courses && this.state.selectedBenchmark.courses.length > 0) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.boldText]}>Suggested Courses: </Text>
-
-                                    <View style={[styles.rowDirection,styles.flexWrap]}>
-                                      {this.state.selectedBenchmark.courses.map((value, optionIndex) =>
-                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
-                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
-                                          {(optionIndex + 1 !== this.state.selectedBenchmark.courses.length) && (
-                                            <Text style={[styles.standardText]}>,</Text>
-                                          )}
-                                        </View>
-                                      )}
-                                    </View>
-
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                {(this.state.selectedBenchmark.certifications && this.state.selectedBenchmark.certifications.length > 0) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.boldText]}>Suggested Certifications / Badges: </Text>
-
-                                    <View style={[styles.rowDirection,styles.flexWrap]}>
-                                      {this.state.selectedBenchmark.certifications.map((value, optionIndex) =>
-                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
-                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
-                                          {(optionIndex + 1 !== this.state.selectedBenchmark.certifications.length) && (
-                                            <Text style={[styles.standardText]}>,</Text>
-                                          )}
-                                        </View>
-                                      )}
-                                    </View>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                <View style={[styles.spacer]}/>
-
-                                {(this.state.selectedBenchmark.educationMessage) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.educationMessage}"</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's resume</Text>
                               </View>
-                            )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Endorsements') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              {(this.state.selectedBenchmark.resumeMessage) && (
                                 <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Endorsements</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.endorsementWeight) ? "(" + this.state.selectedBenchmark.endorsementWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.resumeMessage}"</Text>
+                                </View>
+                              )}
 
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of 3rd party skill and knowledge endorsements</Text>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Cover Letter') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Cover Letter</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.coverLetterWeight) ? "(" + this.state.selectedBenchmark.coverLetterWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
 
-                                {(this.state.selectedBenchmark.endorsementsMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.endorsementsMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.row10]}>
-                                  <TouchableOpacity onPress={() => this.prepareEndorsement()}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}>See Example Endorsement</Text></TouchableOpacity>
-                                </View>
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's cover letter</Text>
                               </View>
-                            )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Projects') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              {(this.state.selectedBenchmark.coverLetterMessage) && (
                                 <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Projects</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.projectWeight) ? "(" + this.state.selectedBenchmark.projectWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.coverLetterMessage}"</Text>
+                                </View>
+                              )}
 
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant projects, and what type of project work</Text>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Interview') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Interview</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interviewWeight) ? "(" + this.state.selectedBenchmark.interviewWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
 
-                                {(this.state.projectTags && this.state.projectTags.length > 0) && (
-                                  <View style={[styles.row10]}>
-                                    {this.renderTags('projectTags', this.state.projectTags)}
-
-                                  </View>
-                                )}
-
-                                {(this.state.selectedBenchmark.projectHours && this.state.selectedBenchmark.projectHours !== '') && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Recommended Invested Hours:</Text> {this.state.selectedBenchmark.projectHours}</Text>
-                                  </View>
-                                )}
-
-                                {(this.state.selectedBenchmark.exampleProjects && this.state.selectedBenchmark.exampleProjects.length > 0) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.boldText]}>Example Impressive Projects: </Text>
-
-                                    <View style={[styles.rowDirection,styles.flexWrap]}>
-                                      {this.state.selectedBenchmark.exampleProjects.map((value, optionIndex) =>
-                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
-                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
-                                          {(optionIndex + 1 !== this.state.selectedBenchmark.exampleProjects.length) && (
-                                            <Text style={[styles.standardText]}>,</Text>
-                                          )}
-                                        </View>
-                                      )}
-                                    </View>
-
-                                  </View>
-                                )}
-
-                                {(this.state.selectedBenchmark.projectsMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.projectsMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters in the ideal candidate's interview</Text>
                               </View>
-                            )}
 
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Experience') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Experience</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.experienceWeight) ? "(" + this.state.selectedBenchmark.experienceWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
+                              <View style={[styles.spacer]}/>
 
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant experience, and what type of experience</Text>
-                                </View>
+                              {(this.state.selectedBenchmark.interviewRubric && this.state.selectedBenchmark.interviewRubric.length > 0) && (
+                                <View style={[styles.row20]}>
+                                  <Text style={[styles.headingText5]}>Interview Rubric</Text>
+                                  <View style={[styles.spacer]}/>
 
-                                {(this.state.selectedBenchmark.experienceMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.experienceMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
-                              </View>
-                            )}
-
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Resume') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Resume</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.resumeWeight) ? "(" + this.state.selectedBenchmark.resumeWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
-
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's resume</Text>
-                                </View>
-
-                                {(this.state.selectedBenchmark.resumeMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.resumeMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
-                              </View>
-                            )}
-
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Cover Letter') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Cover Letter</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.coverLetterWeight) ? "(" + this.state.selectedBenchmark.coverLetterWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
-
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's cover letter</Text>
-                                </View>
-
-                                {(this.state.selectedBenchmark.coverLetterMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.coverLetterMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
-                              </View>
-                            )}
-
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Interview') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Interview</Text>
-                                    </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interviewWeight) ? "(" + this.state.selectedBenchmark.interviewWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
-
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters in the ideal candidate's interview</Text>
-                                </View>
-
-                                <View style={[styles.spacer]}/>
-
-                                {(this.state.selectedBenchmark.interviewRubric && this.state.selectedBenchmark.interviewRubric.length > 0) && (
-                                  <View style={[styles.row20]}>
-                                    <Text style={[styles.headingText5]}>Interview Rubric</Text>
-                                    <View style={[styles.spacer]}/>
-
-                                    <View style={[styles.standardBorder]}>
-                                      <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
-                                        <View style={[styles.flex33,styles.padding20]}>
-                                          <Text style={[styles.standardText,styles.boldText]}>Criteria</Text>
-                                        </View>
-                                        <View style={[styles.flex33,styles.padding20]}>
-                                          <Text style={[styles.standardText,styles.boldText]}>Sample Questions</Text>
-                                        </View>
-                                        <View style={[styles.flex33,styles.padding20]}>
-                                          <Text style={[styles.standardText,styles.boldText]}>Qualities of Great Scores</Text>
-                                        </View>
-
+                                  <View style={[styles.standardBorder]}>
+                                    <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
+                                      <View style={[styles.flex33,styles.padding20]}>
+                                        <Text style={[styles.standardText,styles.boldText]}>Criteria</Text>
+                                      </View>
+                                      <View style={[styles.flex33,styles.padding20]}>
+                                        <Text style={[styles.standardText,styles.boldText]}>Sample Questions</Text>
+                                      </View>
+                                      <View style={[styles.flex33,styles.padding20]}>
+                                        <Text style={[styles.standardText,styles.boldText]}>Qualities of Great Scores</Text>
                                       </View>
 
-                                      {this.state.selectedBenchmark.interviewRubric.map((value, optionIndex) =>
-                                        <View key={value}>
-                                          <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
-                                            <View style={[styles.flex33,styles.padding20]}>
-                                              <Text style={[styles.boldText]}>{optionIndex + 1}. {value.criterion}</Text>
-                                            </View>
-                                            <View style={[styles.flex33,styles.padding20]}>
-                                              {value.questions.map((value2, optionIndex2) =>
-                                                <View>
-                                                  <Text style={[styles.standardText]}>{value2}</Text>
-                                                </View>
-                                              )}
-                                            </View>
-                                            <View style={[styles.flex33,styles.padding20]}>
-                                              {value.answers.map((value2, optionIndex2) =>
-                                                <View>
-                                                  <Text style={[styles.standardText]}>{value2}</Text>
-                                                </View>
-                                              )}
-                                            </View>
+                                    </View>
 
+                                    {this.state.selectedBenchmark.interviewRubric.map((value, optionIndex) =>
+                                      <View key={value}>
+                                        <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
+                                          <View style={[styles.flex33,styles.padding20]}>
+                                            <Text style={[styles.boldText]}>{optionIndex + 1}. {value.criterion}</Text>
+                                          </View>
+                                          <View style={[styles.flex33,styles.padding20]}>
+                                            {value.questions.map((value2, optionIndex2) =>
+                                              <View>
+                                                <Text style={[styles.standardText]}>{value2}</Text>
+                                              </View>
+                                            )}
+                                          </View>
+                                          <View style={[styles.flex33,styles.padding20]}>
+                                            {value.answers.map((value2, optionIndex2) =>
+                                              <View>
+                                                <Text style={[styles.standardText]}>{value2}</Text>
+                                              </View>
+                                            )}
+                                          </View>
+
+                                        </View>
+                                      </View>
+                                    )}
+                                  </View>
+
+                                </View>
+                              )}
+
+                              {(this.state.selectedBenchmark.interviewMessage) && (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interviewMessage}"</Text>
+                                </View>
+                              )}
+
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Ideal Profile' || this.state.subNavSelected === 'Diversity') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Diversity</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.adversityScoreWeight) ? "(" + this.state.selectedBenchmark.adversityScoreWeight + "%)" : "(0%)"}</Text>
+                                  </View>
+                                </View>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What valuable diverse candidates look like to us</Text>
+                              </View>
+
+                              {(this.state.selectedBenchmark.adversityScoreMessage) && (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.adversityScoreMessage}"</Text>
+                                </View>
+                              )}
+
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'About') && (
+                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              {(this.state.selectedEmployer) && (
+                                <View>
+
+                                  <Text style={[styles.headingText3,styles.bottomPadding]}>About {this.state.employerName}</Text>
+
+                                  {(this.state.selectedEmployer.videos && this.state.selectedEmployer.videos.length > 0) ? (
+                                    <View>
+                                      {this.state.selectedEmployer.videos.map((value, index) =>
+                                        <View key={value}>
+                                          <View>
+                                            <View style={[styles.topMargin20]}>
+                                              <View>
+                                                <View>
+                                                  <WebView
+                                                    style={[styles.calcColumn60,styles.screenHeight20]}
+                                                    javaScriptEnabled={true}
+                                                    source={{uri: value}}
+                                                  />
+
+                                                </View>
+
+                                              </View>
+                                            </View>
                                           </View>
                                         </View>
                                       )}
+
                                     </View>
-
-                                  </View>
-                                )}
-
-                                {(this.state.selectedBenchmark.interviewMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interviewMessage}"</Text>
-                                  </View>
-                                )}
-
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-
-                              </View>
-                            )}
-
-                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Diversity') && (
-                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                                <View style={[styles.row10]}>
-                                  <View style={[styles.rowDirection]}>
-                                    <View style={[styles.calcColumn140]}>
-                                      <Text style={[styles.headingText3]}>Diversity</Text>
+                                  ) : (
+                                    <View>
+                                      <Text style={[styles.standardText,styles.descriptionTextColor]}>No Videos Yet</Text>
                                     </View>
-                                    <View style={[styles.width80]}>
-                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.adversityScoreWeight) ? "(" + this.state.selectedBenchmark.adversityScoreWeight + "%)" : "(0%)"}</Text>
-                                    </View>
-                                  </View>
+                                  )}
 
-                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What valuable diverse candidates look like to us</Text>
+                                  <View style={[styles.spacer]} />
+
+                                  {(this.state.selectedEmployer.description) && (
+                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.row10]}>{this.state.selectedEmployer.description}</Text>
+                                  )}
+
+                                  {(this.state.selectedEmployer.employerCulture) && (
+                                    <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{this.state.selectedEmployer.employerCulture}</Text>
+                                  )}
+
+                                  {(this.state.selectedEmployer.employerType) && (
+                                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Type:</Text> {this.state.selectedEmployer.employerType}</Text>
+                                  )}
+
+                                  {(this.state.selectedEmployer.employeeCount) && (
+                                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Employees:</Text> {this.state.selectedEmployer.employeeCount}</Text>
+                                  )}
+
+                                  {(this.state.selectedEmployer.employeeGrowth) && (
+                                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Growth:</Text> {this.state.selectedEmployer.employeeGrowth}</Text>
+                                  )}
+
+                                  {(this.state.selectedEmployer.employerLocation) && (
+                                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Location:</Text> {this.state.selectedEmployer.employerLocation}</Text>
+                                  )}
+
                                 </View>
+                              )}
 
-                                {(this.state.selectedBenchmark.adversityScoreMessage) && (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.adversityScoreMessage}"</Text>
-                                  </View>
-                                )}
+                            </View>
+                          )}
 
-                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                          <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
-                              </View>
-                            )}
-
-                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-
-                          </View>
-                        )}
+                        </View>
                       </View>
                     </View>
 
@@ -1746,6 +1863,70 @@ class BenchmarkDetails extends Component {
               </View>
             )}
           </View>
+
+          <Modal isVisible={this.state.modalIsOpen} style={styles.modal} key="Modal">
+           {(this.state.showShareButtons) && (
+             <View style={[styles.flex1,styles.padding20,styles.centerText]}>
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                <View style={[styles.row10]}>
+                  <Text style={[styles.headingText4,styles.centerText]}>Share the {this.state.selectedBenchmark.title} Benchmark with Friends!</Text>
+                </View>
+
+                <View style={[styles.row30]}>
+                  <Text style={[styles.descriptionText1,styles.centerText]}>Share this link:</Text>
+                  <TouchableOpacity onPress={() => Linking.openURL(this.state.shareURL)}><Text style={[styles.standardText,styles.ctaColor,styles.boldText,styles.centerText]}>{this.state.shareURL}</Text></TouchableOpacity>
+                </View>
+
+                <View style={[styles.spacer]} />
+
+                <View style={[styles.topPadding20]}>
+                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                </View>
+
+              </View>
+           )}
+
+           {(this.state.showApprovedInfo) && (
+             <ScrollView style={[styles.flex1,styles.padding20]}>
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                <View style={[styles.row10]}>
+                  <Text style={[styles.headingText4,styles.centerText]}>{this.state.selectedBenchmark.title} has been approved by {this.state.employerName}</Text>
+                </View>
+
+                <View style={[styles.row30,styles.rowDirection]}>
+                  <Text style={[styles.descriptionText1,styles.centerText]}>{this.state.employerName} has indicated that this benchmark is relective of how they evaluate candidates for the {this.state.selectedBenchmark.pathway} pathway. This benchmark may be even attached to some of their postings. However, {this.state.employerName} is not legally bound to use this criteria when evaluating candidates.</Text>
+                </View>
+
+                <View style={[styles.row10]}>
+                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                </View>
+
+              </ScrollView>
+           )}
+
+           {(this.state.showBenchmarkInfo) && (
+             <ScrollView style={[styles.flex1,styles.padding20]}>
+              {console.log('showApprovedInfo: ', this.state.showApprovedInfo)}
+               <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+               <View style={[styles.row10]}>
+                 <Text style={[styles.headingText4,styles.centerText]}>What is a Benchmark?</Text>
+               </View>
+
+               <View style={[styles.row30,styles.rowDirection]}>
+                 <Text style={[styles.descriptionText1,styles.centerText]}>Benchmarks are "ideal candidate profiles" and serve as the foundation for Guided Compass. Employers and workforce programs define benchmarks (i.e., ideal candidates in terms of skills, knowledge, interests, and more) and attach them to work opportunities, project opportunities, programs and more. Our algorithms use benchmarks to recommend opportunities to you and your applications to them. Learn more about our benchmarks <Text onPress={() => Linking.openURL('https://guidedcompass.com/benefits/transparent-pathways')} style={[styles.descriptionText1,styles.ctaColor,styles.underlineText]}>here</Text>.</Text>
+               </View>
+
+               <View style={[styles.row10]}>
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
+               </View>
+
+              </ScrollView>
+           )}
+
+         </Modal>
         </ScrollView>
 
     )

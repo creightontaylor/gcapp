@@ -706,7 +706,7 @@ module.exports = StyleSheet.create({
     fontStyle: 'italic'
   },
   underlineText: {
-    textDecoration: 'underline'
+    textDecorationLine: 'underline'
   },
   offsetUnderline: {
     textUnderlineOffset: 5

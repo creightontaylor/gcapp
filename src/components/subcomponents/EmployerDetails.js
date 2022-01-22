@@ -56,8 +56,6 @@ class EmployerDetails extends Component {
   retrieveData = async() => {
     try {
 
-      console.log('in E')
-
       const emailId = await AsyncStorage.getItem('email')
       const email = emailId
       const username = await AsyncStorage.getItem('username');
@@ -395,7 +393,7 @@ class EmployerDetails extends Component {
                     </View>
                   ) : (
                     <View>
-                      <Text style={[styles.descriptionTextColor]}>No Videos Yet</Text>
+                      <Text style={[styles.standardText,styles.descriptionTextColor]}>No Videos Yet</Text>
                     </View>
                   )}
 
@@ -410,27 +408,27 @@ class EmployerDetails extends Component {
                   <View style={[styles.spacer]} />
 
                   {(this.state.employer.description) && (
-                    <Text style={[styles.descriptionTextColor,styles.row10]}>{this.state.employer.description}</Text>
+                    <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.row10]}>{this.state.employer.description}</Text>
                   )}
 
                   {(this.state.employer.employerCulture) && (
-                    <Text style={[styles.descriptionTextColor]}>{this.state.employer.employerCulture}</Text>
+                    <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{this.state.employer.employerCulture}</Text>
                   )}
 
                   {(this.state.employer.employerType) && (
-                    <Text style={[styles.row10]}><Text style={[styles.boldText]}>Type:</Text> {this.state.employer.employerType}</Text>
+                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Type:</Text> {this.state.employer.employerType}</Text>
                   )}
 
                   {(this.state.employer.employeeCount) && (
-                    <Text style={[styles.row10]}><Text style={[styles.boldText]}>Employees:</Text> {this.state.employer.employeeCount}</Text>
+                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Employees:</Text> {this.state.employer.employeeCount}</Text>
                   )}
 
                   {(this.state.employer.employeeGrowth) && (
-                    <Text style={[styles.row10]}><Text style={[styles.boldText]}>Growth:</Text> {this.state.employer.employeeGrowth}</Text>
+                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Growth:</Text> {this.state.employer.employeeGrowth}</Text>
                   )}
 
                   {(this.state.employer.employerLocation) && (
-                    <Text style={[styles.row10]}><Text style={[styles.boldText]}>Location:</Text> {this.state.employer.employerLocation}</Text>
+                    <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Location:</Text> {this.state.employer.employerLocation}</Text>
                   )}
                 </View>
               )}
@@ -441,7 +439,7 @@ class EmployerDetails extends Component {
 
                   <View style={[styles.spacer]} />
 
-                  <Text style={[styles.descriptionTextColor]}>No Posts Yet</Text>
+                  <Text style={[styles.standardText,styles.descriptionTextColor]}>No Posts Yet</Text>
                 </View>
               )}
 
@@ -452,7 +450,7 @@ class EmployerDetails extends Component {
                   <View style={[styles.spacer]} />
 
                   {(!this.state.events || this.state.events.length === 0) ? (
-                    <Text style={[styles.descriptionTextColor]}>No active events available to your organization</Text>
+                    <Text style={[styles.standardText,styles.descriptionTextColor]}>No active events available to your organization</Text>
                   ) : (
                     <View>
                       {this.state.events.map((item, index) =>
@@ -542,7 +540,7 @@ class EmployerDetails extends Component {
                   <View style={[styles.spacer]} />
 
                   {(!this.state.projects || this.state.projects.length === 0) ? (
-                    <Text style={[styles.descriptionTextColor]}>No active project opportunities available to your organization</Text>
+                    <Text style={[styles.standardText,styles.descriptionTextColor]}>No active project opportunities available to your organization</Text>
                   ) : (
                     <View>
                       {this.state.projects.map((item, index) =>
@@ -625,7 +623,7 @@ class EmployerDetails extends Component {
                   <View style={[styles.spacer]} />
 
                   {(!this.state.work || this.state.work.length === 0) ? (
-                    <Text style={[styles.descriptionTextColor]}>No active work opportunities available to your organization</Text>
+                    <Text style={[styles.standardText,styles.descriptionTextColor]}>No active work opportunities available to your organization</Text>
                   ) : (
                     <View>
                       {this.state.work.map((item, index) =>
@@ -711,7 +709,7 @@ class EmployerDetails extends Component {
                   <View style={[styles.spacer]} />
 
                   {(!this.state.benchmarks || this.state.benchmarks.length === 0) ? (
-                    <Text style={[styles.descriptionTextColor]}>No benchmarks available to your organization</Text>
+                    <Text style={[styles.standardText,styles.descriptionTextColor]}>No benchmarks available to your organization</Text>
                   ) : (
                     <View>
                       {this.state.benchmarks.map((item, index) =>

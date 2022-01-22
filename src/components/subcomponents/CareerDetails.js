@@ -78,6 +78,7 @@ class CareerDetails extends Component {
     this.renderCourses = this.renderCourses.bind(this)
     this.renderJobs = this.renderJobs.bind(this)
     this.addItem = this.addItem.bind(this)
+    this.closeModal = this.closeModal.bind(this)
 
     this.postGroupPost = this.postGroupPost.bind(this)
     this.voteOnItem = this.voteOnItem.bind(this)
@@ -867,7 +868,7 @@ class CareerDetails extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, howShareButtons: false, addQuestion: false, addProject: false, showUpvotes: false, showComments: false })
+    this.setState({ modalIsOpen: false, showShareButtons: false, addQuestion: false, addProject: false, showUpvotes: false, showComments: false })
   }
 
   renderCourses() {
