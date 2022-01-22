@@ -54,6 +54,7 @@ import Employers from './src/components/Employers';
 import ChangePassword from './src/components/ChangePassword';
 import AddWorkspaces from './src/components/AddWorkspaces';
 import OrgDetails from './src/components/OrgDetails';
+import BenchmarkDetails from './src/components/BenchmarkDetails';
 
 const orgLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/full-guided-compass-logo.png"
 const notificationsIconDark = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/notifications-icon-dark.png"
@@ -344,6 +345,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="AddWorkspaces" component={AddWorkspaces} />
           <Stack.Screen name="OrgDetails" component={OrgDetails} />
           <Stack.Screen name="Walkthrough" component={Walkthrough} options={{ headerShown: false }} />
+          <Stack.Screen name="BenchmarkDetails" component={BenchmarkDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     );

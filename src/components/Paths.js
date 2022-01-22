@@ -6,6 +6,7 @@ const styles = require('./css/style');
 //import PushNotification from 'react-native-push-notification';
 //import { configurePushNotifications } from '../services/PushNotifications';
 
+import SubBenchmarks from './subcomponents/Benchmarks';
 import SubCareers from './subcomponents/Careers';
 import SubFinancials from './subcomponents/Financials';
 import SubTrends from './subcomponents/Trends';
@@ -14,7 +15,9 @@ class Paths extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      subNavCategories: ['Careers','Trends'],
+      showBenchmarks: true,
+
+      subNavCategories: [],
       subNavSelected: 'Careers',
       favorites: [],
     }
@@ -57,8 +60,16 @@ class Paths extends Component {
         selectedGoal = this.props.route.params.selectedGoal
 
       }
-      console.log('show me the money: ', subNavSelected,this.props.route.params)
-      this.setState({ subNavSelected,calculateMatches,selectedGoal})
+
+      // console.log('show me the money: ', subNavSelected,this.props.route.params)
+      let subNavCategories = ['Careers','Trends']
+
+      if (this.state.showBenchmarks) {
+        subNavCategories = ['Benchmarks','Careers','Trends']
+        subNavSelected = 'Benchmarks'
+      }
+
+      this.setState({ subNavSelected,calculateMatches,selectedGoal,subNavCategories})
      } catch (error) {
        // Error retrieving data
        console.log('there was an error in parent paths: ', error)
@@ -93,6 +104,12 @@ class Paths extends Component {
           </View>
           <View style={styles.horizontalLine} />
         </View>
+
+        {(this.state.subNavSelected === 'Benchmarks') && (
+          <View>
+            <SubBenchmarks navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} selectedGoal={this.state.selectedGoal} />
+          </View>
+        )}
 
         {(this.state.subNavSelected === 'Careers') && (
           <View>
