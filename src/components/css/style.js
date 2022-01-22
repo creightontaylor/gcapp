@@ -702,6 +702,9 @@ module.exports = StyleSheet.create({
   boldText: {
     fontWeight: 'bold'
   },
+  italicizeText: {
+    fontStyle: 'italic'
+  },
   underlineText: {
     textDecoration: 'underline'
   },
@@ -1292,6 +1295,9 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     borderColor: primaryColor
   },
+  primaryColor: {
+    color: primaryColor
+  },
   secondaryBackground: {
     backgroundColor: '#70DBDB'
   },
@@ -1301,6 +1307,9 @@ module.exports = StyleSheet.create({
   secondaryBorder: {
     borderWidth: 1,
     borderColor: '#70DBDB',
+  },
+  secondaryColor: {
+    color: '#70DBDB'
   },
   tertiaryBackground: {
     backgroundColor: 'rgba(0,190,160,1)'
@@ -1312,6 +1321,9 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(0,190,160,1)',
   },
+  tertiaryColor: {
+    color: 'rgba(0,190,160,1)'
+  },
   quaternaryBackground: {
     backgroundColor: '#0d98ba'
   },
@@ -1321,6 +1333,9 @@ module.exports = StyleSheet.create({
   quaternaryBorder: {
     borderWidth: 1,
     borderColor: '#0d98ba',
+  },
+  quaternaryColor: {
+    color: '#AFEEEE'
   },
   quinaryBackground: {
     backgroundColor: '#01796F'
@@ -1332,17 +1347,65 @@ module.exports = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#0d98ba',
   },
+  quinaryColor: {
+    color: '#01796F'
+  },
   senaryBackground: {
     backgroundColor: '#FFC8C8'
   },
   senaryBackgroundLight: {
     backgroundColor: 'rgba(255,200,200,0.5)'
   },
+  senaryColor: {
+    color: '#FFC8C8'
+  },
   septaryBackground: {
     backgroundColor: '#E6E6FA'
   },
   septaryBackgroundLight: {
     backgroundColor: 'rgba(230,230,250,0.5)'
+  },
+  septaryColor: {
+    color: '#E6E6FA'
+  },
+  nonaryBackground: {
+    backgroundColor: 'rgba(254,183,0,1)'
+  },
+  nonaryColor: {
+    color: 'rgba(254,183,0,1)'
+  },
+  denaryBackground: {
+    backgroundColor: 'purple'
+  },
+  denaryColor: {
+    color: 'purple'
+  },
+  elevenBackground: {
+    backgroundColor: 'yellow'
+  },
+  elevenColor: {
+    color: 'yellow'
+  },
+  twelveBackground: {
+    backgroundColor: 'green'
+  },
+  twelveColor: {
+    color: 'green'
+  },
+  thirteenBackground: {
+    backgroundColor: 'red'
+  },
+  thirteenColor: {
+    color: 'red'
+  },
+  tagContainerBasic: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 5
   },
   tagContainerThin: {
     paddingTop: 4,

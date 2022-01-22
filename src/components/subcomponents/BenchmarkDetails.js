@@ -619,37 +619,41 @@ class BenchmarkDetails extends Component {
   renderTags(type, passedArray, limit) {
     console.log('renderTags: ', type, passedArray, limit)
 
-    let backgroundColorClass = "primary-background"
+    let backgroundColorClass = styles.primaryBackground
     if (type === 'gravitateValues') {
-      backgroundColorClass = "secondary-background"
+      backgroundColorClass = styles.secondaryBackground
     } else if (type === 'employerValues') {
-      backgroundColorClass = "tertiary-background"
+      backgroundColorClass = styles.tertiaryBackground
     } else if (type === 'hardSkills') {
-      backgroundColorClass = "quaternary-background"
+      backgroundColorClass = styles.quaternaryBackground
     } else if (type === 'softSkills') {
-      backgroundColorClass = "quinary-background"
+      backgroundColorClass = styles.quinaryBackground
     } else if (type === 'workPreferenceTags') {
-      backgroundColorClass = "nonary-background"
+      backgroundColorClass = styles.nonaryBackground
     } else if (type === 'knowledge') {
-      backgroundColorClass = "denary-background"
+      backgroundColorClass = styles.denaryBackground
     }
     if (passedArray) {
       return (
         <View key={type + "|0"}>
-          <View className="spacer" />
-          {passedArray.map((value, optionIndex) =>
-            <View key={type + "|" + optionIndex} className="float-left">
-              {(!limit || (limit && optionIndex < limit)) && (
-                <View className="float-left right-padding-5">
-                  <View className="half-spacer" />
-                  <View className={"tag-container-basic " + backgroundColorClass}>
-                    <Text className="description-text-2 white-text">{value}</Text>
+          <View style={[styles.spacer]} />
+
+          <View style={[styles.rowDirection,styles.flexWrap]}>
+            {passedArray.map((value, optionIndex) =>
+              <View key={type + "|" + optionIndex}>
+                {(!limit || (limit && optionIndex < limit)) && (
+                  <View style={[styles.rightPadding5]}>
+                    <View style={[styles.halfSpacer]} />
+                    <View style={[styles.tagContainerBasic,backgroundColorClass]}>
+                      <Text style={[styles.descriptionText2,styles.whiteColor]}>{value}</Text>
+                    </View>
+                    <View style={[styles.halfSpacer]} />
                   </View>
-                  <View className="half-spacer" />
-                </View>
-              )}
-            </View>
-          )}
+                )}
+              </View>
+            )}
+          </View>
+
         </View>
       )
     }
@@ -687,17 +691,17 @@ class BenchmarkDetails extends Component {
       rows.push(
         <View key={"weights|" + i}>
           <TouchableOpacity onPress={() => this.setState({ subNavSelected: weights[i - 1].urlKey })}>
-            <View className="row-10">
-              <View className="calc-column-offset-70">
-                <Text className="heading-text-6">{i}. {weights[i - 1].name}</Text>
-                <View className="half-spacer" /><View className="mini-spacer" /><View className="mini-spacer" />
-                <Text className="description-text-2">{weights[i - 1].description}</Text>
+            <View style={[styles.row10,styles.rowDirection]}>
+              <View style={[styles.calcColumn140,styles.rightPadding]}>
+                <Text style={[styles.headingText6]}>{i}. {weights[i - 1].name}</Text>
+                <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                <Text style={[styles.descriptionText2]}>{weights[i - 1].description}</Text>
               </View>
-              <View className="fixed-column-70">
-                <View className="mini-spacer"/><View className="mini-spacer"/>
-                <Text className="heading-text-2 cta-color bold-text full-width right-text">{(weights[i - 1].value) ? weights[i - 1].value : "0"}%</Text>
+              <View style={[styles.width80]}>
+                <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
+                <Text style={[styles.headingText2,styles.ctaColor,styles.boldText,styles.rightText]}>{(weights[i - 1].value) ? weights[i - 1].value : "0"}%</Text>
               </View>
-              <View className="clear" />
+
             </View>
           </TouchableOpacity>
         </View>
@@ -711,34 +715,34 @@ class BenchmarkDetails extends Component {
   returnColorClass(index,type) {
     console.log('returnColorClass called', index, type)
 
-    let colorClass = "nonary-background"
+    let colorClass = styles.nonaryBackground
     if (type === 'text') {
       if (index === 0) {
-        colorClass = 'nonary-text'
+        colorClass = styles.nonaryColor
       } else if (index === 1) {
-        colorClass = 'primary-text'
+        colorClass = styles.primaryColor
       } else if (index === 2) {
-        colorClass = 'twelve-text'
+        colorClass = styles.twelveColor
       } else if (index === 3) {
-        colorClass = 'denary-text'
+        colorClass = styles.denaryColor
       } else if (index === 4) {
-        colorClass = 'thirteen-text'
+        colorClass = styles.thirteenColor
       } else if (index === 5) {
-        colorClass = 'secondary-text'
+        colorClass = styles.secondaryColor
       }
     } else if (type === 'background') {
       if (index === 0) {
-        colorClass = 'nonary-background'
+        colorClass = styles.nonaryBackground
       } else if (index === 1) {
-        colorClass = 'primary-background'
+        colorClass = styles.primaryBackground
       } else if (index === 2) {
-        colorClass = 'twelve-background'
+        colorClass =  styles.twelveBackground
       } else if (index === 3) {
-        colorClass = 'denary-background'
+        colorClass = styles.denaryBackground
       } else if (index === 4) {
-        colorClass = 'thirteen-background'
+        colorClass = styles.thirteenBackground
       } else if (index === 5) {
-        colorClass = 'secondary-background'
+        colorClass = styles.secondaryBackground
       }
     }
     return colorClass
@@ -934,9 +938,9 @@ class BenchmarkDetails extends Component {
             {(this.state.selectedBenchmark) && (
               <View>
                 {(this.state.isLoading) ? (
-                  <View className="flex-container flex-center full-space">
+                  <View style={[styles.flexCenter,styles.flex1]}>
                     <View>
-                      <View className="super-spacer" />
+                      <View style={[styles.superSpacer]} />
 
                       <ActivityIndicator
                          animating = {this.state.animating}
@@ -944,65 +948,66 @@ class BenchmarkDetails extends Component {
                          size = "large"
                          style={[styles.square80, styles.centerHorizontally]}/>
 
-                      <View className="spacer" /><View className="spacer" /><View className="spacer" />
-                      <Text className="center-text cta-color bold-text">Loading...</Text>
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                      <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Loading...</Text>
 
                     </View>
                   </View>
                 ) : (
                   <View>
-                    <View className="full-width">
+                    <View>
                       <View>
-                        <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally top-margin-40">
-                          <View className="full-width height-5 primary-background" />
-                          <View className="padding-40">
-                            <View className="row-10">
-                              <View className="fixed-column-90">
+                        <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.topMargin30]}>
+                          <View style={[styles.height5,styles.primaryBackground]} />
+                          <View style={[styles.padding30]}>
+                            <View style={[styles.row10,styles.rowDirection,styles.flex1]}>
+                              <View style={[styles.width50]}>
+                              </View>
+                              <View style={[styles.calcColumn160,styles.flexCenter]}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('EmployerDetails', { objectId: this.state.selectedBenchmark.accountCode })}>
-                                  <Image source={(this.state.employerLogoURI) ? { uri: this.state.employerLogoURI} : { uri: benchmarksIconDark}} className="image-auto-80" />
+                                  <Image source={(this.state.employerLogoURI) ? { uri: this.state.employerLogoURI} : { uri: benchmarksIconDark}} style={[styles.square80,styles.contain]} />
                                 </TouchableOpacity>
                               </View>
-                              <View className="calc-column-offset-140 left-padding top-padding-5">
-                                <Text className="heading-text-2">{this.state.selectedBenchmark.title}</Text>
-                                <Text className="top-padding">The ideal candidate to join {(this.state.selectedBenchmark.jobFunction && this.state.selectedBenchmark.jobFunction !== 'Other') && ' the ' + this.state.selectedBenchmark.jobFunction.toLowerCase() + ' team at '}{this.state.employerName}. </Text>
-                                <Text className="profile-descriptor top-padding-15">Note: The "perfect candidate" will not be guaranteed a job. This is meant to be a guide for career-seekers, educators, and workforce professionals.</Text>
+                              <View style={[styles.width50,styles.alignEnd]}>
+                                <Image source={{ uri: approvedIconBlue}} style={[styles.square25,styles.contain]}/>
                               </View>
-                              <View className="fixed-column-50">
-                                <Image source={{ uri: approvedIconBlue}} className="image-auto-25 center-horizontally" />
-
-                                <Text className="description-text-2 full-width center-text top-margin-5">{this.state.employerName} Verified!</Text>
+                            </View>
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View>
+                                <Text style={[styles.headingText2,styles.centerText]}>{this.state.selectedBenchmark.title}</Text>
+                                <Text style={[styles.topPadding,styles.centerText]}>The ideal candidate to join {(this.state.selectedBenchmark.jobFunction && this.state.selectedBenchmark.jobFunction !== 'Other') && ' the ' + this.state.selectedBenchmark.jobFunction.toLowerCase() + ' team at '}{this.state.employerName}. </Text>
+                                <Text style={[styles.descriptionText2,styles.topPadding15,styles.bottomPadding5,styles.centerText]}>Note: The "perfect candidate" will not be guaranteed a job. This is meant to be a guide for career-seekers, educators, and workforce professionals.</Text>
                               </View>
-                              <View className="clear" />
                             </View>
                           </View>
                         </View>
 
                         {(this.state.viewMode === 'List') && (
                           <View>
-                            <View className="medium-shadow slightly-rounded-corners width-94-percent max-width-1400 center-horizontally top-margin-40 ">
-                              <View className="carousel-3 white-background" onScroll={this.handleScroll}>
+                            <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.topMargin30]}>
+                              <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.leftPadding30]}>
                                 {this.state.benchmarkCategories.map((value, index) =>
-                                  <View className="carousel-item-container">
+                                  <View style={[styles.row15,styles.rightPadding30]}>
                                     {(value === this.state.subNavSelected) ? (
-                                      <View className="selected-carousel-item">
-                                        <Text key={value}>{value}</Text>
+                                      <View style={[styles.selectedCarouselItem]}>
+                                        <Text key={value} style={[styles.headingText6]}>{value}</Text>
                                       </View>
                                     ) : (
-                                      <TouchableOpacity className="menu-button" onPress={() => this.setState({ subNavSelected: value })}>
-                                        <Text key={value}>{value}</Text>
+                                      <TouchableOpacity style={[styles.menuButton]} onPress={() => this.setState({ subNavSelected: value })}>
+                                        <Text key={value} style={[styles.headingText6]}>{value}</Text>
                                       </TouchableOpacity>
                                     )}
                                   </View>
                                 )}
-                              </View>
+                              </ScrollView>
                             </View>
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Weights') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <Text className="heading-text-3">Weights</Text>
-                                  <Text className="description-text-1 description-text-color top-padding">How much does each category matter?</Text>
-                                  <View className="spacer" />
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.headingText3]}>Weights</Text>
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>How much does each category matter?</Text>
+                                  <View style={[styles.spacer]} />
                                 </View>
 
                                 {this.renderAllocation()}
@@ -1011,28 +1016,30 @@ class BenchmarkDetails extends Component {
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Work Preferences SA') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Work Preferences (Self-Assessment)</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Work Preferences (Self-Assessment)</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.workPreferenceWeight) ? "(" + this.state.selectedBenchmark.workPreferenceWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.workPreferenceWeight) ? "(" + this.state.selectedBenchmark.workPreferenceWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">What the ideal candidate explicitly says they want in their work, work style, and work environment</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What the ideal candidate explicitly says they want in their work, work style, and work environment</Text>
                                 </View>
 
                                 {(this.state.workPreferenceTags && this.state.workPreferenceTags.length > 0) && (
-                                  <View className="row-10">
+                                  <View style={[styles.row10]}>
                                     {this.renderTags('workPreferenceTags', this.state.workPreferenceTags)}
-                                    <View className="clear" />
+
                                   </View>
                                 )}
 
                                 {(this.state.selectedBenchmark.workPreferencesMessage) && (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.workPreferencesMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.workPreferencesMessage}"</Text>
                                   </View>
                                 )}
 
@@ -1040,199 +1047,208 @@ class BenchmarkDetails extends Component {
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Interests SA') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Interests (Self-Assessment)</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Interests (Self-Assessment)</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interestsWeight) ? "(" + this.state.selectedBenchmark.interestsWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.interestsWeight) ? "(" + this.state.selectedBenchmark.interestsWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">Candidate general interests and strong interest inventory</Text>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Candidate general interests and strong interest inventory</Text>
                               </View>
 
                               {(this.state.selectedBenchmark.generalInterests && this.state.selectedBenchmark.generalInterests.length > 0) && (
-                                <View className="row-10">
+                                <View style={[styles.row10]}>
                                   {this.renderTags('generalInterests', this.state.selectedBenchmark.generalInterests)}
-                                  <View className="clear" />
+
                                 </View>
                               )}
 
                               {(this.state.interests && this.state.interests.length > 0) && (
-                                <View className="standard-border padding-30 top-margin-20">
-                                  <Text className="heading-text-5">Strong Interest Inventory Results</Text>
-                                  <Text className="row-5 description-text-2">Strong Interest Inventory is a popular interest assessment used by career counselors. Learn more <Text style={[styles.standardText,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Strong_Interest_Inventory")}>here</Text>.</Text>
-                                  <View className="spacer" /><View className="spacer" />
+                                <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
+                                  <Text style={[styles.headingText5]}>Strong Interest Inventory Results</Text>
+                                  <Text style={[styles.row5,styles.descriptionText2]}>Strong Interest Inventory is a popular interest assessment used by career counselors. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Strong_Interest_Inventory")}>here</Text>.</Text>
+                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                   {this.state.interests.map((value, optionIndex) =>
                                     <View key={value}>
-                                      <View className="fixed-column-130">
-                                        <Text className={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
-                                      </View>
-                                      <View className="calc-column-offset-190 top-padding-5">
-                                        <View className="mini-spacer" />
-                                        <View className="progress-bar clear-border" >
-                                          <View className={"filler " + this.returnColorClass(optionIndex,'background')} style={(value.score) ? { width: (value.score * 20).toString() + '%' }: { width: '0%' }} />
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.calcColumn190]}>
+                                          <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
+                                        </View>
+                                        <View style={[styles.width70,styles.alignEnd]}>
+                                          <Text style={[styles.rightText,this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
                                         </View>
                                       </View>
-                                      <View className="fixed-column-60">
-                                        <Text className={"full-width right-text " + this.returnColorClass(optionIndex,'text')}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
+                                      <View style={[styles.calcColumn120,styles.topPadding5]}>
+                                        <View style={[styles.miniSpacer]} />
+                                        <View style={[styles.progressBar]} >
+                                          <View style={[styles.filler,this.returnColorClass(optionIndex,'background'), (value.score) ? { flex: value.score * 20 } : { flex: 0 }]} />
+                                        </View>
                                       </View>
-                                      <View className="clear" />
+
                                       {(optionIndex + 1 !== this.state.interests.length) && (
-                                        <View className="row-10">
+                                        <View style={[styles.row10]}>
                                           <View style={[styles.horizontalLine]} />
                                         </View>
                                       )}
                                     </View>
                                   )}
-                                  <View className="clear" />
+
                                 </View>
                               )}
 
-                              <View className="spacer" />
+                              <View style={[styles.spacer]} />
 
                               {(this.state.selectedBenchmark.interestsMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.interestsMessage}"</Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interestsMessage}"</Text>
                                 </View>
                               )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Personality SA') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Personality (Self-Assessment)</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Personality (Self-Assessment)</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.personalityWeight) ? "(" + this.state.selectedBenchmark.personalityWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.personalityWeight) ? "(" + this.state.selectedBenchmark.personalityWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">The big five, 16 personalities, and other personality traits</Text>
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The big five, 16 personalities, and other personality traits</Text>
                               </View>
 
                               {(this.state.selectedBenchmark.additionalTraits && this.state.selectedBenchmark.additionalTraits.length > 0) && (
-                                <View className="row-10">
+                                <View style={[styles.row10]}>
                                   {this.renderTags('additionalTraits', this.state.selectedBenchmark.additionalTraits)}
-                                  <View className="clear" />
                                 </View>
                               )}
 
                               {(this.state.selectedBenchmark.myersBriggs) && (
-                                <View className="standard-border padding-30 top-margin-20">
-                                  <Text className="heading-text-5">16 Personalities Results</Text>
-                                  <Text className="row-5 description-text-2">16 personalities / myers briggs is a popular way for career counselors to distinguish how people have different personalities. Learn more <Text style={[styles.standardText,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Myers–Briggs_Type_Indicator")}>here</Text>.</Text>
-                                  <View className="spacer" />
-                                  <Text className="heading-text-2 cta-color">{this.state.selectedBenchmark.myersBriggs}</Text>
-                                  <View className="clear" />
+                                <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
+                                  <Text style={[styles.headingText5]}>16 Personalities Results</Text>
+                                  <Text style={[styles.row5,styles.descriptionText2]}>16 personalities / myers briggs is a popular way for career counselors to distinguish how people have different personalities. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Myers–Briggs_Type_Indicator")}>here</Text>.</Text>
+                                  <View style={[styles.spacer]} />
+                                  <Text style={[styles.headingText2,styles.ctaColor]}>{this.state.selectedBenchmark.myersBriggs}</Text>
+
                                 </View>
                               )}
 
                               {(this.state.traits && this.state.traits.length > 0) && (
-                                <View className="standard-border padding-30 top-margin-20">
-                                  <Text className="heading-text-5">Big Five Results</Text>
-                                  <Text className="row-5 description-text-2">The Big Five personality traits is a popular way for career counselors and psychologists to distinguish how people have different personalities. Learn more <Text style={[styles.standardText,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}>here</Text>.</Text>
-                                  <View className="spacer" /><View className="spacer" />
+                                <View style={[styles.standardBorder,styles.padding30,styles.topMargin20]}>
+                                  <Text style={[styles.headingText5]}>Big Five Results</Text>
+                                  <Text style={[styles.row5,styles.descriptionText2]}>The Big Five personality traits is a popular way for career counselors and psychologists to distinguish how people have different personalities. Learn more <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL("https://en.wikipedia.org/wiki/Big_Five_personality_traits")}>here</Text>.</Text>
+                                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                   {this.state.traits.map((value, optionIndex) =>
                                     <View key={value}>
-                                      <View className="full-width">
-                                        <Text className={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
+                                      <View>
+                                        <Text style={this.returnColorClass(optionIndex,'text')}>{value.title}</Text>
                                       </View>
-                                      <View className="full-width top-padding-5">
-                                        <View className="mini-spacer" />
-                                        <View className="progress-bar clear-border" >
-                                          <View className={"filler " + this.returnColorClass(optionIndex,'background')} style={(value.score) ? { width: (value.score * 20).toString() + '%' }: { width: '0%' }} />
+                                      <View style={[styles.topPadding5]}>
+                                        <View style={[styles.miniSpacer]} />
+                                        <View style={[styles.progressBar]} >
+                                          <View style={[styles.filler,this.returnColorClass(optionIndex,'background'),(value.score) ? { flex: value.score } : { flex: 0 }]} />
                                         </View>
                                       </View>
-                                      <View className="fixed-column-60">
-                                        <Text className={"full-width " + this.returnColorClass(optionIndex,'text')}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
+                                      <View style={[styles.width60]}>
+                                        <Text style={[this.returnColorClass(optionIndex,'text')]}>{(value.score) ? (value.score * 20).toString() + '%' : '0%'}</Text>
                                       </View>
-                                      <View className="clear" />
+
                                       {(optionIndex + 1 !== this.state.traits.length) && (
-                                        <View className="row-10">
+                                        <View style={[styles.row10]}>
                                           <View style={[styles.horizontalLine]} />
                                         </View>
                                       )}
                                     </View>
                                   )}
-                                  <View className="clear" />
+
                                 </View>
                               )}
 
                               {(this.state.selectedBenchmark.personalityMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.personalityMessage}"</Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.personalityMessage}"</Text>
                                 </View>
                               )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Values SA') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Values (Self-Assessment)</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Values (Self-Assessment)</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.valuesWeight) ? "(" + this.state.selectedBenchmark.valuesWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.valuesWeight) ? "(" + this.state.selectedBenchmark.valuesWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">Ranked values on who candidate gravitates towards and what their employer prefers</Text>
-                                <View className="spacer" /><View className="spacer" />
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Ranked values on who candidate gravitates towards and what their employer prefers</Text>
+                                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                               </View>
 
                               {(this.state.selectedBenchmark.gravitateValues && this.state.selectedBenchmark.gravitateValues.length > 0) && (
-                                <View className="row-10">
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate gravitates toward people who are:</Text>
                                   {this.renderTags('gravitateValues', this.state.selectedBenchmark.gravitateValues, 5)}
-                                  <View className="clear" />
+
                                 </View>
                               )}
                               {(this.state.selectedBenchmark.employerValues && this.state.selectedBenchmark.employerValues.length > 0) && (
-                                <View className="row-10">
+                                <View style={[styles.row10]}>
                                   <Text style={[styles.standardText]}>The ideal{(this.state.selectedBenchmark.jobFunction) && " " + this.state.selectedBenchmark.jobFunction.toLowerCase()} candidate wants to work with employers that provide:</Text>
                                   {this.renderTags('employerValues', this.state.selectedBenchmark.employerValues, 5)}
-                                  <View className="clear" />
+
                                 </View>
                               )}
 
                               {(this.state.selectedBenchmark.valuesMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.valuesMessage}"</Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.valuesMessage}"</Text>
                                 </View>
                               )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Skills SA') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Skills (Self-Assessment)</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn140]}>
+                                    <Text style={[styles.headingText3]}>Skills (Self-Assessment)</Text>
+                                  </View>
+                                  <View style={[styles.width80]}>
+                                    <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.skillsWeight) ? "(" + this.state.selectedBenchmark.skillsWeight + "%)" : "(0%)"}</Text>
+                                  </View>
                                 </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.skillsWeight) ? "(" + this.state.selectedBenchmark.skillsWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">The top skills that matter</Text>
-                                <View className="spacer" />
+
+                                <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The top skills that matter</Text>
+                                <View style={[styles.spacer]} />
                               </View>
 
-                              <View className="row-10">
-                                <View className="container-left">
+                              <View>
+                                <View style={[styles.row10]}>
                                   {((this.state.selectedBenchmark.highPriorityHardSkills && this.state.selectedBenchmark.highPriorityHardSkills.length > 0) || (this.state.selectedBenchmark.lowPriorityHardSkills && this.state.selectedBenchmark.lowPriorityHardSkills.length > 0)) && (
-                                    <View className="row-10">
+                                    <View style={[styles.row10]}>
                                       <Text style={[styles.standardText]}>Top hard skills:</Text>
 
                                       {(this.state.selectedBenchmark.lowPriorityHardSkills) ? (
@@ -1244,13 +1260,13 @@ class BenchmarkDetails extends Component {
                                           {this.renderTags('hardSkills', this.state.selectedBenchmark.highPriorityHardSkills, 6)}
                                         </View>
                                       )}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
-                                <View className="container-right">
+                                <View style={[styles.row10]}>
                                   {((this.state.selectedBenchmark.highPrioritySoftSkills && this.state.selectedBenchmark.highPrioritySoftSkills.length > 0) || (this.state.selectedBenchmark.lowPrioritySoftSkills && this.state.selectedBenchmark.lowPrioritySoftSkills.length > 0)) && (
-                                    <View className="row-10">
+                                    <View style={[styles.row10]}>
                                       <Text style={[styles.standardText]}>Top soft skills:</Text>
 
                                       {(this.state.selectedBenchmark.lowPrioritySoftSkills) ? (
@@ -1262,383 +1278,411 @@ class BenchmarkDetails extends Component {
                                           {this.renderTags('softSkills', this.state.selectedBenchmark.highPrioritySoftSkills, 6)}
                                         </View>
                                       )}
-                                      <View className="clear" />
+
                                     </View>
                                   )}
                                 </View>
-                                <View className="clear" />
+
                               </View>
 
                               {(this.state.selectedBenchmark.skillCourses && this.state.selectedBenchmark.skillCourses.length > 0) && (
-                                <View className="row-10">
-                                  <Text className="bold-text">Suggested Courses: </Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.boldText]}>Suggested Courses: </Text>
 
-                                  {this.state.selectedBenchmark.skillCourses.map((value, optionIndex) =>
-                                    <View key={value} className="right-padding">
-                                      <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText]}>{value.name}</Text>
-                                      {(optionIndex + 1 !== this.state.selectedBenchmark.skillCourses.length) && (
-                                        <Text style={[styles.standardText]}>,</Text>
-                                      )}
-                                    </View>
-                                  )}
+                                  <View style={[styles.rowDirection,styles.flexWrap]}>
+                                    {this.state.selectedBenchmark.skillCourses.map((value, optionIndex) =>
+                                      <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
+                                        {(optionIndex + 1 !== this.state.selectedBenchmark.skillCourses.length) && (
+                                          <Text style={[styles.standardText]}>,</Text>
+                                        )}
+                                      </View>
+                                    )}
+                                  </View>
+
                                 </View>
                               )}
 
                               {(this.state.selectedBenchmark.skillCertifications && this.state.selectedBenchmark.skillCertifications.length > 0) && (
-                                <View className="row-10">
-                                  <Text className="bold-text">Suggested Certifications / Badges: </Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.boldText]}>Suggested Certifications / Badges: </Text>
 
-                                  {this.state.selectedBenchmark.skillCertifications.map((value, optionIndex) =>
-                                    <View key={value} className="right-padding">
-                                      <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText]}>{value.name}</Text>
-                                      {(optionIndex + 1 !== this.state.selectedBenchmark.skillCertifications.length) && (
-                                        <Text style={[styles.standardText]}>,</Text>
-                                      )}
-                                    </View>
-                                  )}
+                                  <View style={[styles.rowDirection,styles.flexWrap]}>
+                                    {this.state.selectedBenchmark.skillCertifications.map((value, optionIndex) =>
+                                      <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
+                                        {(optionIndex + 1 !== this.state.selectedBenchmark.skillCertifications.length) && (
+                                          <Text style={[styles.standardText]}>,</Text>
+                                        )}
+                                      </View>
+                                    )}
+                                  </View>
+
                                 </View>
                               )}
 
                               {(this.state.selectedBenchmark.skillsMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.skillsMessage}"</Text>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.skillsMessage}"</Text>
                                 </View>
                               )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                              <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Education') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Education</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Education</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.educationWeight) ? "(" + this.state.selectedBenchmark.educationWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.educationWeight) ? "(" + this.state.selectedBenchmark.educationWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">The educational components that matter</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>The educational components that matter</Text>
 
                                 </View>
 
                                 {(this.state.knowledge && this.state.knowledge.length > 0) ? (
-                                  <View className="row-10">
+                                  <View style={[styles.row10]}>
                                     {this.renderTags('knowledge', this.state.knowledge)}
-                                    <View className="clear" />
+
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
-                                <View className="spacer"/>
+                                <View style={[styles.spacer]}/>
 
                                 {(this.state.selectedBenchmark.degreeRequirements) ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">Degree Requirements:</Text> {this.state.selectedBenchmark.degreeRequirements}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Degree Requirements:</Text> {this.state.selectedBenchmark.degreeRequirements}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.idealMajors && this.state.selectedBenchmark.idealMajors.length > 0) ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">Ideal Majors:</Text> {this.state.selectedBenchmark.idealMajors.toString().replace(/,/g,", ")}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Ideal Majors:</Text> {this.state.selectedBenchmark.idealMajors.toString().replace(/,/g,", ")}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.gpaRange && this.state.selectedBenchmark.gpaRange !== '') ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">GPA Range:</Text> {this.state.selectedBenchmark.gpaRange}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>GPA Range:</Text> {this.state.selectedBenchmark.gpaRange}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.gradYearRange && this.state.selectedBenchmark.gradYearRange !== '') ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">Grad Year Range:</Text> {this.state.selectedBenchmark.gradYearRange}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Grad Year Range:</Text> {this.state.selectedBenchmark.gradYearRange}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.testScores && this.state.selectedBenchmark.testScores !== '') ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">Standardized Test Scores:</Text> {this.state.selectedBenchmark.testScores}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Standardized Test Scores:</Text> {this.state.selectedBenchmark.testScores}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.courseHours && this.state.selectedBenchmark.courseHours !== '') ? (
-                                  <View className="row-10">
-                                    <Text style={[styles.standardText]}><Text className="bold-text">Hours of Relevant Coursework Completed:</Text> {this.state.selectedBenchmark.courseHours}</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Hours of Relevant Coursework Completed:</Text> {this.state.selectedBenchmark.courseHours}</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.courses && this.state.selectedBenchmark.courses.length > 0) ? (
-                                  <View className="row-10">
-                                    <Text className="bold-text">Suggested Courses: </Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.boldText]}>Suggested Courses: </Text>
 
-                                    {this.state.selectedBenchmark.courses.map((value, optionIndex) =>
-                                      <View key={value} className="right-padding">
-                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText]}>{value.name}</Text>
-                                        {(optionIndex + 1 !== this.state.selectedBenchmark.courses.length) && (
-                                          <Text style={[styles.standardText]}>,</Text>
-                                        )}
-                                      </View>
-                                    )}
+                                    <View style={[styles.rowDirection,styles.flexWrap]}>
+                                      {this.state.selectedBenchmark.courses.map((value, optionIndex) =>
+                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
+                                          {(optionIndex + 1 !== this.state.selectedBenchmark.courses.length) && (
+                                            <Text style={[styles.standardText]}>,</Text>
+                                          )}
+                                        </View>
+                                      )}
+                                    </View>
+
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
                                 {(this.state.selectedBenchmark.certifications && this.state.selectedBenchmark.certifications.length > 0) ? (
-                                  <View className="row-10">
-                                    <Text className="bold-text">Suggested Certifications / Badges: </Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.boldText]}>Suggested Certifications / Badges: </Text>
 
-                                    {this.state.selectedBenchmark.certifications.map((value, optionIndex) =>
-                                      <View key={value} className="right-padding">
-                                        <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText]}>{value.name}</Text>
-                                        {(optionIndex + 1 !== this.state.selectedBenchmark.certifications.length) && (
-                                          <Text style={[styles.standardText]}>,</Text>
-                                        )}
-                                      </View>
-                                    )}
+                                    <View style={[styles.rowDirection,styles.flexWrap]}>
+                                      {this.state.selectedBenchmark.certifications.map((value, optionIndex) =>
+                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
+                                          {(optionIndex + 1 !== this.state.selectedBenchmark.certifications.length) && (
+                                            <Text style={[styles.standardText]}>,</Text>
+                                          )}
+                                        </View>
+                                      )}
+                                    </View>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
-                                <View className="spacer"/>
+                                <View style={[styles.spacer]}/>
 
                                 {(this.state.selectedBenchmark.educationMessage) ? (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.educationMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.educationMessage}"</Text>
                                   </View>
                                 ) : (
                                   <View />
                                 )}
 
-                                <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Endorsements') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Endorsements</Text>
-                                </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.endorsementWeight) ? "(" + this.state.selectedBenchmark.endorsementWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">Importance of 3rd party skill and knowledge endorsements</Text>
-                              </View>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Endorsements</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.endorsementWeight) ? "(" + this.state.selectedBenchmark.endorsementWeight + "%)" : "(0%)"}</Text>
+                                    </View>
+                                  </View>
 
-                              {(this.state.selectedBenchmark.endorsementsMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.endorsementsMessage}"</Text>
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of 3rd party skill and knowledge endorsements</Text>
                                 </View>
-                              )}
 
-                              <View className="row-10">
-                                <TouchableOpacity onPress={() => this.prepareEndorsement()}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}>See Example Endorsement</Text></TouchableOpacity>
-                              </View>
+                                {(this.state.selectedBenchmark.endorsementsMessage) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.endorsementsMessage}"</Text>
+                                  </View>
+                                )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.row10]}>
+                                  <TouchableOpacity onPress={() => this.prepareEndorsement()}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline]}>See Example Endorsement</Text></TouchableOpacity>
+                                </View>
+
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Projects') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Projects</Text>
-                                </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.projectWeight) ? "(" + this.state.selectedBenchmark.projectWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">Importance of relevant projects, and what type of project work</Text>
-                              </View>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Projects</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.projectWeight) ? "(" + this.state.selectedBenchmark.projectWeight + "%)" : "(0%)"}</Text>
+                                    </View>
+                                  </View>
 
-                              {(this.state.projectTags && this.state.projectTags.length > 0) && (
-                                <View className="row-10">
-                                  {this.renderTags('projectTags', this.state.projectTags)}
-                                  <View className="clear" />
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant projects, and what type of project work</Text>
                                 </View>
-                              )}
 
-                              {(this.state.selectedBenchmark.projectHours && this.state.selectedBenchmark.projectHours !== '') && (
-                                <View className="row-10">
-                                  <Text style={[styles.standardText]}><Text className="bold-text">Recommended Invested Hours:</Text> {this.state.selectedBenchmark.projectHours}</Text>
-                                </View>
-                              )}
+                                {(this.state.projectTags && this.state.projectTags.length > 0) && (
+                                  <View style={[styles.row10]}>
+                                    {this.renderTags('projectTags', this.state.projectTags)}
 
-                              {(this.state.selectedBenchmark.exampleProjects && this.state.selectedBenchmark.exampleProjects.length > 0) && (
-                                <View className="row-10">
-                                  <Text className="bold-text">Example Impressive Projects: </Text>
+                                  </View>
+                                )}
 
-                                  {this.state.selectedBenchmark.exampleProjects.map((value, optionIndex) =>
-                                    <View key={value} className="right-padding">
-                                      <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText]}>{value.name}</Text>
-                                      {(optionIndex + 1 !== this.state.selectedBenchmark.exampleProjects.length) && (
-                                        <Text style={[styles.standardText]}>,</Text>
+                                {(this.state.selectedBenchmark.projectHours && this.state.selectedBenchmark.projectHours !== '') && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Recommended Invested Hours:</Text> {this.state.selectedBenchmark.projectHours}</Text>
+                                  </View>
+                                )}
+
+                                {(this.state.selectedBenchmark.exampleProjects && this.state.selectedBenchmark.exampleProjects.length > 0) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.boldText]}>Example Impressive Projects: </Text>
+
+                                    <View style={[styles.rowDirection,styles.flexWrap]}>
+                                      {this.state.selectedBenchmark.exampleProjects.map((value, optionIndex) =>
+                                        <View key={value} style={[styles.rightPadding,styles.rowDirection]}>
+                                          <Text onPress={() => Linking.openURL(value.url)} style={[styles.standardText,styles.ctaColor,styles.boldText]}>{value.name}</Text>
+                                          {(optionIndex + 1 !== this.state.selectedBenchmark.exampleProjects.length) && (
+                                            <Text style={[styles.standardText]}>,</Text>
+                                          )}
+                                        </View>
                                       )}
                                     </View>
-                                  )}
-                                </View>
-                              )}
 
-                              {(this.state.selectedBenchmark.projectsMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.projectsMessage}"</Text>
-                                </View>
-                              )}
+                                  </View>
+                                )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                {(this.state.selectedBenchmark.projectsMessage) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.projectsMessage}"</Text>
+                                  </View>
+                                )}
+
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Experience') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Experience</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Experience</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.experienceWeight) ? "(" + this.state.selectedBenchmark.experienceWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.experienceWeight) ? "(" + this.state.selectedBenchmark.experienceWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">Importance of relevant experience, and what type of experience</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>Importance of relevant experience, and what type of experience</Text>
                                 </View>
 
                                 {(this.state.selectedBenchmark.experienceMessage) && (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.experienceMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.experienceMessage}"</Text>
                                   </View>
                                 )}
 
-                                <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Resume') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Resume</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Resume</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.resumeWeight) ? "(" + this.state.selectedBenchmark.resumeWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.resumeWeight) ? "(" + this.state.selectedBenchmark.resumeWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">What matters on the ideal candidate's resume</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's resume</Text>
                                 </View>
 
                                 {(this.state.selectedBenchmark.resumeMessage) && (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.resumeMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.resumeMessage}"</Text>
                                   </View>
                                 )}
 
-                                <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Cover Letter') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Cover Letter</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Cover Letter</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.coverLetterWeight) ? "(" + this.state.selectedBenchmark.coverLetterWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.coverLetterWeight) ? "(" + this.state.selectedBenchmark.coverLetterWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">What matters on the ideal candidate's cover letter</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters on the ideal candidate's cover letter</Text>
                                 </View>
 
                                 {(this.state.selectedBenchmark.coverLetterMessage) && (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.coverLetterMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.coverLetterMessage}"</Text>
                                   </View>
                                 )}
 
-                                <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Interview') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                                <View className="row-10">
-                                  <View className="float-left">
-                                    <Text className="heading-text-3">Interview</Text>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Interview</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.interviewWeight) ? "(" + this.state.selectedBenchmark.interviewWeight + "%)" : "(0%)"}</Text>
+                                    </View>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.interviewWeight) ? "(" + this.state.selectedBenchmark.interviewWeight + "%)" : "(0%)"}</Text>
-                                  </View>
-                                  <View className="clear" />
-                                  <Text className="description-text-1 description-text-color top-padding">What matters in the ideal candidate's interview</Text>
+
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What matters in the ideal candidate's interview</Text>
                                 </View>
 
-                                <View className="spacer"/>
+                                <View style={[styles.spacer]}/>
 
                                 {(this.state.selectedBenchmark.interviewRubric && this.state.selectedBenchmark.interviewRubric.length > 0) && (
-                                  <View className="row-20">
-                                    <Text className="heading-text-5">Interview Rubric</Text>
-                                    <View className="spacer"/>
+                                  <View style={[styles.row20]}>
+                                    <Text style={[styles.headingText5]}>Interview Rubric</Text>
+                                    <View style={[styles.spacer]}/>
 
-                                    <View className="standard-border">
-                                      <View className="bold-text standard-border-bottom ">
-                                        <View className="relative-column-33 padding-20">
-                                          <Text style={[styles.standardText]}>Criteria</Text>
+                                    <View style={[styles.standardBorder]}>
+                                      <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
+                                        <View style={[styles.flex33,styles.padding20]}>
+                                          <Text style={[styles.standardText,styles.boldText]}>Criteria</Text>
                                         </View>
-                                        <View className="relative-column-33 padding-20">
-                                          <Text style={[styles.standardText]}>Sample Questions</Text>
+                                        <View style={[styles.flex33,styles.padding20]}>
+                                          <Text style={[styles.standardText,styles.boldText]}>Sample Questions</Text>
                                         </View>
-                                        <View className="relative-column-33 padding-20">
-                                          <Text style={[styles.standardText]}>Qualities of Great Scores</Text>
+                                        <View style={[styles.flex33,styles.padding20]}>
+                                          <Text style={[styles.standardText,styles.boldText]}>Qualities of Great Scores</Text>
                                         </View>
-                                        <View className="clear" />
+
                                       </View>
 
                                       {this.state.selectedBenchmark.interviewRubric.map((value, optionIndex) =>
                                         <View key={value}>
-                                          <View className="standard-border-bottom">
-                                            <View className="relative-column-33 padding-20">
-                                              <Text className="bold-text">{optionIndex + 1}. {value.criterion}</Text>
+                                          <View style={[styles.horizontalLine,styles.flex1,styles.rowDirection]}>
+                                            <View style={[styles.flex33,styles.padding20]}>
+                                              <Text style={[styles.boldText]}>{optionIndex + 1}. {value.criterion}</Text>
                                             </View>
-                                            <View className="relative-column-33 padding-20">
+                                            <View style={[styles.flex33,styles.padding20]}>
                                               {value.questions.map((value2, optionIndex2) =>
                                                 <View>
                                                   <Text style={[styles.standardText]}>{value2}</Text>
                                                 </View>
                                               )}
                                             </View>
-                                            <View className="relative-column-33 padding-20">
+                                            <View style={[styles.flex33,styles.padding20]}>
                                               {value.answers.map((value2, optionIndex2) =>
                                                 <View>
                                                   <Text style={[styles.standardText]}>{value2}</Text>
                                                 </View>
                                               )}
                                             </View>
-                                            <View className="clear" />
+
                                           </View>
                                         </View>
                                       )}
@@ -1648,41 +1692,43 @@ class BenchmarkDetails extends Component {
                                 )}
 
                                 {(this.state.selectedBenchmark.interviewMessage) && (
-                                  <View className="row-10">
-                                    <Text className="italicize-text">"{this.state.selectedBenchmark.interviewMessage}"</Text>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.interviewMessage}"</Text>
                                   </View>
                                 )}
 
-                                <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
                             {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Diversity') && (
-                              <View className="card-clear-padding slightly-rounded-corners width-94-percent max-width-1400 center-horizontally padding-40 top-margin-40">
-                              <View className="row-10">
-                                <View className="float-left">
-                                  <Text className="heading-text-3">Diversity</Text>
-                                </View>
-                                <View className="float-left left-padding">
-                                  <Text className="heading-text-3 cta-color bold-text">{(this.state.selectedBenchmark.adversityScoreWeight) ? "(" + this.state.selectedBenchmark.adversityScoreWeight + "%)" : "(0%)"}</Text>
-                                </View>
-                                <View className="clear" />
-                                <Text className="description-text-1 description-text-color top-padding">What valuable diverse candidates look like to us</Text>
-                              </View>
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.headingText3]}>Diversity</Text>
+                                    </View>
+                                    <View style={[styles.width80]}>
+                                      <Text style={[styles.headingText3,styles.ctaColor,styles.boldText]}>{(this.state.selectedBenchmark.adversityScoreWeight) ? "(" + this.state.selectedBenchmark.adversityScoreWeight + "%)" : "(0%)"}</Text>
+                                    </View>
+                                  </View>
 
-                              {(this.state.selectedBenchmark.adversityScoreMessage) && (
-                                <View className="row-10">
-                                  <Text className="italicize-text">"{this.state.selectedBenchmark.adversityScoreMessage}"</Text>
+                                  <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.topPadding]}>What valuable diverse candidates look like to us</Text>
                                 </View>
-                              )}
 
-                              <View className="spacer"/><View className="spacer"/><View className="half-spacer"/>
+                                {(this.state.selectedBenchmark.adversityScoreMessage) && (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.italicizeText]}>"{this.state.selectedBenchmark.adversityScoreMessage}"</Text>
+                                  </View>
+                                )}
+
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
 
                               </View>
                             )}
 
-                            <View className="spacer"/><View className="spacer"/><View className="spacer"/>
+                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
                           </View>
                         )}
