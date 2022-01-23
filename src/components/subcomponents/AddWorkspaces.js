@@ -380,9 +380,9 @@ class AddWorkspaces extends Component {
   formChangeHandler(eventName,eventValue,dateEvent) {
     console.log('formChangeHandler called')
 
-    if (eventValue && !dateEvent) {
-      this.setState({ selectedValue: eventValue })
-    }
+    // if (eventValue && !dateEvent) {
+    //   this.setState({ selectedValue: eventValue })
+    // }
 
     if (dateEvent && Platform.OS === 'android') {
       console.log('in dateEvent', dateEvent)
@@ -421,12 +421,12 @@ class AddWorkspaces extends Component {
         }
       }
 
-      this.setState({ itemFilters, isAnimating: true, searchString })
+      this.setState({ itemFilters, isAnimating: true, searchString, selectedValue: eventValue })
       this.filterResults(this.state.searchString, eventValue, itemFilters, index, false, null)
     } else if (this.state.showDateTimePicker) {
       this.setState({ [eventName]: convertDateToString(new Date(eventValue),'hyphenatedDate') })
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

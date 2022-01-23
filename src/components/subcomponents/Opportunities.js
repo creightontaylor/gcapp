@@ -1383,8 +1383,6 @@ class Opportunities extends Component {
   formChangeHandler = (eventName,eventValue) => {
     console.log('formChangeHandler called')
 
-    this.setState({ selectedValue: eventValue })
-
     if (eventName === 'search') {
 
       const searchString = eventValue
@@ -1549,7 +1547,7 @@ class Opportunities extends Component {
 
         eventFilters = filters
 
-        this.setState({ filters, animating: true, searchString, eventFilters, eventSorters })
+        this.setState({ filters, animating: true, searchString, eventFilters, eventSorters, selectedValue: eventValue })
       } else if (isProjects) {
 
         // projects
@@ -1582,7 +1580,7 @@ class Opportunities extends Component {
 
         projectFilters = filters
 
-        this.setState({ filters, animating: true, searchString, projectFilters, projectSorters })
+        this.setState({ filters, animating: true, searchString, projectFilters, projectSorters, selectedValue: eventValue })
 
       } else if (isWork) {
         // work
@@ -1615,7 +1613,7 @@ class Opportunities extends Component {
 
         workFilters = filters
 
-        this.setState({ filters, animating: true, searchString, workFilters, workSorters })
+        this.setState({ filters, animating: true, searchString, workFilters, workSorters, selectedValue: eventValue })
       } else if (isAll) {
         // all
         type = 'All'
@@ -1647,7 +1645,7 @@ class Opportunities extends Component {
 
         allFilters = filters
 
-        this.setState({ filters, animating: true, searchString, allFilters, allSorters })
+        this.setState({ filters, animating: true, searchString, allFilters, allSorters, selectedValue: eventValue })
       }
 
       this.filterResults(this.state.searchString, eventValue, filters, index, false, type)
@@ -1711,7 +1709,7 @@ class Opportunities extends Component {
           }
         }
 
-        this.setState({ searchString, eventFilters, eventSorters, animating: true })
+        this.setState({ searchString, eventFilters, eventSorters, animating: true, selectedValue: eventValue })
       } else if (isProjects) {
         type = 'Project'
         let projectSorters = this.state.projectSorters
@@ -1739,7 +1737,7 @@ class Opportunities extends Component {
           }
         }
 
-        this.setState({ searchString, projectFilters, projectSorters, animating: true })
+        this.setState({ searchString, projectFilters, projectSorters, animating: true, selectedValue: eventValue })
       } else if (isWork) {
         type = 'Work'
         let workSorters = this.state.workSorters
@@ -1767,7 +1765,7 @@ class Opportunities extends Component {
           }
         }
 
-        this.setState({ searchString, workFilters, workSorters, animating: true })
+        this.setState({ searchString, workFilters, workSorters, animating: true, selectedValue: eventValue })
       } else if (isAll) {
         type = 'All'
         let allSorters = this.state.allSorters
@@ -1795,7 +1793,7 @@ class Opportunities extends Component {
           }
         }
 
-        this.setState({ searchString, allFilters, allSorters, animating: true })
+        this.setState({ searchString, allFilters, allSorters, animating: true, selectedValue: eventValue })
       }
 
       const nameArray = eventName.split("|")
@@ -2541,7 +2539,7 @@ class Opportunities extends Component {
       const posting = filteredPostings[i - 1]
       let isActive = true
 
-      let postingIcon = internIconBlue
+      let postingIcon = opportunitiesIconBlue
 
       if (posting.postType === 'Event') {
         postingIcon = eventIconBlue
@@ -2686,8 +2684,8 @@ class Opportunities extends Component {
               </View>
             </View>
 
-            {(posting.sortCriteria || this.state.sortCriteriaArray) ? (
-              <View style={[styles.leftPadding70]}>
+            {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[i - 1] && this.state.sortCriteriaArray[i - 1].name) ? (
+              <View style={[styles.leftPadding50]}>
                 {(this.state.sortCriteriaArray.length > 0) && (
                   <View>
                     <View style={styles.halfSpacer} />
@@ -2699,8 +2697,8 @@ class Opportunities extends Component {
               <View />
             )}
 
-            {(posting.filterCriteria || this.state.filterCriteriaArray) ? (
-              <View style={[styles.leftPadding70]}>
+            {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) ? (
+              <View style={[styles.leftPadding50]}>
                 <View style={styles.halfSpacer} />
                 <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
               </View>

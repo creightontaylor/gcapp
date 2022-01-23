@@ -1262,7 +1262,7 @@ class Apply extends Component {
   formChangeHandler = (eventName, eventValue) => {
     console.log('show data: ')
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     if (eventName === 'resumeURL') {
       this.setState({ resumeURL: eventValue })
@@ -1396,7 +1396,7 @@ class Apply extends Component {
         }
       }
 
-      this.setState({ resumeName, resumeURL, tasks })
+      this.setState({ resumeName, resumeURL, tasks, selectedValue: eventValue })
     } else if (eventName === 'firstName') {
       this.setState({ firstName: eventValue })
     } else if (eventName === 'lastName') {
@@ -1603,7 +1603,7 @@ class Apply extends Component {
         }
       }
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 
@@ -2664,7 +2664,7 @@ class Apply extends Component {
 
       rows.push(
         <View key={i} style={[styles.row5]}>
-          <View style={[styles.row10]}>
+          <View style={[styles.row10,styles.standardText]}>
             {(this.state.tasks[i - 1].isCompleted) ? (
               <View>
                 <TouchableOpacity style={[styles.rowDirection]} onPress={() => this.expandSection(index)}>
@@ -2940,7 +2940,7 @@ class Apply extends Component {
                 {(this.state.tasks[index].action === 'Upload') ? (
                   <View>
                     <View>
-                      <Text style={[styles.row10]}>Submit New Resume</Text>
+                      <Text style={[styles.row10,styles.standardText]}>Submit New Resume</Text>
 
                       <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.formChangeHandler('resume',null)}>
                         <Text style={[styles.descriptionText1,styles.whiteColor]}>Upload New</Text>
@@ -2948,11 +2948,11 @@ class Apply extends Component {
                     </View>
                     {(this.state.resumes && this.state.resumes.length > 0) && (
                       <View>
-                        <View style={[styles.row10]}>
+                        <View style={[styles.row10,styles.standardText]}>
                           <Text style={[styles.boldText,styles.descriptionText3,styles.descriptionTextColor,styles.topPadding]}>OR</Text>
                         </View>
                         <View style={[styles.bottomPadding]}>
-                          <Text style={[styles.row10]}>Submit Existing Resume from Profile</Text>
+                          <Text style={[styles.row10,styles.standardText]}>Submit Existing Resume from Profile</Text>
                           <View style={[styles.calcColumn60]}>
                             {(Platform.OS === 'ios') ? (
                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Resume", selectedIndex: null, selectedName: "resumeName", selectedValue: this.state.resumeName, selectedOptions: this.state.resumeNames, selectedSubKey: null })}>
@@ -3018,7 +3018,7 @@ class Apply extends Component {
     } else if (task.shorthand === 'thirdPartyAssessments') {
       return (
         <View key={"expandedTask" + index} style={[styles.topPadding]}>
-          <View style={[styles.row10]}>
+          <View style={[styles.row10,styles.standardText]}>
             {this.renderQuestions(task.shorthand)}
           </View>
         </View>
@@ -3026,7 +3026,7 @@ class Apply extends Component {
     } else if (task.shorthand === 'dealBreakers') {
       return (
         <View key={"expandedTask" + index} style={[styles.topPadding]}>
-          <View style={[styles.row10]}>
+          <View style={[styles.row10,styles.standardText]}>
             {this.renderQuestions(task.shorthand)}
           </View>
         </View>
@@ -3034,7 +3034,7 @@ class Apply extends Component {
     } else if (task.shorthand === 'customAssessment') {
       return (
         <View key={"expandedTask" + index} style={[styles.topPadding]}>
-          <View style={[styles.row10]}>
+          <View style={[styles.row10,styles.standardText]}>
             {this.renderQuestions(task.shorthand)}
           </View>
         </View>
@@ -3070,7 +3070,7 @@ class Apply extends Component {
         const response = responses[index]
         // console.log('looping: ', i - 1, question, response)
         rows.push(
-          <View key={"question|" + i} style={[styles.row10]}>
+          <View key={"question|" + i} style={[styles.row10,styles.standardText]}>
             {(question.prompt) && (
               <View>
                 <Text style={[styles.headingText5,styles.boldText]}>{question.prompt}</Text>

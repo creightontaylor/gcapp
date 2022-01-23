@@ -198,12 +198,12 @@ class EditGroup extends Component {
       }
     }
 
-    formChangeHandler = (eventName,eventValue, dateEvent, changeDateTime, mode) => {
+    formChangeHandler = (eventName,eventValue, dateEvent, changeDateTime, mode, changePicker) => {
       console.log('formChangeHandler called')
 
-      if (eventValue && !dateEvent) {
-        this.setState({ selectedValue: eventValue })
-      }
+      // if (eventValue && !dateEvent) {
+      //   this.setState({ selectedValue: eventValue })
+      // }
 
       if (dateEvent && Platform.OS === 'android') {
         console.log('in dateEvent', dateEvent, this.state.mode)
@@ -325,7 +325,7 @@ class EditGroup extends Component {
           this.setState({ [eventName]: eventValue })
         }
       } else {
-        this.setState({ [eventName]: eventValue })
+        this.setState({ [eventName]: eventValue, selectedValue: eventValue })
       }
     }
 

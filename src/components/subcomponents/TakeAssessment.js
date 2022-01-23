@@ -948,7 +948,7 @@ class TakeAssessment extends Component {
   formChangeHandler(eventName,eventValue) {
     console.log('formChangeHandler called' )
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     let wpResponses = this.state.wpResponses
     if (eventName === 'shortResponse') {
@@ -989,7 +989,7 @@ class TakeAssessment extends Component {
       }
     } else if (eventName === 'multipleChoice') {
       wpResponses[this.state.questionIndex] = eventValue
-      this.setState({ multipleChoice: eventValue, wpResponses })
+      this.setState({ multipleChoice: eventValue, wpResponses, selectedValue: eventValue })
     } else if (eventName.includes('multipleChoice')) {
 
       const index = Number(eventName.split('|')[1])
@@ -1022,7 +1022,7 @@ class TakeAssessment extends Component {
           }
         }
 
-        this.setState({ multipleAnswer: topValues, topValues })
+        this.setState({ multipleAnswer: topValues, topValues, selectedValue: eventValue })
 
       } else {
         let thisResponseArray = wpResponses[this.state.questionIndex]
@@ -1043,7 +1043,7 @@ class TakeAssessment extends Component {
         }
 
         wpResponses[this.state.questionIndex] = thisResponseArray
-        this.setState({ multipleAnswer: thisResponseArray, wpResponses })
+        this.setState({ multipleAnswer: thisResponseArray, wpResponses, selectedValue: eventValue })
       }
     } else if (eventName.includes('multipleAnswer')) {
       // wpResponses[this.state.questionIndex] = eventValue
@@ -1092,7 +1092,7 @@ class TakeAssessment extends Component {
           }
         }
         console.log('show topGravitateValues: ', topGravitateValues)
-        this.setState({ topGravitateValues, topEmployerValues })
+        this.setState({ topGravitateValues, topEmployerValues, selectedValue: eventValue })
 
       } else {
         const firstIndex = Number(eventName.split('|')[1])
@@ -1114,11 +1114,11 @@ class TakeAssessment extends Component {
         }
 
         wpResponses[firstIndex] = thisResponseArray
-        this.setState({ wpResponses })
+        this.setState({ wpResponses, selectedValue: eventValue })
       }
     } else if (eventName === 'boolean') {
       wpResponses[this.state.questionIndex] = eventValue
-      this.setState({ boolean: eventValue, wpResponses })
+      this.setState({ boolean: eventValue, wpResponses, selectedValue: eventValue })
     } else if (eventName === 'pathway') {
 
       let selectedPathway = eventValue
@@ -1147,12 +1147,12 @@ class TakeAssessment extends Component {
         }
       }
 
-      this.setState({ pathway: selectedPathway, selectedPathway, skills, competencies, responses, questions, categories })
+      this.setState({ pathway: selectedPathway, selectedPathway, skills, competencies, responses, questions, categories, selectedValue: eventValue })
     } else if (eventName === 'skillName') {
       this.setState({ [eventName]: eventValue })
       this.searchCompetencies(eventValue, ['General Skill','Skill','Hard Skill','Soft Skill','Work Style','Ability','Tools Used'], null)
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

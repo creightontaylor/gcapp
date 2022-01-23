@@ -173,11 +173,9 @@ class CreatePost extends Component {
     formChangeHandler = (eventName,eventValue) => {
       console.log('formChangeHandler called')
 
-      this.setState({ selectedValue: eventValue })
-
       if (eventName === 'profileItemType') {
         let profileItemOptions = []
-        this.setState({ [eventName]: eventValue, profileItemOptions })
+        this.setState({ [eventName]: eventValue, profileItemOptions, selectedValue: eventValue })
         // console.log('t0', eventValue)
         if (eventValue !== '' && eventValue !== 'Select an Item Type') {
           // console.log('t1', eventValue)
@@ -211,7 +209,7 @@ class CreatePost extends Component {
           }
         }
       } else {
-        this.setState({ [eventName]: eventValue })
+        this.setState({ [eventName]: eventValue, selectedValue: eventValue })
       }
     }
 
@@ -1704,7 +1702,9 @@ class CreatePost extends Component {
                                </View>
                              ) : (
                                <View style={[styles.row10]}>
-                                 <Text style={[styles.descriptionText3,styles.errorColor]}>Well this is awkward. No profile items found. Add to your profile <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}><Text style={[styles.ctaColor,styles.boldText]}>here</Text></TouchableOpacity> and then return to post.</Text>
+                                 <Text style={[styles.descriptionText3,styles.errorColor]}>Well this is awkward.</Text>
+                                 <Text style={[styles.descriptionText3,styles.errorColor,styles.topPadding]}>We didn't find any items on your profile. Add to your profile <Text onPress={() => { this.props.closeModal(); this.props.navigation.navigate('EditProfileDetails')}} style={[styles.ctaColor,styles.boldText]}>here</Text> and then return to post.
+                                 </Text>
                                </View>
                              )}
                            </View>

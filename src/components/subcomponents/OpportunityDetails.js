@@ -1552,9 +1552,9 @@ class OpportunityDetails extends Component {
           selectedProject = projectOptions[i - 1]
         }
       }
-      this.setState({ selectedProject })
+      this.setState({ selectedProject, selectedValue: eventValue })
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

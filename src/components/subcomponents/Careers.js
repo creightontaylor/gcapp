@@ -348,8 +348,6 @@ class Careers extends Component {
   formChangeHandler(eventName, eventValue) {
     console.log('formChangeHandler called')
 
-    this.setState({ selectedValue: eventValue })
-
     if (eventName === 'search') {
       this.setState({ searchString: eventValue, animating: true })
       this.filterResults(eventValue, null, null, null, true)
@@ -381,7 +379,7 @@ class Careers extends Component {
         itemSorters[i - 1]['value'] = this.state.defaultSortOption
       }
 
-      this.setState({ animating: true, searchString, itemFilters, itemSorters })
+      this.setState({ animating: true, searchString, itemFilters, itemSorters, selectedValue: eventValue })
 
       this.filterResults(this.state.searchString, eventValue, itemFilters, index, false)
 
@@ -410,8 +408,7 @@ class Careers extends Component {
         }
       }
 
-      this.setState({ searchString, itemFilters, itemSorters, animating: true })
-
+      this.setState({ searchString, itemFilters, itemSorters, animating: true, selectedValue: eventValue })
 
       this.sortResults(eventValue, field)
 
@@ -1263,13 +1260,13 @@ class Careers extends Component {
                       </View>
 
                       {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                        <View style={styles.leftPadding70}>
+                        <View style={styles.leftPadding50}>
                           <View style={styles.halfSpacer} />
                           <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
                         </View>
                       )}
                       {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                        <View style={styles.leftPadding70}>
+                        <View style={styles.leftPadding50}>
                           <View style={styles.halfSpacer} />
                           <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
                         </View>

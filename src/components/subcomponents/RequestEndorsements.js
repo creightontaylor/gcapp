@@ -432,11 +432,11 @@ class RequestEndorsements extends Component {
 
   formChangeHandler(eventName,eventValue) {
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     if (eventName === 'anonymousCheckmark') {
       const value = event.target.type === 'checkbox' ? event.target.checked : eventValue;
-      this.setState({ isAnonymousContribution: value });
+      this.setState({ isAnonymousContribution: value, selectedValue: eventValue });
     } else if (eventName === 'firstName') {
       this.setState({ recipientFirstName: eventValue })
     } else if (eventName === 'lastName') {
@@ -444,7 +444,7 @@ class RequestEndorsements extends Component {
     } else if (eventName === 'email') {
       this.setState({ recipientEmail: eventValue })
     } else if (eventName === 'relationship') {
-      this.setState({ relationship: eventValue })
+      this.setState({ relationship: eventValue, selectedValue: eventValue })
     } else if (eventName === 'senderFirstName') {
       this.setState({ senderFirstName: eventValue })
     } else if (eventName === 'senderLastName') {
@@ -476,7 +476,7 @@ class RequestEndorsements extends Component {
         }
       }
 
-      this.setState({ selectedPathway, skillTraits, competencies, checked })
+      this.setState({ selectedPathway, skillTraits, competencies, checked, selectedValue: eventValue })
 
     } else if (eventName.includes('skillName')) {
       console.log('show me what were working with', this.state.skillTraits)
@@ -499,19 +499,19 @@ class RequestEndorsements extends Component {
       const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
       skillTraits[index] = { name: skillTraits[index].name, skillType: eventValue, rating: skillTraits[index].rating }
-      this.setState({ skillTraits })
+      this.setState({ skillTraits, selectedValue: eventValue })
     } else if (eventName.includes('skillRating')) {
       let skillTraits = this.state.skillTraits
       const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
       skillTraits[index]['rating'] = eventValue
-      this.setState({ skillTraits })
+      this.setState({ skillTraits, selectedValue: eventValue })
     } else if (eventName.includes('exampleSkillTrait')) {
       let examples = this.state.examples
       const nameArray = eventName.split("|")
       const index = Number(nameArray[1]) - 1
       examples[index] = { skillTrait: eventValue, example: examples[index].example }
-      this.setState({ examples })
+      this.setState({ examples, selectedValue: eventValue })
     } else if (eventName.includes('exampleExample')) {
       let examples = this.state.examples
       const nameArray = eventName.split("|")
@@ -529,7 +529,7 @@ class RequestEndorsements extends Component {
       if (goalType.name !== 'Career') {
         pathway = 'Custom'
       }
-      this.setState({ goalType, pathway })
+      this.setState({ goalType, pathway, selectedValue: eventValue })
     } else if (eventName === 'searchCareers') {
       this.searchItems(eventValue, 'career')
     } else if (eventName === 'searchOpportunities') {
@@ -539,7 +539,7 @@ class RequestEndorsements extends Component {
     } else if (eventName === 'searchMembers') {
       this.searchItems(eventValue, 'member')
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

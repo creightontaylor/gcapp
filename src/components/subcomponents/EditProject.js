@@ -145,7 +145,7 @@ class EditProject extends Component {
     formChangeHandler(eventName,eventValue) {
       console.log('formChangeHandler called: ')
 
-      this.setState({ selectedValue: eventValue })
+      // this.setState({ selectedValue: eventValue })
 
       if (!eventName) {
         // unknown error
@@ -184,7 +184,7 @@ class EditProject extends Component {
           selectedProject['category'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('projectDescription')) {
 
           let selectedProject = this.state.selectedProject
@@ -198,25 +198,25 @@ class EditProject extends Component {
           selectedProject['startDate'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('endDate')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['endDate'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('collaboratorEmail')) {
           const collaboratorEmail = eventValue
           let projectHasChanged = true
-          this.setState({ collaboratorEmail, projectHasChanged })
+          this.setState({ collaboratorEmail, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('collaboratorCount')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['collaboratorCount'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('collaborator')) {
 
           let selectedProject = this.state.selectedProject
@@ -232,34 +232,34 @@ class EditProject extends Component {
           console.log('show collaborators: ', selectedProject.collaborators)
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('projectHours')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['hours'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('projectTotalHours')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['totalHours'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('projectFocus')) {
           let selectedProject = this.state.selectedProject
           selectedProject['focus'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('skillTags')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['skillTags'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
 
         } else if (eventName.includes('industryTags')) {
 
@@ -267,14 +267,14 @@ class EditProject extends Component {
           selectedProject['industryTags'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
         } else if (eventName.includes('projectFunction')) {
 
           let selectedProject = this.state.selectedProject
           selectedProject['jobFunction'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
 
         } else if (eventName.includes('projectIndustry')) {
 
@@ -282,7 +282,7 @@ class EditProject extends Component {
           selectedProject['industry'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
 
         } else if (eventName === 'metricSet') {
 
@@ -293,30 +293,30 @@ class EditProject extends Component {
           this.setState({ selectedProject, projectHasChanged })
 
         } else if (eventName === 'postDate') {
-          this.setState({ postDate: eventValue, projectHasChanged: true })
+          this.setState({ postDate: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'link') {
-          this.setState({ link: eventValue, projectHasChanged: true })
+          this.setState({ link: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'platform') {
-          this.setState({ platform: eventValue, projectHasChanged: true })
+          this.setState({ platform: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'views') {
-          this.setState({ views: eventValue, projectHasChanged: true })
+          this.setState({ views: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'likes') {
-          this.setState({ likes: eventValue, projectHasChanged: true })
+          this.setState({ likes: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'interactions') {
-          this.setState({ interactions: eventValue, projectHasChanged: true })
+          this.setState({ interactions: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'accountFollows') {
-          this.setState({ accountFollows: eventValue, projectHasChanged: true })
+          this.setState({ accountFollows: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'metricStartDate') {
-          this.setState({ metricStartDate: eventValue, projectHasChanged: true })
+          this.setState({ metricStartDate: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'metricEndDate') {
-          this.setState({ metricEndDate: eventValue, projectHasChanged: true })
+          this.setState({ metricEndDate: eventValue, projectHasChanged: true, selectedValue: eventValue })
         } else if (eventName === 'projectCareerPath') {
 
           let selectedProject = this.state.selectedProject
           selectedProject['careerPath'] = eventValue
 
           let projectHasChanged = true
-          this.setState({ selectedProject, projectHasChanged })
+          this.setState({ selectedProject, projectHasChanged, selectedValue: eventValue })
 
           this.searchItems(eventValue)
         } else {

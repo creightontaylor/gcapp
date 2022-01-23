@@ -796,18 +796,6 @@ class BenchmarkDetails extends Component {
                         </View>
                       </View>
 
-                      {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                        <View style={[styles.leftPadding70]}>
-                          <View style={[styles.halfSpacer]} />
-                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
-                        </View>
-                      )}
-                      {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                        <View style={[styles.leftPadding70]}>
-                          <View style={[styles.halfSpacer]} />
-                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
-                        </View>
-                      )}
                       <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                       <View style={[styles.horizontalLine]} />
 
@@ -1005,14 +993,6 @@ class BenchmarkDetails extends Component {
                 <View />
               )}
 
-              {(posting.filterCriteria || this.state.filterCriteriaArray) ? (
-                <View style={[styles.leftPadding70]}>
-                  <View style={styles.halfSpacer} />
-                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-                </View>
-              ) : (
-                <View />
-              )}
               <View style={styles.spacer} /><View style={styles.spacer} />
               <View style={[styles.horizontalLine]} />
 
@@ -1085,22 +1065,6 @@ class BenchmarkDetails extends Component {
                 )}
               </View>
 
-              {(this.state.filteredPastEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
-                <View style={[styles.leftPadding70]}>
-                  {(this.state.sortCriteriaArray.length > 0) && (
-                    <View>
-                      <View style={styles.halfSpacer} />
-                      <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
-                    </View>
-                  )}
-                </View>
-              )}
-              {(this.state.filteredPastEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
-                <View style={[styles.leftPadding70]}>
-                  <View style={styles.halfSpacer} />
-                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-                </View>
-              )}
               <View style={styles.spacer} /><View style={styles.spacer} />
               <View style={[styles.horizontalLine]} />
 
@@ -2681,12 +2645,6 @@ class BenchmarkDetails extends Component {
                                               </TouchableOpacity>
                                             )}
                                           </View>
-
-                                          {(this.state.filterCriteriaArray && this.state.filterCriteriaArray.length > 0 && this.state.filterCriteriaArray.length === this.state.members.length) && (
-                                            <View style={[styles.topPadding]}>
-                                              <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-                                            </View>
-                                          )}
 
                                           <View style={[styles.spacer]} />
                                         </View>

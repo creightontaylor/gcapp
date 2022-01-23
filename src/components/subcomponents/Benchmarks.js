@@ -95,37 +95,38 @@ class Benchmarks extends Component {
         console.log('email: ', emailId);
 
         this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
-          roleName, activeOrg, orgFocus, orgName, remoteAuth
+          roleName, activeOrg, orgFocus, orgName, remoteAuth, animating: true
         })
 
-        const jobFamilyOptions = ['Management','Business and Financial Operations','Computer and Mathematical','Architecture and Engineering','Life, Physical, and Social Science','Community and Social Service','Legal','Education, Training, and Library','Arts, Design, Entertainment, Sports, and Media','Healthcare Practitioners and Technical','Healthcare Support','Protective Service','Food Preparation and Serving Related','Building and Grounds Cleaning and Maintenance','Personal Care and Service','Sales and Related','Office and Administrative Support','Farming, Fishing, and Forestry','Construction and Extraction','Installation, Maintenance, and Repair','Production','Transportation and Material Moving']
-        const growthOptions = ['8% or higher','5% to 7%','3% to 4%','1% to 2%','-1% or lower']
-        const payOptions = ['< $30,000','$30,000 - $50,000','$50,000 - $70,000','$70,000 - $100,000','$100,000 - $150,000','$150,000 - $208,000','$208,000+']
-        const employmentOptions = ['< 10,000','10,000 - 50,000','50,000 - 100,000','100,000 - 200,000','200,000 - 300,000','300,000 - 500,000','500,000+']
-
-        const itemFilters = [
-          { name: 'Job Family', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(jobFamilyOptions)},
-          { name: 'Growth', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(growthOptions)},
-          { name: 'Pay', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(payOptions)},
-          { name: 'Employment', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(employmentOptions)},
-        ]
-
-        const itemSorters = [
-          // { name: 'Growth', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(growthOptions)},
-          // { name: 'Pay', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(payOptions)},
-          // { name: 'Employment', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(employmentOptions)},
-          { name: 'Realistic', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-          { name: 'Investigative', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-          { name: 'Artistic', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-          { name: 'Social', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-          { name: 'Enterprising', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-          { name: 'Conventional', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
-        ]
-
-        this.setState({ itemFilters, itemSorters, animating: true })
+        // const jobFamilyOptions = ['Management','Business and Financial Operations','Computer and Mathematical','Architecture and Engineering','Life, Physical, and Social Science','Community and Social Service','Legal','Education, Training, and Library','Arts, Design, Entertainment, Sports, and Media','Healthcare Practitioners and Technical','Healthcare Support','Protective Service','Food Preparation and Serving Related','Building and Grounds Cleaning and Maintenance','Personal Care and Service','Sales and Related','Office and Administrative Support','Farming, Fishing, and Forestry','Construction and Extraction','Installation, Maintenance, and Repair','Production','Transportation and Material Moving']
+        // const growthOptions = ['8% or higher','5% to 7%','3% to 4%','1% to 2%','-1% or lower']
+        // const payOptions = ['< $30,000','$30,000 - $50,000','$50,000 - $70,000','$70,000 - $100,000','$100,000 - $150,000','$150,000 - $208,000','$208,000+']
+        // const employmentOptions = ['< 10,000','10,000 - 50,000','50,000 - 100,000','100,000 - 200,000','200,000 - 300,000','300,000 - 500,000','500,000+']
+        //
+        // const itemFilters = [
+        //   { name: 'Job Family', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(jobFamilyOptions)},
+        //   { name: 'Growth', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(growthOptions)},
+        //   { name: 'Pay', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(payOptions)},
+        //   { name: 'Employment', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(employmentOptions)},
+        // ]
+        //
+        // const itemSorters = [
+        //   // { name: 'Growth', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(growthOptions)},
+        //   // { name: 'Pay', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(payOptions)},
+        //   // { name: 'Employment', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(employmentOptions)},
+        //   { name: 'Realistic', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        //   { name: 'Investigative', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        //   { name: 'Artistic', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        //   { name: 'Social', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        //   { name: 'Enterprising', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        //   { name: 'Conventional', value: this.state.defaultSortOption, options: [this.state.defaultSortOption].concat(['High','Low'])},
+        // ]
+        //
+        // this.setState({ itemFilters, itemSorters, animating: true })
 
         if (this.props.pageSource !== 'Goal' && !this.props.calculateMatches) {
-          Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { pathwayLevel: true } })
+          const orgCode = null
+          Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { pathwayLevel: true, orgCode } })
           .then((response) => {
             console.log('Benchmarks query worked');
 
@@ -332,9 +333,28 @@ class Benchmarks extends Component {
           if (response.data.success) {
             console.log('Work options query succeeded')
 
-            const hourOptions = response.data.workOptions[0].hourOptions
+            const functionOptions = response.data.workOptions[0].functionOptions
+            const industryOptions = response.data.workOptions[0].industryOptions
+            const payRangeOptions = response.data.workOptions[0].hourlyPayOptions
+            const employerTypeOptions = response.data.workOptions[0].employerTypeOptions
 
-            this.setState({ hourOptions });
+            //filters
+            const defaultFilterOption = this.state.defaultFilterOption
+            const functionFilterOptions = [defaultFilterOption].concat(functionOptions.slice(1, functionOptions.length))
+            const industryFilterOptions = [defaultFilterOption].concat(industryOptions.slice(1, industryOptions.length))
+            const payRangeFilterOptions = [defaultFilterOption].concat(payRangeOptions.slice(1, payRangeOptions.length))
+            const employerTypeFilterOptions = [defaultFilterOption].concat(employerTypeOptions.slice(1, employerTypeOptions.length))
+
+            let itemFilters = [
+              { name: 'Work Function', value: defaultFilterOption, options: functionFilterOptions },
+              { name: 'Industry', value: defaultFilterOption, options: industryFilterOptions },
+              { name: 'Pay Range', value: defaultFilterOption, options: payRangeFilterOptions },
+              { name: 'Employer Type', value: defaultFilterOption, options: employerTypeFilterOptions },
+            ]
+
+            const itemSorters = []
+
+            this.setState({ itemFilters, itemSorters });
           }
         });
       }
@@ -346,8 +366,6 @@ class Benchmarks extends Component {
 
   formChangeHandler(eventName, eventValue) {
     console.log('formChangeHandler called')
-
-    this.setState({ selectedValue: eventValue })
 
     if (eventName === 'search') {
       this.setState({ searchString: eventValue, animating: true })
@@ -380,7 +398,7 @@ class Benchmarks extends Component {
         itemSorters[i - 1]['value'] = this.state.defaultSortOption
       }
 
-      this.setState({ animating: true, searchString, itemFilters, itemSorters })
+      this.setState({ animating: true, searchString, itemFilters, itemSorters, selectedValue: eventValue })
 
       this.filterResults(this.state.searchString, eventValue, itemFilters, index, false)
 
@@ -409,7 +427,7 @@ class Benchmarks extends Component {
         }
       }
 
-      this.setState({ searchString, itemFilters, itemSorters, animating: true })
+      this.setState({ searchString, itemFilters, itemSorters, animating: true, selectedValue: eventValue })
 
 
       this.sortResults(eventValue, field)
@@ -539,32 +557,22 @@ class Benchmarks extends Component {
   filterResults(searchString, filterString, filters, index, search) {
     console.log('filterResults called', searchString, filterString, filters, index, search)
 
-    // let careers = this.state.careers
+    const orgCode = null
+    const pathwayLevel = true
 
     const self = this
     function officiallyFilter() {
       console.log('officiallyFilter called in careers')
 
-      const excludeMissingOutlookData = true
-      const excludeMissingJobZone = true
-
-      Axios.put('https://www.guidedcompass.com/api/careers/search', {  searchString, filterString, filters, index, search, excludeMissingOutlookData, excludeMissingJobZone })
+      Axios.get('https://www.guidedcompass.com/api/benchmarks/search', {  params: { searchString, orgCode, pathwayLevel }})
       .then((response) => {
-        console.log('Careers query attempted');
+        console.log('Benchmark search query attempted');
 
           if (response.data.success) {
-            console.log('successfully retrieved careers')
+            console.log('successfully retrieved benchmarks')
 
-            if (response.data) {
-
-              const careers = response.data.careers
-
-              // THIS IS SUPER UNNECESSARY
-              const filterCriteriaArray = response.data.filterCriteriaArray
-              const sortCriteriaArray = null
-
-              self.setState({ careers, animating: false, filterCriteriaArray, sortCriteriaArray })
-            }
+            const benchmarks = response.data.benchmarks
+            self.setState({ benchmarks, animating: false })
 
           } else {
             console.log('no career data found', response.data.message)
@@ -572,7 +580,7 @@ class Benchmarks extends Component {
           }
 
       }).catch((error) => {
-          console.log('Career query did not work', error);
+          console.log('Benchmark query did not work', error);
           self.setState({ animating: false })
       });
     }
@@ -630,10 +638,11 @@ class Benchmarks extends Component {
   }
 
   renderManipulators(type) {
-    console.log('renderManipulators called')
+    console.log('renderManipulators called', this.state.itemFilters.length)
 
     if (type === 'filter') {
       let filters = this.state.itemFilters
+      // console.log('show filters: ', filters)
 
       if (filters) {
 
@@ -675,6 +684,19 @@ class Benchmarks extends Component {
       }
     } else if (type === 'sort') {
       let sorters = this.state.itemSorters
+
+      // if (this.state.subNavSelected === 'Events') {
+      //   // events
+      //   sorters = this.state.eventSorters
+      // } else if (this.state.subNavSelected === 'Projects') {
+      //   // projects
+      //   sorters = this.state.projectSorters
+      // } else if (this.state.subNavSelected === 'Work') {
+      //   // work
+      //   sorters = this.state.workSorters
+      // } else if (this.state.subNavSelected === 'All') {
+      //   sorters = this.state.allSorters
+      // }
 
       if (sorters) {
 
@@ -1158,7 +1180,7 @@ class Benchmarks extends Component {
                    style={[styles.square80, styles.centerHorizontally]}/>
 
                 <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
-                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling career matches...</Text>
+                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling matches...</Text>
 
               </View>
             </View>
@@ -1210,13 +1232,13 @@ class Benchmarks extends Component {
                       </View>
 
                       {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                        <View style={styles.leftPadding70}>
+                        <View style={styles.leftPadding50}>
                           <View style={styles.halfSpacer} />
                           <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
                         </View>
                       )}
                       {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                        <View style={styles.leftPadding70}>
+                        <View style={styles.leftPadding50}>
                           <View style={styles.halfSpacer} />
                           <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
                         </View>

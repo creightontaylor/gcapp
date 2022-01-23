@@ -942,18 +942,6 @@ class Matches extends Component {
                 </View>
               </View>
 
-              {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
-                <View style={[styles.leftPadding70]}>
-                  <View style={[styles.halfSpacer]} />
-                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
-                </View>
-              )}
-              {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
-                <View style={[styles.leftPadding70]}>
-                  <View style={[styles.halfSpacer]} />
-                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
-                </View>
-              )}
               <View style={[styles.spacer]} /><View style={[styles.spacer]} />
               <View style={[styles.horizontalLine]} />
 

@@ -219,7 +219,7 @@ class Groups extends Component {
   formChangeHandler = (eventName, eventValue) => {
     console.log('formChangeHandler called', eventName, eventValue)
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     if (eventName === 'search') {
       console.log('in search')
@@ -238,7 +238,7 @@ class Groups extends Component {
       itemFilters[index]['value'] = eventValue
       console.log('show the item values: ', itemFilters, eventName, index, eventValue)
 
-      this.setState({ itemFilters, animating: true })
+      this.setState({ itemFilters, animating: true, selectedValue: eventValue })
       this.filterResults(this.state.searchString, eventName, eventValue, false)
 
     } else if (eventName.includes('sort|')) {
@@ -252,7 +252,7 @@ class Groups extends Component {
       itemSorters[index]['value'] = eventValue
       console.log('show the item values: ', itemSorters, eventName, index, eventValue)
 
-      this.setState({ itemSorters, animating: true })
+      this.setState({ itemSorters, animating: true, selectedValue: eventValue })
       this.sortResults(this.state.searchString, eventName, eventValue, false)
     } else if (eventName === 'groupCoverImage') {
 
@@ -267,7 +267,7 @@ class Groups extends Component {
             // this.saveFile(eventName, event.target.files[0])
         }
     } else {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 
@@ -599,7 +599,7 @@ class Groups extends Component {
                     </View>
                   </View>
 
-                  {(this.state.filterCriteriaArray && this.state.filterCriteriaArray.length > 0 && this.state.filterCriteriaArray.length === this.state.groups.length) && (
+                  {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
                     <View style={[styles.topPadding,styles.horizontalPadding30]}>
                       <Text style={[styles.errorColor,styles.descriptionText5,styles.boldText]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
                     </View>

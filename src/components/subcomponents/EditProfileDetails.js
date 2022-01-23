@@ -1105,9 +1105,9 @@ class EditProfileDetails extends Component {
     console.log('formChangeHandler called: ', eventName, eventValue, dateEvent)
 
     // for all pickers
-    if (eventValue && !dateEvent) {
-      this.setState({ selectedValue: eventValue })
-    }
+    // if (eventValue && !dateEvent) {
+    //   this.setState({ selectedValue: eventValue })
+    // }
 
     if (dateEvent && Platform.OS === 'android') {
       console.log('in dateEvent', dateEvent)
@@ -1261,7 +1261,7 @@ class EditProfileDetails extends Component {
 
       let education = this.state.education
       education[index][name] = eventValue
-      this.setState({ education, textFormHasChanged: true })
+      this.setState({ education, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData('education', eventValue, null, 'basic')
       }
@@ -1379,34 +1379,34 @@ class EditProfileDetails extends Component {
       }
       this.searchSchools(eventValue)
     } else if (eventName === 'degree') {
-      this.setState({ degree: eventValue, textFormHasChanged: true })
+      this.setState({ degree: eventValue, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'degreeAttained') {
-      this.setState({ degreeAttained: eventValue, textFormHasChanged: true })
+      this.setState({ degreeAttained: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'major') {
       this.setState({ major: eventValue, textFormHasChanged: true })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'pathway') {
-      this.setState({ pathway: eventValue, textFormHasChanged: true })
+      this.setState({ pathway: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'gradYear') {
-      this.setState({ gradYear: eventValue, textFormHasChanged: true })
+      this.setState({ gradYear: eventValue, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'race') {
-      this.setState({ race: eventValue, textFormHasChanged: true })
+      this.setState({ race: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'gender') {
-      this.setState({ gender: eventValue, textFormHasChanged: true })
+      this.setState({ gender: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'veteranStatus') {
-      this.setState({ veteranStatus: eventValue, textFormHasChanged: true })
+      this.setState({ veteranStatus: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'workAuthorization') {
-      this.setState({ workAuthorization: eventValue, textFormHasChanged: true })
+      this.setState({ workAuthorization: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'overallFit') {
-      this.setState({ overallFit: eventValue, textFormHasChanged: true })
+      this.setState({ overallFit: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName.includes('projectTitle')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1418,7 +1418,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectURL')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1430,7 +1430,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectCategory')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1442,7 +1442,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectDescription')) {
 
       const nameArray = eventName.split("|")
@@ -1455,7 +1455,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('startDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1467,7 +1467,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('endDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1479,7 +1479,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('collaboratorEmail')) {
       const collaboratorEmail = eventValue
       let projectHasChanged = true
@@ -1495,7 +1495,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('collaborator')) {
       const nameArray = eventName.split("|")
       const macroIndex = nameArray[1]
@@ -1516,7 +1516,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[macroIndex] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectHours')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1528,7 +1528,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectTotalHours')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1540,7 +1540,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectFocus')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1552,7 +1552,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('skillTags')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1564,7 +1564,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('industryTags')) {
       const nameArray = eventName.split("|")
@@ -1577,7 +1577,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('projectFunction')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1589,7 +1589,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('projectIndustry')) {
       const nameArray = eventName.split("|")
@@ -1602,7 +1602,7 @@ class EditProfileDetails extends Component {
       projectHasChangedArray[index] = true
 
       let projectHasChanged = true
-      this.setState({ projects, projectHasChanged, projectHasChangedArray })
+      this.setState({ projects, projectHasChanged, projectHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('isEditingProjectsArray')) {
 
       const nameArray = eventName.split("|")
@@ -1614,7 +1614,7 @@ class EditProfileDetails extends Component {
       } else {
         isEditingProjectsArray[index] = true
       }
-      this.setState({ isEditingProjectsArray })
+      this.setState({ isEditingProjectsArray, selectedValue: eventValue })
     } else if (eventName.includes('isEditingExperienceArray')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1625,7 +1625,7 @@ class EditProfileDetails extends Component {
       } else {
         isEditingExperienceArray[index] = true
       }
-      this.setState({ isEditingExperienceArray })
+      this.setState({ isEditingExperienceArray, selectedValue: eventValue })
 
     } else if (eventName.includes('isEditingExtracurricularArray')) {
       const nameArray = eventName.split("|")
@@ -1637,7 +1637,7 @@ class EditProfileDetails extends Component {
       } else {
         isEditingExtracurricularArray[index] = true
       }
-      this.setState({ isEditingExtracurricularArray })
+      this.setState({ isEditingExtracurricularArray, selectedValue: eventValue })
     } else if (eventName.includes('isEditingAwardArray')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1648,7 +1648,7 @@ class EditProfileDetails extends Component {
       } else {
         isEditingAwardArray[index] = true
       }
-      this.setState({ isEditingAwardArray })
+      this.setState({ isEditingAwardArray, selectedValue: eventValue })
 
     } else if (eventName.includes('jobTitle|')) {
 
@@ -1662,7 +1662,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('employerName|')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1674,7 +1674,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceStartDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1686,7 +1686,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceEndDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1698,7 +1698,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('jobFunction')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1710,7 +1710,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('jobIndustry')) {
 
       const nameArray = eventName.split("|")
@@ -1723,7 +1723,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('payInterest')) {
       console.log('in payInterest')
@@ -1737,7 +1737,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('pay')) {
       const nameArray = eventName.split("|")
@@ -1750,7 +1750,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('wasPaid')) {
 
       const nameArray = eventName.split("|")
@@ -1763,7 +1763,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('hoursPerWeek')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1775,7 +1775,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceSkillTags')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1787,7 +1787,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceSupervisorFirstName')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1799,7 +1799,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceSupervisorLastName')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1811,7 +1811,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceSupervisorTitle')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1823,7 +1823,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('experienceSupervisorEmail')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1835,7 +1835,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('experienceDescription')) {
       const nameArray = eventName.split("|")
@@ -1848,7 +1848,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('workInterest')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1860,7 +1860,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('workSkill')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1872,7 +1872,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('teamInterest')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1884,7 +1884,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('employerInterest')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1896,7 +1896,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('overallFit')) {
       const nameArray = eventName.split("|")
@@ -1909,7 +1909,7 @@ class EditProfileDetails extends Component {
       experienceHasChangedArray[index] = true
 
       let experienceHasChanged = true
-      this.setState({ experience, experienceHasChanged, experienceHasChangedArray })
+      this.setState({ experience, experienceHasChanged, experienceHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('activityName')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1921,7 +1921,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('roleName')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1933,7 +1933,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('extracurricularStartDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1945,7 +1945,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('extracurricularEndDate')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1957,7 +1957,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('extracurricularHoursPerWeek')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1969,7 +1969,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('extracurricularDescription')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1981,7 +1981,7 @@ class EditProfileDetails extends Component {
       extracurricularHasChangedArray[index] = true
 
       let extracurricularHasChanged = true
-      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray })
+      this.setState({ extracurriculars, extracurricularHasChanged, extracurricularHasChangedArray, selectedValue: eventValue })
     } else if (eventName.includes('awardName')) {
       const nameArray = eventName.split("|")
       const index = nameArray[1]
@@ -1993,7 +1993,7 @@ class EditProfileDetails extends Component {
       awardHasChangedArray[index] = true
 
       let awardHasChanged = true
-      this.setState({ awards, awardHasChanged, awardHasChangedArray })
+      this.setState({ awards, awardHasChanged, awardHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('awardDate')) {
       const nameArray = eventName.split("|")
@@ -2006,7 +2006,7 @@ class EditProfileDetails extends Component {
       awardHasChangedArray[index] = true
 
       let awardHasChanged = true
-      this.setState({ awards, awardHasChanged, awardHasChangedArray })
+      this.setState({ awards, awardHasChanged, awardHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName.includes('awardDescription')) {
       const nameArray = eventName.split("|")
@@ -2019,117 +2019,117 @@ class EditProfileDetails extends Component {
       awardHasChangedArray[index] = true
 
       let awardHasChanged = true
-      this.setState({ awards, awardHasChanged, awardHasChangedArray })
+      this.setState({ awards, awardHasChanged, awardHasChangedArray, selectedValue: eventValue })
 
     } else if (eventName === 'politicalAlignment') {
-      this.setState({ politicalAlignment: eventValue, textFormHasChanged: true })
+      this.setState({ politicalAlignment: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'stateRegistration') {
-      this.setState({ stateRegistration: eventValue, textFormHasChanged: true })
+      this.setState({ stateRegistration: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'currentCongressionalDistrict') {
       this.setState({ currentCongressionalDistrict: eventValue, textFormHasChanged: true })
     } else if (eventName === 'hometown') {
-      this.setState({ hometown: eventValue, textFormHasChanged: true })
+      this.setState({ hometown: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'homeCongressionalDistrict') {
-      this.setState({ homeCongressionalDistrict: eventValue, textFormHasChanged: true })
+      this.setState({ homeCongressionalDistrict: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'dacaStatus') {
       this.setState({ dacaStatus: eventValue, textFormHasChanged: true })
     } else if (eventName === 'dateOfBirth') {
       // console.log('dateOfBirth called: ', convertDateToString(new Date(eventValue),'hyphenatedDate'))
 
-      this.setState({ dateOfBirth: convertDateToString(new Date(eventValue),'hyphenatedDate'), textFormHasChanged: true })
+      this.setState({ dateOfBirth: convertDateToString(new Date(eventValue),'hyphenatedDate'), textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'phoneNumber') {
-      this.setState({ phoneNumber: eventValue, textFormHasChanged: true })
+      this.setState({ phoneNumber: eventValue, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'address') {
-      this.setState({ address: eventValue, textFormHasChanged: true })
+      this.setState({ address: eventValue, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'city') {
       this.setState({ city: eventValue, textFormHasChanged: true })
     } else if (eventName === 'numberOfMembers') {
-      this.setState({ numberOfMembers: eventValue, textFormHasChanged: true })
+      this.setState({ numberOfMembers: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'householdIncome') {
-      this.setState({ householdIncome: eventValue, textFormHasChanged: true })
+      this.setState({ householdIncome: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'fosterYouth') {
-      this.setState({ fosterYouth: eventValue, textFormHasChanged: true })
+      this.setState({ fosterYouth: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'homeless') {
-      this.setState({ homeless: eventValue, textFormHasChanged: true })
+      this.setState({ homeless: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'incarcerated') {
-      this.setState({ incarcerated: eventValue, textFormHasChanged: true })
+      this.setState({ incarcerated: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'adversityList') {
-      this.setState({ adversityList: eventValue, textFormHasChanged: true })
+      this.setState({ adversityList: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'jobTitle') {
-      this.setState({ jobTitle: eventValue, textFormHasChanged: true })
+      this.setState({ jobTitle: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'employerName') {
-      this.setState({ employerName: eventValue, textFormHasChanged: true })
+      this.setState({ employerName: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'zipcode') {
-      this.setState({ zipcode: eventValue, textFormHasChanged: true })
+      this.setState({ zipcode: eventValue, textFormHasChanged: true, selectedValue: eventValue })
       if (this.props.fromApply) {
         this.props.passData(eventName, eventValue, null, 'basic')
       }
     } else if (eventName === 'workTenure') {
-      this.setState({ workTenure: eventValue, textFormHasChanged: true })
+      this.setState({ workTenure: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'studyFields') {
-      this.setState({ studyFields: eventValue, textFormHasChanged: true })
+      this.setState({ studyFields: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'careerTrack') {
-      this.setState({ careerTrack: eventValue, textFormHasChanged: true })
+      this.setState({ careerTrack: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'homeNumber') {
-      this.setState({ homeNumber: eventValue, textFormHasChanged: true })
+      this.setState({ homeNumber: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'lastOfSocialSecurity') {
-      this.setState({ lastOfSocialSecurity: eventValue, textFormHasChanged: true })
+      this.setState({ lastOfSocialSecurity: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'IEPPlan') {
-      this.setState({ IEPPlan: eventValue, textFormHasChanged: true })
+      this.setState({ IEPPlan: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'parentName') {
-      this.setState({ parentName: eventValue, textFormHasChanged: true })
+      this.setState({ parentName: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'parentRelationship') {
-      this.setState({ parentRelationship: eventValue, textFormHasChanged: true })
+      this.setState({ parentRelationship: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'parentPhone') {
-      this.setState({ parentPhone: eventValue, textFormHasChanged: true })
+      this.setState({ parentPhone: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'parentEmail') {
-      this.setState({ parentEmail: eventValue, textFormHasChanged: true })
+      this.setState({ parentEmail: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'emergencyContactName') {
-      this.setState({ emergencyContactName: eventValue, textFormHasChanged: true })
+      this.setState({ emergencyContactName: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'emergencyContactRelationship') {
-      this.setState({ emergencyContactRelationship: eventValue, textFormHasChanged: true })
+      this.setState({ emergencyContactRelationship: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'emergencyContactPhone') {
-      this.setState({ emergencyContactPhone: eventValue, textFormHasChanged: true })
+      this.setState({ emergencyContactPhone: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'emergencyContactEmail') {
-      this.setState({ emergencyContactEmail: eventValue, textFormHasChanged: true })
+      this.setState({ emergencyContactEmail: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     } else if (eventName === 'projectPublicPreference') {
-      this.setState({ projectPublicPreference: eventValue })
+      this.setState({ projectPublicPreference: eventValue, selectedValue: eventValue })
     } else if (eventName === 'goalPublicPreference') {
-      this.setState({ goalPublicPreference: eventValue })
+      this.setState({ goalPublicPreference: eventValue, selectedValue: eventValue })
     } else if (eventName === 'passionPublicPreference') {
-      this.setState({ passionPublicPreference: eventValue })
+      this.setState({ passionPublicPreference: eventValue, selectedValue: eventValue })
     } else if (eventName === 'assessmentPublicPreference') {
-      this.setState({ assessmentPublicPreference: eventValue })
+      this.setState({ assessmentPublicPreference: eventValue, selectedValue: eventValue })
     } else if (eventName === 'endorsementPublicPreference') {
-      this.setState({ endorsementPublicPreference: eventValue })
+      this.setState({ endorsementPublicPreference: eventValue, selectedValue: eventValue })
     } else if (eventName === 'resumePublicPreference') {
       let selectedResume = this.state.selectedResume
       if (this.state.resumes && this.state.resumes.length > 0) {
         selectedResume = this.state.resumeNames[this.state.resumeNames.length - 1]
       }
-      this.setState({ resumePublicPreference: eventValue, selectedResume })
+      this.setState({ resumePublicPreference: eventValue, selectedResume, selectedValue: eventValue })
     } else if (eventName === 'selectedProject') {
-      this.setState({ selectedProject: eventValue })
+      this.setState({ selectedProject: eventValue, selectedValue: eventValue })
     } else if (eventName === 'selectedGoal') {
-      this.setState({ selectedGoal: eventValue })
+      this.setState({ selectedGoal: eventValue, selectedValue: eventValue })
     } else if (eventName === 'selectedPassion') {
-      this.setState({ selectedPassion: eventValue })
+      this.setState({ selectedPassion: eventValue, selectedValue: eventValue })
     } else if (eventName === 'selectedAssessment') {
-      this.setState({ selectedAssessment: eventValue })
+      this.setState({ selectedAssessment: eventValue, selectedValue: eventValue })
     } else if (eventName === 'selectedEndorsement') {
-      this.setState({ selectedEndorsement: eventValue })
+      this.setState({ selectedEndorsement: eventValue, selectedValue: eventValue })
     } else {
       console.log('there was an error in formChangeHandler')
-      this.setState({ [eventName]: eventValue, textFormHasChanged: true })
+      this.setState({ [eventName]: eventValue, textFormHasChanged: true, selectedValue: eventValue })
     }
   }
 

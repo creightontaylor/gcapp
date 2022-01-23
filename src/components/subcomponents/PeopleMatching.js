@@ -278,7 +278,7 @@ class PeopleMatching extends Component {
   formChangeHandler = (eventName,eventValue) => {
     console.log('formChangeHandler called')
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     if (eventName === 'search') {
       console.log('in search')
@@ -289,7 +289,7 @@ class PeopleMatching extends Component {
     } else if (eventName.includes('filter|')) {
 
       const nameArray = eventName.split("|")
-      this.setState({ [nameArray[1]]: eventValue, animating: true })
+      this.setState({ [nameArray[1]]: eventValue, animating: true, selectedValue: eventValue })
       this.filterResults(this.state.searchString, nameArray[1], eventValue, false)
 
     } else if (eventName.includes('sort|')) {
@@ -323,7 +323,7 @@ class PeopleMatching extends Component {
           }
         }
 
-        this.setState({ searchString, itemFilters, itemSorters, animating: true })
+        this.setState({ searchString, itemFilters, itemSorters, animating: true, selectedValue: eventValue })
 
         this.sortResults(eventValue, field)
       }
@@ -683,7 +683,7 @@ class PeopleMatching extends Component {
                     )}
                   </View>
 
-                  {(this.state.filterCriteriaArray && this.state.filterCriteriaArray.length > 0 && this.state.filterCriteriaArray.length === this.state.members.length) && (
+                  {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
                     <View style={[styles.topPadding]}>
                       <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
                     </View>

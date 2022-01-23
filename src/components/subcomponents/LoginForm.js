@@ -279,7 +279,7 @@ class LogInForm extends Component {
 
   formChangeHandler(eventName,eventValue) {
 
-    this.setState({ selectedValue: eventValue })
+    // this.setState({ selectedValue: eventValue })
 
     if (eventName === 'firstName') {
       let capitalizedFirstName = eventValue.charAt(0).toUpperCase() + eventValue.slice(1);
@@ -294,7 +294,7 @@ class LogInForm extends Component {
     } else if (eventName === 'gradYear') {
       this.setState({ gradYear: eventValue })
     } else if (eventName === 'pathway') {
-      this.setState({ pathway: eventValue })
+      this.setState({ pathway: eventValue, selectedValue: eventValue })
     } else if (eventName === 'jobTitle') {
       this.setState({ jobTitle: eventValue })
     } else if (eventName === 'employerName') {
@@ -312,7 +312,7 @@ class LogInForm extends Component {
     } else if (eventName === 'roleName') {
       const roleName = eventValue
 
-      this.setState({ roleName })
+      this.setState({ roleName, selectedValue: eventValue })
     } else if (eventName === 'school') {
       this.setState({ school: eventValue })
     } else if (eventName === 'otherRoleName') {
@@ -321,7 +321,7 @@ class LogInForm extends Component {
     //   const value = event.target.type === 'checkbox' ? event.target.checked : eventValue;
     //   this.setState({ subscribed: value, formHasChanged: true })
     } else {
-      this.setState({[eventName]: eventValue})
+      this.setState({[eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

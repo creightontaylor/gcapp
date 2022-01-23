@@ -975,9 +975,9 @@ class EditLog extends Component {
   formChangeHandler(eventName, eventValue, dateEvent, changeDateTime, mode) {
     console.log('formChangeHandler clicked', eventName, eventValue, dateEvent, changeDateTime);
 
-    if (eventValue && !dateEvent) {
-      this.setState({ selectedValue: eventValue })
-    }
+    // if (eventValue && !dateEvent) {
+    //   this.setState({ selectedValue: eventValue })
+    // }
 
     if (dateEvent && Platform.OS === 'android') {
       console.log('in dateEvent', dateEvent, this.state.mode)
@@ -1035,7 +1035,7 @@ class EditLog extends Component {
           //applicationOptions.push({ value: logs[i - 1].positionTitle + " | " + logs[i - 1].employerName })
         }
       }
-      this.setState({ associatedApplication })
+      this.setState({ associatedApplication, selectedValue: eventValue })
 
     } else if (eventName === 'numberOfInterviews') {
 
@@ -1060,7 +1060,7 @@ class EditLog extends Component {
         }
       }
 
-      this.setState({ numberOfInterviews: eventValue, interviews })
+      this.setState({ numberOfInterviews: eventValue, interviews, selectedValue: eventValue })
 
     } else if (eventName.includes('interviewerName')) {
       const nameArray = eventName.split("|")
@@ -1068,7 +1068,7 @@ class EditLog extends Component {
 
       let interviews = this.state.interviews
       interviews[index] = { name: eventValue, rating: this.state.interviews[index].rating }
-      this.setState({ interviews })
+      this.setState({ interviews, selectedValue: eventValue })
 
     } else if (eventName.includes('interviewRating')) {
       const nameArray = eventName.split("|")
@@ -1076,33 +1076,33 @@ class EditLog extends Component {
 
       let interviews = this.state.interviews
       interviews[index] = { name: this.state.interviews[index].name, rating: eventValue}
-      this.setState({ interviews })
+      this.setState({ interviews, selectedValue: eventValue })
 
     } else if (eventName.includes('task|')) {
       const nameArray = eventName.split("|")
       const type = nameArray[0]
       const index = Number(nameArray[1])
       const name = nameArray[2]
-      console.log('keepers: ', type, index, name, nameArray)
+      // console.log('keepers: ', type, index, name, nameArray)
       let tasks = this.state.tasks
       tasks[index][name] = eventValue
-      this.setState({ tasks })
+      this.setState({ tasks, selectedValue: eventValue })
     } else if (eventName.includes('item')) {
-      console.log('step 1')
+      // console.log('step 1')
       const nameArray = eventName.split("|")
       const type = nameArray[1]
       const index = Number(nameArray[2])
-      console.log('step 2', type)
+      // console.log('step 2', type)
       if (type === 'Asked') {
 
         let questionsAsked = this.state.questionsAsked
         questionsAsked[index] = eventValue
-        this.setState({ questionsAsked })
-        console.log('step 3', questionsAsked)
+        this.setState({ questionsAsked, selectedValue: eventValue })
+        // console.log('step 3', questionsAsked)
       } else if (type === 'Answered') {
         let questionsAnswered = this.state.questionsAnswered
         questionsAnswered[index] = eventValue
-        this.setState({ questionsAnswered })
+        this.setState({ questionsAnswered, selectedValue: eventValue })
       }
     } else if (eventName === 'offerAssociatedApplication') {
 
@@ -1118,7 +1118,8 @@ class EditLog extends Component {
           //applicationOptions.push({ value: logs[i - 1].positionTitle + " | " + logs[i - 1].employerName })
         }
       }
-      this.setState({ offerAssociatedApplication })
+
+      this.setState({ offerAssociatedApplication, selectedValue: eventValue })
 
     } else if (eventName === 'goalType') {
       let goalType = { name: '' }
@@ -1127,20 +1128,20 @@ class EditLog extends Component {
           goalType = this.state.goalTypeOptions[i - 1]
         }
       }
-      this.setState({ goalType })
+      this.setState({ goalType, selectedValue: eventValue })
       if (goalType.name === 'Basics' || goalType.name === 'Stability' || goalType.name === 'Pay' || goalType.name === 'Interests') {
         this.adjustCoreCompetencies(null, goalType.name.toLowerCase(), eventName, true)
       }
     } else if (eventName === 'skillPreference') {
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
       if (eventValue && eventValue !== '') {
         this.adjustCoreCompetencies(null, eventValue.toLowerCase(), eventName, true)
       }
     } else if (eventName === 'entrepreneurshipGoal') {
-      this.setState({ entrepreneurshipGoal: eventValue })
+      this.setState({ entrepreneurshipGoal: eventValue, selectedValue: eventValue })
       this.adjustCoreCompetencies(eventValue, 'entrepreneurship', eventName, true)
     } else if (eventName === 'entrepreneurshipIndustry') {
-      this.setState({ entrepreneurshipIndustry: eventValue })
+      this.setState({ entrepreneurshipIndustry: eventValue, selectedValue: eventValue })
       this.adjustCoreCompetencies(eventValue, 'entrepreneurship', eventName, true)
     } else if (eventName === 'entrepreneurshipProject') {
 
@@ -1150,7 +1151,7 @@ class EditLog extends Component {
           entrepreneurshipProject = this.state.projectOptions[i - 1]
         }
       }
-      this.setState({ entrepreneurshipProject })
+      this.setState({ entrepreneurshipProject, selectedValue: eventValue })
     } else if (eventName === 'aItemProject') {
 
       let aItem = null
@@ -1159,7 +1160,7 @@ class EditLog extends Component {
           aItem = this.state.projectOptions[i - 1]
         }
       }
-      this.setState({ aItem })
+      this.setState({ aItem, selectedValue: eventValue })
 
     } else if (eventName === 'bItemProject') {
 
@@ -1169,7 +1170,7 @@ class EditLog extends Component {
           bItem = this.state.projectOptions[i - 1]
         }
       }
-      this.setState({ bItem })
+      this.setState({ bItem, selectedValue: eventValue })
     } else if (eventName === 'searchCareers') {
       this.searchItems(eventValue, 'career')
     } else if (eventName === 'searchCareersA') {
@@ -1196,22 +1197,22 @@ class EditLog extends Component {
       let actionItems = this.state.actionItems
       const index = Number(eventName.split("|")[1])
       actionItems[index] = eventValue
-      this.setState({ actionItems })
+      this.setState({ actionItems, selectedValue: eventValue })
     } else if (eventName.includes("link|")) {
       let links = this.state.links
       const index = Number(eventName.split("|")[1])
       links[index] = eventValue
-      this.setState({ links })
+      this.setState({ links, selectedValue: eventValue })
     } else if (eventName.includes('aLink|')) {
       const index = Number(eventName.split("|")[1])
       let aLinks = this.state.aLinks
       aLinks[index] = eventValue
-      this.setState({ aLinks })
+      this.setState({ aLinks, selectedValue: eventValue })
     } else if (eventName.includes('bLink|')) {
       const index = Number(eventName.split("|")[1])
       let bLinks = this.state.bLinks
       bLinks[index] = eventValue
-      this.setState({ bLinks })
+      this.setState({ bLinks, selectedValue: eventValue })
     } else if (eventName === 'comparisonType') {
       let pollQuestion = null
       if (eventValue === 'Careers') {
@@ -1223,12 +1224,12 @@ class EditLog extends Component {
       } else if (eventValue === 'Jobs') {
         pollQuestion = 'Which job should I take? Why?'
       }
-      this.setState({ [eventName]: eventValue, pollQuestion })
+      this.setState({ [eventName]: eventValue, pollQuestion, selectedValue: eventValue })
     } else if (changeDateTime) {
       if (mode === 'date') {
-        console.log('view date 1: ', eventValue)
+        // console.log('view date 1: ', eventValue)
         eventValue = convertDateToString(new Date(eventValue),'hyphenatedDate')
-        console.log('view date 2: ', eventValue)
+        // console.log('view date 2: ', eventValue)
         this.setState({ [eventName]: eventValue })
       } else if (mode === 'datetime') {
         //date component
@@ -1238,7 +1239,7 @@ class EditLog extends Component {
       }
     } else {
       console.log('in regular')
-      this.setState({ [eventName]: eventValue })
+      this.setState({ [eventName]: eventValue, selectedValue: eventValue })
     }
   }
 

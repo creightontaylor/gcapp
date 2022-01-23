@@ -69,7 +69,7 @@ class SubPicker extends Component {
               <Picker
                 selectedValue={this.props.selectedValue}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.props.formChangeHandler(this.props.selectedName,itemValue)
+                  this.props.formChangeHandler(this.props.selectedName,itemValue,true)
                 }>
                   {this.props.selectedOptions.map(value =>
                     <Picker.Item key={value.label} label={value.label} value={value.value} />
