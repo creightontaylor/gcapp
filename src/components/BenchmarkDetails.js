@@ -51,8 +51,8 @@ class BenchmarkDetails extends Component {
     console.log('componentDidUpdate called within BenchmarkDetails ')
 
     if (this.props.route.params && this.props.route.params.selectedBenchmark !== prevProps.route.params.selectedBenchmark) {
-      console.log('new career selected in parent')
-      this.setState({ selectedBenchmark: this.props.route.params.selectedBenchmark._id })
+      console.log('new benchmark selected in parent')
+      this.setState({ benchmarkId: this.props.route.params.selectedBenchmark._id })
     }
   }
 

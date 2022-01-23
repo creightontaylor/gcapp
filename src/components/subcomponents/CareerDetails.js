@@ -181,7 +181,7 @@ class CareerDetails extends Component {
 
           if (this.state.directLink) {
             //the searchTerm should be the id to avoid the search
-            Axios.get('https://www.guidedcompass.comapi/careers/details', { params: { searchTerm: careerSelected } })
+            Axios.get('https://www.guidedcompass.com/api/careers/details', { params: { searchTerm: careerSelected } })
             .then((response) => {
                 console.log('Career details query attempted 1', response.data.success, response.data.career);
 
@@ -1524,7 +1524,7 @@ class CareerDetails extends Component {
                     <View>
                       <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.horizontalPadding20]}>
                         {this.state.subNavCategories.map((value, index) =>
-                          <View style={[styles.row10,styles.rightPadding30]}>
+                          <View style={[styles.row15,styles.rightPadding30]}>
                             {(this.state.subNavCategories[index] === this.state.subNavSelected) ? (
                               <View style={[styles.selectedCarouselItem]}>
                                 <Text key={value} style={[styles.headingText5]}>{value}</Text>
@@ -1653,38 +1653,38 @@ class CareerDetails extends Component {
                           <Text style={[styles.headingText6,styles.underlineText]}>Market Data</Text>
                         </View>
                         <View style={[styles.rowDirection]}>
-                          <View style={[styles.width120]}>
+                          <View style={[styles.width160]}>
                             <Text style={[styles.standardText]}>Pay</Text>
                           </View>
-                          <View style={[styles.calcColumn180,styles.leftPadding]}>
-                            <Text style={[styles.standardText]}>${Number(this.state.careerDetails.marketData.pay).toLocaleString()}</Text>
+                          <View style={[styles.calcColumn220,styles.leftPadding]}>
+                            <Text style={[styles.standardText,styles.rightText]}>${Number(this.state.careerDetails.marketData.pay).toLocaleString()}</Text>
                           </View>
 
                         </View>
                         <View style={[styles.rowDirection]}>
-                          <View style={[styles.width120]}>
+                          <View style={[styles.width160]}>
                             <Text style={[styles.standardText]}>Total Employment</Text>
                           </View>
-                          <View style={[styles.calcColumn180,styles.leftPadding]}>
-                            <Text style={[styles.standardText]}>{this.state.careerDetails.marketData.totalEmployment}</Text>
+                          <View style={[styles.calcColumn220,styles.leftPadding]}>
+                            <Text style={[styles.standardText,styles.rightText]}>{this.state.careerDetails.marketData.totalEmployment}</Text>
                           </View>
 
                         </View>
                         <View style={[styles.rowDirection]}>
-                          <View style={[styles.width120]}>
+                          <View style={[styles.width160]}>
                             <Text style={[styles.standardText]}>Growth</Text>
                           </View>
-                          <View style={[styles.calcColumn180,styles.leftPadding]}>
-                            <Text style={[styles.standardText]}>{this.state.careerDetails.marketData.growth}</Text>
+                          <View style={[styles.calcColumn220,styles.leftPadding]}>
+                            <Text style={[styles.standardText,styles.rightText]}>{this.state.careerDetails.marketData.growth}</Text>
                           </View>
 
                         </View>
                         <View style={[styles.rowDirection]}>
-                          <View style={[styles.width120]}>
+                          <View style={[styles.width160]}>
                             <Text style={[styles.standardText]}>New Jobs</Text>
                           </View>
-                          <View style={[styles.calcColumn180,styles.leftPadding]}>
-                            <Text style={[styles.standardText]}>{Number(this.state.careerDetails.marketData.newJobs).toLocaleString()}</Text>
+                          <View style={[styles.calcColumn220,styles.leftPadding]}>
+                            <Text style={[styles.standardText,styles.rightText]}>{Number(this.state.careerDetails.marketData.newJobs).toLocaleString()}</Text>
                           </View>
 
                         </View>
@@ -1700,11 +1700,11 @@ class CareerDetails extends Component {
                         {this.state.careerDetails.whereTheyWork.map((value, index) =>
                           <View key={value}>
                             <View style={[styles.rowDirection]}>
-                              <View style={[styles.width120]}>
+                              <View style={[styles.width160]}>
                                 <Text style={[styles.standardText]}>{value.title}</Text>
                               </View>
-                              <View style={[styles.calcColumn180,styles.leftPadding]}>
-                                <Text style={[styles.standardText]}>{value.percentEmployed}% Employed</Text>
+                              <View style={[styles.calcColumn220,styles.leftPadding]}>
+                                <Text style={[styles.standardText,styles.rightText]}>{value.percentEmployed}% Employed</Text>
                               </View>
 
                             </View>

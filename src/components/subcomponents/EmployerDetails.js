@@ -85,7 +85,6 @@ class EmployerDetails extends Component {
         let employerId = this.props.employerId
         if (this.props.selectedEmployer) {
           employerId = this.props.selectedEmployer._id
-          this.props.navigation.setOptions({ headerTitle: this.props.selectedEmployer.employerName })
         }
 
         if (employerId || this.props.accountCode) {
@@ -118,10 +117,11 @@ class EmployerDetails extends Component {
 
               const employer = response.data.accountInfo
               this.setState({ employer })
+              this.props.navigation.setOptions({ headerTitle: employer.employerName })
 
               Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: employer._id } })
               .then((response) => {
-                console.log('Followers query attempted', response.data);
+                console.log('Followers query attempted');
 
                 if (response.data.success) {
                   console.log('followers query worked in sub settings')

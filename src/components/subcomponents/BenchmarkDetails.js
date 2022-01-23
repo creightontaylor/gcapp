@@ -8,18 +8,31 @@ import { WebView } from 'react-native-webview';
 const benchmarksIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/benchmarks-icon-dark.png';
 const approvedIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/approved-icon-blue.png';
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
+const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-grey.png';
+const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
 const favoritesIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-white.png';
 const shareIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/share-icon-dark.png';
 const questionMarkBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/question-mark-blue.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
+const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
+const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-blue.png';
+const linkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/link-icon.png';
+const internIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/intern-icon-blue.png';
+const assignmentsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignments-icon-blue.png';
+const problemIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/problem-icon-blue.png';
+const challengeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/challenge-icon-blue.png';
+const opportunitiesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-blue.png';
 
 import SubEndorsementDetails from '../common/EndorsementDetails';
+
+import {convertDateToString} from '../functions/convertDateToString';
 
 class BenchmarkDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      friends: [],
       favorites: [],
       subNavSelected: 'Ideal Profile',
       totalPercent: 100,
@@ -27,7 +40,7 @@ class BenchmarkDetails extends Component {
       benchmarkCategories: ['All','Weights','Work Preferences SA','Interests SA','Personality SA','Values SA','Skills SA','Endorsements','Education','Projects','Experience','Interview','Diversity'],
       viewOptions: ['','List','Profile Card'],
 
-      subNavCategories: ['Ideal Profile','About','People','Courses','Projects','Similar']
+      subNavCategories: ['Ideal Profile','About','People','Courses','Work','Similar']
     }
 
     this.retrieveData = this.retrieveData.bind(this)
@@ -40,6 +53,10 @@ class BenchmarkDetails extends Component {
     this.returnColorClass = this.returnColorClass.bind(this)
     this.prepareEndorsement = this.prepareEndorsement.bind(this)
     this.closeModal = this.closeModal.bind(this)
+    this.followPerson = this.followPerson.bind(this)
+    this.pullCourses = this.pullCourses.bind(this)
+    this.renderCourses = this.renderCourses.bind(this)
+    this.renderOpportunities = this.renderOpportunities.bind(this)
 
   }
 
@@ -51,7 +68,7 @@ class BenchmarkDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ')
+    console.log('componentDidUpdate called SubBenchmarkDetails')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       this.retrieveData()
@@ -130,6 +147,24 @@ class BenchmarkDetails extends Component {
       }).catch((error) => {
          console.log('User details query did not work', error);
       });
+
+      Axios.get('https://www.guidedcompass.com/api/friends', { params: { orgCode: activeOrg, emailId } })
+      .then((response) => {
+        console.log('Friends query attempted');
+
+          if (response.data.success) {
+            console.log('friends query worked')
+
+            const friends = response.data.friends
+            this.setState({ friends })
+
+          } else {
+            console.log('friends query did not work', response.data.message)
+          }
+
+      }).catch((error) => {
+          console.log('Friends query did not work for some reason', error);
+      })
 
       if (this.props.benchmarkId) {
         Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: this.props.benchmarkId } })
@@ -429,6 +464,8 @@ class BenchmarkDetails extends Component {
             // console.log('show ir: ', selectedBenchmark)
             this.setState({ selectedApplication, selectedJob, workPreferenceTags, interests, traits, knowledge });
 
+            this.pullCourses(selectedBenchmark.jobFunction, null, null, null)
+
             Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { accountCode: selectedBenchmark.accountCode, pathwayLevel: true } })
             .then((response) => {
               console.log('Benchmarks query within employerDetails attempted');
@@ -478,6 +515,110 @@ class BenchmarkDetails extends Component {
               });
             }
 
+            const resLimit = 50
+            Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: selectedBenchmark._id, resLimit } })
+            .then((response) => {
+              console.log('Followers query attempted');
+
+              if (response.data.success) {
+                console.log('followers query worked in sub settings')
+
+                const followers = response.data.followers
+                this.setState({ followers })
+              }
+
+            }).catch((error) => {
+              console.log('Followers query did not work for some reason', error);
+            });
+
+            if (selectedBenchmark.jobFunction) {
+
+              const search = true
+              const searchString = selectedBenchmark.jobFunction
+              const excludeMissingOutlookData = true
+              const excludeMissingJobZone = true
+              console.log('show search string: ', searchString)
+              Axios.put('https://www.guidedcompass.com/api/careers/search', { search, searchString, excludeMissingOutlookData, excludeMissingJobZone  })
+              .then((response) => {
+                  console.log('Career details query attempted 2');
+
+                  if (response.data.success) {
+
+                    if (response.data.careers && response.data.careers.length > 0) {
+                      const selectedCareer = response.data.careers[0]
+                      this.setState({ selectedCareer })
+                    }
+
+                  } else {
+                    console.log('there was an error from back-end, message:');
+                  }
+              });
+            }
+
+            Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+            .then((response) => {
+              console.log('Org info query attempted', response.data);
+
+                if (response.data.success) {
+                  console.log('org info query worked')
+
+                  // const orgName = response.data.orgInfo.orgName
+
+                  const orgCode = activeOrg
+                  let placementPartners = []
+                  if (response.data.orgInfo.placementPartners) {
+                    placementPartners = response.data.orgInfo.placementPartners
+                  }
+                  const postType = null
+                  const postTypes = ['Assignment','Problem','Challenge','Internship','Individual','Work']
+                  const pathway = null
+                  const accountCode = null
+                  const recent = true
+                  const active = true
+                  const pullPartnerPosts = true
+                  const csWorkflow = true
+                  const benchmarkId = selectedBenchmark._id
+
+                  //only schools see this screen
+                  Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, csWorkflow, benchmarkId }})
+                  .then((response) => {
+                    console.log('Posted postings query attempted within subcomponent');
+
+                    if (response.data.success) {
+                      console.log('posted postings query worked')
+
+                      if (response.data.postings.length !== 0) {
+
+                        let projectOpportunities = []
+                        let work = []
+                        for (let i = 1; i <= response.data.postings.length; i++) {
+                          if (response.data.postings[i - 1].postType === 'Assignment' || response.data.postings[i - 1].postType === 'Problem' || response.data.postings[i - 1].postType === 'Work') {
+                            projectOpportunities.push(response.data.postings[i - 1])
+                          } else {
+                            work.push(response.data.postings[i - 1])
+                          }
+                        }
+
+                        this.setState({ projectOpportunities, work })
+
+                      }
+
+                    } else {
+                      console.log('posted postings query did not work', response.data.message)
+                    }
+
+                  }).catch((error) => {
+                      console.log('Posted postings query did not work for some reason', error);
+                  });
+
+                } else {
+                  console.log('org info query did not work', response.data.message)
+                }
+
+            }).catch((error) => {
+                console.log('Org info query did not work for some reason', error);
+            });
+
           } else {
             console.log('benchmark query did not work', response.data.message)
           }
@@ -491,6 +632,486 @@ class BenchmarkDetails extends Component {
        // Error retrieving data
        console.log('there was an error', error)
      }
+  }
+
+  pullCourses(searchValue, priceValue, durationValue, difficultyLevelValue) {
+    console.log('pullCourses called', searchValue, priceValue, durationValue, difficultyLevelValue)
+
+    this.setState({ animating: true, errorMessage: null, successMessage: null })
+
+    // const searchValue = 'Excel'
+    if (!searchValue) {
+      searchValue = this.state.selectedSkill
+    }
+    const categoryValue = null
+    const subcategoryValue = null
+    // let priceValue = this.state.priceValue
+    if (!priceValue) {
+      priceValue = this.state.priceValue
+    }
+    let ratingValue = null
+    if (!ratingValue) {
+      ratingValue = 3.0
+    }
+    // let durationValue = this.state.durationValue
+    if (!durationValue) {
+      durationValue = this.state.durationValue
+    }
+
+    if (difficultyLevelValue) {
+      difficultyLevelValue = difficultyLevelValue.toLowerCase()
+    }
+
+    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue } })
+    .then((response) => {
+      console.log('Courses query attempted');
+
+        if (response.data.success) {
+          console.log('successfully retrieved courses')
+
+          if (response.data.responseData) {
+
+            const courses = response.data.responseData.results
+            this.setState({ courses, animating: false })
+          }
+
+        } else {
+          console.log('no course data found', response.data.message)
+          this.setState({ animating: false, errorMessage: 'Found no courses that match the criteria'})
+        }
+
+    }).catch((error) => {
+        console.log('Course query did not work', error);
+        this.setState({ animating: false, errorMessage: 'There was an unknown error retrieving the courses'})
+    });
+  }
+
+  renderCourses() {
+    console.log('renderBrowseCourses called')
+
+    return (
+      <View key="browseCourses">
+        <View style={[styles.row20]}>
+
+          {(this.state.animating) ? (
+            <View style={[styles.flex1,styles.flexCenter]}>
+              <View>
+                <ActivityIndicator
+                   animating = {this.state.animating}
+                   color = '#87CEFA'
+                   size = "large"
+                   style={[styles.square80, styles.centerHorizontally]}/>
+
+                <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Pulling results...</Text>
+
+              </View>
+            </View>
+          ) : (
+            <View>
+                {this.state.courses && this.state.courses.map((value, index) =>
+                  <View>
+                    <View key={index}>
+                      <View style={[styles.spacer]} />
+
+                      <View style={[styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)} style={[styles.calcColumn92,styles.rowDirection]}>
+                          <View style={[styles.width70]}>
+                            <Image source={{ uri: value.image_125_H}} style={[styles.square60,styles.contain]}/>
+                          </View>
+                          <View style={[styles.calcColumn162]}>
+                            <Text style={[styles.headingText5]}>{value.title}</Text>
+                            <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>{value.headline}</Text>
+
+                            <View style={[styles.halfSpacer]} />
+
+                            <View style={[styles.rowDirection]}>
+                              {(value.duration) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: timeIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.duration}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.price) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: moneyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.price}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.difficultyLevel) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: difficultyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.difficultyLevel ? value.difficultyLevel : "Beginner"}</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.rating && value.ratingCount) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: ratingsIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.rating} / 5.0 - {value.ratingCount} Ratings</Text>
+                                  </View>
+                                </View>
+                              )}
+
+                              {(value.studentCount) && (
+                                <View style={[styles.descriptionText3,styles.rowDirection]}>
+                                  <View style={[styles.rightMargin]}>
+                                    <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                                  </View>
+                                  <View style={[styles.rightMargin]}>
+                                    <Text style={[styles.standardText]}>{value.studentCount} Students</Text>
+                                  </View>
+                                </View>
+                              )}
+                            </View>
+
+                            <View style={[styles.halfSpacer]} />
+                          </View>
+                        </TouchableOpacity>
+
+                        <View style={[styles.leftPadding]} >
+                          <View>
+                            <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://www.udemy.com' + value.url)}>
+                              <Image source={{ uri: linkIcon}} style={[styles.square22,styles.contain]}/>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+
+                      {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
+                        <View style={[styles.leftPadding70]}>
+                          <View style={[styles.halfSpacer]} />
+                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[index].name}: {this.standardizeValue('sort',index, this.state.sortCriteriaArray[index].criteria)}</Text>
+                        </View>
+                      )}
+                      {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
+                        <View style={[styles.leftPadding70]}>
+                          <View style={[styles.halfSpacer]} />
+                          <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
+                        </View>
+                      )}
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                      <View style={[styles.horizontalLine]} />
+
+                      <View style={[styles.spacer]} />
+                    </View>
+
+                  </View>
+                )}
+
+            </View>
+          )}
+
+        </View>
+      </View>
+    )
+  }
+
+  renderOpportunities(type) {
+    console.log('renderOpportunities called', type);
+
+    let rows = [];
+
+    let filteredPostings = []
+    if (type === 'project' && this.state.projectOpportunities) {
+      filteredPostings = this.state.projectOpportunities
+    } else if (type === 'work' && this.state.work) {
+      filteredPostings = this.state.work
+    }
+
+    if (!filteredPostings || filteredPostings.length === 0) {
+      rows.push(
+        <View key={type} style={[styles.row30]}>
+          <Text style={[styles.standardText,styles.centerText]}>No {type} opportunities found with this benchmark attached.</Text>
+        </View>
+      )
+    } else {
+      for (let i = 1; i <= filteredPostings.length; i++) {
+        console.log(i);
+
+        // const index = i - 1
+        const posting = filteredPostings[i - 1]
+        let isActive = true
+
+        let postingIcon = internIconBlue
+
+        if (posting.postType === 'Assignment') {
+          postingIcon = assignmentsIconBlue
+        } else if (posting.postType === 'Problem') {
+          postingIcon = problemIconBlue
+        } else if (posting.postType === 'Challenge') {
+          postingIcon = challengeIconBlue
+        } else if (posting.postType === 'Internship') {
+          if (!posting.isActive) {
+            isActive = false
+          }
+        } else if (posting.postType === 'Work') {
+          postingIcon = opportunitiesIconBlue
+          if (!posting.isActive) {
+            isActive = false
+          }
+        }
+
+        if (posting.imageURL) {
+          postingIcon = posting.imageURL
+        }
+
+        if (isActive) {
+          let title = posting.title
+          if (!posting.title) {
+            title = posting.name
+          }
+
+          let subtitle1 = posting.employerName
+
+          let subtitle2 = posting.postType
+          if (posting.politicalParty && posting.politicalParty !== '') {
+            if (subtitle2 === '') {
+              subtitle2 = posting.politicalParty
+            } else {
+              subtitle2 = subtitle2 + ' | ' + posting.politicalParty
+            }
+          }
+
+          if (posting.field && posting.field !== '') {
+            if (subtitle2 === '') {
+              subtitle2 = posting.field.split("|")[0].trim()
+            } else {
+              subtitle2 = subtitle2 + ' | ' + posting.field.split("|")[0].trim()
+            }
+          }
+
+          if (posting.industry && posting.industry !== '') {
+            if (subtitle2 === '') {
+              subtitle2 = posting.industry
+            } else {
+              subtitle2 = subtitle2 + ' | Industry: ' + posting.industry
+            }
+          }
+
+          if (posting.difficultyLevel && posting.difficultyLevel !== '') {
+            if (subtitle2 === '') {
+              subtitle2 = posting.difficultyLevel
+            } else {
+              subtitle2 = subtitle2 + ' | Difficulty Level: ' + posting.difficultyLevel
+            }
+          }
+
+          if (posting.submissionDeadline) {
+            if (subtitle2 === '') {
+              subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
+            } else {
+              subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
+            }
+          }
+
+          if (posting.startDate) {
+            if (subtitle2 === '') {
+              subtitle2 = convertDateToString(posting.startDate,"datetime")
+            } else {
+              subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
+            }
+          }
+
+          rows.push(
+            <View key={i}>
+              <View style={styles.spacer} />
+
+              <View style={[styles.rowDirection]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})} style={[styles.calcColumn110,styles.rowDirection]}>
+                  <View style={[styles.width50]}>
+                    {(posting.matchScore) ? (
+                      <View style={styles.padding5}>
+                        <Progress.Circle progress={posting.matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                      </View>
+                    ) : (
+                      <Image source={{ uri: postingIcon}} style={[styles.square40,styles.topMargin5,styles.centerItem,styles.contain]} />
+                    )}
+                  </View>
+                  <View style={[styles.calcColumn160]}>
+                    <Text style={[styles.headingText5]}>{title}</Text>
+                    <Text style={[styles.descriptionText1]}>{subtitle1}</Text>
+                    <Text style={[styles.descriptionText2]}>{subtitle2}</Text>
+                    {((posting.subPostType === 'Full-Time' || posting.subPostType === 'Part-Time') && (posting.payRange)) && (
+                      <View>
+                        <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{posting.payRange}</Text>
+                      </View>
+                    )}
+                    {(posting.createdAt) && (
+                      <View style={[styles.topPadding,styles.horizontalPadding5]}>
+                        <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth]}>Posted {convertDateToString(posting.createdAt,"daysAgo")}</Text>
+                      </View>
+                    )}
+                  </View>
+                </TouchableOpacity>
+                <View>
+                  <View style={[styles.leftPadding,styles.rowDirection]}>
+                    <View style={[styles.rightPadding]}>
+                      {((this.state.applications && this.state.applications.some(app => app.postingId === posting._id)) || (posting.submissions && posting.submissions.some(sub => sub.userEmail === this.state.emailId))) ? (
+                        <View style={[styles.topMargin]}>
+                          <Image source={{ uri: appliedIconBlue}} style={[styles.square22,styles.contain]}/>
+                        </View>
+                      ) : (
+                        <View>
+                          {(this.state.rsvps && this.state.rsvps.some(rsvp => rsvp.postingId === posting._id)) && (
+                            <View style={[styles.topMargin]}>
+                              <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain,styles.pinRight]}/>
+                            </View>
+                          )}
+                        </View>
+                      )}
+
+                      <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(posting) }>
+                        <Image source={(this.state.favorites.includes(posting._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <TouchableOpacity style={[styles.topMargin]} onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: posting})}>
+                        <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain,styles.pinRight]}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              {(posting.sortCriteria || this.state.sortCriteriaArray) ? (
+                <View style={[styles.leftPadding70]}>
+                  {(this.state.sortCriteriaArray.length > 0) && (
+                    <View>
+                      <View style={styles.halfSpacer} />
+                      <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <View />
+              )}
+
+              {(posting.filterCriteria || this.state.filterCriteriaArray) ? (
+                <View style={[styles.leftPadding70]}>
+                  <View style={styles.halfSpacer} />
+                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+                </View>
+              ) : (
+                <View />
+              )}
+              <View style={styles.spacer} /><View style={styles.spacer} />
+              <View style={[styles.horizontalLine]} />
+
+              <View style={styles.spacer} />
+            </View>
+          )
+        }
+      }
+
+      if (type === 'events' && this.state.filteredPastEvents && this.state.filteredPastEvents.length > 0) {
+        rows.push(
+          <View key="past" style={[styles.row30]}>
+            <Text style={[styles.headingText3]}>Past Events</Text>
+          </View>
+        )
+
+        const filteredPastEvents = this.state.filteredPastEvents
+        for (let i = 1; i <= filteredPastEvents.length; i++) {
+          console.log(i);
+
+          const index = i - 1
+
+          rows.push(
+            <View key={"past|" +i}>
+              <View style={styles.spacer} />
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} style={[styles.calcColumn80,styles.rowDirection]}>
+                <View style={[styles.width50]}>
+                  {(this.state.filteredPastEvents[index].matchScore) ? (
+                    <View style={styles.padding5}>
+                      <Progress.Circle progress={this.state.filteredPastEvents[index].matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
+                    </View>
+                  ) : (
+                    <Image source={(this.state.filteredPastEvents[index].imageURL) ? { uri: this.state.filteredPastEvents[index].imageURL} : { uri: eventIconBlue}} style={[styles.square40,styles.contain,styles.centerItem]} />
+                  )}
+                  {(this.state.filteredPastEvents[index].createdAt) && (
+                    <View style={[styles.topPadding,styles.horizontalPadding5]}>
+                      <Text style={[styles.descriptionText4,styles.descriptionTextColor,styles.boldText,styles.fullScreenWidth,styles.centerText]}>{convertDateToString(this.state.filteredPastEvents[index].createdAt,"daysAgo")}</Text>
+                    </View>
+                  )}
+                </View>
+                <View style={[styles.calcColumn130]}>
+                  <Text style={[styles.headingText5]}>{filteredPastEvents[i - 1].title}</Text>
+                  <Text style={[styles.descriptionText1]}>{filteredPastEvents[i - 1].orgName}</Text>
+                  <Text style={[styles.descriptionText2]}>{convertDateToString(filteredPastEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredPastEvents[i - 1].endDate,"datetime")}</Text>
+                  {(this.props.pageSource === 'landingPage') && (
+                    <View style={[styles.row5]}>
+                      <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredPastEvents[i - 1].orgName}</Text></Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
+              <View style={[styles.leftPadding,styles.rowDirection]}>
+                <View>
+                  <View style={styles.spacer}/>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: this.state.filteredPastEvents[index]})} >
+                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+                  </TouchableOpacity>
+                </View>
+                {(this.state.path && this.state.path.includes('/app')) && (
+                  <View style={[styles.rightPadding15]}>
+                    {(this.state.rsvps && this.state.rsvps.some(app => app.postingId === this.state.filteredPastEvents[index]._id)) && (
+                      <View>
+                        <Image source={{ uri: rsvpIconBlue}} style={[styles.square22,styles.contain]} />
+                      </View>
+                    )}
+                    <TouchableOpacity style={[styles.topMargin]} onPress={() => this.favoriteItem(this.state.filteredPastEvents[i - 1]) }>
+                      <Image source={(this.state.favorites.includes(this.state.filteredPastEvents[index]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              {(this.state.filteredPastEvents[i - 1].sortCriteria || this.state.sortCriteriaArray) && (
+                <View style={[styles.leftPadding70]}>
+                  {(this.state.sortCriteriaArray.length > 0) && (
+                    <View>
+                      <View style={styles.halfSpacer} />
+                      <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.sortCriteriaArray[i - 1].name}: {this.state.sortCriteriaArray[i - 1].criteria}</Text>
+                    </View>
+                  )}
+                </View>
+              )}
+              {(this.state.filteredPastEvents[i - 1].filterCriteria || this.state.filterCriteriaArray) && (
+                <View style={[styles.leftPadding70]}>
+                  <View style={styles.halfSpacer} />
+                  <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+                </View>
+              )}
+              <View style={styles.spacer} /><View style={styles.spacer} />
+              <View style={[styles.horizontalLine]} />
+
+              <View style={styles.spacer} />
+            </View>
+          )
+        }
+      }
+    }
+
+    return rows;
   }
 
   formChangeHandler(eventName,eventValue) {
@@ -905,12 +1526,57 @@ class BenchmarkDetails extends Component {
     console.log('favorites', favoritesArray)
     this.setState({ favorites: favoritesArray })
   }
-  //
-  // closeModal() {
-  //   console.log('closeModal called')
-  //
-  //   this.setState({ modalIsOpen: false, howShareButtons: false, addQuestion: false, addProject: false, showUpvotes: false, showComments: false })
-  // }
+
+  followPerson(e, person) {
+    console.log('followPerson called', e, person)
+
+    e.stopPropagation()
+    e.preventDefault()
+
+    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
+
+    const senderPictureURL = this.state.pictureURL
+    const senderEmail = this.state.emailId
+    const senderFirstName = this.state.cuFirstName
+    const senderLastName = this.state.cuLastName
+    const senderUsername = this.state.username
+    const senderHeadline = this.state.headline
+    const recipientPictureURL = person.pictureURL
+    const recipientEmail = person.email
+    const recipientFirstName = person.firstName
+    const recipientLastName = person.lastName
+    const recipientUsername = person.username
+    const recipientHeadline = person.headline
+    const relationship = 'Peer'
+    const orgCode = this.state.activeOrg
+    const orgName = this.state.orgName
+
+    const friend = {
+      senderPictureURL, senderEmail, senderFirstName, senderLastName, senderUsername, senderHeadline,
+      recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
+      relationship, orgCode, orgName }
+
+    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
+    .then((response) => {
+
+      if (response.data.success) {
+
+        friend['active'] = false
+        friend['friend2Email'] = recipientEmail
+
+        let friends = this.state.friends
+        friends.push(friend)
+        console.log('show friends: ', friends)
+        this.setState({ successMessage: response.data.message, friends })
+
+      } else {
+
+        this.setState({ errorMessage: response.data.message })
+      }
+    }).catch((error) => {
+        console.log('Advisee request send did not work', error);
+    });
+  }
 
   render() {
 
@@ -997,7 +1663,7 @@ class BenchmarkDetails extends Component {
 
                         <View>
                           <View style={[styles.cardClearPadding,styles.fullScreenWidth,styles.topMargin30]}>
-                            <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.leftPadding30]}>
+                            <ScrollView style={[styles.carousel]} horizontal={true} style={[styles.horizontalPadding30]}>
                               {this.state.subNavCategories.map((value, index) =>
                                 <View style={[styles.row15,styles.rightPadding30]}>
                                   {(value === this.state.subNavSelected) ? (
@@ -1840,9 +2506,256 @@ class BenchmarkDetails extends Component {
                                     <Text style={[styles.descriptionText1,styles.row10]}><Text style={[styles.boldText]}>Location:</Text> {this.state.selectedEmployer.employerLocation}</Text>
                                   )}
 
+                                  <View style={[styles.row10]}>
+                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.props.navigation.navigate("EmployerDetails", { objectId: this.state.employerId })}>
+                                      <Text style={[styles.standardText,styles.ctaColor]}>View the {this.state.employerName} Profile</Text>
+                                    </TouchableOpacity>
+                                  </View>
+
                                 </View>
                               )}
 
+                              {(this.state.selectedCareer) && (
+                                <View>
+
+                                  {(this.state.selectedEmployer) && (
+                                    <View style={[styles.row30]}>
+                                      <View style={[styles.ctaHorizontalLine]} />
+                                    </View>
+                                  )}
+
+                                  <Text style={[styles.headingText3,styles.bottomPadding,styles.centerText]}>About {this.state.selectedCareer.name}</Text>
+
+                                  {(this.state.selectedCareer.overview) ? (
+                                    <View style={[styles.row15]}>
+                                      <Text style={[styles.descriptionText1,styles.centerText]}>{this.state.selectedCareer.overview.summary}</Text>
+                                    </View>
+                                  ) : (
+                                    <View />
+                                  )}
+
+                                  { (this.state.selectedCareer.marketData) && (
+                                    <View>
+                                      <View style={[styles.topPadding20,styles.bottomPadding5]}>
+                                        <Text style={[styles.headingText6,styles.underlineText]}>Market Data</Text>
+                                      </View>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.width160]}>
+                                          <Text style={[styles.descriptionText1]}>Pay</Text>
+                                        </View>
+                                        <View style={[styles.calcColumn220,styles.leftPadding]}>
+                                          <Text style={[styles.descriptionText1,styles.rightText]}>${Number(this.state.selectedCareer.marketData.pay).toLocaleString()}</Text>
+                                        </View>
+
+                                      </View>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.width160]}>
+                                          <Text style={[styles.descriptionText1]}>Total Employment</Text>
+                                        </View>
+                                        <View style={[styles.calcColumn220,styles.leftPadding]}>
+                                          <Text style={[styles.descriptionText1,styles.rightText]}>{this.state.selectedCareer.marketData.totalEmployment}</Text>
+                                        </View>
+
+                                      </View>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.width160]}>
+                                          <Text style={[styles.descriptionText1]}>Growth</Text>
+                                        </View>
+                                        <View style={[styles.calcColumn220,styles.leftPadding]}>
+                                          <Text style={[styles.descriptionText1,styles.rightText]}>{this.state.selectedCareer.marketData.growth}</Text>
+                                        </View>
+
+                                      </View>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.width160]}>
+                                          <Text style={[styles.descriptionText1]}>New Jobs</Text>
+                                        </View>
+                                        <View style={[styles.calcColumn220,styles.leftPadding]}>
+                                          <Text style={[styles.descriptionText1,styles.rightText]}>{Number(this.state.selectedCareer.marketData.newJobs).toLocaleString()}</Text>
+                                        </View>
+
+                                      </View>
+                                    </View>
+                                  )}
+
+                                  <View style={[styles.row10,styles.topMargin20]}>
+
+                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.props.navigation.navigate("CareerDetails", { careerSelected: this.state.selectedCareer })}>
+                                      <Text style={[styles.standardText,styles.ctaColor,styles.centerText]}>View Career Profile</Text>
+                                    </TouchableOpacity>
+                                  </View>
+
+                                </View>
+                              )}
+
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'People') && (
+                            <View>
+                              {(this.state.followers && this.state.followers.length > 0) ? (
+                                <View>
+                                  {this.state.followers.map((item, optionIndex) =>
+                                    <View key={item.email}>
+                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username})}>
+                                        <View style={[styles.card,styles.centerHorizontally,styles.fullScreenWidth,styles.topMargin20]}>
+                                          <View style={[styles.rowDirection]}>
+                                            <View style={[styles.flex15]} />
+                                            <View style={[styles.flex70, styles.flexCenter]}>
+                                              {(item.pictureURL) ? (
+                                                <Image source={{ uri: item.pictureURL}} style={[styles.square100,styles.contain, { borderRadius: 50 }]} />
+                                              ) : (
+                                                <Image source={{ uri: profileIconDark}} style={[styles.square60,styles.contain]} />
+                                              )}
+                                            </View>
+                                            <View style={[styles.flex15]}>
+                                              {(this.props.pageSource === 'Profiles') ? (
+                                                <View>
+                                                  {(item.publicProfile) ? (
+                                                    <View>
+                                                      {(item.publicProfileExtent) ? (
+                                                        <View>
+                                                          {(item.publicProfileExtent === 'Public') ? (
+                                                            <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>{item.publicProfileExtent}</Text>
+                                                          ) : (
+                                                            <Text style={[styles.middleColor,styles.descriptionText4,styles.rightText]}>{item.publicProfileExtent}</Text>
+                                                          )}
+                                                        </View>
+                                                      ) : (
+                                                        <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>Public</Text>
+                                                      )}
+                                                    </View>
+                                                  ) : (
+                                                    <View>
+                                                      <Text style={[styles.errorColor,styles.descriptionText4,styles.rightText]}>Private</Text>
+                                                    </View>
+                                                  )}
+                                                </View>
+                                              ) : (
+                                                <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.favoriteItem(item) } style={[styles.alignEnd]}>
+                                                  <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
+                                                </TouchableOpacity>
+                                              )}
+                                            </View>
+                                          </View>
+
+                                          <Text style={[styles.centerText,styles.headingText5,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
+                                          {(item.school) ? (
+                                            <Text style={[styles.centerText,styles.descriptionText1,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
+                                          ) : (
+                                            <View />
+                                          )}
+                                          {(item.major) ? (
+                                            <Text style={[styles.centerText,styles.descriptionText2,styles.topPadding5]}>{item.major}</Text>
+                                          ) : (
+                                            <View />
+                                          )}
+
+                                          <View style={[styles.topPadding20]}>
+                                            {(this.props.pageSource === 'Profiles') ? (
+                                              <View>
+                                                {(this.state.friends.some(friend => (friend.friend1Email === item.email || friend.friend2Email === item.email))) ? (
+                                                  <View>
+
+                                                    {(this.state.friends.some(friend => (friend.friend1Email === item.email || friend.friend2Email === item.email) && friend.active)) ? (
+                                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item})}>
+                                                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
+                                                          <Text style={[styles.descriptionText1,styles.ctaColor]}>Message</Text>
+                                                        </TouchableOpacity>
+                                                      </TouchableOpacity>
+                                                    ) : (
+                                                      <TouchableOpacity style={[styles.btnSquarish,styles.mediumBackground, styles.flexCenter]} disabled={true}><Text style={[styles.whiteColor,styles.descriptionText1]}>Pending</Text></TouchableOpacity>
+                                                    )}
+                                                  </View>
+                                                ) : (
+                                                  <View>
+                                                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
+                                                  </View>
+                                                )}
+                                              </View>
+                                            ) : (
+                                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item})}>
+                                                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}>
+                                                  <Text style={[styles.descriptionText1,styles.whiteColor]}>Message</Text>
+                                                </TouchableOpacity>
+                                              </TouchableOpacity>
+                                            )}
+                                          </View>
+
+                                          {(this.state.filterCriteriaArray && this.state.filterCriteriaArray.length > 0 && this.state.filterCriteriaArray.length === this.state.members.length) && (
+                                            <View style={[styles.topPadding]}>
+                                              <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
+                                            </View>
+                                          )}
+
+                                          <View style={[styles.spacer]} />
+                                        </View>
+                                      </TouchableOpacity>
+                                    </View>
+                                  )}
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Courses') && (
+                            <View style={[styles.card,styles.topMargin30]}>
+                              {this.renderCourses()}
+                            </View>
+                          )}
+                          {/*
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Projects') && (
+                            <View style={[styles.card,styles.topMargin30]}>
+                              {this.renderOpportunities('project')}
+                            </View>
+                          )}*/}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Work') && (
+                            <View style={[styles.card,styles.topMargin30]}>
+                              {this.renderOpportunities('work')}
+                            </View>
+                          )}
+
+                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Similar') && (
+                            <View style={[styles.card,styles.topMargin30]}>
+                                <Text style={[styles.headingText5]}>Other {this.state.employerName} Benchmarks</Text>
+
+                                <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+
+                                {this.state.benchmarks.map((item, index) =>
+                                  <View key={item}>
+                                    {(index < 3) && (
+                                      <View style={[styles.bottomPadding]}>
+                                        <View style={[styles.spacer]} />
+
+                                        <View style={[styles.rowDirection]}>
+                                          <TouchableOpacity onPress={() => this.props.navigation.navigate('BenchmarkDetails',{ selectedBenchmark: item })} style={[styles.rowDirection]}>
+                                            <View style={[styles.width50]}>
+                                              <Image source={(this.state.employerLogoURI) ? { uri: this.state.employerLogoURI } : { uri: benchmarksIconDark}} style={[styles.square40,styles.contain]}/>
+                                            </View>
+                                            <View style={[styles.calcColumn150]}>
+                                              <Text style={[styles.standardText,styles.ctaColor]}>{item.title}</Text>
+                                              <Text style={[styles.descriptionText2]}>{item.jobFunction} | {item.jobType}</Text>
+                                            </View>
+                                          </TouchableOpacity>
+                                          <View style={[styles.width40,styles.alignEnd]}>
+                                            <View style={[styles.spacer]}/>
+                                            <TouchableOpacity onPress={() => this.props.navigation.navigate('BenchmarkDetails',{ selectedBenchmark: item })}>
+                                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+                                            </TouchableOpacity>
+                                          </View>
+                                        </View>
+
+                                        <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                        <View style={[styles.horizontalLine]} />
+
+                                        <View style={[styles.spacer]} />
+                                      </View>
+                                    )}
+                                  </View>
+                                )}
                             </View>
                           )}
 
