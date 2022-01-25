@@ -335,21 +335,15 @@ class Benchmarks extends Component {
 
             const functionOptions = response.data.workOptions[0].functionOptions
             const industryOptions = response.data.workOptions[0].industryOptions
-            const payRangeOptions = response.data.workOptions[0].hourlyPayOptions
-            const employerTypeOptions = response.data.workOptions[0].employerTypeOptions
 
             //filters
             const defaultFilterOption = this.state.defaultFilterOption
             const functionFilterOptions = [defaultFilterOption].concat(functionOptions.slice(1, functionOptions.length))
             const industryFilterOptions = [defaultFilterOption].concat(industryOptions.slice(1, industryOptions.length))
-            const payRangeFilterOptions = [defaultFilterOption].concat(payRangeOptions.slice(1, payRangeOptions.length))
-            const employerTypeFilterOptions = [defaultFilterOption].concat(employerTypeOptions.slice(1, employerTypeOptions.length))
 
             let itemFilters = [
               { name: 'Work Function', value: defaultFilterOption, options: functionFilterOptions },
               { name: 'Industry', value: defaultFilterOption, options: industryFilterOptions },
-              { name: 'Pay Range', value: defaultFilterOption, options: payRangeFilterOptions },
-              { name: 'Employer Type', value: defaultFilterOption, options: employerTypeFilterOptions },
             ]
 
             const itemSorters = []
@@ -564,25 +558,47 @@ class Benchmarks extends Component {
     function officiallyFilter() {
       console.log('officiallyFilter called in careers')
 
-      Axios.get('https://www.guidedcompass.com/api/benchmarks/search', {  params: { searchString, orgCode, pathwayLevel }})
-      .then((response) => {
-        console.log('Benchmark search query attempted');
+      if (filters && filters.length > 0) {
+        Axios.get('https://www.guidedcompass.com/api/benchmarks/filter', {  params: { filters, orgCode, pathwayLevel }})
+        .then((response) => {
+          console.log('Benchmark filter query attempted');
 
-          if (response.data.success) {
-            console.log('successfully retrieved benchmarks')
+            if (response.data.success) {
+              console.log('successfully retrieved benchmarks')
 
-            const benchmarks = response.data.benchmarks
-            self.setState({ benchmarks, animating: false })
+              const benchmarks = response.data.benchmarks
+              self.setState({ benchmarks, animating: false })
 
-          } else {
-            console.log('no career data found', response.data.message)
+            } else {
+              console.log('no benchmarks data found', response.data.message)
+              self.setState({ animating: false })
+            }
+
+        }).catch((error) => {
+            console.log('Benchmark query did not work', error);
             self.setState({ animating: false })
-          }
+        });
+      } else {
+        Axios.get('https://www.guidedcompass.com/api/benchmarks/search', {  params: { searchString, orgCode, pathwayLevel }})
+        .then((response) => {
+          console.log('Benchmark search query attempted');
 
-      }).catch((error) => {
-          console.log('Benchmark query did not work', error);
-          self.setState({ animating: false })
-      });
+            if (response.data.success) {
+              console.log('successfully retrieved benchmarks')
+
+              const benchmarks = response.data.benchmarks
+              self.setState({ benchmarks, animating: false })
+
+            } else {
+              console.log('no benchmark data found', response.data.message)
+              self.setState({ animating: false })
+            }
+
+        }).catch((error) => {
+            console.log('Benchmark query did not work', error);
+            self.setState({ animating: false })
+        });
+      }
     }
 
     const delayFilter = () => {
@@ -804,7 +820,6 @@ class Benchmarks extends Component {
         const profile = this.state.profile
         const matchingCriteria = this.state.matchingCriteria
         const useCases = this.state.useCases
-        const hourOptions = this.state.hourOptions
 
         const self = this
 
@@ -815,23 +830,23 @@ class Benchmarks extends Component {
           const excludeMissingJobZone = true
 
           // query postings on back-end
-          Axios.put('https://www.guidedcompass.com/api/careers/matches', { profile, matchingCriteria, useCases, excludeMissingOutlookData, excludeMissingJobZone, hourOptions })
+          Axios.put('https://www.guidedcompass.com/api/benchmarks/matches', { profile, matchingCriteria, useCases, pathwayLevel: true })
           .then((response) => {
-            console.log('Career matches attempted');
+            console.log('Benchmark matches attempted');
 
               if (response.data.success) {
-                console.log('career match query worked')
+                console.log('benchmark query worked')
 
                 let matchScores = response.data.matchScores
-                self.setState({ animating: false, matchingView: true, matchScores, careers: response.data.careers })
+                self.setState({ animating: false, matchingView: true, matchScores, benchmarks: response.data.benchmarks })
 
               } else {
-                console.log('Career match did not work', response.data.message)
+                console.log('Benchmark did not work', response.data.message)
                 self.setState({ animating: false, matchingView: true, errorMessage: 'there was an error: ' + response.data.message })
               }
 
           }).catch((error) => {
-              console.log('Career match did not work for some reason', error);
+              console.log('Benchmark did not work for some reason', error);
               self.setState({ animating: false, matchingView: true, errorMessage: 'there was an error: ' + error.toString() })
           });
         }
@@ -1210,8 +1225,10 @@ class Benchmarks extends Component {
                           <View style={[styles.calcColumn160]}>
                             <Text style={[styles.headingText5]}>{value.title} by {value.employerName}</Text>
                             <Text style={[styles.descriptionText1,styles.curtailText]}>{value.jobFunction} | {value.jobType}</Text>
-                            {(value.maxPay) && (
+                            {(value.maxPay) ? (
                               <Text style={[styles.descriptionText3,styles.ctaColor,styles.boldText,styles.topPadding5]}>{value.maxPay}</Text>
+                            ) : (
+                              <View />
                             )}
                           </View>
                         </TouchableOpacity>

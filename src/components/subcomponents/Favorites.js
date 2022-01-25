@@ -19,6 +19,7 @@ const challengeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.c
 const internIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/intern-icon-blue.png';
 const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-blue.png';
 const courseIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png';
+const benchmarksIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/benchmarks-icon-blue.png';
 
 import SubTableView from '../common/TableView';
 
@@ -667,6 +668,42 @@ class Favorites extends Component {
                     </View>
                     <View style={[styles.width20,styles.topMargin15]}>
                       <TouchableOpacity  onPress={() => this.props.navigation.navigate('AdvisorExchange')}>
+                        <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain]}/>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                </View>
+              )
+            } else if (this.state.types[i - 1] === 'benchmark') {
+
+              rows.push(
+                <View key={index} style={[styles.row20,styles.calcColumn60,styles.rowDirection]}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('BenchmarkDetails', { selectedBenchmark: item })} style={[styles.rowDirection,styles.calcColumn120]}>
+                    <View style={[styles.width50]}>
+                      <Image source={{ uri: benchmarksIconBlue }} style={[styles.square40,styles.centerItem]}/>
+                    </View>
+                    <View style={[styles.calcColumn170,styles.horizontalPadding3]}>
+                      <View>
+                        <Text style={[styles.headingText6]}>{item.title}</Text>
+                      </View>
+                      <View style={[styles.rowDirection,styles.flexWrap]}>
+                        <Text style={[styles.descriptionText2]}>{item.jobFunction}</Text>
+                        {(item.industry) && (
+                          <Text style={[styles.descriptionText2]}> | {item.industry}</Text>
+                        )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={[styles.rowDirection]}>
+                    <View style={[styles.width30,styles.topMargin,styles.rightPadding]}>
+                      <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                      <TouchableOpacity onPress={() => this.favoriteItem(item) }>
+                        <Image source={{ uri: favoritesIconBlue}} style={[styles.square20,styles.contain]}/>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={[styles.width20,styles.topMargin15]}>
+                      <TouchableOpacity  onPress={() => this.props.navigation.navigate('BenchmarkDetails', { selectedBenchmark: item })}>
                         <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square18,styles.contain]}/>
                       </TouchableOpacity>
                     </View>

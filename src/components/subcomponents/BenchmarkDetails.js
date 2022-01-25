@@ -38,7 +38,6 @@ class BenchmarkDetails extends Component {
       totalPercent: 100,
       // benchmarkCategories: ['Overall Weights','Work Preferences','Interests','Personality','Values','Skills','Endorsements','Education','Projects','Experience','Interview'],
       benchmarkCategories: ['All','Weights','Work Preferences SA','Interests SA','Personality SA','Values SA','Skills SA','Endorsements','Education','Projects','Experience','Interview','Diversity'],
-      viewOptions: ['','List','Profile Card'],
 
       subNavCategories: ['Ideal Profile','About','People','Courses','Work','Similar']
     }
@@ -53,6 +52,7 @@ class BenchmarkDetails extends Component {
     this.returnColorClass = this.returnColorClass.bind(this)
     this.prepareEndorsement = this.prepareEndorsement.bind(this)
     this.closeModal = this.closeModal.bind(this)
+
     this.followPerson = this.followPerson.bind(this)
     this.pullCourses = this.pullCourses.bind(this)
     this.renderCourses = this.renderCourses.bind(this)
