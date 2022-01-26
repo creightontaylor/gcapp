@@ -1115,9 +1115,7 @@ class Careers extends Component {
                           <Image source={(this.state.showingSearchBar) ? {uri: filterIconSelected} : {uri: filterIcon}} style={[styles.square25,styles.contain,styles.centerItem,styles.topMargin]} />
                         </TouchableOpacity>
                       </View>
-
                     </View>
-
                   </View>
                 )}
               </View>

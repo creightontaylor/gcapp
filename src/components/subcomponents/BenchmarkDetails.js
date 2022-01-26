@@ -2618,24 +2618,9 @@ class BenchmarkDetails extends Component {
                                           <View style={[styles.topPadding20]}>
                                             {(this.props.pageSource === 'Profiles') ? (
                                               <View>
-                                                {(this.state.friends.some(friend => (friend.friend1Email === item.email || friend.friend2Email === item.email))) ? (
-                                                  <View>
-
-                                                    {(this.state.friends.some(friend => (friend.friend1Email === item.email || friend.friend2Email === item.email) && friend.active)) ? (
-                                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item})}>
-                                                        <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
-                                                          <Text style={[styles.descriptionText1,styles.ctaColor]}>Message</Text>
-                                                        </TouchableOpacity>
-                                                      </TouchableOpacity>
-                                                    ) : (
-                                                      <TouchableOpacity style={[styles.btnSquarish,styles.mediumBackground, styles.flexCenter]} disabled={true}><Text style={[styles.whiteColor,styles.descriptionText1]}>Pending</Text></TouchableOpacity>
-                                                    )}
-                                                  </View>
-                                                ) : (
-                                                  <View>
-                                                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
-                                                  </View>
-                                                )}
+                                                <View>
+                                                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
+                                                </View>
                                               </View>
                                             ) : (
                                               <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item})}>

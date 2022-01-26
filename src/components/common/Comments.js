@@ -76,12 +76,13 @@ class Comments extends Component {
         const selectedGroup = this.props.selectedGroup
         const selectedGroupPost = this.props.selectedGroupPost
         const selectedCurriculumPost = this.props.selectedCurriculumPost
+        const selectedCourse = this.props.selectedCourse
         const orgLogo = this.props.orgLogo
         const employerLogo = this.props.employerLogo
 
         this.setState({
           emailId, cuFirstName, cuLastName, orgFocus, roleName, selectedOpportunity, activeOrg, accountCode, comments,
-          postingOrgCode, postingOrgName, orgContactEmail, pictureURL, selectedGroup, selectedGroupPost, selectedCurriculumPost,
+          postingOrgCode, postingOrgName, orgContactEmail, pictureURL, selectedGroup, selectedGroupPost, selectedCurriculumPost, selectedCourse,
           orgLogo, employerLogo, employerName, jobTitle
         })
 
@@ -611,7 +612,6 @@ class Comments extends Component {
 
         let isGroup = false
 
-        // console.log('going in 1', this.state.selectedOpportunity, this.state.selectedGroup)
         if (this.state.selectedOpportunity) {
           console.log('going in 2')
           parentPostId = this.state.selectedOpportunity._id
@@ -637,6 +637,13 @@ class Comments extends Component {
           postingTitle = this.state.selectedCurriculumPost.itemName
           contributorFirstName = this.state.selectedCurriculumPost.firstName
           contributorEmail = this.state.selectedCurriculumPost.email
+          isGroup = true
+        } else if (this.state.selectedCourse) {
+          console.log('going in 3')
+          parentPostId = this.state.selectedCourse._id
+          postingTitle = this.state.selectedCourse.title
+          contributorFirstName = 'Creighton'
+          contributorEmail = 'creightontaylor@gmail.com'
           isGroup = true
         } else {
 
@@ -706,7 +713,7 @@ class Comments extends Component {
     render() {
       return (
         <ScrollView>
-          {(this.state.selectedOpportunity || this.state.selectedGroup || this.state.selectedGroupPost || this.state.selectedCurriculumPost) ? (
+          {(this.state.selectedOpportunity || this.state.selectedGroup || this.state.selectedGroupPost || this.state.selectedCurriculumPost || this.state.selectedCourse) ? (
             <View>
               <View>
                 <View style={styles.rowDirection}>

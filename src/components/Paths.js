@@ -8,6 +8,7 @@ const styles = require('./css/style');
 
 import SubBenchmarks from './subcomponents/Benchmarks';
 import SubCareers from './subcomponents/Careers';
+import SubCourses from './subcomponents/Courses';
 import SubFinancials from './subcomponents/Financials';
 import SubTrends from './subcomponents/Trends';
 
@@ -65,7 +66,7 @@ class Paths extends Component {
       let subNavCategories = ['Careers','Trends']
 
       if (this.state.showBenchmarks) {
-        subNavCategories = ['Benchmarks','Careers','Trends']
+        subNavCategories = ['Benchmarks','Careers','Courses','Trends']
         subNavSelected = 'Benchmarks'
       }
 
@@ -116,6 +117,11 @@ class Paths extends Component {
             <SubCareers navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} selectedGoal={this.state.selectedGoal} />
           </View>
         )}
+        {(this.state.subNavSelected === 'Courses') && (
+          <View>
+            <SubCourses navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} />
+          </View>
+        )}
         {(this.state.subNavSelected === 'Financial Planner') && (
           <View>
             <View>
@@ -123,6 +129,7 @@ class Paths extends Component {
             </View>
           </View>
         )}
+
         {(this.state.subNavSelected === 'Trends') && (
           <View>
             <SubTrends navigation={this.props.navigation} />
