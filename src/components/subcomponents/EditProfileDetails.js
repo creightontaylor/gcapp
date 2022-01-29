@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch, Linking } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, TextInput, Image, Platform, Switch, Linking, ActivityIndicator } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from "react-native-modal";
@@ -42,6 +42,7 @@ class EditProfileDetails extends Component {
     this.state = {
       allowMultipleFiles: true,
       extraPaddingForKeyboard: true,
+      allowMultipleRaces: false,
 
       profilePicFile: null,
       profilePicImage: null,
@@ -90,7 +91,9 @@ class EditProfileDetails extends Component {
       pathwayOptions: [],
       gradYearOptions: [],
       degreeOptions: [],
+      educationStatusOptions: [],
       basicCountOptions: [],
+      numberOfMembersOptions: [],
       householdIncomeOptions: [],
       fosterYouthOptions: [],
       homelessOptions: [],
@@ -285,161 +288,305 @@ class EditProfileDetails extends Component {
           roleName, activeOrg, orgFocus, orgName, remoteAuth
         })
 
+        const objectId = this.props.objectId
+
+        let placementAgency = false
+        if (activeOrg === 'bixel' || activeOrg === 'c2c' || activeOrg === 'exp' || activeOrg === 'unite-la') {
+          placementAgency = true
+        } else if (orgFocus === 'Placement') {
+          placementAgency = true
+        }
+
+        this.setState({ emailId: email, username, activeOrg, orgFocus, placementAgency });
+
+        const collaboratorOptions = [{value: '0'}, {value: '1'},{value: '2'}, {value: '3'}, {value: '4'}, {value: '5'}]
+        // const hourOptions = [{value: ''}, {value: '< 10'},{value: '10 - 50'}, {value: '50 - 100'}, {value: '100 - 500'}, {value: '500 - 1000'}, {value: '1000 - 5000'}, {value: '5000 - 10000'}, {value: '10000+'}]
+
+        let dateOptions = []
+        let educationDateOptions = []
+
+        const currentMonth = new Date().getMonth()
+        const currentYear = new Date().getFullYear()
+
+        let numberOfYears = 25
+        let educationBump = 5
+        let month = ''
+        let year = currentYear - numberOfYears
+
+        // console.log('show me current stuff', currentMonth, currentYear)
+        for (let i = 1; i <= ((numberOfYears + educationBump) * 12); i++) {
+          // console.log('show me stuff', i, (i + currentMonth + 1) % 12)
+          if ((i + currentMonth + 1) % 12 === 2) {
+            month = 'January'
+          } else if ((i + currentMonth + 1) % 12 === 3) {
+            month = 'February'
+          } else if ((i + currentMonth + 1) % 12 === 4) {
+            month = 'March'
+          } else if ((i + currentMonth + 1) % 12 === 5) {
+            month = 'April'
+          } else if ((i + currentMonth + 1) % 12 === 6) {
+            month = 'May'
+          } else if ((i + currentMonth + 1) % 12 === 7) {
+            month = 'June'
+          } else if ((i + currentMonth + 1) % 12 === 8) {
+            month = 'July'
+          } else if ((i + currentMonth + 1) % 12 === 9) {
+            month = 'August'
+          } else if ((i + currentMonth + 1) % 12 === 10) {
+            month = 'September'
+          } else if ((i + currentMonth + 1) % 12 === 11) {
+            month = 'October'
+          } else if ((i + currentMonth + 1) % 12 === 0) {
+            month = 'November'
+          } else if ((i + currentMonth + 1) % 12 === 1) {
+            month = 'December'
+          }
+
+          if (month === 'January') {
+            year = year + 1
+          }
+
+          // dateOptions.push({ value: month + ' ' + year})
+          if (i <= (numberOfYears * 12)) {
+            dateOptions.push({ value: month + ' ' + year})
+          }
+          educationDateOptions.push({ value: month + ' ' + year })
+
+        }
+
+        const startDate = dateOptions[dateOptions.legnth - 1]
+        const endDate = dateOptions[dateOptions.length - 1]
+
+        Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+        .then((response) => {
+          console.log('Org info query attempted cc', response.data);
+
+            if (response.data.success) {
+              console.log('org info query worked')
+
+              let schoolOptions = []
+              if (response.data.orgInfo.schools) {
+                schoolOptions = response.data.orgInfo.schools
+                schoolOptions.unshift('')
+              }
+
+              let pathwayOptions = []
+              if (response.data.orgInfo.pathways) {
+                pathwayOptions = response.data.orgInfo.pathways
+                pathwayOptions.unshift({ name: ''})
+              }
+
+              let gradYearOptions = []
+              if (response.data.orgInfo.gradYearOptions) {
+                gradYearOptions = response.data.orgInfo.gradYearOptions
+                gradYearOptions.unshift('')
+              }
+
+              let projectCategoryOptions = [{value: 'I am not sure'}]
+              if (activeOrg === 'c2c') {
+                if (response.data.orgInfo.projectCategories) {
+                  for (let i = 1; i <= response.data.orgInfo.projectCategories.length; i++) {
+                    if (i > 1) {
+                      projectCategoryOptions.push({ value: response.data.orgInfo.projectCategories[i - 1]})
+                    }
+                  }
+                }
+              }
+
+              const degree = response.data.orgInfo.degreeType
+              this.fetchAllProfileData(email, degree)
+
+              const requirePersonalInfo = response.data.orgInfo.requirePersonalInfo
+              const includeAlternativeContacts = response.data.orgInfo.includeAlternativeContacts
+              const allowMultipleRaces = response.data.orgInfo.allowMultipleRaces
+
+              this.setState({ requirePersonalInfo, includeAlternativeContacts, allowMultipleRaces })
+
+              Axios.get('https://www.guidedcompass.com/api/workoptions')
+              .then((response) => {
+                console.log('Work options query tried', response.data);
+
+                if (response.data.success) {
+                  console.log('Work options query succeeded')
+
+                  let functionOptions = [{value: 'I am not sure'}]
+                  for (let i = 1; i <= response.data.workOptions[0].functionOptions.length; i++) {
+                    if (i > 1) {
+                      functionOptions.push({ value: response.data.workOptions[0].functionOptions[i - 1]})
+                    }
+                  }
+
+                  let industryOptions = [{value: 'I am not sure'}]
+                  for (let i = 1; i <= response.data.workOptions[0].industryOptions.length; i++) {
+                    if (i > 1) {
+                      industryOptions.push({ value: response.data.workOptions[0].industryOptions[i - 1]})
+                    }
+                  }
+
+                  let workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
+                  for (let i = 1; i <= response.data.workOptions[0].workDistanceOptions.length; i++) {
+                    if (i > 1) {
+                      workDistanceOptions.push({ value: response.data.workOptions[0].workDistanceOptions[i - 1]})
+                    }
+                  }
+
+                  let hoursPerWeekOptions = [{value: ''}]
+                  for (let i = 1; i <= response.data.workOptions[0].hoursPerWeekOptions.length; i++) {
+                    if (i > 1) {
+                      hoursPerWeekOptions.push({ value: response.data.workOptions[0].hoursPerWeekOptions[i - 1]})
+                    }
+                  }
+
+                  let hourOptions = [{value: ''}]
+                  for (let i = 1; i <= response.data.workOptions[0].hourOptions.length; i++) {
+                    if (i > 1) {
+                      hourOptions.push({ value: response.data.workOptions[0].hourOptions[i - 1]})
+                    }
+                  }
+
+                  let workTypeOptions = [{value: 'Internship'}]
+                  for (let i = 1; i <= response.data.workOptions[0].workTypeOptions.length; i++) {
+                    if (i > 1) {
+                      workTypeOptions.push({ value: response.data.workOptions[0].workTypeOptions[i - 1]})
+                    }
+                  }
+
+                  let hourlyPayOptions = [{value: 'Flexible'}]
+                  for (let i = 1; i <= response.data.workOptions[0].hourlyPayOptions.length; i++) {
+                    if (i > 1) {
+                      hourlyPayOptions.push({ value: response.data.workOptions[0].hourlyPayOptions[i - 1]})
+                    }
+                  }
+
+                  let annualPayOptions = [{value: 'I am not sure'}]
+                  for (let i = 1; i <= response.data.workOptions[0].annualPayOptions.length; i++) {
+                    if (i > 1) {
+                      annualPayOptions.push({ value: response.data.workOptions[0].annualPayOptions[i - 1]})
+                    }
+                  }
+
+                  const degreeOptions = response.data.workOptions[0].degreeOptions
+                  const educationStatusOptions = degreeOptions.concat(['Not currently enrolled in school'])
+
+                  // let gradYearOptions = []
+                  const startingPoint = new Date().getFullYear() - 6
+                  for (let i = 1; i <= 10; i++) {
+                    gradYearOptions.push(startingPoint + i)
+                  }
+
+                  // let projectCategoryOptions = [{value: 'I am not sure'}]
+                  for (let i = 1; i <= response.data.workOptions[0].projectCategoryOptions.length; i++) {
+                    if (i > 1) {
+                      projectCategoryOptions.push({ value: response.data.workOptions[0].projectCategoryOptions[i - 1]})
+                    }
+                  }
+
+                  // gradYearOptions.push('Other')
+
+                  let politicalAlignmentOptions = ['']
+                  if (response.data.workOptions[0].individualPoliticalAlignmentOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].individualPoliticalAlignmentOptions.length; i++) {
+                      politicalAlignmentOptions.push(response.data.workOptions[0].individualPoliticalAlignmentOptions[i - 1])
+                    }
+                  }
+
+                  let registrationOptions = ['']
+                  if (response.data.workOptions[0].unitedStateOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].unitedStateOptions.length; i++) {
+                      registrationOptions.push(response.data.workOptions[0].unitedStateOptions[i - 1])
+                    }
+                  }
+
+                  let hometownOptions = registrationOptions
+
+                  const basicCountOptions = ['','1','2','3','4','5','6','7','8','9','10']
+                  let householdIncomeOptions = response.data.workOptions[0].lowIncomeOptions
+                  householdIncomeOptions.unshift('')
+                  let fosterYouthOptions = response.data.workOptions[0].fosterYouthOptions
+                  fosterYouthOptions.unshift('')
+                  let homelessOptions = response.data.workOptions[0].homelessOptions
+                  homelessOptions.unshift('')
+                  let incarceratedOptions = response.data.workOptions[0].incarceratedOptions
+                  incarceratedOptions.unshift('')
+
+                  let adversityListOptions = []
+                  if (response.data.workOptions[0].adversityListOptions) {
+                    adversityListOptions = response.data.workOptions[0].adversityListOptions
+                  }
+
+                  const careerGoalOptions = response.data.workOptions[0].careerGoalOptions
+
+                  let raceOptions = ['']
+                  if (response.data.workOptions[0].raceOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].raceOptions.length; i++) {
+                      raceOptions.push(response.data.workOptions[0].raceOptions[i - 1])
+                    }
+                  }
+
+                  let genderOptions = ['']
+                  if (response.data.workOptions[0].genderOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].genderOptions.length; i++) {
+                      genderOptions.push(response.data.workOptions[0].genderOptions[i - 1])
+                    }
+                  }
+
+                  let numberOfMembersOptions = ['']
+                  if (response.data.workOptions[0].numberOfMembersOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].numberOfMembersOptions.length; i++) {
+                      numberOfMembersOptions.push(response.data.workOptions[0].numberOfMembersOptions[i - 1])
+                    }
+                  }
+
+                  let workAuthorizationOptions = ['']
+                  if (response.data.workOptions[0].workAuthorizationOptions) {
+                    for (let i = 1; i <= response.data.workOptions[0].workAuthorizationOptions.length; i++) {
+                      workAuthorizationOptions.push(response.data.workOptions[0].workAuthorizationOptions[i - 1])
+                    }
+                  }
+
+                  this.setState({ functionOptions, industryOptions, gradYearOptions, pathwayOptions,
+                    workDistanceOptions, hoursPerWeekOptions, workTypeOptions, hourlyPayOptions, payOptions: annualPayOptions,
+                    projectCategoryOptions, dateOptions,educationDateOptions, collaboratorOptions, hourOptions, degreeOptions,
+                    politicalAlignmentOptions, registrationOptions, hometownOptions, schoolOptions,
+                    basicCountOptions, householdIncomeOptions, fosterYouthOptions, homelessOptions, incarceratedOptions,
+                    adversityListOptions, careerGoalOptions, educationStatusOptions,
+                    raceOptions, genderOptions, numberOfMembersOptions, workAuthorizationOptions
+                  })
+
+                } else {
+                  console.log('no jobFamilies data found', response.data.message)
+
+                  const functionOptions = [{value: 'Undecided'}]
+                  const industryOptions = [{value: 'Undecided'}]
+                  //const workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
+                  const hoursPerWeekOptions = [{value: '~ 40 hours / week'}]
+                  //const workTypeOptions = [{value: 'Internship'}]
+                  //const hourlyPayOptions = [{value: 'Flexible'}]
+                  const payOptions = [{value: 'Flexible'}]
+                  const hourOptions = [{value: ''}]
+
+                  this.setState({ functionOptions, industryOptions, hoursPerWeekOptions, payOptions, dateOptions, collaboratorOptions, hourOptions, startDate, endDate })
+
+                }
+              }).catch((error) => {
+                  console.log('query for work options did not work', error);
+              })
+
+            } else {
+              console.log('org info query did not work', response.data.message)
+            }
+
+        }).catch((error) => {
+            console.log('Org info query did not work for some reason', error);
+        });
+
         if (this.props.fromAdvisor) {
 
           if (activeOrg) {
             this.fetchAllProfileData(email, null)
           }
 
-          Axios.get('https://www.guidedcompass.com/api/workoptions')
-            .then((response) => {
-              console.log('Work options query tried', response.data);
-
-              if (response.data.success) {
-                console.log('Work options query succeeded')
-
-                let functionOptions = ['']
-                for (let i = 1; i <= response.data.workOptions[0].functionOptions.length; i++) {
-                  if (i > 1) {
-                    functionOptions.push(response.data.workOptions[0].functionOptions[i - 1])
-                  }
-                }
-
-                let industryOptions = []
-                for (let i = 1; i <= response.data.workOptions[0].industryOptions.length; i++) {
-                  if (i > 1) {
-                    industryOptions.push({ value: response.data.workOptions[0].industryOptions[i - 1]})
-                  }
-                }
-
-                let degreeOptions = []
-                for (let i = 1; i <= response.data.workOptions[0].degreeOptions.length; i++) {
-                  if (i > 1) {
-                    degreeOptions.push(response.data.workOptions[0].degreeOptions[i - 1])
-                  }
-                }
-
-                let politicalAlignmentOptions = ['']
-                if (response.data.workOptions[0].individualPoliticalAlignmentOptions) {
-                  for (let i = 1; i <= response.data.workOptions[0].individualPoliticalAlignmentOptions.length; i++) {
-                    politicalAlignmentOptions.push(response.data.workOptions[0].individualPoliticalAlignmentOptions[i - 1])
-                  }
-                }
-
-                let registrationOptions = ['']
-                if (response.data.workOptions[0].unitedStateOptions) {
-                  for (let i = 1; i <= response.data.workOptions[0].unitedStateOptions.length; i++) {
-                    registrationOptions.push(response.data.workOptions[0].unitedStateOptions[i - 1])
-                  }
-                }
-
-                let hometownOptions = registrationOptions
-
-                this.setState({ functionOptions, industryOptions, degreeOptions, politicalAlignmentOptions, registrationOptions, hometownOptions })
-
-                if (activeOrg === 'c2c') {
-                  Axios.get('https://www.guidedcompass.com/api/benchmarks', { params: { orgCode: activeOrg } })
-                  .then((response) => {
-                    console.log('Benchmarks query attempted', response.data);
-
-                      if (response.data.success) {
-                        console.log('benchmark query worked')
-
-                        if (response.data.benchmarks.length !== 0) {
-                          //jobs = response.data.postings
-
-                          let benchmarkOptions = response.data.benchmarks
-                          functionOptions = ['']
-
-                          for (let i = 1; i <= benchmarkOptions.length; i++) {
-                            if (!benchmarkOptions[i - 1].title.includes('Scholarship') && !benchmarkOptions[i - 1].title.includes('C2C')) {
-                              functionOptions.push(benchmarkOptions[i - 1].title)
-                            }
-                          }
-
-                          this.setState({ functionOptions })
-                        }
-                      }
-                  })
-                }
-              } else {
-                console.log('no jobFamilies data found', response.data.message)
-
-              }
-          }).catch((error) => {
-              console.log('query for work options did not work', error);
-          })
-
         } else {
-
-          const objectId = this.props.objectId
-
-          let placementAgency = false
-          if (activeOrg === 'bixel' || activeOrg === 'c2c' || activeOrg === 'exp' || activeOrg === 'unite-la') {
-            placementAgency = true
-          } else if (orgFocus === 'Placement') {
-            placementAgency = true
-          }
-
-          this.setState({ emailId: email, username, activeOrg, orgFocus, placementAgency });
-
-          const collaboratorOptions = [{value: '0'}, {value: '1'},{value: '2'}, {value: '3'}, {value: '4'}, {value: '5'}]
-          // const hourOptions = [{value: ''}, {value: '< 10'},{value: '10 - 50'}, {value: '50 - 100'}, {value: '100 - 500'}, {value: '500 - 1000'}, {value: '1000 - 5000'}, {value: '5000 - 10000'}, {value: '10000+'}]
-
-          let dateOptions = []
-          let educationDateOptions = []
-
-          const currentMonth = new Date().getMonth()
-          const currentYear = new Date().getFullYear()
-
-          let numberOfYears = 25
-          let educationBump = 5
-          let month = ''
-          let year = currentYear - numberOfYears
-
-          // console.log('show me current stuff', currentMonth, currentYear)
-          for (let i = 1; i <= ((numberOfYears + educationBump) * 12); i++) {
-            // console.log('show me stuff', i, (i + currentMonth + 1) % 12)
-            if ((i + currentMonth + 1) % 12 === 2) {
-              month = 'January'
-            } else if ((i + currentMonth + 1) % 12 === 3) {
-              month = 'February'
-            } else if ((i + currentMonth + 1) % 12 === 4) {
-              month = 'March'
-            } else if ((i + currentMonth + 1) % 12 === 5) {
-              month = 'April'
-            } else if ((i + currentMonth + 1) % 12 === 6) {
-              month = 'May'
-            } else if ((i + currentMonth + 1) % 12 === 7) {
-              month = 'June'
-            } else if ((i + currentMonth + 1) % 12 === 8) {
-              month = 'July'
-            } else if ((i + currentMonth + 1) % 12 === 9) {
-              month = 'August'
-            } else if ((i + currentMonth + 1) % 12 === 10) {
-              month = 'September'
-            } else if ((i + currentMonth + 1) % 12 === 11) {
-              month = 'October'
-            } else if ((i + currentMonth + 1) % 12 === 0) {
-              month = 'November'
-            } else if ((i + currentMonth + 1) % 12 === 1) {
-              month = 'December'
-            }
-
-            if (month === 'January') {
-              year = year + 1
-            }
-
-            // dateOptions.push({ value: month + ' ' + year})
-            if (i <= (numberOfYears * 12)) {
-              dateOptions.push({ value: month + ' ' + year})
-            }
-            educationDateOptions.push({ value: month + ' ' + year })
-
-          }
-
-          const startDate = dateOptions[dateOptions.legnth - 1]
-          const endDate = dateOptions[dateOptions.length - 1]
 
           Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email, includeCollaborations: true } })
           .then((response) => {
@@ -603,192 +750,6 @@ class EditProfileDetails extends Component {
 
           }).catch((error) => {
               console.log('Experience query did not work', error);
-          });
-
-          Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
-          .then((response) => {
-            console.log('Org info query attempted cc', response.data);
-
-              if (response.data.success) {
-                console.log('org info query worked')
-
-                let schoolOptions = []
-                if (response.data.orgInfo.schools) {
-                  schoolOptions = response.data.orgInfo.schools
-                  schoolOptions.unshift('')
-                }
-
-                let pathwayOptions = []
-                if (response.data.orgInfo.pathways) {
-                  pathwayOptions = response.data.orgInfo.pathways
-                  pathwayOptions.unshift({ name: ''})
-                }
-
-                let gradYearOptions = []
-                if (response.data.orgInfo.gradYearOptions) {
-                  gradYearOptions = response.data.orgInfo.gradYearOptions
-                  gradYearOptions.unshift('')
-                }
-
-                let projectCategoryOptions = [{value: 'I am not sure'}]
-                if (activeOrg === 'c2c') {
-                  if (response.data.orgInfo.projectCategories) {
-                    for (let i = 1; i <= response.data.orgInfo.projectCategories.length; i++) {
-                      if (i > 1) {
-                        projectCategoryOptions.push({ value: response.data.orgInfo.projectCategories[i - 1]})
-                      }
-                    }
-                  }
-                }
-
-                const degree = response.data.orgInfo.degreeType
-                this.fetchAllProfileData(email, degree)
-
-                const requirePersonalInfo = response.data.orgInfo.requirePersonalInfo
-                this.setState({ requirePersonalInfo })
-
-                Axios.get('https://www.guidedcompass.com/api/workoptions')
-                .then((response) => {
-                  console.log('Work options query tried', response.data);
-
-                  if (response.data.success) {
-                    console.log('Work options query succeeded')
-
-                    let functionOptions = [{value: 'I am not sure'}]
-                    for (let i = 1; i <= response.data.workOptions[0].functionOptions.length; i++) {
-                      if (i > 1) {
-                        functionOptions.push({ value: response.data.workOptions[0].functionOptions[i - 1]})
-                      }
-                    }
-
-                    let industryOptions = [{value: 'I am not sure'}]
-                    for (let i = 1; i <= response.data.workOptions[0].industryOptions.length; i++) {
-                      if (i > 1) {
-                        industryOptions.push({ value: response.data.workOptions[0].industryOptions[i - 1]})
-                      }
-                    }
-
-                    let workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
-                    for (let i = 1; i <= response.data.workOptions[0].workDistanceOptions.length; i++) {
-                      if (i > 1) {
-                        workDistanceOptions.push({ value: response.data.workOptions[0].workDistanceOptions[i - 1]})
-                      }
-                    }
-
-                    let hoursPerWeekOptions = [{value: ''}]
-                    for (let i = 1; i <= response.data.workOptions[0].hoursPerWeekOptions.length; i++) {
-                      if (i > 1) {
-                        hoursPerWeekOptions.push({ value: response.data.workOptions[0].hoursPerWeekOptions[i - 1]})
-                      }
-                    }
-
-                    let hourOptions = [{value: ''}]
-                    for (let i = 1; i <= response.data.workOptions[0].hourOptions.length; i++) {
-                      if (i > 1) {
-                        hourOptions.push({ value: response.data.workOptions[0].hourOptions[i - 1]})
-                      }
-                    }
-
-                    let workTypeOptions = [{value: 'Internship'}]
-                    for (let i = 1; i <= response.data.workOptions[0].workTypeOptions.length; i++) {
-                      if (i > 1) {
-                        workTypeOptions.push({ value: response.data.workOptions[0].workTypeOptions[i - 1]})
-                      }
-                    }
-
-                    let hourlyPayOptions = [{value: 'Flexible'}]
-                    for (let i = 1; i <= response.data.workOptions[0].hourlyPayOptions.length; i++) {
-                      if (i > 1) {
-                        hourlyPayOptions.push({ value: response.data.workOptions[0].hourlyPayOptions[i - 1]})
-                      }
-                    }
-
-                    let annualPayOptions = [{value: 'I am not sure'}]
-                    for (let i = 1; i <= response.data.workOptions[0].annualPayOptions.length; i++) {
-                      if (i > 1) {
-                        annualPayOptions.push({ value: response.data.workOptions[0].annualPayOptions[i - 1]})
-                      }
-                    }
-
-                    const degreeOptions = response.data.workOptions[0].degreeOptions
-
-                    // let gradYearOptions = []
-                    const startingPoint = new Date().getFullYear() - 6
-                    for (let i = 1; i <= 10; i++) {
-                      gradYearOptions.push(startingPoint + i)
-                    }
-
-                    // let projectCategoryOptions = [{value: 'I am not sure'}]
-                    for (let i = 1; i <= response.data.workOptions[0].projectCategoryOptions.length; i++) {
-                      if (i > 1) {
-                        projectCategoryOptions.push({ value: response.data.workOptions[0].projectCategoryOptions[i - 1]})
-                      }
-                    }
-
-                    // gradYearOptions.push('Other')
-
-                    let politicalAlignmentOptions = ['']
-                    if (response.data.workOptions[0].individualPoliticalAlignmentOptions) {
-                      for (let i = 1; i <= response.data.workOptions[0].individualPoliticalAlignmentOptions.length; i++) {
-                        politicalAlignmentOptions.push(response.data.workOptions[0].individualPoliticalAlignmentOptions[i - 1])
-                      }
-                    }
-
-                    let registrationOptions = ['']
-                    if (response.data.workOptions[0].unitedStateOptions) {
-                      for (let i = 1; i <= response.data.workOptions[0].unitedStateOptions.length; i++) {
-                        registrationOptions.push(response.data.workOptions[0].unitedStateOptions[i - 1])
-                      }
-                    }
-
-                    let hometownOptions = registrationOptions
-
-                    const basicCountOptions = ['','1','2','3','4','5','6','7','8','9','10']
-                    let householdIncomeOptions = response.data.workOptions[0].lowIncomeOptions
-                    householdIncomeOptions.unshift('')
-                    let fosterYouthOptions = response.data.workOptions[0].fosterYouthOptions
-                    fosterYouthOptions.unshift('')
-                    let homelessOptions = response.data.workOptions[0].homelessOptions
-                    homelessOptions.unshift('')
-                    let incarceratedOptions = response.data.workOptions[0].incarceratedOptions
-                    incarceratedOptions.unshift('')
-
-                    const adversityListOptions = ['LGBQIA','ADA','First Generation Immigrant','First Generation College Student','Receiving Free or Reduced-Price Lunch','Receiving Food Stamps','Receiving TANF','None']
-                    const careerGoalOptions = response.data.workOptions[0].careerGoalOptions
-
-                    this.setState({ functionOptions, industryOptions, gradYearOptions, pathwayOptions,
-                      workDistanceOptions, hoursPerWeekOptions, workTypeOptions, hourlyPayOptions, payOptions: annualPayOptions,
-                      projectCategoryOptions, dateOptions,educationDateOptions, collaboratorOptions, hourOptions, degreeOptions,
-                      politicalAlignmentOptions, registrationOptions, hometownOptions, schoolOptions,
-                      basicCountOptions, householdIncomeOptions, fosterYouthOptions, homelessOptions, incarceratedOptions,
-                      adversityListOptions, careerGoalOptions
-                    })
-
-                  } else {
-                    console.log('no jobFamilies data found', response.data.message)
-
-                    const functionOptions = [{value: 'Undecided'}]
-                    const industryOptions = [{value: 'Undecided'}]
-                    //const workDistanceOptions = [{value: '0 miles'},{value: '10 miles'}]
-                    const hoursPerWeekOptions = [{value: '~ 40 hours / week'}]
-                    //const workTypeOptions = [{value: 'Internship'}]
-                    //const hourlyPayOptions = [{value: 'Flexible'}]
-                    const payOptions = [{value: 'Flexible'}]
-                    const hourOptions = [{value: ''}]
-
-                    this.setState({ functionOptions, industryOptions, hoursPerWeekOptions, payOptions, dateOptions, collaboratorOptions, hourOptions, startDate, endDate })
-
-                  }
-                }).catch((error) => {
-                    console.log('query for work options did not work', error);
-                })
-
-              } else {
-                console.log('org info query did not work', response.data.message)
-              }
-
-          }).catch((error) => {
-              console.log('Org info query did not work for some reason', error);
           });
 
           if (this.props.category === 'Public') {
@@ -1001,6 +962,7 @@ class EditProfileDetails extends Component {
               resumes, resumeNames,
               customWebsiteURL: response.data.user.customWebsiteURL,
               videoResumeURL: response.data.user.videoResumeURL,
+              educationStatus: response.data.user.educationStatus,
               education: response.data.user.education,
               school: response.data.user.school,
               schoolName: response.data.user.school,
@@ -1011,6 +973,8 @@ class EditProfileDetails extends Component {
               pathway: response.data.user.pathway,
               gradYear: response.data.user.gradYear,
               race: response.data.user.race,
+              races: response.data.user.races,
+              selfDescribedRace: response.data.user.selfDescribedRace,
               gender: response.data.user.gender,
               veteranStatus: response.data.user.veteran,
               workAuthorization: response.data.user.workAuthorization,
@@ -1028,6 +992,8 @@ class EditProfileDetails extends Component {
 
               dateOfBirth: response.data.user.dateOfBirth,
               phoneNumber: response.data.user.phoneNumber,
+              alternativeEmail: response.data.user.alternativeEmail,
+              alternativePhoneNumber: response.data.user.alternativePhoneNumber,
               address: response.data.user.address,
               city: response.data.user.city,
               numberOfMembers: response.data.user.numberOfMembers,
@@ -2632,6 +2598,8 @@ class EditProfileDetails extends Component {
           this.setState({ serverErrorMessageText: 'Please add your first name'})
         } else if (this.state.lastNameValue === '') {
           this.setState({ serverErrorMessageText: 'Please add your last name'})
+        } else if (this.state.requirePersonalInfo && (!this.state.educationStatus || this.state.educationStatus === '')) {
+          this.setState({ serverErrorMessageText: 'Please add your education status for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.address || this.state.address === '')) {
           this.setState({ serverErrorMessageText: 'Please add your address for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.city || this.state.city === '')) {
@@ -2642,8 +2610,8 @@ class EditProfileDetails extends Component {
           this.setState({ serverErrorMessageText: 'Please add your phone number for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.dateOfBirth || this.state.dateOfBirth === '')) {
           this.setState({ serverErrorMessageText: 'Please add your date of birth for program and matching purposes.'})
-        } else if (this.state.requirePersonalInfo && (!this.state.race || this.state.race === '')) {
-          this.setState({ serverErrorMessageText: 'Please add your race for program and matching purposes.'})
+        } else if (this.state.requirePersonalInfo && ((!this.state.race || this.state.race === '') && (!this.state.races || this.state.races.length === 0))) {
+          this.setState({ serverErrorMessageText: 'Please add your race(s) for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.gender || this.state.gender === '')) {
           this.setState({ serverErrorMessageText: 'Please add your gender for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.workAuthorization || this.state.workAuthorization === '')) {
@@ -2652,12 +2620,12 @@ class EditProfileDetails extends Component {
           this.setState({ serverErrorMessageText: 'Please add the number of members in your household last name'})
         } else if (this.state.requirePersonalInfo && (!this.state.householdIncome || this.state.householdIncome === '')) {
           this.setState({ serverErrorMessageText: 'Please add your household income for program and matching purposes.'})
-        } else if (this.state.requirePersonalInfo && (!this.state.fosterYouth || this.state.fosterYouth === '')) {
-          this.setState({ serverErrorMessageText: 'Please add whether you are a foster youth for program and matching purposes.'})
-        } else if (this.state.requirePersonalInfo && (!this.state.homeless || this.state.homeless === '')) {
-          this.setState({ serverErrorMessageText: 'Please add whether you were homeless for program and matching purposes.'})
-        } else if (this.state.requirePersonalInfo && (!this.state.incarcerated || this.state.incarcerated === '')) {
-          this.setState({ serverErrorMessageText: 'Please add whether you were incarcerated for program and matching purposes.'})
+        // } else if (this.state.requirePersonalInfo && (!this.state.fosterYouth || this.state.fosterYouth === '')) {
+        //   this.setState({ serverErrorMessageText: 'Please add whether you are a foster youth for program and matching purposes.'})
+        // } else if (this.state.requirePersonalInfo && (!this.state.homeless || this.state.homeless === '')) {
+        //   this.setState({ serverErrorMessageText: 'Please add whether you were homeless for program and matching purposes.'})
+        // } else if (this.state.requirePersonalInfo && (!this.state.incarcerated || this.state.incarcerated === '')) {
+        //   this.setState({ serverErrorMessageText: 'Please add whether you were incarcerated for program and matching purposes.'})
         } else if (this.state.requirePersonalInfo && (!this.state.adversityList || this.state.adversityList.length === 0)) {
           this.setState({ serverErrorMessageText: 'Please "designate all that apply" for program and matching purposes.'})
         } else {
@@ -2714,6 +2682,7 @@ class EditProfileDetails extends Component {
           let major = this.state.major
           let pathway = this.state.pathway
           let gradYear = this.state.gradYear
+          const educationStatus = this.state.educationStatus
           const education = this.state.education
           if (education && education.length > 0) {
             let selectedEducation = null
@@ -2722,7 +2691,6 @@ class EditProfileDetails extends Component {
                 selectedEducation = education[i - 1]
               } else if (education[i - 1].endDate && education[i - 1].endDate.split(" ")) {
                 const endYear = Number(education[i - 1].endDate.split(" ")[1])
-                console.log('show endYear: ', endYear)
                 if (!selectedEducation) {
                   selectedEducation = education[i - 1]
                 } else if (endYear > Number(selectedEducation.endDate.split(" ")[1])) {
@@ -2742,7 +2710,14 @@ class EditProfileDetails extends Component {
             }
           }
 
-          const race = this.state.race
+          let race = this.state.race
+          const races = this.state.races
+          const selfDescribedRace = this.state.selfDescribedRace
+          // change to race update
+          if (this.state.allowMultipleRaces && races && races.length > 0) {
+            race = races[0]
+          }
+
           const gender = this.state.gender
           const veteran = this.state.veteranStatus
           const workAuthorization = this.state.workAuthorization
@@ -2755,6 +2730,8 @@ class EditProfileDetails extends Component {
 
           const dateOfBirth = this.state.dateOfBirth
           const phoneNumber = this.state.phoneNumber
+          const alternativeEmail = this.state.alternativeEmail
+          const alternativePhoneNumber = this.state.alternativePhoneNumber
           const address = this.state.address
           const city = this.state.city
 
@@ -2794,9 +2771,9 @@ class EditProfileDetails extends Component {
           const userObject = {
             emailId, rawPictureURL, pictureURL,
             firstNameValue, lastNameValue,
-            linkedInURL, resumeURL, customWebsiteURL, videoResumeURL, headline, education, school,
-            dateOfBirth, phoneNumber, address, city,
-            degree, major, pathway, gradYear, race, gender, veteran, workAuthorization,
+            linkedInURL, resumeURL, customWebsiteURL, videoResumeURL, headline, educationStatus, education, school,
+            dateOfBirth, phoneNumber, alternativeEmail, alternativePhoneNumber, address, city,
+            degree, major, pathway, gradYear, race, races, selfDescribedRace, gender, veteran, workAuthorization,
             politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict, dacaStatus,
             numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
             jobTitle, employerName, zipcode, workTenure, overallFit,
@@ -4689,7 +4666,7 @@ class EditProfileDetails extends Component {
     } else if (type === 'education') {
       let education = this.state.education
       education[index]['isContinual'] = change
-      this.setState({ education })
+      this.setState({ education, textFormHasChanged: true })
     } else {
       // experience
       let experience = this.state.experience
@@ -4950,7 +4927,7 @@ class EditProfileDetails extends Component {
         adversityList = [this.state.adversityListOptions[optionIndex]]
       }
 
-      this.setState({ adversityList })
+      this.setState({ adversityList, textFormHasChanged: true })
 
     } else if (type === 'project') {
       if (value && value !== '' && value !== 'Select a Project' && !this.state.publicProjects.includes(value)) {
@@ -5001,6 +4978,21 @@ class EditProfileDetails extends Component {
       console.log('show selectedResume: ', this.state.selectedResume)
       let publicResumeName = this.state.selectedResume
       this.setState({ publicResumeName })
+    } else if (type === 'race') {
+      let races = this.state.races
+      if (races && races.length > 0) {
+        if (races.includes(this.state.raceOptions[optionIndex])) {
+          const removeIndex = races.indexOf(this.state.raceOptions[optionIndex])
+          races.splice(removeIndex, 1)
+
+        } else {
+          races.push(this.state.raceOptions[optionIndex])
+        }
+      } else {
+        races = [this.state.raceOptions[optionIndex]]
+      }
+
+      this.setState({ races, textFormHasChanged: true })
     }
 
   }
@@ -5823,6 +5815,34 @@ class EditProfileDetails extends Component {
                     </View>
                   </View>
 
+                  {(this.state.activeOrg === 'unite-la') && (
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.standardText,styles.row10]}>Education Status: I am currently earning a<Text style={[styles.standardText,styles.errorColor,styles.boldText]}>*</Text></Text>
+                      {(Platform.OS === 'ios') ? (
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Education Status', selectedIndex: null, selectedName: "educationStatus", selectedValue: this.state.educationStatus, selectedOptions: this.state.educationStatusOptions, selectedSubKey: null })}>
+                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                            <View style={[styles.calcColumn115]}>
+                              <Text style={[styles.descriptionText1]}>{this.state.educationStatus}</Text>
+                            </View>
+                            <View style={[styles.width20,styles.topMargin5]}>
+                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ) : (
+                        <View style={[styles.standardBorder]}>
+                          <Picker
+                            selectedValue={item.name}
+                            onValueChange={(itemValue, itemIndex) =>
+                              this.formChangeHandler("educationStatus",itemValue)
+                            }>
+                            {this.state.educationStatusOptions.map(value => <Picker.Item label={value} value={value} />)}
+                          </Picker>
+                        </View>
+                      )}
+                    </View>
+                  )}
+
                   <View>
                     {(this.state.education) ? (
                       <View>
@@ -6047,7 +6067,7 @@ class EditProfileDetails extends Component {
                               <Text style={[styles.standardText,styles.row10]}>Are you still at this school?</Text>
                               <Switch
                                  onValueChange = {(value) => this.changeContinual(optionIndex, value,'education')}
-                                 value = {this.state.isContinual}
+                                 value = {item.isContinual}
                               />
                             </View>
 
@@ -6108,7 +6128,7 @@ class EditProfileDetails extends Component {
                                 ) : (
                                   <View>
                                     {(Platform.OS === 'ios') ? (
-                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'End Year', selectedIndex: optionIndex, selectedName: "education|endYear|" + optionIndex, selectedValue: item.endYear, selectedOptions: this.state.educationDateOptions, selectedSubKey: 'value' })}>
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'End Year', selectedIndex: optionIndex, selectedName: "education|endDate|" + optionIndex, selectedValue: item.endDate, selectedOptions: this.state.educationDateOptions, selectedSubKey: 'value' })}>
                                         <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                                           <View style={[styles.calcColumn115]}>
                                             <Text style={[styles.descriptionText1]}>{item.endDate}</Text>
@@ -6222,7 +6242,7 @@ class EditProfileDetails extends Component {
                               />
                             </View>
                             <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                              <Text style={[styles.standardText,styles.row10]}>Mobile Phone{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                               <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => this.formChangeHandler('phoneNumber', text)}
@@ -6231,8 +6251,32 @@ class EditProfileDetails extends Component {
                                 placeholderTextColor="grey"
                               />
                             </View>
-
                           </View>
+
+                          {(this.state.includeAlternativeContacts) && (
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Alternative Email</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler('alternativeEmail', text)}
+                                  value={this.state.alternativeEmail}
+                                  placeholder="e.g. jon@doe.com"
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Alternative Phone Number</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler('alternativePhoneNumber', text)}
+                                  value={this.state.alternativePhoneNumber}
+                                  placeholder="e.g. (555) 555-5555"
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+                            </View>
+                          )}
 
                           <View>
                             <View style={[styles.row10]}>
@@ -6418,32 +6462,114 @@ class EditProfileDetails extends Component {
                           )}
 
                           <View>
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
+                          {(this.state.allowMultipleRaces) ? (
+                              <View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
 
-                              {(Platform.OS === 'ios') ? (
-                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Race', selectedIndex: null, selectedName: "race", selectedValue: this.state.race, selectedOptions: this.state.raceOptions, selectedSubKey: null })}>
-                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                    <View style={[styles.calcColumn115]}>
-                                      <Text style={[styles.descriptionText1]}>{this.state.race}</Text>
+                                  {this.state.raceOptions.map((value, optionIndex) =>
+                                    <View key={value + optionIndex} style={styles.rowDirection}>
+                                      {(optionIndex > 0) && (
+                                        <View style={[styles.rightPadding,styles.topPadding]}>
+                                          {(this.state.races && this.state.races.includes(value)) ? (
+                                            <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'race')}>
+                                              <View>
+                                                <View>
+                                                  <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          ) : (
+                                            <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'race')}>
+                                              <View>
+                                                <View>
+                                                  <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          )}
+                                        </View>
+                                      )}
                                     </View>
-                                    <View style={[styles.width20,styles.topMargin5]}>
-                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                    </View>
-                                  </View>
-                                </TouchableOpacity>
-                              ) : (
-                                <View style={[styles.standardBorder]}>
-                                  <Picker
-                                    selectedValue={this.state.race}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("race",itemValue)
-                                    }>
-                                    {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
+                                  )}
                                 </View>
-                              )}
-                            </View>
+
+                                {/*
+                                <div className="row-10">
+                                  <label className="profile-label">Race{(this.state.requirePersonalInfo) && <label className="error-color bold-text"> *</label>}</label>
+                                  {this.state.raceOptions.map((value, optionIndex) =>
+                                    <div key={value + optionIndex}>
+                                      {(optionIndex > 0) && (
+                                        <div className="float-left right-padding top-padding">
+                                          {(this.state.races && this.state.races.includes(value)) ? (
+                                            <button type="button" className="background-button selected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
+                                              <div>
+                                                <div className="float-left">
+                                                  <p className="description-text-2 white-text nowrap">{value}</p>
+                                                </div>
+                                              </div>
+                                            </button>
+                                          ) : (
+                                            <button type="button" className="background-button unselected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
+                                              <div>
+                                                <div className="float-left">
+                                                  <p className="description-text-2 nowrap">{value}</p>
+                                                </div>
+                                              </div>
+                                            </button>
+                                          )}
+                                        </div>
+                                      )}
+
+                                    </div>
+                                  )}
+                                  <div className="clear" />
+                                </div>*/}
+                                {(this.state.races && this.state.races.includes('Prefer to self-describe')) ? (
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.row10]}>Please describe your race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("selfDescribedRace", text)}
+                                      value={this.state.selfDescribedRace}
+                                      placeholder="e.g., Black and Latino"
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                ) : (
+                                  <View />
+                                )}
+
+                              </View>
+                            ) : (
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
+
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Race', selectedIndex: null, selectedName: "race", selectedValue: this.state.race, selectedOptions: this.state.raceOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.race}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.race}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("race",itemValue)
+                                      }>
+                                      {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+
                             <View style={[styles.row10]}>
                               <Text style={[styles.standardText,styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
 
@@ -6623,7 +6749,7 @@ class EditProfileDetails extends Component {
                                 </View>
 
                               </View>
-
+                              {/*
                               <View>
                                 <View style={[styles.row10]}>
                                   <Text style={[styles.standardText,styles.row10]}>Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
@@ -6710,7 +6836,7 @@ class EditProfileDetails extends Component {
 
                                 </View>
 
-                              </View>
+                              </View>*/}
 
                               <View style={[styles.row10]}>
                                 <Text style={[styles.standardText,styles.row10]}>Designate all that apply.{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
