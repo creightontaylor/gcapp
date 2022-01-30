@@ -196,7 +196,7 @@ class CourseDetails extends Component {
         console.log('got courseId???', this.props.courseId)
         if (this.props.courseId) {
 
-          Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { _id: this.props.courseId, source: 'Udemy' } })
+          Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { _id: this.props.courseId, source: 'Udemy', saveCourse: true } })
           .then((response) => {
             console.log('Course query attempted');
 
@@ -204,9 +204,12 @@ class CourseDetails extends Component {
               console.log('course query worked')
 
               let selectedCourse = response.data.course
-              selectedCourse['_id'] = selectedCourse.id
+              if (selectedCourse.udemyId) {
+                selectedCourse['id'] = selectedCourse.udemyId
+              }
+              // selectedCourse['_id'] = selectedCourse.id
 
-              let shareURL = "https://www.guidedcompass.com/courses/" + selectedCourse._id
+              let shareURL = "https://www.guidedcompass.com/courses/" + selectedCourse.id
 
               const shareTitle = 'Check Out ' + selectedCourse.title + ' Course On Guided Compass!'
               let shareBody = 'Check out the ' + selectedCourse.title + ' course on Guided Compass'
@@ -234,7 +237,7 @@ class CourseDetails extends Component {
                  console.log('Comments query did not work', error);
               });
 
-              Axios.get('https://www.guidedcompass.com/api/courses/reviews', { params: { _id: selectedCourse._id, source: 'Udemy' } })
+              Axios.get('https://www.guidedcompass.com/api/courses/reviews', { params: { _id: selectedCourse.id, source: 'Udemy' } })
               .then((response) => {
                 console.log('Course reviews query attempted');
 
@@ -249,34 +252,50 @@ class CourseDetails extends Component {
                 console.log('Coures reviews query did not work for some reason', error);
               });
 
-              Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { udemyId: selectedCourse.id } })
+              // Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { udemyId: selectedCourse.id } })
+              // .then((response) => {
+              //   console.log('Get course saved in database query attempted');
+              //
+              //   if (response.data.success) {
+              //     console.log('course saved in database query worked in sub settings')
+              //
+              //     // const followers = response.data.followers
+              //     // this.setState({ followers })
+              //     const resLimit = 50
+              //     Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: response.data.course._id, resLimit } })
+              //     .then((response) => {
+              //       console.log('Followers query attempted');
+              //
+              //       if (response.data.success) {
+              //         console.log('followers query worked in sub settings')
+              //
+              //         const followers = response.data.followers
+              //         this.setState({ followers })
+              //       }
+              //
+              //     }).catch((error) => {
+              //       console.log('Followers query did not work for some reason', error);
+              //     });
+              //   }
+              //
+              // }).catch((error) => {
+              //   console.log('Course saved in database query did not work for some reason', error);
+              // });
+
+              const resLimit = 50
+              Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: response.data.course._id, resLimit } })
               .then((response) => {
-                console.log('Get course saved in database query attempted');
+                console.log('Followers query attempted');
 
                 if (response.data.success) {
-                  console.log('course saved in database query worked in sub settings')
+                  console.log('followers query worked in sub settings')
 
-                  // const followers = response.data.followers
-                  // this.setState({ followers })
-                  const resLimit = 50
-                  Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: response.data.course._id, resLimit } })
-                  .then((response) => {
-                    console.log('Followers query attempted');
-
-                    if (response.data.success) {
-                      console.log('followers query worked in sub settings')
-
-                      const followers = response.data.followers
-                      this.setState({ followers })
-                    }
-
-                  }).catch((error) => {
-                    console.log('Followers query did not work for some reason', error);
-                  });
+                  const followers = response.data.followers
+                  this.setState({ followers })
                 }
 
               }).catch((error) => {
-                console.log('Course saved in database query did not work for some reason', error);
+                console.log('Followers query did not work for some reason', error);
               });
 
               if (selectedCourse.jobFunction) {

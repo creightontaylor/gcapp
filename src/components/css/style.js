@@ -1473,7 +1473,8 @@ module.exports = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: faintColor,
-    paddingLeft: 8
+    paddingLeft: 8,
+
   },
   editComment: {
     height: 38,

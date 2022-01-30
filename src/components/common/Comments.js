@@ -351,24 +351,26 @@ class Comments extends Component {
       }
 
       rows.push(
-        <View key={0} style={styles.rowDirection}>
-          <View style={styles.width50}>
-            <View style={styles.spacer} />
-            <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={styles.profileThumbnail40} />
-          </View>
-          <View style={[styles.calcColumn110,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
-            <TextInput
-              style={styles.editComment}
-              onChangeText={(text) => this.formChangeHandler("reply|" + index,text)}
-              value={myReply}
-              placeholder="Add a reply..."
-              placeholderTextColor="grey"
-            />
+        <View key={0}>
+          <View style={styles.rowDirection}>
+            <View style={styles.width50}>
+              <View style={styles.spacer} />
+              <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={styles.profileThumbnail40} />
+            </View>
+            <View style={[styles.calcColumn160,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
+              <TextInput
+                style={[styles.textInput,styles.flex1]}
+                onChangeText={(text) => this.formChangeHandler("reply|" + index,text)}
+                value={myReply}
+                placeholder="Add a reply..."
+                placeholderTextColor="grey"
+              />
+            </View>
           </View>
 
           {(this.state.myReplies[index] !== '') && (
             <View style={[styles.leftMargin67]}>
-              <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.postComment(index,postType)}>Reply</TouchableOpacity>
+              <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.postComment(index,postType)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Reply</Text></TouchableOpacity>
             </View>
           )}
 
@@ -725,7 +727,7 @@ class Comments extends Component {
                   </View>
                   <View style={[styles.calcColumn180,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
                     <TextInput
-                      style={[styles.commentTextField,styles.flex1]}
+                      style={[styles.textInput,styles.flex1]}
                       onChangeText={(text) => this.formChangeHandler('comment',text)}
                       value={this.state.myComment}
                       placeholder="Add a comment..."
