@@ -59,8 +59,6 @@ class Apply extends Component {
     this.optionClicked = this.optionClicked.bind(this)
     this.switchWorkspaces = this.switchWorkspaces.bind(this)
 
-    this.signUp = this.signUp.bind(this)
-    this.signIn = this.signIn.bind(this)
     this.signOut = this.signOut.bind(this)
 
     this.renderQuestions = this.renderQuestions.bind(this)
@@ -120,6 +118,8 @@ class Apply extends Component {
       if (!activeOrg) {
         activeOrg = 'guidedcompass'
       }
+
+      let myOrgs = await AsyncStorage.getItem('myOrgs')
 
       let selectedPosting = this.props.selectedPosting
       let passedTasks = this.props.passedTasks
@@ -289,68 +289,9 @@ class Apply extends Component {
         }
       }
 
-      this.setState({ activeOrg, emailId: email, cuFirstName, cuLastName, username, orgFocus, selectedPosting, tasks, profilePath,
+      this.setState({ activeOrg, myOrgs, emailId: email, cuFirstName, cuLastName, username, orgFocus, selectedPosting, tasks, profilePath,
         customAssessmentResponses, newCustomAssessmentResponses, responses, caQuestions, application, pageSource, signedIn,
         tpaResponses, dbResponses
-      })
-
-      Axios.get('https://www.guidedcompass.com/api/workoptions')
-      .then((response) => {
-        console.log('Work options query tried', response.data);
-
-        if (response.data.success) {
-          console.log('Work options query succeeded')
-
-          let genderOptions = response.data.workOptions[0].genderOptions
-          genderOptions.unshift('')
-          let raceOptions = response.data.workOptions[0].raceOptions
-          raceOptions.unshift('')
-          const basicCountOptions = ['','1','2','3','4','5','6','7','8','9','10']
-          let lowIncomeOptions = response.data.workOptions[0].lowIncomeOptions
-          lowIncomeOptions.unshift('')
-          let fosterYouthOptions = response.data.workOptions[0].fosterYouthOptions
-          fosterYouthOptions.unshift('')
-          let homelessOptions = response.data.workOptions[0].homelessOptions
-          homelessOptions.unshift('')
-          let incarceratedOptions = response.data.workOptions[0].incarceratedOptions
-          incarceratedOptions.unshift('')
-
-          const year = (new Date().getFullYear() - 18).toString()
-          let month = ''
-          if ((new Date().getMonth() + 1) >= 10) {
-            month = (new Date().getMonth() + 1).toString()
-          } else {
-            month = '0' + (new Date().getMonth() + 1).toString()
-          }
-
-          const day = new Date().getDate().toString()
-          const defaultDate = year + '-' + month + '-' + day
-
-          let questions = [
-            { category: 'basic', name: 'Date of Birth', type: 'Date', field: 'dateOfBirth', placeholder: 'e.g. 04/13/98', answer: defaultDate },
-            { category: 'basic', name: 'Gender', type: 'Multiple Choice', field: 'gender', options: genderOptions },
-            { category: 'basic', name: 'Race', type: 'Multiple Choice', field: 'race', options: raceOptions },
-            { category: 'basic', name: 'Home Address', type: 'Short Answer', field: 'homeAddress', placeholder: 'e.g. 111 Candy Cane Lane Los Angeles, CA' },
-            { category: 'basic', name: 'Phone Number', type: 'Short Answer', field: 'phoneNumber', placeholder: 'e.g. (323) 299-2991' },
-            { category: 'diversity', name: 'Number of Members in Household', type: 'Multiple Choice', field: 'numberOfMembers', options: basicCountOptions },
-            { category: 'diversity', name: 'Estimated Household Income', type: 'Multiple Choice', field: 'householdIncome', options: lowIncomeOptions },
-            { category: 'diversity', name: 'Have you ever been a foster youth?', type: 'Multiple Choice', field: 'fosterYouth', options: fosterYouthOptions },
-            { category: 'diversity', name: 'Are you currently or formerly homeless?', type: 'Multiple Choice', field: 'homeless', options: homelessOptions },
-            { category: 'diversity', name: 'Were you previously incarcerated?', type: 'Multiple Choice', field: 'incarcerated', options: incarceratedOptions },
-            { category: 'diversity', name: 'Designate all that apply.', type: 'Multiple Answer', field: 'adversity', options: ['LGBQIA','ADA','First Generation Immigrant','First Generation College Student','Low Income','None'] },
-            { category: 'referral', name: 'Name of person who recommended you', type: 'Short Answer', field: 'referrerName', placeholder: 'e.g. John Smith' },
-            { category: 'referral', name: 'Email of person who recommended you', type: 'Short Answer', field: 'referrerEmail', placeholder: 'e.g. johnsmith@love.org' },
-            { category: 'referral', name: 'Name of organization that referred you', type: 'Short Answer', field: 'referrerOrg', options: [], placeholder: 'e.g. Franklin High' },
-          ]
-
-          this.setState({ questions })
-
-        } else {
-          console.log('no work options data found', response.data.message)
-
-        }
-      }).catch((error) => {
-          console.log('query for work options did not work', error);
       })
 
       if (selectedPosting) {
@@ -794,6 +735,11 @@ class Apply extends Component {
               phoneNumber = response.data.user.phoneNumber
             }
 
+            const alternativePhoneNumber = response.data.user.alternativePhoneNumber
+            const alternativeEmail = response.data.user.alternativeEmail
+
+            const educationStatus = response.data.user.educationStatus
+
             let education = null
             if (response.data.user.education) {
               education = response.data.user.education
@@ -828,6 +774,8 @@ class Apply extends Component {
             const dateOfBirth = response.data.user.dateOfBirth
             const pathway = response.data.user.pathway
             const race = response.data.user.race
+            const races = response.data.user.races
+            const selfDescribedRace = response.data.user.selfDescribedRace
             const gender = response.data.user.gender
             const veteran = response.data.user.veteran
             const workAuthorization = response.data.user.workAuthorization
@@ -1003,9 +951,9 @@ class Apply extends Component {
             this.setState({ isBasicInfo, isPoliticalInfo, isResume, resumeURL, resumeName, resumes, resumeNames,
               coverLetterURL, letterOfRecommendationURL, identificationURL,
               isTranscript, transcriptURL,
-              tasks, firstName, lastName, phoneNumber,
-              education, schoolName, major, degree, gradYear, linkedInURL, customWebsiteURL, videoResumeURL, isPortfolio, pictureURL, zipcode,
-              dateOfBirth, pathway, race, gender, veteran, workAuthorization,
+              tasks, firstName, lastName, phoneNumber, alternativePhoneNumber, alternativeEmail,
+              educationStatus, education, schoolName, major, degree, gradYear, linkedInURL, customWebsiteURL, videoResumeURL, isPortfolio, pictureURL, zipcode,
+              dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
               politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict,
               dacaStatus,
@@ -1858,373 +1806,6 @@ class Apply extends Component {
     }.bind(this));
   }
 
-  signUp() {
-      console.log('signUp called')
-
-      const firstName = this.state.firstName
-      const lastName = this.state.lastName
-      let email = this.state.emailId
-      const password = this.state.password
-      const activeOrg = this.state.activeOrg
-      let roleName = 'Student'
-
-      let dateOfBirth = undefined
-      if (this.state.questions && this.state.questions[0]) {
-        dateOfBirth = this.state.questions[0].answer
-      }
-
-      let gender = undefined
-      if (this.state.questions && this.state.questions[1]) {
-        gender = this.state.questions[1].answer
-      }
-
-      let race = undefined
-      if (this.state.questions && this.state.questions[2]) {
-        race = this.state.questions[2].answer
-      }
-
-      let address = undefined
-      if (this.state.questions && this.state.questions[3]) {
-        address = this.state.questions[3].answer
-      }
-
-      let phoneNumber = undefined
-      if (this.state.questions && this.state.questions[4]) {
-        phoneNumber = this.state.questions[4].answer
-      }
-
-      let numberOfMembers = undefined
-      if (this.state.questions && this.state.questions[5]) {
-        numberOfMembers = this.state.questions[5].answer
-      }
-
-      let householdIncome = undefined
-      if (this.state.questions && this.state.questions[6]) {
-        householdIncome = this.state.questions[6].answer
-      }
-
-      let fosterYouth = undefined
-      if (this.state.questions && this.state.questions[7]) {
-        fosterYouth = this.state.questions[7].answer
-      }
-
-      let homeless = undefined
-      if (this.state.questions && this.state.questions[8]) {
-        homeless = this.state.questions[8].answer
-      }
-
-      let incarcerated = undefined
-      if (this.state.questions && this.state.questions[9]) {
-        incarcerated = this.state.questions[9].answer
-      }
-
-      let adversityList = undefined
-      if (this.state.questions && this.state.questions[10]) {
-        adversityList = this.state.questions[10].answer
-      }
-
-      let referrerName = undefined
-      if (this.state.questions && this.state.questions[11]) {
-        referrerName = this.state.questions[11].answer
-      }
-
-      let referrerEmail = undefined
-      if (this.state.questions && this.state.questions[12]) {
-        referrerEmail = this.state.questions[12].answer
-      }
-
-      let referrerOrg = undefined
-      if (this.state.questions && this.state.questions[13]) {
-        referrerOrg = this.state.questions[13].answer
-      }
-
-      let createdAt = new Date();
-      let updatedAt = new Date();
-      let platform = 'web'
-
-      if (!firstName || firstName === '') {
-        this.setState({ serverErrorMessage: 'please enter your first name' })
-      } else if (!lastName || lastName === '') {
-        this.setState({ serverErrorMessage: 'please enter your last name' })
-      } else if (!email || email === '') {
-        this.setState({ serverErrorMessage: 'please enter your email' })
-      } else if (!email.includes('@')) {
-        this.setState({ serverErrorMessage: 'email invalid. please enter a valid email' })
-      } else if (!password || password === '') {
-        this.setState({ serverErrorMessage: 'please enter a password' })
-      } else if (!activeOrg || activeOrg === '') {
-        this.setState({ serverErrorMessage: 'please add the code affiliated with a Guided Compass partner' })
-      } else if (!roleName || roleName === '') {
-        this.setState({ serverErrorMessage: 'please enter your role name' })
-      } else if (password.length < 7) {
-        this.setState({ serverErrorMessage: 'please enter a password over 6 characters' })
-      } else if (this.state.activeOrg === 'unite-la' && !dateOfBirth) {
-        this.setState({ serverErrorMessage: 'please add your date of birth' })
-      } else if (this.state.activeOrg === 'unite-la' && !gender) {
-        this.setState({ serverErrorMessage: 'please add your gender' })
-      } else if (this.state.activeOrg === 'unite-la' && !race) {
-        this.setState({ serverErrorMessage: 'please add your race' })
-      } else if (this.state.activeOrg === 'unite-la' && !address) {
-        this.setState({ serverErrorMessage: 'please add your address' })
-      } else if (this.state.activeOrg === 'unite-la' && !phoneNumber) {
-        this.setState({ serverErrorMessage: 'please add your phone number' })
-      } else if (this.state.activeOrg === 'unite-la' && !numberOfMembers) {
-        this.setState({ serverErrorMessage: 'please add number of members in your household' })
-      } else if (this.state.activeOrg === 'unite-la' && !householdIncome) {
-        this.setState({ serverErrorMessage: 'please add household income' })
-      } else if (this.state.activeOrg === 'unite-la' && !fosterYouth) {
-        this.setState({ serverErrorMessage: 'please add whether you were a foster youth' })
-      } else if (this.state.activeOrg === 'unite-la' && !homeless) {
-        this.setState({ serverErrorMessage: 'please add whether you were homeless' })
-      } else if (this.state.activeOrg === 'unite-la' && !incarcerated) {
-        this.setState({ serverErrorMessage: 'please add whether you were incarcerated' })
-      } else if (this.state.activeOrg === 'unite-la' && !adversityList) {
-        this.setState({ serverErrorMessage: 'please add click areas of adversity that applies' })
-      } else if (this.state.activeOrg === 'unite-la' && !referrerName) {
-        this.setState({ serverErrorMessage: 'please add the name of your referrer' })
-      } else if (this.state.activeOrg === 'unite-la' && !referrerEmail) {
-        this.setState({ serverErrorMessage: 'please add the email of your referrer' })
-      } else if (this.state.activeOrg === 'unite-la' && !referrerOrg) {
-        this.setState({ serverErrorMessage: 'please add the organization of your referrer' })
-      } else {
-
-          //we will assume username is unique for now
-          let combinedNames = firstName + lastName
-          let username = combinedNames.toLowerCase();
-
-          this.setState({ isWaiting: true, username })
-
-          Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
-          .then((response) => {
-            console.log('Org info query attempted', response.data);
-
-              if (response.data.success) {
-                console.log('org info query worked')
-
-                email = email.toLowerCase()
-                const orgName = response.data.orgInfo.orgName
-                const orgFocus = response.data.orgInfo.orgFocus
-                const orgContactFirstName = response.data.orgInfo.contactFirstName
-                const orgContactLastName = response.data.orgInfo.contactLastName
-                const orgContactEmail = response.data.orgInfo.contactEmail
-                const studentAlias = response.data.orgInfo.studentAlias
-                const headerImageURL = response.data.orgInfo.headerImageURL
-
-                const myOrgs = [activeOrg]
-                const courseIds = [this.state.courseId]
-                const workIds = [this.state.workId]
-
-                const education = this.state.education
-                let school = this.state.school
-                if (orgFocus === 'Placement') {
-                  school = ''
-                }
-
-                let schoolDistrict = this.state.schoolDistrict
-
-                let accountCode = ''
-
-                let benefits = undefined
-                if (roleName && roleName.toLowerCase() === 'Student') {
-                  benefits = this.state.studentBenefits
-                } else if (roleName && roleName.toLowerCase() === 'career-seeker') {
-                  roleName = 'Student'
-                  benefits = this.state.studentBenefits
-                }
-
-                if (benefits) {
-                  for (let i = 1; i <= benefits.length; i++) {
-                    benefits[i - 1]['detail'] = benefits[i - 1].detail.replace(/{{orgName}}/g,orgName)
-                  }
-                }
-
-                const openToMentoring = true
-                const confirmEmail = this.state.confirmEmail
-
-                this.props.manualRegister({
-                  firstName,lastName, username, email, password, orgName, courseIds, workIds,
-                  orgContactFirstName, orgContactLastName, orgContactEmail,
-                  activeOrg, myOrgs, roleName, education, school, schoolDistrict, accountCode,
-                  createdAt, updatedAt, platform, openToMentoring, benefits, headerImageURL,
-                  dateOfBirth, gender, race, address, phoneNumber, numberOfMembers, householdIncome, fosterYouth,
-                  homeless, incarcerated, adversityList, referrerName, referrerEmail, referrerOrg,
-                  confirmEmail
-                })
-                .then((responseData) => {
-                  if (responseData.success) {
-
-                    //success
-                    AsyncStorage.setItem('email', email)//this.props.auth.email
-                    AsyncStorage.setItem('username', username)
-                    AsyncStorage.setItem('firstName', firstName)
-                    AsyncStorage.setItem('lastName', lastName)
-                    // AsyncStorage.setItem('isAdvisor', 'false')
-                    // AsyncStorage.setItem('isAdvisee', 'true')
-                    AsyncStorage.setItem('unreadNotificationsCount', 0)
-                    AsyncStorage.setItem('orgAffiliation', '')
-                    AsyncStorage.setItem('activeOrg', activeOrg)
-                    AsyncStorage.setItem('orgFocus', orgFocus)
-                    AsyncStorage.setItem('myOrgs', JSON.stringify(myOrgs))
-                    AsyncStorage.setItem('orgName', orgName)
-                    AsyncStorage.setItem('roleName', roleName)
-
-                    if (studentAlias) {
-                      AsyncStorage.setItem('studentAlias', studentAlias)
-                    } else {
-                      AsyncStorage.removeItem('studentAlias')
-                    }
-
-                    this.setState({ isWaiting: false })
-
-                    if (roleName === 'Student') {
-                      if (this.state.confirmEmail) {
-
-                        this.setState({ signedIn: true, orgFocus, roleName, serverErrorMessage: null })
-
-                        this.retrieveData()
-                      } else {
-                        this.setState({ signedIn: true, orgFocus, roleName, serverErrorMessage: null })
-                        this.retrieveData()
-                      }
-                    }
-
-                  } else {
-                    // report to the user if there was a problem during registration
-                    console.log('what is this', responseData.message );
-                    this.setState({ serverErrorMessage: responseData.message })
-                  }
-                })
-
-              } else {
-                console.log('org info query did not work', response.data.message)
-                //don't allow signups without an org affiliation
-                this.setState({ serverErrorMessage: 'There was an error finding the organization' })
-              }
-
-          }).catch((error) => {
-              console.log('Org info query did not work for some reason', error);
-          });
-      }
-
-  }
-
-  signIn() {
-      console.log('subSignIn called: ', this.state)
-
-      const email = this.state.emailId
-      const password = this.state.password
-
-      if (email === '') {
-        this.setState({ serverErrorMessage: 'please enter your email' })
-      } else if (password === '') {
-        this.setState({ serverErrorMessage: 'please enter your password' })
-      } else {
-
-        this.setState({ isWaiting: true })
-
-        this.props.manualLogin({
-          email,password
-        })
-        .then((responseData) => {
-          console.log('what we got', responseData)
-          if (responseData.success) {
-
-            if (!this.state.orgFocus || this.state.orgFocus === '' || !this.state.orgCode || this.state.orgCode === '') {
-              // pull org information
-              if (this.state.path && this.state.path.includes('/employers')) {
-                this.completeSignIn(email, responseData, this.state.orgCode, this.state.orgFocus)
-              } else {
-                console.log('pull org info')
-                const orgCode = responseData.user.activeOrg
-                Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode} })
-                .then((response) => {
-                  console.log('Org info query attempted for orgFocus', response.data);
-
-                    if (response.data.success) {
-                      console.log('org info query worked for orgFocus')
-
-                      const orgFocus = response.data.orgInfo.orgFocus
-
-                      this.completeSignIn(email, responseData, orgCode, orgFocus)
-
-                    } else {
-                      console.log('org info query did not work', response.data.message)
-                    }
-
-                }).catch((error) => {
-                    console.log('Org info query did not work for some reason', error);
-                });
-              }
-
-            } else {
-              this.completeSignIn(email, responseData, this.state.orgCode, this.state.orgFocus)
-            }
-          } else {
-
-            // report to the user if there was a problem during registration
-            console.log('what is this', responseData.message);
-            this.setState({ serverErrorMessage: responseData.message })
-          }
-        })
-      }
-  }
-
-  completeSignIn(email, responseData,orgCode, orgFocus) {
-    console.log('completeSignIn called', email, orgCode, orgFocus)
-
-    AsyncStorage.setItem('email', email)
-    AsyncStorage.setItem('username', responseData.user.username)
-    AsyncStorage.setItem('firstName', responseData.user.firstName)
-    AsyncStorage.setItem('lastName', responseData.user.lastName)
-    AsyncStorage.setItem('pathway', responseData.user.pathway)
-    AsyncStorage.setItem('unreadNotificationsCount', 0)
-
-    if (responseData.user.workMode === true) {
-      AsyncStorage.setItem('workMode', 'true')
-    } else {
-      AsyncStorage.setItem('workMode', 'false')
-    }
-
-    if (responseData.user.isAdvisor) {
-      AsyncStorage.setItem('isAdvisor', 'true')
-    } else {
-      AsyncStorage.setItem('isAdvisor', 'false')
-      AsyncStorage.setItem('isAdvisee', 'true')
-    }
-
-    if (responseData.user.orgAffiliation) {
-      if (responseData.user.orgAffiliation === 'admin') {
-        AsyncStorage.setItem('orgAffiliation', 'admin')
-      } else {
-        AsyncStorage.setItem('orgAffiliation', '')
-      }
-    } else {
-      AsyncStorage.setItem('orgAffiliation', '')
-    }
-    if (responseData.user.myOrgs) {
-      AsyncStorage.setItem('myOrgs', JSON.stringify(responseData.user.myOrgs))
-    }
-
-    if (responseData.user.activeOrg) {
-      AsyncStorage.setItem('activeOrg', responseData.user.activeOrg)
-      if (orgFocus && orgFocus !== '') {
-        AsyncStorage.setItem('orgFocus', orgFocus)
-      }
-    }
-
-    if (responseData.user.roleName) {
-      AsyncStorage.setItem('roleName', responseData.user.roleName)
-    }
-
-    this.setState({ signedIn: true, orgFocus, roleName: responseData.user.roleName,
-      resumeURL: responseData.user.resumeURL, firstName: responseData.user.firstName, lastName: responseData.user.lastName,
-      serverErrorMessage: null
-    })
-
-    this.retrieveData()
-
-  }
-
   signOut() {
     console.log('signOut called')
 
@@ -2261,7 +1842,7 @@ class Apply extends Component {
 
       } else {
         console.log('login did not work', response.data.message)
-        //don't allow signups without an org affiliation
+
         return { success: false, message: response.data.message }
 
       }
@@ -2509,6 +2090,7 @@ class Apply extends Component {
       let degree = this.state.degree
       let major = this.state.major
       let gradYear = this.state.gradYear
+      const educationStatus = this.state.educationStatus
       const education = this.state.education
       if (education && education.length > 0) {
         let selectedEducation = null
@@ -2539,10 +2121,14 @@ class Apply extends Component {
 
       const zipcode = this.state.zipcode
       const phoneNumber = this.state.phoneNumber
+      const alternativePhoneNumber = this.state.alternativePhoneNumber
+      const alternativeEmail = this.state.alternativeEmail
 
       const dateOfBirth = this.state.dateOfBirth
       const pathway = this.state.pathway
       const race = this.state.race
+      const races = this.state.races
+      const selfDescribedRace = this.state.selfDescribedRace
       const gender = this.state.gender
       const veteran = this.state.veteran
       const workAuthorization = this.state.workAuthorization
@@ -2552,13 +2138,14 @@ class Apply extends Component {
       const homeless = this.state.homeless
       const incarcerated = this.state.incarcerated
       const adversityList = this.state.adversityList
-      console.log('show expte')
+      // console.log('show expte')
       Axios.post('https://www.guidedcompass.com/api/applications', {
         _id, postingId: this.state.selectedPosting._id, postingTitle: this.state.selectedPosting.title, postingEmployerName, postingLocation: this.state.selectedPosting.location,
         pathways: this.state.selectedPosting.pathways, departments: this.state.selectedPosting.departments,
-        firstName, lastName, email, username, education, schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
+        firstName, lastName, email, username, educationStatus, education, schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
+        alternativePhoneNumber, alternativeEmail,
         resumeURL, coverLetterURL, linkedInURL, customWebsiteURL, videoResumeURL, letterOfRecommendationURL, identificationURL, transcriptURL,
-        dateOfBirth, pathway, race, gender, veteran, workAuthorization,
+        dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
         numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
         customAssessmentResults: customAssessmentResponses, dealBreakerResponses, thirdPartyAssessmentResponses,
         newCustomAssessmentResults, direct,
@@ -2603,28 +2190,31 @@ class Apply extends Component {
             const emailId = email
             const updatedAt = new Date()
 
-            // save to profile information
-            this.props.saveProfileDetails({
-              emailId, firstName, lastName, education, school: schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
+            const userObject = {
+              emailId, firstName, lastName, educationStatus, education, school: schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
+              alternativePhoneNumber, alternativeEmail,
               resumeURL, coverLetterURL, linkedInURL, customWebsiteURL, videoResumeURL, letterOfRecommendationURL, identificationURL, transcriptURL,
-              dateOfBirth, pathway, race, gender, veteran, workAuthorization,
+              dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
               updatedAt
-            })
-            .then((responseData) => {
+            }
 
-                if (responseData.success) {
-                  console.log('successfully saved to profile')
-                  //report whether values were successfully saved
-                  // this.setState({ serverSuccess: true, serverSuccessMessage: 'Saved changes to profile'
-                  // })
+            Axios.post('https://www.guidedcompass.com/api/users/profile/details', userObject)
+            .then((response) => {
 
-                } else {
+              if (response.data.success) {
+                console.log('successfully saved profile')
 
-                  console.log('save to profile was not successful')
-                  this.setState({ serverSuccess: false, serverErrorMessage: responseData.message })
-                }
-            })
+              } else {
+                console.log('profile save was not successful')
+
+                this.setState({ serverError: true, serverErrorMessage: response.data.error })
+              }
+            }).catch((error) => {
+                console.log('Saving the info did not work', error);
+                this.setState({ serverError: true, serverErrorMessage: error.toString() })
+
+            });
           }
 
         } else {
@@ -3425,10 +3015,10 @@ class Apply extends Component {
   }
 
   switchWorkspaces() {
-    console.log('switchWorkspaces called')
+    console.log('switchWorkspaces called', this.state.myOrgs)
 
-    let myOrgs = AsyncStorage.getItem('myOrgs');
-    console.log('show myOrgs: ', myOrgs)
+    let myOrgs = this.state.myOrgs
+    // console.log('show myOrgs: ', myOrgs)
     if (myOrgs && myOrgs.includes(this.state.selectedPosting.orgCode)) {
 
       this.setState({ serverSuccessMessage: null, serverErrorMessage: null })
@@ -3553,7 +3143,7 @@ class Apply extends Component {
                       </View>
                     ) : (
                       <View style={[styles.row20]}>
-                        <Text style={[styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <TouchableOpacity onPress={() => this.switchWorkspaces()}><Text style={[styles.standardText,styles.ctaColor]}>here</Text></TouchableOpacity> to switch workspaces.</Text>
+                        <Text style={[styles.standardText,styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <Text style={[styles.standardText,styles.ctaColor]} onPress={() => this.switchWorkspaces()}>here</Text> to switch workspaces.</Text>
                       </View>
                     )}
 

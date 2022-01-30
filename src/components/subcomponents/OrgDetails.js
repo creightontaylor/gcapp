@@ -18,6 +18,7 @@ const searchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 import SubPicker from '../common/SubPicker';
+import SubRenderSignUpFields from '../common/RenderSignUpFields';
 
 import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
@@ -38,6 +39,8 @@ class OrgDetails extends Component {
     this.submitSignUpFields = this.submitSignUpFields.bind(this)
     this.optionClicked = this.optionClicked.bind(this)
     this.closeModal = this.closeModal.bind(this)
+    this.openSignUpFieldsModal = this.openSignUpFieldsModal.bind(this)
+    this.passData = this.passData.bind(this)
 
   }
 
@@ -174,25 +177,9 @@ class OrgDetails extends Component {
 
             let myOrgs = response.data.user.myOrgs
             const joinRequests = response.data.user.joinRequests
+            const userObject = response.data.user
 
-            const dateOfBirth = response.data.user.dateOfBirth
-            const gender = response.data.user.gender
-            const race = response.data.user.race
-            const address = response.data.user.address
-            const phoneNumber = response.data.user.phoneNumber
-            const numberOfMembers = response.data.user.numberOfMembers
-            const householdIncome = response.data.user.householdIncome
-            const fosterYouth = response.data.user.fosterYouth
-            const homeless = response.data.user.homeless
-            const incarcerated = response.data.user.incarcerated
-            const adversityList = response.data.user.adversityList
-
-            const pictureURL = response.data.user.pictureURL
-            const education = response.data.user.education
-
-            this.setState({ myOrgs, joinRequests, dateOfBirth, gender, race, address, phoneNumber, numberOfMembers,
-              householdIncome, fosterYouth, homeless, incarcerated, adversityList, pictureURL, education
-            })
+            this.setState({ myOrgs, joinRequests, userObject })
 
           }
         }).catch((error) => {
@@ -317,7 +304,8 @@ class OrgDetails extends Component {
             this.setState({ errorMessage: 'There was an unknown error' })
           }
         } else {
-          this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: true, showOrgDetails: false })
+          // this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: true, showOrgDetails: false })
+          this.openSignUpFieldsModal(value)
         }
 
       } else {
@@ -571,7 +559,113 @@ class OrgDetails extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showPicker: false, showDateTimePicker: false })
+    this.setState({ modalIsOpen: false, showPicker: false, showDateTimePicker: false, showSignUpFields: false })
+  }
+
+  openSignUpFieldsModal(orgSelected) {
+    console.log('openSignUpFieldsModal called')
+
+    Axios.get('https://www.guidedcompass.com/api/workoptions')
+    .then((response) => {
+      console.log('Work options query tried', response.data);
+
+      if (response.data.success) {
+        console.log('Work options query succeeded')
+
+        const degreeOptions = response.data.workOptions[0].degreeOptions.slice(1,response.data.workOptions[0].degreeOptions.lengh)
+
+        const educationStatusOptions = degreeOptions.concat(['Not currently enrolled in school'])
+
+        let educationDateOptions = []
+
+        const currentMonth = new Date().getMonth()
+        const currentYear = new Date().getFullYear()
+
+        let numberOfYears = 25
+        let educationBump = 5
+        let month = ''
+        let year = currentYear - numberOfYears
+
+        // console.log('show me current stuff', currentMonth, currentYear)
+        for (let i = 1; i <= ((numberOfYears + educationBump) * 12); i++) {
+          // console.log('show me stuff', i, (i + currentMonth + 1) % 12)
+          if ((i + currentMonth + 1) % 12 === 2) {
+            month = 'January'
+          } else if ((i + currentMonth + 1) % 12 === 3) {
+            month = 'February'
+          } else if ((i + currentMonth + 1) % 12 === 4) {
+            month = 'March'
+          } else if ((i + currentMonth + 1) % 12 === 5) {
+            month = 'April'
+          } else if ((i + currentMonth + 1) % 12 === 6) {
+            month = 'May'
+          } else if ((i + currentMonth + 1) % 12 === 7) {
+            month = 'June'
+          } else if ((i + currentMonth + 1) % 12 === 8) {
+            month = 'July'
+          } else if ((i + currentMonth + 1) % 12 === 9) {
+            month = 'August'
+          } else if ((i + currentMonth + 1) % 12 === 10) {
+            month = 'September'
+          } else if ((i + currentMonth + 1) % 12 === 11) {
+            month = 'October'
+          } else if ((i + currentMonth + 1) % 12 === 0) {
+            month = 'November'
+          } else if ((i + currentMonth + 1) % 12 === 1) {
+            month = 'December'
+          }
+
+          if (month === 'January') {
+            year = year + 1
+          }
+
+          // dateOptions.push({ value: month + ' ' + year})
+          if (i <= (numberOfYears * 12)) {
+            // dateOptions.push({ value: month + ' ' + year})
+          }
+          educationDateOptions.push(month + ' ' + year)
+
+        }
+
+        const raceOptions = response.data.workOptions[0].raceOptions
+        const genderOptions = response.data.workOptions[0].genderOptions
+
+        const householdIncomeOptions = response.data.workOptions[0].lowIncomeOptions
+        const adversityListOptions = response.data.workOptions[0].adversityListOptions
+        const numberOfMembersOptions = response.data.workOptions[0].numberOfMembersOptions
+        const workAuthorizationOptions = response.data.workOptions[0].workAuthorizationOptions
+        // console.log('show educationDateOptions: ', educationDateOptions)
+        const workOptions = {
+          raceOptions, genderOptions, degreeOptions, householdIncomeOptions, adversityListOptions,
+          numberOfMembersOptions, workAuthorizationOptions,
+          educationStatusOptions, educationDateOptions
+        }
+
+        if (orgSelected.signUpFieldsRequired && orgSelected.signUpFieldsRequired.length > 0) {
+          let signUpFieldsRequired = orgSelected.signUpFieldsRequired
+          for (let i = 1; i <= signUpFieldsRequired.length; i++) {
+            if (signUpFieldsRequired[i - 1].answerChoices && signUpFieldsRequired[i - 1].answerChoices.length === 1) {
+              signUpFieldsRequired[i - 1].answerChoices = workOptions[signUpFieldsRequired[i - 1].answerChoices[0]]
+            }
+          }
+        }
+
+        this.setState({ modalIsOpen: true, orgSelected, showSignUpFields: true, showOrgDetails: false })
+
+      } else {
+        console.log('no workOptions found')
+
+      }
+    }).catch((error) => {
+        console.log('query for work options did not work', error);
+    })
+  }
+
+  passData(passedData) {
+    console.log('passedData called', passedData, this.state.gender)
+
+    this.setState(passedData)
+
   }
 
   render() {
@@ -839,6 +933,16 @@ class OrgDetails extends Component {
             )}
 
             <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
+              {(this.state.showSignUpFields && this.state.orgSelected) && (
+                <ScrollView style={[styles.flex1,styles.padding20]}>
+                  <View>
+                    <SubRenderSignUpFields navigation={this.props.navigation} orgSelected={this.state.orgSelected} passData={this.passData} userObject={this.state.userObject} opportunityId={this.props.opportunityId} closeModal={this.closeModal} submitRequest={this.submitRequest}/>
+
+                    {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
+                    {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.successMessage}</Text>}
+                  </View>
+                </ScrollView>
+              )}
               {(this.state.showPicker) && (
                 <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
                   <SubPicker

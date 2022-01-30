@@ -2223,7 +2223,7 @@ class TakeAssessment extends Component {
             ) : (
               <View>
 
-                <View style={[styles.centerText,styles.row10,styles.rowDirection,styles.flex1,styles.calcColumn60]}>
+                <View style={[styles.centerText,styles.row10,styles.rowDirection,styles.flex1]}>
                   <View style={(this.state.questions[i - 1].score === 1 || this.state.responses[i - 1] === '1') ? [styles.flex20,styles.ctaBorder,styles.row15,styles.horizontalPadding10,styles.ctaBackgroundColor] : [styles.flex20,styles.ctaBorder,styles.row15,styles.horizontalPadding10]} >
                     <TouchableOpacity onPress={() => this.itemClicked(index,1)} style={[styles.flex1,styles.flexCenter]}>
                       <Text style={(this.state.questions[i - 1].score === 1 || this.state.responses[i - 1] === '1') ? [styles.whiteColor] : []}>1</Text>
@@ -2618,7 +2618,7 @@ class TakeAssessment extends Component {
                   <View>
                     {this.state.assessmentTitle ? (
                       <View>
-                        <View style={[styles.calcColumn60,styles.centerText]}>
+                        <View style={[styles.flex1,styles.centerText]}>
                           <View>
                             {!this.props.fromWalkthrough && (
                               <View>
@@ -2642,7 +2642,7 @@ class TakeAssessment extends Component {
                                       {(this.state.questions && this.state.type === 'skills') && (
                                         <View>
                                           {(this.props.fromApply) && (
-                                            <Text style={[styles.descriptionTextColor]}>{this.state.questions.length} Questions</Text>
+                                            <Text style={[styles.descriptionTextColor,styles.centerText]}>{this.state.questions.length} Questions</Text>
                                           )}
 
 
@@ -2675,7 +2675,7 @@ class TakeAssessment extends Component {
                                             <View>
                                               <Text style={[styles.standardText]}>Your results have been saved and imported into your application.</Text>
                                               <View style={styles.spacer} />
-                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor]} onPress={() => this.props.closeModal()}><Text style={[styles.whiteColor]}>Close View</Text></TouchableOpacity>
+                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.props.closeModal()}><Text style={[styles.standardText,styles.whiteColor]}>Close View</Text></TouchableOpacity>
                                             </View>
                                           ) : (
                                             <View>
@@ -2701,11 +2701,11 @@ class TakeAssessment extends Component {
                                           <View style={[styles.topPadding]}>
                                             {(this.props.fromApply) ? (
                                               <View>
-                                                <Text style={[styles.standardText]}>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
+                                                <Text style={[styles.standardText,styles.centerText]}>This employer desires to hire candidates who have the following skills. Compared to your peers, in what percentile would you rate yourself?</Text>
                                               </View>
                                             ) : (
                                               <View>
-                                                <Text style={[styles.standardText]}>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
+                                                <Text style={[styles.standardText, styles.centerText]}>These skills serve as a comprehensive record for your reference and a resource to import into applications. Not sure what skills to add? <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRateByPathway: true })}><Text style={[styles.boldText,styles.ctaColor]}>Click here</Text></TouchableOpacity> for suggestions by career pathway.</Text>
                                               </View>
                                             )}
                                           </View>

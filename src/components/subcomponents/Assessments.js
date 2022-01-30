@@ -14,7 +14,7 @@ class Assessments extends Component {
     super(props)
     this.state = {
       excludeValuesAssessment: true,
-      
+
       matchCriteria: 'Overall Match',
       sortDirection: 'Descending',
 
@@ -593,10 +593,9 @@ class Assessments extends Component {
           <View>
             {this.renderAssessments()}
 
-
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-             <View key="skillAssessment" style={[styles.calcColumn60,styles.padding20]}>
-              <SubTakeAssessment navigation={this.props.navigation} type={this.state.type} assessmentTitle={this.state.assessmentTitle} assessments={this.state.assessments} index={this.state.index} assessment={this.state.assessment} resultsData={this.state.resultsData} assessmentDescription={this.state.assessmentDescription} closeModal={this.closeModal} passData={this.passData} skillQuestions={this.state.skillQuestions} />
+             <View key="skillAssessment" style={[styles.flex1]}>
+              <SubTakeAssessment navigation={this.props.navigation} type={this.state.type} assessmentTitle={this.state.assessmentTitle} assessments={this.state.assessments} index={this.state.index} assessment={this.state.assessment} resultsData={this.state.resultsData} assessmentDescription={this.state.assessmentDescription} closeModal={this.closeModal} passData={this.passData} skillQuestions={this.state.skillQuestions} fromApply={true} />
              </View>
            </Modal>
           </View>

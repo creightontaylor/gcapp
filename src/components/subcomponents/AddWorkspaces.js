@@ -22,23 +22,24 @@ import {requestAccessToWorkspace} from '../services/ProfileRoutes';
 import {convertDateToString} from '../functions/convertDateToString';
 import {convertStringToDate} from '../functions/convertStringToDate';
 import SubPicker from '../common/SubPicker';
+import SubRenderSignUpFields from '../common/RenderSignUpFields';
 
 class AddWorkspaces extends Component {
   constructor(props) {
     super(props)
     this.state = {
       defaultFilterOption: 'All',
+      education: [],
     }
 
     this.retrieveData = this.retrieveData.bind(this)
     this.submitRequest = this.submitRequest.bind(this)
-    this.submitSignUpFields = this.submitSignUpFields.bind(this)
 
     this.closeModal = this.closeModal.bind(this)
-    this.renderSignUpField = this.renderSignUpField.bind(this)
     this.formChangeHandler = this.formChangeHandler.bind(this)
-    this.optionClicked = this.optionClicked.bind(this)
     this.renderManipulators = this.renderManipulators.bind(this)
+    this.openSignUpFieldsModal = this.openSignUpFieldsModal.bind(this)
+    this.passData = this.passData.bind(this)
 
   }
 
@@ -132,7 +133,8 @@ class AddWorkspaces extends Component {
 
                  const filteredOrgs = orgs
                  if (this.props.orgCode) {
-                   this.setState({ orgs, filteredOrgs, modalIsOpen: true, orgSelected, showSignUpFields: true, showOrgDetails: false, isAnimating: false })
+                   this.setState({ orgs, filteredOrgs, isAnimating: false })
+                   this.openSignUpFieldsModal(orgSelected)
                  } else {
                     this.setState({ orgs, filteredOrgs, isAnimating: false })
                  }
@@ -174,25 +176,9 @@ class AddWorkspaces extends Component {
 
               let myOrgs = response.data.user.myOrgs
               const joinRequests = response.data.user.joinRequests
+              const userObject = response.data.user
 
-              const dateOfBirth = response.data.user.dateOfBirth
-              const gender = response.data.user.gender
-              const race = response.data.user.race
-              const address = response.data.user.address
-              const phoneNumber = response.data.user.phoneNumber
-              const numberOfMembers = response.data.user.numberOfMembers
-              const householdIncome = response.data.user.householdIncome
-              const fosterYouth = response.data.user.fosterYouth
-              const homeless = response.data.user.homeless
-              const incarcerated = response.data.user.incarcerated
-              const adversityList = response.data.user.adversityList
-
-              const pictureURL = response.data.user.pictureURL
-              const education = response.data.user.education
-
-              this.setState({ myOrgs, joinRequests, dateOfBirth, gender, race, address, phoneNumber, numberOfMembers,
-                householdIncome, fosterYouth, homeless, incarcerated, adversityList, pictureURL, education
-              })
+              this.setState({ myOrgs, joinRequests, userObject })
 
             }
           }).catch((error) => {
@@ -204,55 +190,6 @@ class AddWorkspaces extends Component {
        // Error retrieving data
        console.log('there was an error', error)
      }
-  }
-
-  submitSignUpFields() {
-    console.log('submitSignUpFields called')
-
-    if (!this.state.dateOfBirth || this.state.dateOfBirth === '') {
-      this.setState({ errorMessage: 'Please add your date of birth' })
-    } else if (!this.state.gender || this.state.gender === '') {
-      this.setState({ errorMessage: 'Please add your gender' })
-    } else if (!this.state.race || this.state.race === '') {
-      this.setState({ errorMessage: 'Please add your race' })
-    } else if (!this.state.address || this.state.address === '') {
-      this.setState({ errorMessage: 'Please add your address' })
-    } else if (!this.state.phoneNumber || this.state.phoneNumber === '') {
-      this.setState({ errorMessage: 'Please add your phone number' })
-    } else if (!this.state.numberOfMembers || this.state.numberOfMembers === '') {
-      this.setState({ errorMessage: 'Please add the number of members in your household' })
-    } else if (!this.state.householdIncome || this.state.householdIncome === '') {
-      this.setState({ errorMessage: 'Please add your household income' })
-    } else if (!this.state.fosterYouth || this.state.fosterYouth === '') {
-      this.setState({ errorMessage: 'Please indicate whether you have been a foster youth' })
-    } else if (!this.state.homeless || this.state.homeless === '') {
-      this.setState({ errorMessage: 'Please indicate whether you have been homeless' })
-    } else if (!this.state.incarcerated || this.state.incarcerated === '') {
-      this.setState({ errorMessage: 'Please indicate whether you have been incarcerated' })
-    } else if (!this.state.adversityList || this.state.adversityList === '') {
-      this.setState({ errorMessage: 'Please add all that applies' })
-    } else {
-
-      const dateOfBirth = this.state.dateOfBirth
-      const gender = this.state.gender
-      const race = this.state.race
-      const address = this.state.address
-      const phoneNumber = this.state.phoneNumber
-      const numberOfMembers = this.state.numberOfMembers
-      const householdIncome = this.state.householdIncome
-      const fosterYouth = this.state.fosterYouth
-      const homeless = this.state.homeless
-      const incarcerated = this.state.incarcerated
-      const adversityList = this.state.adversityList
-
-      const signUpFields = {
-        dateOfBirth, gender, race, address, phoneNumber, numberOfMembers, householdIncome,
-        fosterYouth, homeless, incarcerated, adversityList
-      }
-
-      this.submitRequest(null, this.state.orgSelected, signUpFields, false)
-
-    }
   }
 
   async submitRequest(e, value, passedSignUpFields, fromButton) {
@@ -290,10 +227,11 @@ class AddWorkspaces extends Component {
               this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: null, objectId: this.props.opportunityId })
             }
           } else {
-            this.setState({ errorMessage: 'There was an unknown error' })
+            return this.setState({ errorMessage: 'There was an unknown error' })
           }
         } else {
-          this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: true, showOrgDetails: false })
+          // this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: true, showOrgDetails: false })
+          this.openSignUpFieldsModal(value)
         }
 
       } else {
@@ -369,7 +307,7 @@ class AddWorkspaces extends Component {
   }
 
   closeModal() {
-    console.log('closeModal called')
+    console.log('closeModal called in AddWorkspaces')
 
     this.setState({
       modalIsOpen: false, showOrgDetails: false, showSignUpFields: false, orgSelected: null, showQuestion: false,
@@ -512,126 +450,6 @@ class AddWorkspaces extends Component {
     delayFilter();
   }
 
-  renderSignUpField(value, index) {
-    console.log('renderSignUpField called')
-
-    return (
-      <View key="signUpField">
-        <Text style={[styles.standardText,styles.row10]}>{value.name}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-        {(value.questionType === 'Date') && (
-          <View>
-            {(Platform.OS === 'ios') ? (
-              <DateTimePicker
-                testID={value.shorthand}
-                value={(this.state[value.shorthand]) ? convertStringToDate(this.state[value.shorthand],'dateOnly') : new Date()}
-                mode={'date'}
-                is24Hour={true}
-                display="default"
-                onChange={(e, d) => this.formChangeHandler(value.shorthand,d)}
-              />
-            ) : (
-              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: this.state.shorthand, selectedIndex: null, selectedName: this.state.shorthand, selectedValue: this.state[value.shorthand] })}>
-                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                  <View style={[styles.calcColumn115]}>
-                    <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
-                  </View>
-                  <View style={[styles.width20,styles.topMargin5]}>
-                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-        {(value.questionType === 'Short Answer') && (
-          <TextInput
-            style={styles.textInput}
-            onChangeText={(text) => this.formChangeHandler(value.shorthand, text)}
-            value={this.state[value.shorthand]}
-            placeholder="Your answer..."
-            placeholderTextColor="grey"
-          />
-        )}
-        {(value.questionType === 'Multiple Choice') && (
-          <View>
-            {(Platform.OS === 'ios') ? (
-              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: item.name, selectedIndex: index, selectedName: value.shorthand, selectedValue: this.state[value.shorthand], selectedOptions: [''].concat(value.answerChoices), selectedSubKey: null })}>
-                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                  <View style={[styles.calcColumn115]}>
-                    <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
-                  </View>
-                  <View style={[styles.width20,styles.topMargin5]}>
-                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <View style={[styles.standardBorder]}>
-                <Picker
-                  selectedValue={this.state[value.shorthand]}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.formChangeHandler(value.shorthand,itemValue)
-                  }>
-                  {[''].concat(value.answerChoices).map(value => <Picker.Item key={value} label={value} value={value} />)}
-                </Picker>
-              </View>
-            )}
-
-          </View>
-        )}
-        {(value.questionType === 'Multiple Answer') && (
-          <View>
-            {value.answerChoices.map((value2, optionIndex) =>
-              <View key={value2 + optionIndex}>
-                <View style={[styles.topMargin5,styles.rightPadding]}>
-                  {(this.state[value.shorthand] && this.state[value.shorthand].includes(value2)) ? (
-                    <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(index, optionIndex, value, value2)}>
-                      <View>
-                        <View>
-                          <Text style={[styles.descriptionText2,styles.whiteColor]}>{value2}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.optionClicked(index, optionIndex, value, value2)}>
-                      <View>
-                        <View>
-                          <Text style={[styles.descriptionText2]}>{value2}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-            )}
-          </View>
-        )}
-
-
-      </View>
-    )
-  }
-
-  optionClicked(index, optionIndex, value, value2) {
-    console.log('optionClicked called', index, optionIndex, value, value2)
-
-    let items = this.state[value.shorthand]
-    if (items) {
-      if (items.includes(value2)) {
-        const index = items.indexOf(value2)
-        items.splice(index, 1)
-      } else {
-        items.push(value2)
-      }
-
-    } else {
-      items = [value2]
-    }
-
-    this.setState({ [value.shorthand]: items })
-
-  }
-
   renderManipulators(type) {
     console.log('renderManipulators called')
 
@@ -743,6 +561,112 @@ class AddWorkspaces extends Component {
     }
   }
 
+  openSignUpFieldsModal(orgSelected) {
+    console.log('openSignUpFieldsModal called')
+
+    Axios.get('https://www.guidedcompass.com/api/workoptions')
+    .then((response) => {
+      console.log('Work options query tried', response.data);
+
+      if (response.data.success) {
+        console.log('Work options query succeeded')
+
+        const degreeOptions = response.data.workOptions[0].degreeOptions.slice(1,response.data.workOptions[0].degreeOptions.lengh)
+
+        const educationStatusOptions = degreeOptions.concat(['Not currently enrolled in school'])
+
+        let educationDateOptions = []
+
+        const currentMonth = new Date().getMonth()
+        const currentYear = new Date().getFullYear()
+
+        let numberOfYears = 25
+        let educationBump = 5
+        let month = ''
+        let year = currentYear - numberOfYears
+
+        // console.log('show me current stuff', currentMonth, currentYear)
+        for (let i = 1; i <= ((numberOfYears + educationBump) * 12); i++) {
+          // console.log('show me stuff', i, (i + currentMonth + 1) % 12)
+          if ((i + currentMonth + 1) % 12 === 2) {
+            month = 'January'
+          } else if ((i + currentMonth + 1) % 12 === 3) {
+            month = 'February'
+          } else if ((i + currentMonth + 1) % 12 === 4) {
+            month = 'March'
+          } else if ((i + currentMonth + 1) % 12 === 5) {
+            month = 'April'
+          } else if ((i + currentMonth + 1) % 12 === 6) {
+            month = 'May'
+          } else if ((i + currentMonth + 1) % 12 === 7) {
+            month = 'June'
+          } else if ((i + currentMonth + 1) % 12 === 8) {
+            month = 'July'
+          } else if ((i + currentMonth + 1) % 12 === 9) {
+            month = 'August'
+          } else if ((i + currentMonth + 1) % 12 === 10) {
+            month = 'September'
+          } else if ((i + currentMonth + 1) % 12 === 11) {
+            month = 'October'
+          } else if ((i + currentMonth + 1) % 12 === 0) {
+            month = 'November'
+          } else if ((i + currentMonth + 1) % 12 === 1) {
+            month = 'December'
+          }
+
+          if (month === 'January') {
+            year = year + 1
+          }
+
+          // dateOptions.push({ value: month + ' ' + year})
+          if (i <= (numberOfYears * 12)) {
+            // dateOptions.push({ value: month + ' ' + year})
+          }
+          educationDateOptions.push(month + ' ' + year)
+
+        }
+
+        const raceOptions = response.data.workOptions[0].raceOptions
+        const genderOptions = response.data.workOptions[0].genderOptions
+
+        const householdIncomeOptions = response.data.workOptions[0].lowIncomeOptions
+        const adversityListOptions = response.data.workOptions[0].adversityListOptions
+        const numberOfMembersOptions = response.data.workOptions[0].numberOfMembersOptions
+        const workAuthorizationOptions = response.data.workOptions[0].workAuthorizationOptions
+        // console.log('show educationDateOptions: ', educationDateOptions)
+        const workOptions = {
+          raceOptions, genderOptions, degreeOptions, householdIncomeOptions, adversityListOptions,
+          numberOfMembersOptions, workAuthorizationOptions,
+          educationStatusOptions, educationDateOptions
+        }
+
+        if (orgSelected.signUpFieldsRequired && orgSelected.signUpFieldsRequired.length > 0) {
+          let signUpFieldsRequired = orgSelected.signUpFieldsRequired
+          for (let i = 1; i <= signUpFieldsRequired.length; i++) {
+            if (signUpFieldsRequired[i - 1].answerChoices && signUpFieldsRequired[i - 1].answerChoices.length === 1) {
+              signUpFieldsRequired[i - 1].answerChoices = workOptions[signUpFieldsRequired[i - 1].answerChoices[0]]
+            }
+          }
+        }
+
+        this.setState({ modalIsOpen: true, orgSelected, showSignUpFields: true, showOrgDetails: false })
+
+      } else {
+        console.log('no workOptions found')
+
+      }
+    }).catch((error) => {
+        console.log('query for work options did not work', error);
+    })
+  }
+
+  passData(passedData) {
+    console.log('passedData called', passedData, this.state.gender)
+
+    this.setState(passedData)
+
+  }
+
   render() {
 
     return (
@@ -837,7 +761,9 @@ class AddWorkspaces extends Component {
                         <View style={[styles.cardClearPadding]}>
 
                           <TouchableOpacity onPress={() => {
-                            this.props.closeModal();
+                            if (this.props.closeModal) {
+                              this.props.closeModal();
+                            }
                             this.props.navigation.navigate('OrgDetails', { selectedOrg: value });
                           }}>
                             <View style={[styles.padding15]}>
@@ -914,31 +840,14 @@ class AddWorkspaces extends Component {
 
           <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>
 
-           <View key="skillAssessment" style={[styles.calcColumn80,styles.padding20]}>
+           <ScrollView key="skillAssessment" style={[styles.flex1,styles.padding20]}>
             {(this.state.showSignUpFields && this.state.orgSelected) && (
               <View>
-                <Text style={[styles.headingText2]}>Sign Up Fields for {this.state.orgSelected.orgName}</Text>
+                <View>
+                  <SubRenderSignUpFields navigation={this.props.navigation} orgSelected={this.state.orgSelected} passData={this.passData} userObject={this.state.userObject} opportunityId={this.props.opportunityId} closeModal={this.closeModal} submitRequest={this.submitRequest}/>
 
-                <Text style={[styles.row10]}>{this.state.orgSelected.orgName} requires the following fields before joining their workspace</Text>
-
-                {(this.props.opportunityId) && (
-                  <Text style={[styles.row10]}>After you sign up to the {this.state.orgSelected.orgName} workspace, you will be able to access this opportunity.</Text>
-                )}
-                <View style={[styles.spacer]} />
-
-                <View style={[styles.rowDirection,styles.flexWrap]}>
-                  {this.state.orgSelected.signUpFields.map((value, index) =>
-                    <View key={index} style={[style.topMargin15]}>
-                      {this.renderSignUpField(value, index)}
-                    </View>
-                  )}
-                </View>
-
-                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
-                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.successMessage}</Text>}
-
-                <View style={[styles.topPadding20]}>
-                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.submitSignUpFields()}><Text style={[styles.standardText,styles.whiteColor]}>Submit</Text></TouchableOpacity>
+                  {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor]}>{this.state.errorMessage}</Text>}
+                  {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor]}>{this.state.successMessage}</Text>}
                 </View>
               </View>
             )}
@@ -985,7 +894,7 @@ class AddWorkspaces extends Component {
                 />
               </View>
             )}
-           </View>
+           </ScrollView>
          </Modal>
         </ScrollView>
 
