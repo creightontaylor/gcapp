@@ -5,8 +5,10 @@ import Axios from 'axios';
 import NewsFeed from './subcomponents/NewsFeed';
 //import { configurePushNotifications } from '../services/PushNotifications';
 //import { GoogleAnalyticsTracker } from "react-native-google-analytics-bridge";
+import {saveAnalytics} from './services/Analytics';
 
 import RefreshNotifications from './common/RefreshNotifications';
+
 
 class Home extends Component {
   constructor(props) {
@@ -57,6 +59,9 @@ class Home extends Component {
       if (email !== null) {
         // We have data!!
         console.log('what is the email of this user', email);
+        // const activeOrg = await AsyncStorage.getItem('activeOrg')
+        // saveAnalytics(email,this.constructor.name,activeOrg,Platform.OS)
+        saveAnalytics(email,this.constructor.name)
 
       }
      } catch (error) {

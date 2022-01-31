@@ -374,7 +374,7 @@ class LogInForm extends Component {
 
       let createdAt = new Date();
       let updatedAt = new Date();
-      let platform = 'web'
+      let platform = Platform.OS
 
       if (!this.state.rolesSupported.includes(this.state.roleName)) {
 
