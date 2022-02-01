@@ -115,7 +115,7 @@ class RenderSignUpFields extends Component {
     }
 
     formChangeHandler(eventName,eventValue,dateEvent) {
-      console.log('formChangeHandler called')
+      console.log('formChangeHandler called', eventName, eventValue)
 
       if (dateEvent && Platform.OS === 'android') {
         if (eventValue) {
@@ -129,6 +129,20 @@ class RenderSignUpFields extends Component {
       } else if (this.state.showDateTimePicker) {
         this.setState({ [eventName]: convertDateToString(new Date(eventValue),'hyphenatedDate') })
         this.props.passData({ [eventName]: convertDateToString(new Date(eventValue),'hyphenatedDate') })
+      } else if (eventName.includes('education|')) {
+        const name = eventName.split("|")[1]
+
+        let education = this.state.education
+        if (education && education[0]) {
+          education[0][name] = eventValue
+        } else {
+          education = [{}]
+          education[0][name] = eventValue
+        }
+
+        this.setState({ education, selectedValue: eventValue })
+        this.props.passData({ education, selectedValue: eventValue })
+
       } else {
         this.setState({ [eventName]: eventValue, selectedValue: eventValue })
         this.props.passData({ [eventName]: eventValue })
@@ -178,13 +192,26 @@ class RenderSignUpFields extends Component {
           }
         }
 
+        let selectedValue = this.state[value.shorthand]
+        // console.log('show selectedValue: ', selectedValue, this.state[value.shorthand])
+        if (value.shorthand.includes("education|")) {
+          if (this.state.education && this.state.education.length > 0) {
+            selectedValue = this.state.education[0][value.shorthand.split("|")[1]]
+            if (value.shorthand === 'education|endDate') {
+              console.log('do something special', this.state.education, selectedValue)
+            }
+          }
+        }
+        // if (value.shorthand === 'education|endDate') {
+        //   console.log('one mo gain', this.state.education, selectedValue)
+        // }
         rows.push(
           <View key={'renderSignUpFields' + index}>
             {(showQuestion) && (
               <View>
                 <View key="signUpField">
                   {(value.questionType !== 'Date') && (
-                    <Text style={[styles.standardText,styles.row10]}>{value.name}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                    <Text style={[styles.standardText,styles.row10]}>{value.name}{(value.required) && <Text style={[styles.errorColor,styles.boldText]}>*</Text>}</Text>
                   )}
 
                   {(value.questionType === 'Date') && (
@@ -192,7 +219,7 @@ class RenderSignUpFields extends Component {
                       {(Platform.OS === 'ios') ? (
                         <View style={[styles.rowDirection]}>
                           <View style={[styles.calcColumn200]}>
-                            <Text style={[styles.standardText,styles.row10]}>{value.name}<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                            <Text style={[styles.standardText,styles.row10]}>{value.name}{(value.required) && <Text style={[styles.errorColor,styles.boldText]}>*</Text>}</Text>
                           </View>
                           <View style={[styles.width120,styles.topPadding5]}>
                             <DateTimePicker
@@ -236,10 +263,10 @@ class RenderSignUpFields extends Component {
                   {(value.questionType === 'Multiple Choice') && (
                     <View>
                       {(Platform.OS === 'ios') ? (
-                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: value.name, selectedIndex: index, selectedName: value.shorthand, selectedValue: this.state[value.shorthand], selectedOptions: [''].concat(value.answerChoices), selectedSubKey: null })}>
+                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: value.name, selectedIndex: index, selectedName: value.shorthand, selectedValue, selectedOptions: [''].concat(value.answerChoices), selectedSubKey: null })}>
                           <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.descriptionText1]}>{this.state[value.shorthand]}</Text>
+                              <Text style={[styles.descriptionText1]}>{selectedValue}</Text>
                             </View>
                             <View style={[styles.width20,styles.topMargin5]}>
                               <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
@@ -249,7 +276,7 @@ class RenderSignUpFields extends Component {
                       ) : (
                         <View style={[styles.standardBorder]}>
                           <Picker
-                            selectedValue={this.state[value.shorthand]}
+                            selectedValue={selectedValue}
                             onValueChange={(itemValue, itemIndex) =>
                               this.formChangeHandler(value.shorthand,itemValue)
                             }>
@@ -323,6 +350,7 @@ class RenderSignUpFields extends Component {
             } else if (!signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand] || !this.state[signUpFieldsRequired[i - 1].shorthand] === '')) {
               return this.setState({ errorMessage: 'Please add an answer for ' + signUpFieldsRequired[i - 1].name })
             } else if (signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]] || this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]].length === 0)) {
+              console.log('show education signUpFieldsRequired: ', signUpFieldsRequired[i - 1])
               return this.setState({ errorMessage: 'Please add answer(s) for the education fields' })
               // return this.setState({ errorMessage: 'Please add answer(s) for the ' + signUpFieldsRequired[i - 1].name + ' field' })
             }

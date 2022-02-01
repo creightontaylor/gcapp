@@ -16,7 +16,7 @@ class Paths extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showBenchmarks: true,
+      showBenchmarks: false,
 
       subNavCategories: [],
       subNavSelected: 'Careers',
@@ -63,7 +63,7 @@ class Paths extends Component {
       }
 
       // console.log('show me the money: ', subNavSelected,this.props.route.params)
-      let subNavCategories = ['Careers','Trends']
+      let subNavCategories = ['Careers','Courses','Trends']
 
       if (this.state.showBenchmarks) {
         subNavCategories = ['Benchmarks','Careers','Courses','Trends']

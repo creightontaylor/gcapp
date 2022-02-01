@@ -7034,7 +7034,7 @@ class EditProfileDetails extends Component {
                         </View>
                       ) : (
                         <View style={[styles.row10]}>
-                          <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.whiteColor]}>Save Profile Changes</Text></TouchableOpacity>
+                          <TouchableOpacity onPress={this.handleSubmit} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardColor,styles.whiteColor]}>Save Profile Changes</Text></TouchableOpacity>
                         </View>
                       )}
 
