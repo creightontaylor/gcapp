@@ -1000,7 +1000,8 @@ class Benchmarks extends Component {
   }
 
   closeModal() {
-    this.setState({ modalIsOpen: false });
+
+    this.setState({ modalIsOpen: false, showPicker: false, showMatchingCriteria: false });
   }
 
   favoriteItem(item) {
@@ -1391,7 +1392,7 @@ class Benchmarks extends Component {
 
                 <View style={[styles.row20,styles.rowDirection,styles.flexCenter,styles.flex1]}>
                   <View style={[styles.flex50,styles.rightPadding5]}>
-                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply</Text></TouchableOpacity>
                   </View>
                   <View style={[styles.flex50,styles.leftPadding5]}>
                     <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>

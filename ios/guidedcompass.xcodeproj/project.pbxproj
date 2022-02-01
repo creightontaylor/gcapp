@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* GCAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* GCAppTests.m */; };
+		00E356F31AD99517003FC87E /* guidedcompassTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* guidedcompassTests.m */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		4E92E801FC431A9967F16603 /* libPods-GCApp-GCAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AAF952B06B083221553C57D /* libPods-GCApp-GCAppTests.a */; };
+		4E92E801FC431A9967F16603 /* libPods-guidedcompass-guidedcompassTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AAF952B06B083221553C57D /* libPods-guidedcompass-guidedcompassTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D22BB8BC2C150D56DA0C8272 /* libPods-GCApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C87CD7CA5C3D37ABEFA3A85C /* libPods-GCApp.a */; };
+		D22BB8BC2C150D56DA0C8272 /* libPods-guidedcompass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C87CD7CA5C3D37ABEFA3A85C /* libPods-guidedcompass.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -22,28 +22,28 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = GCApp;
+			remoteInfo = guidedcompass;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* GCAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GCAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* guidedcompassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = guidedcompassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* GCAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCAppTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* GCApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GCApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = GCApp/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = GCApp/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = GCApp/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GCApp/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GCApp/main.m; sourceTree = "<group>"; };
-		379A1EEA4EA33A3BC355C6EF /* Pods-GCApp-GCAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCApp-GCAppTests.release.xcconfig"; path = "Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests.release.xcconfig"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GCApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8AAF952B06B083221553C57D /* libPods-GCApp-GCAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GCApp-GCAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A0A351108E0714C477353556 /* Pods-GCApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCApp.release.xcconfig"; path = "Target Support Files/Pods-GCApp/Pods-GCApp.release.xcconfig"; sourceTree = "<group>"; };
-		BA5CE8CB99937E4103D7362B /* Pods-GCApp-GCAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCApp-GCAppTests.debug.xcconfig"; path = "Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		C87CD7CA5C3D37ABEFA3A85C /* libPods-GCApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GCApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356F21AD99517003FC87E /* guidedcompassTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = guidedcompassTests.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* guidedcompass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = guidedcompass.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = guidedcompass/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = guidedcompass/AppDelegate.m; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = guidedcompass/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = guidedcompass/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = guidedcompass/main.m; sourceTree = "<group>"; };
+		379A1EEA4EA33A3BC355C6EF /* Pods-guidedcompass-guidedcompassTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-guidedcompass-guidedcompassTests.release.xcconfig"; path = "Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests.release.xcconfig"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = guidedcompass/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8AAF952B06B083221553C57D /* libPods-guidedcompass-guidedcompassTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-guidedcompass-guidedcompassTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0A351108E0714C477353556 /* Pods-guidedcompass.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-guidedcompass.release.xcconfig"; path = "Target Support Files/Pods-guidedcompass/Pods-guidedcompass.release.xcconfig"; sourceTree = "<group>"; };
+		BA5CE8CB99937E4103D7362B /* Pods-guidedcompass-guidedcompassTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-guidedcompass-guidedcompassTests.debug.xcconfig"; path = "Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C87CD7CA5C3D37ABEFA3A85C /* libPods-guidedcompass.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-guidedcompass.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		FD90B595A72FD9B7189F7E36 /* Pods-GCApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GCApp.debug.xcconfig"; path = "Target Support Files/Pods-GCApp/Pods-GCApp.debug.xcconfig"; sourceTree = "<group>"; };
+		FD90B595A72FD9B7189F7E36 /* Pods-guidedcompass.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-guidedcompass.debug.xcconfig"; path = "Target Support Files/Pods-guidedcompass/Pods-guidedcompass.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E92E801FC431A9967F16603 /* libPods-GCApp-GCAppTests.a in Frameworks */,
+				4E92E801FC431A9967F16603 /* libPods-guidedcompass-guidedcompassTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D22BB8BC2C150D56DA0C8272 /* libPods-GCApp.a in Frameworks */,
+				D22BB8BC2C150D56DA0C8272 /* libPods-guidedcompass.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,13 +73,13 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		00E356EF1AD99517003FC87E /* GCAppTests */ = {
+		00E356EF1AD99517003FC87E /* guidedcompassTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* GCAppTests.m */,
+				00E356F21AD99517003FC87E /* guidedcompassTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = GCAppTests;
+			path = guidedcompassTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -90,7 +90,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* GCApp */ = {
+		13B07FAE1A68108700A75B9A /* guidedcompass */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -100,15 +100,15 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = GCApp;
+			name = guidedcompass;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				C87CD7CA5C3D37ABEFA3A85C /* libPods-GCApp.a */,
-				8AAF952B06B083221553C57D /* libPods-GCApp-GCAppTests.a */,
+				C87CD7CA5C3D37ABEFA3A85C /* libPods-guidedcompass.a */,
+				8AAF952B06B083221553C57D /* libPods-guidedcompass-guidedcompassTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -123,9 +123,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* GCApp */,
+				13B07FAE1A68108700A75B9A /* guidedcompass */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* GCAppTests */,
+				00E356EF1AD99517003FC87E /* guidedcompassTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F228302E0B645C7DF0698580 /* Pods */,
@@ -139,8 +139,8 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* GCApp.app */,
-				00E356EE1AD99517003FC87E /* GCAppTests.xctest */,
+				13B07F961A680F5B00A75B9A /* guidedcompass.app */,
+				00E356EE1AD99517003FC87E /* guidedcompassTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -148,10 +148,10 @@
 		F228302E0B645C7DF0698580 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FD90B595A72FD9B7189F7E36 /* Pods-GCApp.debug.xcconfig */,
-				A0A351108E0714C477353556 /* Pods-GCApp.release.xcconfig */,
-				BA5CE8CB99937E4103D7362B /* Pods-GCApp-GCAppTests.debug.xcconfig */,
-				379A1EEA4EA33A3BC355C6EF /* Pods-GCApp-GCAppTests.release.xcconfig */,
+				FD90B595A72FD9B7189F7E36 /* Pods-guidedcompass.debug.xcconfig */,
+				A0A351108E0714C477353556 /* Pods-guidedcompass.release.xcconfig */,
+				BA5CE8CB99937E4103D7362B /* Pods-guidedcompass-guidedcompassTests.debug.xcconfig */,
+				379A1EEA4EA33A3BC355C6EF /* Pods-guidedcompass-guidedcompassTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -159,9 +159,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* GCAppTests */ = {
+		00E356ED1AD99517003FC87E /* guidedcompassTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "GCAppTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "guidedcompassTests" */;
 			buildPhases = (
 				1E6ECFB11B8B40C6A14AB8A0 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -175,14 +175,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = GCAppTests;
-			productName = GCAppTests;
-			productReference = 00E356EE1AD99517003FC87E /* GCAppTests.xctest */;
+			name = guidedcompassTests;
+			productName = guidedcompassTests;
+			productReference = 00E356EE1AD99517003FC87E /* guidedcompassTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* GCApp */ = {
+		13B07F861A680F5B00A75B9A /* guidedcompass */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GCApp" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "guidedcompass" */;
 			buildPhases = (
 				2C2C837030E331B9011C5D37 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -197,9 +197,9 @@
 			);
 			dependencies = (
 			);
-			name = GCApp;
-			productName = GCApp;
-			productReference = 13B07F961A680F5B00A75B9A /* GCApp.app */;
+			name = guidedcompass;
+			productName = guidedcompass;
+			productReference = 13B07F961A680F5B00A75B9A /* guidedcompass.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -219,7 +219,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "GCApp" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "guidedcompass" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -232,8 +232,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* GCApp */,
-				00E356ED1AD99517003FC87E /* GCAppTests */,
+				13B07F861A680F5B00A75B9A /* guidedcompass */,
+				00E356ED1AD99517003FC87E /* guidedcompassTests */,
 			);
 		};
 /* End PBXProject section */
@@ -287,7 +287,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GCApp-GCAppTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-guidedcompass-guidedcompassTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -309,7 +309,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GCApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-guidedcompass-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -322,15 +322,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B98FD21821CC165B1AF43DE4 /* [CP] Embed Pods Frameworks */ = {
@@ -339,15 +339,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GCApp-GCAppTests/Pods-GCApp-GCAppTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-guidedcompass-guidedcompassTests/Pods-guidedcompass-guidedcompassTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D43114D949A7885C4EBF839F /* [CP] Copy Pods Resources */ = {
@@ -356,15 +356,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D4C2BB7599B49C49B556AEE5 /* [CP] Embed Pods Frameworks */ = {
@@ -373,15 +373,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GCApp/Pods-GCApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-guidedcompass/Pods-guidedcompass-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -410,7 +410,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* GCAppTests.m in Sources */,
+				00E356F31AD99517003FC87E /* guidedcompassTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +428,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* GCApp */;
+			target = 13B07F861A680F5B00A75B9A /* guidedcompass */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -436,14 +436,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BA5CE8CB99937E4103D7362B /* Pods-GCApp-GCAppTests.debug.xcconfig */;
+			baseConfigurationReference = BA5CE8CB99937E4103D7362B /* Pods-guidedcompass-guidedcompassTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = GCAppTests/Info.plist;
+				INFOPLIST_FILE = guidedcompassTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,17 +457,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GCApp.app/GCApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/guidedcompass.app/guidedcompass";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 379A1EEA4EA33A3BC355C6EF /* Pods-GCApp-GCAppTests.release.xcconfig */;
+			baseConfigurationReference = 379A1EEA4EA33A3BC355C6EF /* Pods-guidedcompass-guidedcompassTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = GCAppTests/Info.plist;
+				INFOPLIST_FILE = guidedcompassTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -481,32 +481,32 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GCApp.app/GCApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/guidedcompass.app/guidedcompass";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FD90B595A72FD9B7189F7E36 /* Pods-GCApp.debug.xcconfig */;
+			baseConfigurationReference = FD90B595A72FD9B7189F7E36 /* Pods-guidedcompass.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LZ2UZ8X376;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = GCApp/Info.plist;
+				INFOPLIST_FILE = guidedcompass/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.29;
+				MARKETING_VERSION = 2.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guidedcompass.guidedcompass;
-				PRODUCT_NAME = GCApp;
+				PRODUCT_NAME = guidedcompass;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -515,25 +515,25 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0A351108E0714C477353556 /* Pods-GCApp.release.xcconfig */;
+			baseConfigurationReference = A0A351108E0714C477353556 /* Pods-guidedcompass.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = LZ2UZ8X376;
-				INFOPLIST_FILE = GCApp/Info.plist;
+				INFOPLIST_FILE = guidedcompass/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.29;
+				MARKETING_VERSION = 2.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guidedcompass.guidedcompass;
-				PRODUCT_NAME = GCApp;
+				PRODUCT_NAME = guidedcompass;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -665,7 +665,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "GCAppTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "guidedcompassTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -674,7 +674,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GCApp" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "guidedcompass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -683,7 +683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "GCApp" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "guidedcompass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

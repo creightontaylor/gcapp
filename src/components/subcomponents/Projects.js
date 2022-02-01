@@ -87,7 +87,7 @@ class Projects extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called ', this.props.activeOrg, prevProps)
+    console.log('componentDidUpdate called in projects')
 
     if (this.props.activeOrg !== prevProps.activeOrg || this.props.accountCode !== prevProps.accountCode) {
       this.retrieveData()
@@ -127,7 +127,7 @@ class Projects extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/workoptions')
         .then((response) => {
-          console.log('Work options query tried', response.data);
+          console.log('Work options query tried');
 
           if (response.data.success) {
             console.log('Work options query succeeded')
@@ -188,7 +188,7 @@ class Projects extends Component {
           .then((response) => {
 
               if (response.data.success) {
-                console.log('User profile query worked', response.data);
+                console.log('User profile query worked');
 
                 const courseIds = response.data.user.courseIds
 
@@ -198,7 +198,7 @@ class Projects extends Component {
 
                   Axios.get('https://www.guidedcompass.com/api/projects', { params: { courseIds } })
                   .then((response) => {
-                    console.log('Projects query attempted', response.data);
+                    console.log('Projects query attempted');
 
                       if (response.data.success) {
                         console.log('successfully retrieved projects')
@@ -224,7 +224,7 @@ class Projects extends Component {
                   const resLimit = 50
                   Axios.get('https://www.guidedcompass.com/api/projects', { params: { orgCode: org, resLimit } })
                   .then((response) => {
-                    console.log('Projects query attempted teacher', response.data);
+                    console.log('Projects query attempted teacher');
 
                       if (response.data.success) {
                         console.log('successfully retrieved projects')
@@ -260,7 +260,7 @@ class Projects extends Component {
           const resLimit = 50
           Axios.get('https://www.guidedcompass.com/api/projects', { params: { orgCode: org, resLimit } })
           .then((response) => {
-            console.log('Projects query attempted', response.data);
+            console.log('Projects query attempted');
 
               if (response.data.success) {
                 console.log('successfully retrieved projects')
@@ -283,7 +283,7 @@ class Projects extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: org } })
         .then((response) => {
-          console.log('Org info query attempted one', response.data);
+          console.log('Org info query attempted one');
 
           if (response.data.success) {
             console.log('org info query worked')
@@ -301,7 +301,7 @@ class Projects extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
         .then((response) => {
-          console.log('User profile query attempted', response.data);
+          console.log('User profile query attempted');
 
             if (response.data.success) {
               console.log('successfully retrieved profile')
@@ -325,7 +325,7 @@ class Projects extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
        .then((response) => {
-           console.log('Favorites query attempted', response.data);
+           console.log('Favorites query attempted');
 
            if (response.data.success) {
              console.log('successfully retrieved favorites')
@@ -946,7 +946,7 @@ class Projects extends Component {
   closeModal() {
     console.log('closeModal in projects: ', this.state.showProjectDetail)
 
-    this.setState({ modalIsOpen: false });
+    this.setState({ modalIsOpen: false, showPicker: false, showMatchingCriteria: false });
     //
     // if (this.state.showProjectDetail) {
     //   this.child.current.closeModal()
@@ -1068,7 +1068,7 @@ class Projects extends Component {
 
             {(this.state.showProjectDetail) ? (
               <View>
-                <ProjectDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.projects[this.state.selectedIndex1]} orgCode={this.state.org} />
+                <ProjectDetails closeModal={this.closeModal} modalIsOpen={this.state.modalIsOpen} selectedProject={this.state.projects[this.state.selectedIndex1]} orgCode={this.state.org} navigation={this.props.navigation} />
               </View>
             ) : (
                 <Modal isVisible={this.state.modalIsOpen} style={(this.state.showPicker) ? [] : [styles.modal]}>

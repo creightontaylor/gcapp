@@ -60,6 +60,7 @@ class Employers extends Component {
     this.filterResults = this.filterResults.bind(this)
     this.sortResults = this.sortResults.bind(this)
     this.renderEmployers = this.renderEmployers.bind(this)
+    this.closeModal = this.closeModal.bind(this)
 
   }
 
@@ -735,6 +736,13 @@ class Employers extends Component {
     }
 
     return rows
+  }
+
+  closeModal() {
+    console.log('closeModal called')
+
+    this.setState({ modalIsOpen: false, showMatchingCriteria: false, showPicker: false })
+
   }
 
   render() {

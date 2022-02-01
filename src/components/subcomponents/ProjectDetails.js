@@ -192,7 +192,7 @@ class ProjectDetails extends Component {
       console.log('renderProject called')
 
       return (
-        <View key="projectDetails" style={[styles.calcColumn60]}>
+        <View key="projectDetails" style={[styles.flex1]}>
           <View style={[styles.row10,styles.rowDirection]}>
             <View style={[styles.width60]}>
               <Image style={[styles.square50,styles.contain, { borderRadius: 25 }]} source={(this.state.selectedProject.userPic) ? { uri: this.state.selectedProject.userPic} : { uri: profileIconGrey}} />
@@ -374,10 +374,10 @@ class ProjectDetails extends Component {
             <View>
               <View style={[styles.spacer]} />
 
-              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorderColor,styles.flexCenter]} onPress={() => this.closeModal()}>
+              <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.ctaBorderColor,styles.flexCenter]} onPress={() => this.closeModal()}>
                 <View style={[styles.rowDirection]}>
                   <View style={[styles.topPadding5]}><Image style={[styles.square11,styles.contain]} source={{ uri: closeIcon}} /></View>
-                  <Text style={[styles.leftPadding]}>Close View</Text>
+                  <Text style={[styles.descriptionText1,styles.ctaColor,styles.leftPadding]}>Close View</Text>
 
                 </View>
               </TouchableOpacity>
@@ -403,7 +403,7 @@ class ProjectDetails extends Component {
                   <View>
                     {this.state.modalIsOpen && (
                       <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
-                        <View style={[styles.padding30]}>
+                        <View style={[styles.flex1,styles.padding20]}>
                           {this.renderProject()}
                         </View>
                      </Modal>

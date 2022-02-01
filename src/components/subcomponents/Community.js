@@ -1306,28 +1306,27 @@ class Community extends Component {
                 <View>
                   {this.state.friendRequests.map((value2, optionIndex) =>
                     <View key={value2 + optionIndex}>
-                      <View style={[styles.row10]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                          <View style={styles.width40}>
+                      <View style={[styles.row10,styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: value2.username })} style={[styles.calcColumn140,styles.rowDirection]}>
+                          <View style={[styles.width40,styles.topPadding5]}>
                             <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                           </View>
-                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
                             <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to connect with you</Text>
                           </View>
 
                         </TouchableOpacity>
 
-                        <View style={styles.width150,styles.rowDirection}>
+                        <View style={[styles.alignCenter,styles.leftPadding,styles.width100]}>
+                          <View>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor]} onPress={() => this.decideOnRequest(optionIndex, true,'connection')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Accept</Text></TouchableOpacity>
+                          </View>
                           <View>
                             <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'connection')}>
-                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                              <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Ignore</Text>
                             </TouchableOpacity>
                           </View>
-                          <View style={styles.leftPadding}>
-                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.whiteColor,styles.descriptionText1]} onPress={() => this.decideOnRequest(optionIndex, true,'connection')}>Accept</TouchableOpacity>
-                          </View>
-
                         </View>
 
                       </View>
@@ -1340,28 +1339,27 @@ class Community extends Component {
                 <View>
                   {this.state.groupRequests.map((value2, optionIndex) =>
                     <View key={value2 + optionIndex}>
-                      <View style={[styles.row10]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                          <View style={styles.width40}>
+                      <View style={[styles.row10,styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn140,styles.rowDirection]}>
+                          <View style={[styles.width40,styles.topPadding5]}>
                             <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                           </View>
-                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.headingText5]}>{value2.firstName} {value2.lastName}</Text>
                             <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} wants to join {value2.groupName}</Text>
                           </View>
 
                         </TouchableOpacity>
 
-                        <View style={styles.width150}>
+                        <View style={[styles.alignCenter,styles.leftPadding,styles.width100]}>
+                          <View>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Accept</Text></TouchableOpacity>
+                          </View>
                           <View>
                             <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupRequest')}>
-                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                              <Text style={[styles.descriptionText2,styles.descriptionTextColor]}>Ignore</Text>
                             </TouchableOpacity>
                           </View>
-                          <View style={styles.leftPadding}>
-                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupRequest')}>Accept</TouchableOpacity>
-                          </View>
-
                         </View>
 
                       </View>
@@ -1375,26 +1373,26 @@ class Community extends Component {
                 <View>
                   {this.state.groupInvites.map((value2, optionIndex) =>
                     <View key={value2 + optionIndex}>
-                      <View style={[styles.row10]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn150,styles.topPadding5,styles.rowDirection]}>
-                          <View style={styles.width40}>
+                      <View style={[styles.row10,styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('GroupDetails', { _id: value2._id })} style={[styles.calcColumn140,styles.rowDirection]}>
+                          <View style={[styles.width40,styles.topPadding5]}>
                             <Image source={(value2.pictureURL) ? {uri: value2.pictureURL} : {uri: profileIconDark}} style={[styles.square30,styles.contain]} />
                           </View>
-                          <View style={[styles.calcColumn190,styles.leftPadding]}>
+                          <View style={[styles.calcColumn180,styles.leftPadding]}>
                             <Text style={[styles.headingText5]}>{value2.groupName}</Text>
                             <Text style={[styles.descriptionText2,styles.topPadding5]}>{value2.firstName} {value2.lastName} invited you to join their accountability group: {value2.groupName}</Text>
                           </View>
 
                         </TouchableOpacity>
 
-                        <View style={styles.width150}>
+                        <View style={[styles.alignCenter,styles.leftPadding,styles.width100]}>
+                          <View>
+                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}><Text style={[styles.descriptionText1,styles.whiteColor]}>Accept</Text></TouchableOpacity>
+                          </View>
                           <View>
                             <TouchableOpacity style={styles.topPadding5} onPress={() => this.decideOnRequest(optionIndex, false,'groupInvite')}>
-                              <Text style={styles.descriptionTextColor}>Ignore</Text>
+                              <Text style={[styles.descriptionTextColor,styles.descriptionText2]}>Ignore</Text>
                             </TouchableOpacity>
-                          </View>
-                          <View style={styles.leftPadding}>
-                            <TouchableOpacity style={[styles.btnSmall,styles.ctaBackgroundColor,styles.descriptionText1,styles.whiteColor]} onPress={() => this.decideOnRequest(optionIndex, true,'groupInvite')}>Accept</TouchableOpacity>
                           </View>
 
                         </View>

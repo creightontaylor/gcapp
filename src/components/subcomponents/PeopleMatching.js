@@ -758,7 +758,7 @@ class PeopleMatching extends Component {
   closeModal() {
     console.log('closeModal called')
 
-    this.setState({ modalIsOpen: false, showMessageWidget: false, showMatchingCriteria: false })
+    this.setState({ modalIsOpen: false, showMessageWidget: false, showMatchingCriteria: false, showPicker: false })
   }
 
   itemClicked(name, value) {
@@ -1092,7 +1092,7 @@ class PeopleMatching extends Component {
 
               <View style={[styles.row20,styles.rowDirection,styles.flexCenter,styles.flex1]}>
                 <View style={[styles.flex50,styles.rightPadding5]}>
-                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply Changes</Text></TouchableOpacity>
+                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.calculateMatches(true, true, true)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Apply</Text></TouchableOpacity>
                 </View>
                 <View style={[styles.flex50,styles.leftPadding5]}>
                   <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.descriptionText1,styles.ctaColor]}>Close View</Text></TouchableOpacity>
