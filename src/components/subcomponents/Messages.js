@@ -154,7 +154,8 @@ class Messages extends Component {
                            lastName: members[j - 1].lastName,
                            email: members[j - 1].email,
                            pictureURL: members[j - 1].pictureURL,
-                           username: members[j - 1].username
+                           username: members[j - 1].username,
+                           roleName: members[j - 1].roleName
                          }
 
                          if (inboxes[i - 1].unreadCount) {
@@ -205,7 +206,8 @@ class Messages extends Component {
                      if (members[i - 1].email !== email) {
                        recipient = {
                          firstName: members[i - 1].firstName, lastName: members[i - 1].lastName,
-                         email: members[i - 1].email, pictureURL: members[i - 1].pictureURL, username: members[i - 1].username
+                         email: members[i - 1].email, pictureURL: members[i - 1].pictureURL, username: members[i - 1].username,
+                         roleName: members[i - 1].roleName
                        }
                      }
                    }
@@ -291,7 +293,7 @@ class Messages extends Component {
   filterResults(searchString, filterName, filterValue, search) {
     console.log('filterResults called', searchString, filterName, filterValue, search)
 
-    let roleNames = ['Student','Career-Seeker']
+    let roleNames = ['Student','Career-Seeker','Mentor']
     if (this.state.userType === 'Mentors') {
       roleNames = ['Mentor']
     }
@@ -371,10 +373,10 @@ class Messages extends Component {
       const accountCode = this.state.accountCode
 
       const recipients = [{
-        firstName: this.state.recipient.firstName, lastName: this.state.recipient.lastName, email: this.state.recipient.email, pictureURL: this.state.recipient.pictureURL, username: this.state.recipient.username
+        firstName: this.state.recipient.firstName, lastName: this.state.recipient.lastName, email: this.state.recipient.email, pictureURL: this.state.recipient.pictureURL, username: this.state.recipient.username, roleName: this.state.recipient.roleName
       }]
 
-      let members = [{ firstName: this.state.cuFirstName, lastName: this.state.cuLastName, email: this.state.emailId, pictureURL: this.state.pictureURL, username: this.state.username }]
+      let members = [{ firstName: this.state.cuFirstName, lastName: this.state.cuLastName, email: this.state.emailId, pictureURL: this.state.pictureURL, username: this.state.username, roleName: this.state.roleName }]
       members = members.concat(recipients)
 
       const createdAt = new Date()
@@ -493,7 +495,8 @@ class Messages extends Component {
         if (members[i - 1].email !== this.state.emailId) {
           recipient = {
             firstName: members[i - 1].firstName, lastName: members[i - 1].lastName,
-            email: members[i - 1].email, pictureURL: members[i - 1].pictureURL, username: members[i - 1].username
+            email: members[i - 1].email, pictureURL: members[i - 1].pictureURL, username: members[i - 1].username,
+            roleName: members[i - 1].roleName
           }
         }
       }

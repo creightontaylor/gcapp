@@ -317,6 +317,7 @@ class EditLog extends Component {
           { name: 'Degree', description: 'Earn an educational degree'},
           { name: 'Network', description: 'Develop a robust network'},
           { name: 'Social Problem', description: 'Solve a social problem'},
+          { name: 'Personal', description: 'Personal'},
         ]
 
         let includesAdults = false
@@ -342,6 +343,7 @@ class EditLog extends Component {
             { name: 'Work-Life Balance', description: 'Increase work-life balance'},
             { name: 'Network', description: 'Develop a robust network'},
             { name: 'Social Problem', description: 'Solve a social problem'},
+            { name: 'Personal', description: 'Personal'},
           ]
         }
 
