@@ -5832,7 +5832,7 @@ class EditProfileDetails extends Component {
                       ) : (
                         <View style={[styles.standardBorder]}>
                           <Picker
-                            selectedValue={item.name}
+                            selectedValue={this.state.educationStatus}
                             onValueChange={(itemValue, itemIndex) =>
                               this.formChangeHandler("educationStatus",itemValue)
                             }>
