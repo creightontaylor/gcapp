@@ -5468,7 +5468,7 @@ class EditLog extends Component {
 
                                   {item.selectedTimes.map((item2, optionIndex2) =>
                                     <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {convertDateToString(item2.time,"datetime")}</Text>
+                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {convertDateToString(new Date(item2.time),"datetime-2")}</Text>
                                     </View>
                                   )}
                                 </View>

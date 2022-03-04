@@ -55,7 +55,6 @@ class EditGroup extends Component {
         this.removeTag = this.removeTag.bind(this)
         this.addItem = this.addItem.bind(this)
         this.itemClicked = this.itemClicked.bind(this)
-        this.adjustForTimeDifference = this.adjustForTimeDifference.bind(this)
         this.prepareDate = this.prepareDate.bind(this)
 
     }
@@ -137,9 +136,6 @@ class EditGroup extends Component {
               meetingStartTime = this.props.selectedGroup.meetingStartTime
             } else {
               meetingStartTime = this.props.selectedGroup.meetingStartTime
-              // meetingStartTime = new Date(this.props.selectedGroup.meetingStartTime)
-              // const newMeetingStartTime = new Date(meetingStartTime.getTime() + new Date().getTimezoneOffset()*60000)
-              // meetingStartTime = convertDateToString(newMeetingStartTime,"hyphenatedDateTime")
             }
           }
           if (this.props.selectedGroup.meetingEndTime) {
@@ -147,9 +143,6 @@ class EditGroup extends Component {
               meetingEndTime = this.props.selectedGroup.meetingEndTime
             } else {
               meetingEndTime = this.props.selectedGroup.meetingEndTime
-              // meetingEndTime = new Date(this.props.selectedGroup.meetingEndTime)
-              // const newMeetingEndTime = new Date(meetingEndTime.getTime() + new Date().getTimezoneOffset()*60000)
-              // meetingEndTime = convertDateToString(newMeetingEndTime,"hyphenatedDateTime")
             }
           }
           // console.log('show meeting times: ', meetingStartTime,meetingEndTime)
@@ -306,22 +299,6 @@ class EditGroup extends Component {
           console.log('view date 2: ', eventValue)
           this.setState({ [eventName]: eventValue })
         } else if (mode === 'datetime') {
-          //date component
-          // console.log('show eventValue 1: ', eventValue)
-          //
-          // eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
-          // let doNotAdjust = true
-          // if (doNotAdjust) {
-          //   eventValue = convertDateToString(eventValue,'hyphenatedDateTime')
-          // } else {
-          //   const timeDifference = new Date(eventValue).getTimezoneOffset() / 60
-          //   let adjustedDate = new Date(eventValue)
-          //   adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
-          //   eventValue = convertDateToString(adjustedDate,'hyphenatedDateTime')
-          // }
-
-          // 15, 23, 7
-          // console.log('show eventValue 2: ', eventValue)
           this.setState({ [eventName]: eventValue })
         }
       } else {
@@ -914,17 +891,6 @@ class EditGroup extends Component {
 
       this.setState({ selectedRoleNames })
 
-    }
-
-    adjustForTimeDifference(passedDate) {
-      console.log('adjustTimeDifference called', passedDate)
-
-      const timeDifference = new Date(passedDate).getTimezoneOffset() / 60
-      let adjustedDate = new Date(passedDate)
-      adjustedDate.setHours(adjustedDate.getHours() + timeDifference);
-      passedDate = convertDateToString(adjustedDate,'hyphenatedDateTime')
-
-      return passedDate
     }
 
     prepareDate(passedDate,type) {

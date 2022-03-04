@@ -101,15 +101,18 @@ class Submissions extends Component {
 
         let disableLinks = false
         if (selectedOpportunity) {
-          const now = new Date()
-          const submissionDeadlineDate = new Date(selectedOpportunity.submissionDeadline)
-          const timeDifferenceUnadjusted = now.getTime() - submissionDeadlineDate.getTime()
-          const timeZoneDifferenceMiliseconds = (submissionDeadlineDate.getTimezoneOffset()) * 60000
-          const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
-          console.log('show timeDifference: ', timeDifference)
-          if (timeDifference < 0) {
+          if (new Date().getTime() > new Date(selectedOpportunity.submissionDeadline).getTime()) {
             disableLinks = true
           }
+          // const now = new Date()
+          // const submissionDeadlineDate = new Date(selectedOpportunity.submissionDeadline)
+          // const timeDifferenceUnadjusted = now.getTime() - submissionDeadlineDate.getTime()
+          // const timeZoneDifferenceMiliseconds = (submissionDeadlineDate.getTimezoneOffset()) * 60000
+          // const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
+          // console.log('show timeDifference: ', timeDifference)
+          // if (timeDifference < 0) {
+          //   disableLinks = true
+          // }
         }
 
         this.setState({ pictureURL, emailId, cuFirstName, cuLastName, orgFocus, roleName, selectedOpportunity, activeOrg,

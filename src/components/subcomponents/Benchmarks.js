@@ -340,10 +340,12 @@ class Benchmarks extends Component {
             const defaultFilterOption = this.state.defaultFilterOption
             const functionFilterOptions = [defaultFilterOption].concat(functionOptions.slice(1, functionOptions.length))
             const industryFilterOptions = [defaultFilterOption].concat(industryOptions.slice(1, industryOptions.length))
+            const binaryFilterOptions = [defaultFilterOption].concat(['Employers Only','Exclude Employers'])
 
             let itemFilters = [
               { name: 'Work Function', value: defaultFilterOption, options: functionFilterOptions },
               { name: 'Industry', value: defaultFilterOption, options: industryFilterOptions },
+              { name: 'Organization Type', value: defaultFilterOption, options: binaryFilterOptions },
             ]
 
             const itemSorters = []

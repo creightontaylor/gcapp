@@ -336,10 +336,10 @@ class Logs extends Component {
             title = this.state.logs[i - 1].description
           }
 
-          subtitle = this.state.logs[i - 1].logType + " | " + convertDateToString(this.state.logs[i - 1].deadline,"datetime") + " | " + convertDateToString(this.state.logs[i - 1].createdAt,"datetime")
+          subtitle = this.state.logs[i - 1].logType + " | " + convertDateToString(new Date(this.state.logs[i - 1].deadline),"datetime-2") + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Application') {
           title = this.state.logs[i - 1].positionTitle
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(this.state.logs[i - 1].createdAt,"datetime")
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime02")
         } else if (this.state.logs[i - 1].logType === 'Interview') {
           title = this.state.logs[i - 1].associatedApplicationPositionTitle
           subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].associatedApplicationEmployerName + " | " + this.state.logs[i - 1].fitRating
@@ -348,13 +348,13 @@ class Logs extends Component {
           subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].associatedApplicationEmployerName + " | " + this.state.logs[i - 1].createdAt
         } else if (this.state.logs[i - 1].logType === 'Passion') {
           title = this.state.logs[i - 1].passionTitle
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].passionReason + " | " + convertDateToString(this.state.logs[i - 1].createdAt,"datetime")
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].passionReason + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Native Application') {
           title = this.state.logs[i - 1].postingTitle
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].postingEmployerName + " | " + convertDateToString(this.state.logs[i - 1].createdAt,"datetime")
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].postingEmployerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Native Offer') {
           title = this.state.logs[i - 1].title
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(this.state.logs[i - 1].createdAt,"datetime")
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         }
 
         let showLog = false

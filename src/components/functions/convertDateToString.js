@@ -46,10 +46,10 @@ export const convertDateToString = (passedValue, type)=>{
       }
 
       let day = passedValue.getDate()
-      if (day > 10) {
-        day = day.toString()
-      } else {
+      if (day < 10) {
         day = '0' + day.toString()
+      } else {
+        day = day.toString()
       }
       const year = passedValue.getFullYear()
 
@@ -61,11 +61,19 @@ export const convertDateToString = (passedValue, type)=>{
       } else if (hours === 12) {
         hours = (hours).toString()
         suffix = 'PM'
+      } else if (hours === 0) {
+        hours = '12'
+        suffix = 'AM'
       } else {
         hours = hours.toString()
       }
 
-      const mins = passedValue.getMinutes().toString()
+      let mins = passedValue.getMinutes().toString()
+      if (mins < 10) {
+        mins = '0' + mins.toString()
+      } else {
+        mins = mins.toString()
+      }
 
       returnedValue = month + '/' + day + '/' + year + ' ' + hours + ':' + mins + suffix
     } else if (type === 'date') {

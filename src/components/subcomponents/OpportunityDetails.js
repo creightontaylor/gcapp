@@ -52,6 +52,7 @@ class OpportunityDetails extends Component {
     this.state = {
       selectedProject: {},
 
+      showCorrentTimeAdjustment: true,
       disableSubmit: false,
       showSubEditProject: true,
 
@@ -858,24 +859,46 @@ class OpportunityDetails extends Component {
             // });
           } else if (selectedOpportunity.postType === 'Event') {
 
-            const startDateString = this.formatDate(selectedOpportunity.startDate)
-            const endDateString = this.formatDate(selectedOpportunity.endDate)
-
+            let startDateString = null
+            let endDateString = null
             let eventPassed = false
-            let dateToTest = null
-            if (selectedOpportunity.endDate && new Date(selectedOpportunity.endDate)) {
-              dateToTest = selectedOpportunity.endDate
-            } else if (selectedOpportunity.startDate && new Date(selectedOpportunity.startDate)) {
-              dateToTest = selectedOpportunity.startDate
-            }
 
-            if (dateToTest) {
-              const startDateDate = new Date(dateToTest)
-              const timeDifferenceUnadjusted = new Date().getTime() - startDateDate.getTime()
-              const timeZoneDifferenceMiliseconds = (startDateDate.getTimezoneOffset()) * 60000
-              const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
-              if (timeDifference > 0) {
-                eventPassed = true
+            if (this.state.showCorrentTimeAdjustment) {
+              startDateString = convertDateToString(new Date(selectedOpportunity.startDate),'datetime-2')
+              endDateString = convertDateToString(new Date(selectedOpportunity.endDate),'datetime-2')
+
+              let dateToTest = null
+              if (selectedOpportunity.endDate && new Date(selectedOpportunity.endDate)) {
+                dateToTest = selectedOpportunity.endDate
+              } else if (selectedOpportunity.startDate && new Date(selectedOpportunity.startDate)) {
+                dateToTest = selectedOpportunity.startDate
+              }
+
+              if (dateToTest) {
+                if (new Date().getTime() > new Date(dateToTest).getTime()) {
+                  eventPassed = true
+                }
+              }
+            } else {
+
+              startDateString = this.formatDate(selectedOpportunity.startDate)
+              endDateString = this.formatDate(selectedOpportunity.endDate)
+
+              let dateToTest = null
+              if (selectedOpportunity.endDate && new Date(selectedOpportunity.endDate)) {
+                dateToTest = selectedOpportunity.endDate
+              } else if (selectedOpportunity.startDate && new Date(selectedOpportunity.startDate)) {
+                dateToTest = selectedOpportunity.startDate
+              }
+
+              if (dateToTest) {
+                const startDateDate = new Date(dateToTest)
+                const timeDifferenceUnadjusted = new Date().getTime() - startDateDate.getTime()
+                const timeZoneDifferenceMiliseconds = (startDateDate.getTimezoneOffset()) * 60000
+                const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
+                if (timeDifference > 0) {
+                  eventPassed = true
+                }
               }
             }
 
@@ -952,27 +975,38 @@ class OpportunityDetails extends Component {
                     let disableVoting = false
 
                     if (updatedOpportunity.submissionDeadline) {
-                      const now = new Date()
-                      const submissionDeadlineDate = new Date(updatedOpportunity.submissionDeadline)
-                      const timeDifferenceUnadjusted = now.getTime() - submissionDeadlineDate.getTime()
-                      const timeZoneDifferenceMiliseconds = (submissionDeadlineDate.getTimezoneOffset()) * 60000
-                      const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
+                      if (this.state.showCorrentTimeAdjustment) {
+                        if (new Date().getTime() > new Date(updatedOpportunity.submissionDeadline).getTime()) {
+                          deadlinePassed = true
+                        }
+                      } else {
+                        const now = new Date()
+                        const submissionDeadlineDate = new Date(updatedOpportunity.submissionDeadline)
+                        const timeDifferenceUnadjusted = now.getTime() - submissionDeadlineDate.getTime()
+                        const timeZoneDifferenceMiliseconds = (submissionDeadlineDate.getTimezoneOffset()) * 60000
+                        const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
 
-                      if (timeDifference > 0) {
-                        deadlinePassed = true
+                        if (timeDifference > 0) {
+                          deadlinePassed = true
+                        }
                       }
-                      // console.log('show deadlinePassed: ', deadlinePassed, submissionDeadlineDate, new Date(), now.getTime(), submissionDeadlineDate.getTime(), submissionDeadlineDate.getTimezoneOffset())
                     }
 
                     if (updatedOpportunity.startDate) {
-                      const now = new Date()
-                      const startDate = new Date(updatedOpportunity.startDate)
-                      const timeDifferenceUnadjusted = now.getTime() - startDate.getTime()
-                      const timeZoneDifferenceMiliseconds = (startDate.getTimezoneOffset()) * 60000
-                      const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
+                      if (this.state.showCorrentTimeAdjustment) {
+                        if (new Date().getTime() > new Date(updatedOpportunity.startDate).getTime()) {
+                          registrationPassed = true
+                        }
+                      } else {
+                        const now = new Date()
+                        const startDate = new Date(updatedOpportunity.startDate)
+                        const timeDifferenceUnadjusted = now.getTime() - startDate.getTime()
+                        const timeZoneDifferenceMiliseconds = (startDate.getTimezoneOffset()) * 60000
+                        const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
 
-                      if (timeDifference > 0) {
-                        registrationPassed = true
+                        if (timeDifference > 0) {
+                          registrationPassed = true
+                        }
                       }
                     }
 
@@ -2624,7 +2658,7 @@ class OpportunityDetails extends Component {
                                                   )}
                                                   {(this.state.selectedOpportunity.submissionDeadline !== '') && (
                                                     <View>
-                                                      <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
+                                                      <Text style={[styles.standardText]}><Text style={[styles.boldText]}>Deadline:</Text> {convertDateToString(new Date(this.state.selectedOpportunity.submissionDeadline),'datetime-2')}</Text>
 
                                                     </View>
                                                   )}
@@ -3236,7 +3270,7 @@ class OpportunityDetails extends Component {
 
                                 <View style={[styles.row5]}>
                                   {(this.state.selectedOpportunity.submissionDeadline && this.state.selectedOpportunity.submissionDeadline !== '') ? (
-                                    <Text style={[styles.keepLineBreaks,styles.descriptionText2,styles.boldText]}>{convertDateToString(this.state.selectedOpportunity.submissionDeadline,'datetime')}</Text>
+                                    <Text style={[styles.keepLineBreaks,styles.descriptionText2,styles.boldText]}>{convertDateToString(new Date(this.state.selectedOpportunity.submissionDeadline),'datetime-2')}</Text>
                                   ) : (
                                     <Text style={[styles.keepLineBreaks]}></Text>
                                   )}
@@ -3397,9 +3431,9 @@ class OpportunityDetails extends Component {
                               <View>
                                 <Text style={[styles.headingText4]}>Timeline</Text>
                                 <View style={[styles.row5]}>
-                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(this.state.selectedOpportunity.startDate,"datetime")}</Text>
-                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(this.state.selectedOpportunity.submissionDeadline,"datetime")}</Text>
-                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(this.state.selectedOpportunity.announcementDate,"datetime")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Register and follow by:</Text> {convertDateToString(new Date(this.state.selectedOpportunity.startDate),"datetime-2")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Submission Deadline:</Text> {convertDateToString(new Date(this.state.selectedOpportunity.submissionDeadline),"datetime-2")}</Text>
+                                  <Text style={[styles.standardText]}><Text style={[styles.standardText,styles.boldText]}>Winner Announcement Date:</Text> {convertDateToString(new Date(this.state.selectedOpportunity.announcementDate),"datetime-2")}</Text>
                                 </View>
                               </View>
 

@@ -42,6 +42,7 @@ class Opportunities extends Component {
         defaultFilterOption: 'All',
         defaultSortOption: 'No Sort Applied',
 
+        showCorrentTimeAdjustment: true,
         showAssignments: false,
         subNavSelected: 'All',
 
@@ -1288,18 +1289,17 @@ class Opportunities extends Component {
       } else if (postings[i - 1].postType === 'Event') {
         events.push(postings[i - 1])
 
-        const startDateDate = new Date(postings[i - 1].startDate)
-        const timeDifferenceUnadjusted = new Date().getTime() - startDateDate.getTime()
-        const timeZoneDifferenceMiliseconds = (startDateDate.getTimezoneOffset()) * 60000
-        const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
-        // console.log('show event values: ', timeDifference, postings[i - 1].title, postings[i - 1].startDate, typeof postings[i - 1].startDate)
 
-        // if (timeDifference > 0) {
-        //   eventPassed = true
-        // }
+        if (this.state.showCorrentTimeAdjustment) {
 
-        if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
-          if (timeDifference < 0) {
+          let dateToTest = null
+          if (postings[i - 1].endDate && new Date(postings[i - 1].endDate)) {
+            dateToTest = postings[i - 1].endDate
+          } else if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
+            dateToTest = postings[i - 1].startDate
+          }
+
+          if (new Date(dateToTest).getTime() > new Date().getTime()) {
             upcomingEvents.push(postings[i - 1])
             adjustedPostings.push(postings[i - 1])
 
@@ -1307,7 +1307,29 @@ class Opportunities extends Component {
             pastEvents.push(postings[i - 1])
             adjustedPostings.push(postings[i - 1])
           }
+        } else {
+          const startDateDate = new Date(postings[i - 1].startDate)
+          const timeDifferenceUnadjusted = new Date().getTime() - startDateDate.getTime()
+          const timeZoneDifferenceMiliseconds = (startDateDate.getTimezoneOffset()) * 60000
+          const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
+          // console.log('show event values: ', timeDifference, postings[i - 1].title, postings[i - 1].startDate, typeof postings[i - 1].startDate)
+
+          // if (timeDifference > 0) {
+          //   eventPassed = true
+          // }
+
+          if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
+            if (timeDifference < 0) {
+              upcomingEvents.push(postings[i - 1])
+              adjustedPostings.push(postings[i - 1])
+
+            } else {
+              pastEvents.push(postings[i - 1])
+              adjustedPostings.push(postings[i - 1])
+            }
+          }
         }
+
       } else if (postings[i - 1].postType === 'Scholarship') {
         adjustedPostings.push(postings[i - 1])
       } else {
@@ -2609,17 +2631,17 @@ class Opportunities extends Component {
 
         if (posting.submissionDeadline) {
           if (subtitle2 === '') {
-            subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
+            subtitle2 = 'Deadline :' + convertDateToString(new Date(posting.submissionDeadline),"datetime-2")
           } else {
-            subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
+            subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(new Date(posting.submissionDeadline),"datetime-2")
           }
         }
 
         if (posting.startDate) {
           if (subtitle2 === '') {
-            subtitle2 = convertDateToString(posting.startDate,"datetime")
+            subtitle2 = convertDateToString(new Date(posting.startDate),"datetime-2")
           } else {
-            subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
+            subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(new Date(posting.startDate),"datetime-2")
           }
         }
 
@@ -2748,7 +2770,7 @@ class Opportunities extends Component {
               <View style={[styles.calcColumn130]}>
                 <Text style={[styles.headingText5]}>{filteredPastEvents[i - 1].title}</Text>
                 <Text style={[styles.descriptionText1]}>{filteredPastEvents[i - 1].orgName}</Text>
-                <Text style={[styles.descriptionText2]}>{convertDateToString(filteredPastEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredPastEvents[i - 1].endDate,"datetime")}</Text>
+                <Text style={[styles.descriptionText2]}>{convertDateToString(new Date(filteredPastEvents[i - 1].startDate),"datetime-2")} - {convertDateToString(new Date(filteredPastEvents[i - 1].endDate),"datetime-2")}</Text>
                 {(this.props.pageSource === 'landingPage') && (
                   <View style={[styles.row5]}>
                     <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredPastEvents[i - 1].orgName}</Text></Text>

@@ -905,17 +905,17 @@ class BenchmarkDetails extends Component {
 
           if (posting.submissionDeadline) {
             if (subtitle2 === '') {
-              subtitle2 = 'Deadline :' + convertDateToString(posting.submissionDeadline,"datetime")
+              subtitle2 = 'Deadline :' + convertDateToString(new Date(posting.submissionDeadline),"datetime-2")
             } else {
-              subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(posting.submissionDeadline,"datetime")
+              subtitle2 = subtitle2 + ' | Deadline: ' + convertDateToString(new Date(posting.submissionDeadline),"datetime-2")
             }
           }
 
           if (posting.startDate) {
             if (subtitle2 === '') {
-              subtitle2 = convertDateToString(posting.startDate,"datetime")
+              subtitle2 = convertDateToString(new Date(posting.startDate),"datetime-2")
             } else {
-              subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(posting.startDate,"datetime")
+              subtitle2 = subtitle2 + ' | Start Date: ' + convertDateToString(new Date(posting.startDate),"datetime-2")
             }
           }
 
@@ -1036,7 +1036,7 @@ class BenchmarkDetails extends Component {
                 <View style={[styles.calcColumn130]}>
                   <Text style={[styles.headingText5]}>{filteredPastEvents[i - 1].title}</Text>
                   <Text style={[styles.descriptionText1]}>{filteredPastEvents[i - 1].orgName}</Text>
-                  <Text style={[styles.descriptionText2]}>{convertDateToString(filteredPastEvents[i - 1].startDate,"datetime")} - {convertDateToString(filteredPastEvents[i - 1].endDate,"datetime")}</Text>
+                  <Text style={[styles.descriptionText2]}>{convertDateToString(new Date(filteredPastEvents[i - 1].startDate),"datetime-2")} - {convertDateToString(new Date(filteredPastEvents[i - 1].endDate),"datetime-2")}</Text>
                   {(this.props.pageSource === 'landingPage') && (
                     <View style={[styles.row5]}>
                       <Text style={[styles.descriptionText2]}>Hosted by <Text style={[styles.ctaColor,styles.boldText]}>{filteredPastEvents[i - 1].orgName}</Text></Text>

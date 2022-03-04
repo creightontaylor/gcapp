@@ -317,20 +317,20 @@ class Completions extends Component {
           //starting assuming an application
 
           let title = this.state.completions[i - 1].postingTitle
-          let subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].postingEmployerName + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
+          let subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].postingEmployerName + " | " + convertDateToString(new Date(this.state.completions[i - 1].createdAt),"datetime-2")
           let completionLink = 'OpportunityDetails'
           let passedState = { objectId: this.state.completions[i - 1].postingId }
           let disabledLink = false
 
           if (this.state.completions[i - 1].completionType === 'Offer') {
             title = this.state.completions[i - 1].title
-            subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].employerName + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
+            subtitle = this.state.completions[i - 1].completionType + " | " + this.state.completions[i - 1].employerName + " | " + convertDateToString(new Date(this.state.completions[i - 1].createdAt),"datetime-2")
             completionLink = 'EditLog'
             passedState = { objectId: this.state.completions[i - 1].postingId }
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'RSVP') {
             title = this.state.completions[i - 1].postingTitle
-            subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
+            subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(new Date(this.state.completions[i - 1].createdAt),"datetime-2")
             completionLink = 'OpportunityDetails'
             passedState = { objectId: this.state.completions[i - 1].postingId}
             disabledLink = false
@@ -342,13 +342,13 @@ class Completions extends Component {
                 title = this.state.completions[i - 1].submissions[j - 1].name
               }
             }
-            subtitle = this.state.completions[i - 1].completionType + " | Submitted to: " + this.state.completions[i - 1].name + ' on ' + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
+            subtitle = this.state.completions[i - 1].completionType + " | Submitted to: " + this.state.completions[i - 1].name + ' on ' + convertDateToString(new Date(this.state.completions[i - 1].createdAt),"datetime-2")
             completionLink = 'OpportunityDetails'
             passedState = { objectId: this.state.completions[i - 1]._id}
             disabledLink = false
           } else if (this.state.completions[i - 1].completionType === 'Work') {
             title = this.state.completions[i - 1].title + ' @ ' + this.state.completions[i - 1].employerName
-            subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(this.state.completions[i - 1].createdAt,"datetime")
+            subtitle = this.state.completions[i - 1].completionType + " | " + convertDateToString(new Date(this.state.completions[i - 1].createdAt),"datetime-2")
             completionLink = 'OpportunityDetails'
             passedState = { objectId: this.state.completions[i - 1].postingId}
             disabledLink = true

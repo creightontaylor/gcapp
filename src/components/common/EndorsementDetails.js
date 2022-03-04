@@ -517,7 +517,7 @@ class EndorsementDetails extends Component {
 
               <View style={[styles.topPadding5]}>
                 {(endorsement.createdAt && typeof endorsement.createdAt === 'string') ? (
-                  <Text style={[styles.descriptionText3]}>{convertDateToString(endorsement.createdAt,"datetime")}</Text>
+                  <Text style={[styles.descriptionText3]}>{convertDateToString(new Date(endorsement.createdAt),"datetime-2")}</Text>
                 ) : (
                   <Text style={[styles.descriptionText3]}>{convertDateToString(endorsement.createdAt,"date-2")}</Text>
                 )}
