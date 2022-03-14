@@ -9,6 +9,11 @@ export const convertStringToDate = (passedValue, type)=>{
     let timeOffset = new Date().getTimezoneOffset()*60000
     returnedValue = new Date(universalTime - timeOffset)
     // console.log('returnedValue: ', passedValue, datePassedValue, returnedValue)
+  } else if (type === 'toLocalReversed') {
+    const datePassedValue = new Date(passedValue)
+    let universalTime = datePassedValue.getTime()
+    let timeOffset = datePassedValue.getTimezoneOffset()*60000
+    returnedValue = new Date(universalTime + timeOffset)
   } else if (type === 'dateOnly') {
     // only date from client dropdown
 

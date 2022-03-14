@@ -65,7 +65,6 @@ class Projects extends Component {
     this.favoriteItem = this.favoriteItem.bind(this)
     this.toggleSearchBar = this.toggleSearchBar.bind(this)
 
-    this.formatMonth = this.formatMonth.bind(this)
     this.renderManipulators = this.renderManipulators.bind(this)
     this.filterResults = this.filterResults.bind(this)
     this.sortResults = this.sortResults.bind(this)
@@ -668,39 +667,6 @@ class Projects extends Component {
     }
 
     this.setState({ showingSearchBar })
-  }
-
-  formatMonth(month) {
-    console.log('formatMonth', month)
-
-    let formattedMonth = 'January'
-    if (month === '01') {
-      formattedMonth = 'January'
-    } else if (month === '02') {
-      formattedMonth = 'February'
-    } else if (month === '03') {
-      formattedMonth = 'March'
-    } else if (month === '04') {
-      formattedMonth = 'April'
-    } else if (month === '05') {
-      formattedMonth = 'May'
-    } else if (month === '06') {
-      formattedMonth = 'June'
-    } else if (month === '07') {
-      formattedMonth = 'July'
-    } else if (month === '08') {
-      formattedMonth = 'August'
-    } else if (month === '09') {
-      formattedMonth = 'September'
-    } else if (month === '10') {
-      formattedMonth = 'October'
-    } else if (month === '11') {
-      formattedMonth = 'November'
-    } else if (month === '12') {
-      formattedMonth = 'December'
-    }
-
-    return formattedMonth
   }
 
   saveFeedback() {

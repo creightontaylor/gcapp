@@ -1170,7 +1170,7 @@ class LogInForm extends Component {
                                         onValueChange={(itemValue, itemIndex) =>
                                           this.formChangeHandler("pathway",itemValue)
                                         }>
-                                        {this.state.pathwayOptions.map(value => <Picker.Item key={value.name} label={value.name} value={value.name} />)}
+                                        {this.state.pathwayOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
                                       </Picker>
                                     </View>
                                   )}

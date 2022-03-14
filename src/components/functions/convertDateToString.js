@@ -180,6 +180,34 @@ export const convertDateToString = (passedValue, type)=>{
         // this is actually a date to string
         returnedValue = 'N/A'
       }
+    } else if (type === 'formatMonth') {
+      // console.log('in formatMonth func', passedValue)
+      returnedValue = 'January'
+      if (passedValue === '01' || passedValue === 0) {
+        returnedValue = 'January'
+      } else if (passedValue === '02' || passedValue === 1) {
+        returnedValue = 'February'
+      } else if (passedValue === '03' || passedValue === 2) {
+        returnedValue = 'March'
+      } else if (passedValue === '04' || passedValue === 3) {
+        returnedValue = 'April'
+      } else if (passedValue === '05' || passedValue === 4) {
+        returnedValue = 'May'
+      } else if (passedValue === '06' || passedValue === 5) {
+        returnedValue = 'June'
+      } else if (passedValue === '07' || passedValue === 6) {
+        returnedValue = 'July'
+      } else if (passedValue === '08' || passedValue === 7) {
+        returnedValue = 'August'
+      } else if (passedValue === '09' || passedValue === 8) {
+        returnedValue = 'September'
+      } else if (passedValue === '10' || passedValue === 9) {
+        returnedValue = 'October'
+      } else if (passedValue === '11' || passedValue === 10) {
+        returnedValue = 'November'
+      } else if (passedValue === '12' || passedValue === 11) {
+        returnedValue = 'December'
+      }
     }
   }
 

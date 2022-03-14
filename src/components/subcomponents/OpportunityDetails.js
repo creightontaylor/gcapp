@@ -1633,6 +1633,8 @@ class OpportunityDetails extends Component {
           //   roleName = 'Student'
           // }
           const otherRoleName = this.state.otherRoleName
+          const departments = this.state.selectedOpportunity.departments
+          const pathways = this.state.selectedOpportunity.pathways
 
           const createdAt = new Date()
           const updatedAt = new Date()
@@ -1653,6 +1655,7 @@ class OpportunityDetails extends Component {
           Axios.post('https://www.guidedcompass.com/api/rsvp', {
             postingId, postingTitle, postType, firstName, lastName, email, password, schoolName, jobTitle, employerName, orgCode,
             accountCode, roleName, otherRoleName, createdAt, updatedAt, existingUser, collaborators,
+            departments, pathways,
             orgName, orgContactFirstName, orgContactLastName, orgContactEmail })
           .then((response) => {
 
@@ -1732,6 +1735,7 @@ class OpportunityDetails extends Component {
           const focus = this.state.projectFocus
 
           const departments = this.state.selectedOpportunity.departments
+          const pathways = this.state.selectedOpportunity.pathways
 
           //save submission
           Axios.post('https://www.guidedcompass.com/api/projects/submit', {
@@ -1956,6 +1960,8 @@ class OpportunityDetails extends Component {
       const updatedAt = new Date()
 
       const existingUser = true
+      const departments = this.state.selectedOpportunity.departments
+      const pathways = this.state.selectedOpportunity.pathways
 
       //stuff for email notification
       const orgName = this.state.selectedOpportunity.orgName
@@ -1968,7 +1974,7 @@ class OpportunityDetails extends Component {
 
       Axios.post('https://www.guidedcompass.com/api/rsvp', {
         postingId, postingTitle, questions, firstName, lastName, email, schoolName, jobTitle, employerName, orgCode,
-        accountCode, roleName, createdAt, updatedAt, existingUser,
+        accountCode, roleName, createdAt, updatedAt, existingUser, departments, pathways,
         orgName, orgContactFirstName, orgContactLastName, orgContactEmail, location, startDate, endDate })
       .then((response) => {
 

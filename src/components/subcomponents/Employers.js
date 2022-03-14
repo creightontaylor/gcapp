@@ -14,6 +14,8 @@ const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.co
 const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png';
 const favoriteIconSelected  = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorite-icon-selected.png';
 
+import {convertDateToString} from '../functions/convertDateToString';
+
 import SubPicker from '../common/SubPicker';
 
 class Employers extends Component {
@@ -55,7 +57,6 @@ class Employers extends Component {
     this.formChangeHandler = this.formChangeHandler.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
     this.toggleSearchBar = this.toggleSearchBar.bind(this)
-    this.formatMonth = this.formatMonth.bind(this)
     this.renderManipulators = this.renderManipulators.bind(this)
     this.filterResults = this.filterResults.bind(this)
     this.sortResults = this.sortResults.bind(this)
@@ -606,39 +607,6 @@ class Employers extends Component {
     this.setState({ showingSearchBar })
   }
 
-  formatMonth(month) {
-    console.log('formatMonth', month)
-
-    let formattedMonth = 'January'
-    if (month === '01') {
-      formattedMonth = 'January'
-    } else if (month === '02') {
-      formattedMonth = 'February'
-    } else if (month === '03') {
-      formattedMonth = 'March'
-    } else if (month === '04') {
-      formattedMonth = 'April'
-    } else if (month === '05') {
-      formattedMonth = 'May'
-    } else if (month === '06') {
-      formattedMonth = 'June'
-    } else if (month === '07') {
-      formattedMonth = 'July'
-    } else if (month === '08') {
-      formattedMonth = 'August'
-    } else if (month === '09') {
-      formattedMonth = 'September'
-    } else if (month === '10') {
-      formattedMonth = 'October'
-    } else if (month === '11') {
-      formattedMonth = 'November'
-    } else if (month === '12') {
-      formattedMonth = 'December'
-    }
-
-    return formattedMonth
-  }
-
   renderEmployers() {
     console.log('renderMatches called', this.state.filteredEmployers)
 
@@ -654,12 +622,12 @@ class Employers extends Component {
       // let passedState = { member: this.state.filteredEmployers[index] }
       let updatedAtString = ''
       if (this.state.filteredEmployers[i - 1].updatedAt) {
-        updatedAtString = this.state.filteredEmployers[i - 1].updatedAt.toString()
-        const year = updatedAtString.substring(0,4)
-        const month = updatedAtString.substring(5,7)
-        const day = updatedAtString.substring(8,10)
-        const formattedMonth = this.formatMonth(month)
+        const year = new Date(this.state.filteredEmployers[i - 1].updatedAt).getFullYear()
+        const month = new Date(this.state.filteredEmployers[i - 1].updatedAt).getMonth()
+        const day = new Date(this.state.filteredEmployers[i - 1].updatedAt).getDate()
+        const formattedMonth = convertDateToString(month,'formatMonth')
         updatedAtString = formattedMonth + ' ' + day + ', ' + year
+
         subtitle = 'Last Update: ' + updatedAtString
         if (this.state.filteredEmployers[i - 1].employerIndustry) {
           subtitle = this.state.filteredEmployers[i - 1].employerIndustry + ' | ' + subtitle

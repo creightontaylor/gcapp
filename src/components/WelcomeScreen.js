@@ -21,7 +21,7 @@ class WelcomeScreen extends Component {
 
   render() {
     return (
-      <ImageBackground resizeMode='cover' source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={[styles.absolutePosition,styles.absoluteTop0,styles.absoluteRight0,styles.absoluteBottom0,styles.absoluteLeft0]}>
+      <ImageBackground resizeMode='cover' source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/compass-mobile-background-image.png'}} style={[styles.absolutePosition,styles.absoluteTop0,styles.absoluteRight0,styles.absoluteBottom0,styles.absoluteLeft0]}>
         <View style={[styles.flex1,styles.flexCenter]}>
             <View style={[styles.alignCenter]}>
               <Image source={{uri: 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/orgLogos/Compass-logo-words.png'}} style={[styles.width300,styles.height60,styles.contain]} />

@@ -314,7 +314,7 @@ class Logs extends Component {
 
         let createdAtString = ''
         if (this.state.logs[i - 1] && this.state.logs[i - 1].createdAt) {
-          createdAtString = " | " + convertDateToString(this.state.logs[i - 1].createdAt,"date")
+          createdAtString = " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         }
 
         //starting assuming a session
@@ -325,6 +325,7 @@ class Logs extends Component {
           if (this.state.logs[i - 1].advisorLastName) {
             title = this.state.logs[i - 1].advisorFirstName + " " + this.state.logs[i - 1].advisorLastName
           }
+          subtitle = this.state.logs[i - 1].category + " " + this.state.logs[i - 1].logType + " | " + convertDateToString(new Date(this.state.logs[i - 1].sessionDate),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Meeting') {
           title = convertDateToString(new Date(this.state.logs[i - 1].startTime),"datetime-2") + ' Meeting in ' + this.state.logs[i - 1].groupName
           subtitle = this.state.logs[i - 1].location
@@ -336,16 +337,16 @@ class Logs extends Component {
             title = this.state.logs[i - 1].description
           }
 
-          subtitle = this.state.logs[i - 1].logType + " | " + convertDateToString(new Date(this.state.logs[i - 1].deadline),"datetime-2") + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
+          subtitle = this.state.logs[i - 1].logType + " | Created on " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2") + " | Deadline: " + convertDateToString(new Date(this.state.logs[i - 1].deadline),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Application') {
           title = this.state.logs[i - 1].positionTitle
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime02")
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].employerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Interview') {
           title = this.state.logs[i - 1].associatedApplicationPositionTitle
           subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].associatedApplicationEmployerName + " | " + this.state.logs[i - 1].fitRating
         } else if (this.state.logs[i - 1].logType === 'Offer') {
           title = this.state.logs[i - 1].associatedApplicationPositionTitle
-          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].associatedApplicationEmployerName + " | " + this.state.logs[i - 1].createdAt
+          subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].associatedApplicationEmployerName + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
         } else if (this.state.logs[i - 1].logType === 'Passion') {
           title = this.state.logs[i - 1].passionTitle
           subtitle = this.state.logs[i - 1].logType + " | " + this.state.logs[i - 1].passionReason + " | " + convertDateToString(new Date(this.state.logs[i - 1].createdAt),"datetime-2")
