@@ -15,6 +15,14 @@ const skillsIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appI
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png'
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png'
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
+const addIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon-blue.png';
+const questionMarkBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/question-mark-blue.png';
+const feedbackIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/feedback-icon-dark.png';
+const feedbackIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/feedback-icon-blue.png';
+const thumbsUpIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-up-icon.png';
+const thumbsUpBlueIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-up-blue-icon.png';
+const thumbsDownIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-down-icon.png';
+const thumbsDownOrangeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/thumbs-down-orange-icon.png';
 
 import SubPeopleMatching from '../subcomponents/PeopleMatching';
 import SubCourses from '../subcomponents/Courses';
@@ -159,7 +167,7 @@ class EditLog extends Component {
       repeat: 'Never',
       reminder: 'None',
       currentPage: 'Details',
-      subNavCategories: ['Details','Suggestions','People','Courses','Careers','Events','Projects','Work'],
+      subNavCategories: ['Details','Suggestions','People','Courses','Events','Projects','Work'],
 
       selectedFunctions: [],
       selectedIndustries: [],
@@ -199,6 +207,9 @@ class EditLog extends Component {
     this.closeModal = this.closeModal.bind(this)
     this.renderDetails = this.renderDetails.bind(this)
     this.prepareDate = this.prepareDate.bind(this)
+    this.renderSuggestion = this.renderSuggestion.bind(this)
+    this.itemClicked = this.itemClicked.bind(this)
+    this.saveSuggestion = this.saveSuggestion.bind(this)
 
   }
 
@@ -231,6 +242,7 @@ class EditLog extends Component {
       const username = await AsyncStorage.getItem('username');
       const cuFirstName = await AsyncStorage.getItem('firstName');
       const cuLastName = await AsyncStorage.getItem('lastName');
+      // const pictureURL = await AsyncStorage.getItem('pictureURL');
       const orgFocus = await AsyncStorage.getItem('orgFocus');
       const orgName = await AsyncStorage.getItem('orgName');
       const roleName = await AsyncStorage.getItem('roleName');
@@ -288,54 +300,55 @@ class EditLog extends Component {
           pathNameVariable = 'opportunities'
         }
 
-        let goalTypeOptions = [
-          { name: ''},
-          { name: 'Alternatives', description: 'Choose from alternatives'},
-          { name: 'Career', description: 'Land a job'},
-          { name: 'Freelance', description: 'Become a freelancer'},
-          { name: 'Entrepreneurship - Start', description: 'Start a business'},
-          { name: 'Entrepreneurship', description: 'Grow a business'},
-          { name: 'Explore', description: 'Explore careers'},
-          { name: 'Purpose', description: 'Find my purpose'},
-          { name: 'Learn New Skills', description: 'Learn new skill(s)'},
-          { name: 'Degree', description: 'Earn an educational degree'},
-          { name: 'Network', description: 'Develop a robust network'},
-          { name: 'Social Problem', description: 'Solve a social problem'},
-          { name: 'Personal', description: 'Personal'},
-        ]
+        // let goalTypeOptions = [
+        //   { name: ''},
+        //   { name: 'Alternatives', description: 'Choose from alternatives'},
+        //   { name: 'Career', description: 'Land a job'},
+        //   { name: 'Freelance', description: 'Become a freelancer'},
+        //   { name: 'Entrepreneurship - Start', description: 'Start a business'},
+        //   { name: 'Entrepreneurship', description: 'Grow a business'},
+        //   { name: 'Explore', description: 'Explore careers'},
+        //   { name: 'Purpose', description: 'Find my purpose'},
+        //   { name: 'Learn New Skills', description: 'Learn new skill(s)'},
+        //   { name: 'Degree', description: 'Earn an educational degree'},
+        //   { name: 'Network', description: 'Develop a robust network'},
+        //   { name: 'Social Problem', description: 'Solve a social problem'},
+        //   { name: 'Personal', description: 'Personal'},
+        // ]
+        //
+        // let includesAdults = false
+        // if (includesAdults) {
+        //   goalTypeOptions = [
+        //     { name: ''},
+        //     { name: 'Alternatives', description: 'Choose from alternatives'},
+        //     { name: 'Career', description: 'Land a job'},
+        //     { name: 'Switch', description: 'Make a career switch'},
+        //     { name: 'Freelance', description: 'Become a freelancer'},
+        //     { name: 'Entrepreneurship - Start', description: 'Start a business'},
+        //     { name: 'Entrepreneurship', description: 'Grow a business'},
+        //     { name: 'Explore', description: 'Explore careers'},
+        //     { name: 'Purpose', description: 'Find my purpose'},
+        //     { name: 'Learn New Skills', description: 'Learn new skill(s)'},
+        //     { name: 'Degree', description: 'Earn an educational degree'},
+        //     { name: 'Leadership', description: 'Reach a leadership position'},
+        //     { name: 'Expert', description: 'Become an expert in a field'},
+        //     { name: 'Promotion', description: 'Land a promotion'},
+        //     { name: 'Award', description: 'Win an industry award'},
+        //     { name: 'Pay', description: 'Increase earnings'},
+        //     { name: 'Efficient', description: 'Become more efficient'},
+        //     { name: 'Work-Life Balance', description: 'Increase work-life balance'},
+        //     { name: 'Network', description: 'Develop a robust network'},
+        //     { name: 'Social Problem', description: 'Solve a social problem'},
+        //     { name: 'Personal', description: 'Personal'},
+        //   ]
+        // }
+        //
 
-        let includesAdults = false
-        if (includesAdults) {
-          goalTypeOptions = [
-            { name: ''},
-            { name: 'Alternatives', description: 'Choose from alternatives'},
-            { name: 'Career', description: 'Land a job'},
-            { name: 'Switch', description: 'Make a career switch'},
-            { name: 'Freelance', description: 'Become a freelancer'},
-            { name: 'Entrepreneurship - Start', description: 'Start a business'},
-            { name: 'Entrepreneurship', description: 'Grow a business'},
-            { name: 'Explore', description: 'Explore careers'},
-            { name: 'Purpose', description: 'Find my purpose'},
-            { name: 'Learn New Skills', description: 'Learn new skill(s)'},
-            { name: 'Degree', description: 'Earn an educational degree'},
-            { name: 'Leadership', description: 'Reach a leadership position'},
-            { name: 'Expert', description: 'Become an expert in a field'},
-            { name: 'Promotion', description: 'Land a promotion'},
-            { name: 'Award', description: 'Win an industry award'},
-            { name: 'Pay', description: 'Increase earnings'},
-            { name: 'Efficient', description: 'Become more efficient'},
-            { name: 'Work-Life Balance', description: 'Increase work-life balance'},
-            { name: 'Network', description: 'Develop a robust network'},
-            { name: 'Social Problem', description: 'Solve a social problem'},
-            { name: 'Personal', description: 'Personal'},
-          ]
-        }
+        // goalTypeOptions.sort(function(a,b) {
+        //   return b.description - a.description;
+        // })
 
         const skillPreferenceOptions = ['','Basics','Stability','Pay','Your Interests']
-
-        goalTypeOptions.sort(function(a,b) {
-          return b.description - a.description;
-        })
 
         const entrepreneurshipGoalOptions = [
           '','Overall Skills','Legal Formation','Market Research','Building a Team','Building an App MVP',
@@ -355,7 +368,7 @@ class EditLog extends Component {
             sessionDate: new Date(), activeOrg, logType, logTypeOptions,
             applicationOptions, payTypeOptions, equityPercentageOptions, valuationOptions,
             editExisting, log, logs, recipients: tempRecipients, pathNameVariable,
-            goalTypeOptions, entrepreneurshipGoalOptions, intensityOptions, skillPreferenceOptions,
+            entrepreneurshipGoalOptions, intensityOptions, skillPreferenceOptions,
             goalStatusOptions,methodOptions,sessionMethodOptions,categoryOptions
         });
 
@@ -537,9 +550,20 @@ class EditLog extends Component {
              }
            }
 
+           let optimizeOptions = [''].concat(response.data.workOptions[0].optimizeOptions)
+           let goalTypeOptions = [{ name: ''}]
+           for (let i = 1; i <= response.data.workOptions[0].goalTypeOptions.length; i++) {
+              if ((orgFocus === 'academy' || orgFocus === 'School') && !response.data.workOptions[0].goalTypeOptions[i - 1].adult) {
+                goalTypeOptions.push(response.data.workOptions[0].goalTypeOptions[i - 1])
+              } else if ((orgFocus !== 'academy' && orgFocus !== 'School')){
+                goalTypeOptions.push(response.data.workOptions[0].goalTypeOptions[i - 1])
+              }
+            }
+
+
            this.setState({ functionOptions, industryOptions, hourlyPayOptions, annualPayOptions,
              hoursPerWeekOptions, workTypeOptions, employerTypeOptions, employeeCountOptions, degreeOptions,
-             societalProblemOptions
+             societalProblemOptions, optimizeOptions, goalTypeOptions
            })
 
 
@@ -793,6 +817,8 @@ class EditLog extends Component {
               const bCase = log.bCase
               const bLinks = log.bLinks
               const bItem = log.bItem
+              const progress = log.progress
+              const strategies = log.strategies
 
               this.setState({
                 _id: log._id,
@@ -806,7 +832,7 @@ class EditLog extends Component {
                 selectedSchools, selectedMajors,
                 successDefined, skillPreference, societalProblem, degreeType,
                 comparisonType, pollConnections, pollQuestion, aName, aValue, aCase, aLinks, bName, bValue, bCase, bLinks,
-                aItem, bItem,
+                aItem, bItem, progress, strategies,
                 selectedGoal: log
               })
 
@@ -1211,6 +1237,29 @@ class EditLog extends Component {
         pollQuestion = 'Which job should I take? Why?'
       }
       this.setState({ [eventName]: eventValue, pollQuestion, selectedValue: eventValue })
+    } else if (eventName.includes("progress|")) {
+      let progress = this.state.progress
+      const name = eventName.split("|")[1]
+      const index = Number(eventName.split("|")[2])
+      progress[index][name] = eventValue
+
+      this.setState({ progress })
+    } else if (eventName.includes("strategy|")) {
+      let strategies = this.state.strategies
+      const name = eventName.split("|")[1]
+      const index = Number(eventName.split("|")[2])
+      // console.log('gimme values: ', progress, name, index)
+      strategies[index][name] = eventValue
+
+      this.setState({ strategies })
+    } else if (event.target.name.includes("tactic|")) {
+      let strategies = this.state.strategies
+
+      const index = Number(event.target.name.split("|")[1])
+      const index2 = Number(event.target.name.split("|")[2])
+
+      strategies[index]['tactics'][index2] = event.target.value
+      this.setState({ strategies })
     } else if (changeDateTime) {
       console.log('changeDateTime foo')
       if (mode === 'date') {
@@ -2025,6 +2074,8 @@ class EditLog extends Component {
         const creatorEmail = this.state.emailId
         const creatorFirstName = this.state.cuFirstName
         const creatorLastName = this.state.cuLastName
+        const creatorUsername = this.state.username
+        const creatorPictureURL = this.state.pictureURL
 
         const title = this.state.goalTitle
         let description = this.state.goalDescription
@@ -2065,6 +2116,8 @@ class EditLog extends Component {
         const skillPreference = this.state.skillPreference
         const societalProblem = this.state.societalProblem
         const successDefined = this.state.successDefined
+        const progress = this.state.progress
+        const strategies = this.state.strategies
 
         const comparisonType = this.state.comparisonType
         const pollConnections = this.state.pollConnections
@@ -2086,17 +2139,23 @@ class EditLog extends Component {
         const headline = this.state.headline
         const remoteAuth = this.state.remoteAuth
 
+        let isPublic = false
+        if (this.state.publicProfileExtent === 'Public') {
+          isPublic = true
+        }
+
         // console.log('show aItem: ', aItem, pollQuestion)
         let selectedGoal = {
-          _id: goalId, creatorEmail, creatorFirstName, creatorLastName, title, description, startDate, deadline, tasks,
+          _id: goalId, creatorEmail, creatorFirstName, creatorLastName, creatorUsername, creatorPictureURL,
+          title, description, startDate, deadline, tasks,
           goalType, selectedCareers, selectedOpportunities, entrepreneurshipStage, entrepreneurshipType, entrepreneurshipGoal,
           entrepreneurshipProject, intensity, budget, competencies, degreeType,
           comparisonType, pollConnections, pollQuestion, aName, aValue, aCase, aLinks, bName, bValue, bCase, bLinks,
           aItem, bItem,
           selectedFunctions, selectedIndustries, selectedHours, selectedPayRanges, selectedOptimizeOptions, selectedSkills, selectedMembers,
-          selectedSchools, selectedMajors,
+          selectedSchools, selectedMajors, progress, strategies,
           requestedMentorSupport, notes, logType: 'Goal', skillPreference, societalProblem, successDefined,
-          pictureURL, username, roleName, headline, remoteAuth,
+          pictureURL, username, roleName, headline, remoteAuth, isPublic,
           status, decision, createdAt: new Date(), orgContactEmail, orgCode, updatedAt: new Date()
         }
 
@@ -2170,6 +2229,8 @@ class EditLog extends Component {
         const creatorEmail = this.state.emailId
         const creatorFirstName = this.state.cuFirstName
         const creatorLastName = this.state.cuLastName
+        const creatorUsername = this.state.username
+        const creatorPictureURL = this.state.pictureURL
 
         let employerName = this.state.employerName
         let employerURL = this.state.employerURL
@@ -2190,7 +2251,8 @@ class EditLog extends Component {
 
         //save application
         Axios.post('https://www.guidedcompass.com/api/logs/applications', {
-          _id: applicationId, creatorEmail, creatorFirstName, creatorLastName, employerName, employerURL,
+          _id: applicationId, creatorEmail, creatorFirstName, creatorLastName, creatorUsername, creatorPictureURL,
+          employerName, employerURL,
           employerType, employerIndustry, employerSize, logType: 'Application',
           positionTitle, positionLink, jobFunction, workType, timeframe, applicationDeadline,
           reviewedMaterials, orgCode, createdAt: new Date(), updatedAt: new Date() })
@@ -2260,6 +2322,8 @@ class EditLog extends Component {
         const creatorEmail = this.state.emailId
         const creatorFirstName = this.state.cuFirstName
         const creatorLastName = this.state.cuLastName
+        const creatorUsername = this.state.username
+        const creatorPictureURL = this.state.pictureURL
 
         let associatedApplicationId = this.state.associatedApplication._id
         let associatedApplicationPositionTitle = this.state.associatedApplication.positionTitle
@@ -2289,7 +2353,8 @@ class EditLog extends Component {
 
         //save application
         Axios.post('https://www.guidedcompass.com/api/logs/interviews', {
-          _id: interviewId, creatorEmail, creatorFirstName, creatorLastName, associatedApplicationId, associatedApplicationPositionTitle, associatedApplicationEmployerName,
+          _id: interviewId, creatorEmail, creatorFirstName, creatorLastName, creatorUsername, creatorPictureURL,
+          associatedApplicationId, associatedApplicationPositionTitle, associatedApplicationEmployerName,
           interviewDate, interviewRound, numberOfInterviews, logType: 'Interview',
           interviewLength, interviews, mcPracticedInterviewing, wasPrepared, questionsAsked, questionsAnswered,
           unrelatedTopics, positionRating, thoughtsOnPosition, companyRating, thoughtsOnCompany,
@@ -2372,6 +2437,8 @@ class EditLog extends Component {
         const creatorEmail = this.state.emailId
         const creatorFirstName = this.state.cuFirstName
         const creatorLastName = this.state.cuLastName
+        const creatorUsername = this.state.username
+        const creatorPictureURL = this.state.pictureURL
 
         let associatedApplicationId = this.state.offerAssociatedApplication._id
 
@@ -2398,7 +2465,8 @@ class EditLog extends Component {
 
         //save offer
         Axios.post('https://www.guidedcompass.com/api/logs/offers', {
-          _id: offerId, creatorEmail, creatorFirstName, creatorLastName, associatedApplicationId, associatedApplicationPositionTitle, associatedApplicationEmployerName,
+          _id: offerId, creatorEmail, creatorFirstName, creatorLastName, creatorUsername, creatorPictureURL,
+          associatedApplicationId, associatedApplicationPositionTitle, associatedApplicationEmployerName,
           payType, pay, hasBonus, bonusDescription, benefits, offeredEquity, equityPercentage,
           companyValuation, startDate, decision, decisionReason, orgCode, logType: 'Offer',
           createdAt: new Date(), updatedAt: new Date() })
@@ -2465,6 +2533,8 @@ class EditLog extends Component {
         const creatorEmail = this.state.emailId
         const creatorFirstName = this.state.cuFirstName
         const creatorLastName = this.state.cuLastName
+        const creatorUsername = this.state.username
+        const creatorPictureURL = this.state.pictureURL
 
         let passionTitle = this.state.passionTitle
         let passionReason = this.state.passionReason
@@ -2476,7 +2546,8 @@ class EditLog extends Component {
 
         //save passion
         Axios.post('https://www.guidedcompass.com/api/logs/passions', {
-          _id: passionId, creatorEmail, creatorFirstName, creatorLastName, logType: 'Passion',
+          _id: passionId, creatorEmail, creatorFirstName, creatorLastName, creatorUsername, creatorPictureURL,
+          logType: 'Passion',
           passionTitle, passionReason, orgCode,
           createdAt: new Date(), updatedAt: new Date() })
         .then((response) => {
@@ -2614,7 +2685,7 @@ class EditLog extends Component {
     this.setState({ editModes })
   }
 
-  addRemoveItems(action, index, type) {
+  addRemoveItems(action, index, type, index2) {
     console.log('addRemoveItems called')
 
     if (type === 'Asked') {
@@ -2663,6 +2734,20 @@ class EditLog extends Component {
       let actionItems = this.state.actionItems
       actionItems.splice(index,1)
       this.setState({ actionItems })
+    } else if (type === 'progress') {
+      let progress = this.state.progress
+      progress.splice(index,1)
+      this.setState({ progress })
+      } else if (type === 'strategy') {
+      let strategies = this.state.strategies
+      strategies.splice(index,1)
+      this.setState({ strategies })
+    } else if (type === 'tactic') {
+      let strategies = this.state.strategies
+      let tactics = this.state.strategies[index].tactics
+      tactics.splice(index2,1)
+      strategies[index]['tactics'] = tactics
+      this.setState({ strategies })
     }
   }
 
@@ -3190,7 +3275,7 @@ class EditLog extends Component {
     }
   }
 
-  addItem(type) {
+  addItem(type,index) {
     console.log('addItem called', type)
 
     if (type.includes('career')) {
@@ -3294,7 +3379,7 @@ class EditLog extends Component {
         let selectedFunctions = this.state.selectedFunctions
         selectedFunctions.unshift(this.state.selectedFunction)
 
-        this.setState({ selectedFunction, selectedFunctions, errorMessage: null, functionOptions: [] })
+        this.setState({ selectedFunction, selectedFunctions, errorMessage: null })
 
       }
     } else if (type === 'industry') {
@@ -3308,7 +3393,7 @@ class EditLog extends Component {
         let selectedIndustries = this.state.selectedIndustries
         selectedIndustries.unshift(this.state.selectedIndustry)
 
-        this.setState({ selectedIndustry, selectedIndustries, errorMessage: null, industryOptions: [] })
+        this.setState({ selectedIndustry, selectedIndustries, errorMessage: null })
 
       }
     } else if (type === 'hoursPerWeek') {
@@ -3508,6 +3593,32 @@ class EditLog extends Component {
         actionItems = ['']
       }
       this.setState({ actionItems })
+    } else if (type === 'progress') {
+      let progress = this.state.progress
+      if (progress) {
+        progress.push({ date: null, value: null })
+      } else {
+        progress = [{ date: null, value: null }]
+      }
+      this.setState({ progress })
+    } else if (type === 'strategy') {
+      let strategies = this.state.strategies
+      if (strategies) {
+        strategies.push({ name: '' })
+      } else {
+        strategies = [{ name: '' }]
+      }
+      this.setState({ strategies })
+    } else if (type === 'tactic') {
+      let strategies = this.state.strategies
+      let tactics = this.state.strategies[index].tactics
+      if (tactics) {
+        tactics.push('')
+      } else {
+        tactics = ['']
+      }
+      strategies[index]['tactics'] = tactics
+      this.setState({ strategies })
     }
   }
 
@@ -3521,7 +3632,11 @@ class EditLog extends Component {
   closeModal() {
     console.log('closeModal called in SubEditLog')
 
-    this.setState({ modalIsOpen: false, showSmartDefinition: false, showPicker: false, showDateTimePicker: false })
+    this.setState({ modalIsOpen: false, showSmartDefinition: false,
+      showPicker: false, showDateTimePicker: false, showStrategyDefinition: false,
+      showFeedback: false, selectedSuggestion: null, selectedIndex: null
+    })
+
     // if (this.props.closeModal) {
     //   this.props.closeModal()
     // }
@@ -3629,6 +3744,21 @@ class EditLog extends Component {
                 {(this.state.currentPage === 'Details') && (
                   <View>
                     <View style={[styles.spacer]} />
+
+                    {(this.state.editExisting && !this.state.remoteAuth) && (
+                      <View style={[styles.row10]}>
+
+                        {(this.state.publicProfile && this.state.publicProfileExtent && this.state.publicPreferences && this.state.publicPreferences[2] && (this.state.publicPreferences[2].value === 'All' || this.state.publicPreferences[2].value === 'Some')) ? (
+                          <View style={[styles.standardBorder,styles.padding40]}>
+                            <Text style={[styles.topMargin]}>Share this link to crowdsource resources for this goal: <Text onPress={() => Linking.openURL('https://www/guidedcompass.com/goals/' + this.state.goalId)} style={[styles.ctaColor,styles.boldText]}>{'https://www/guidedcompass.com/goals/' + this.state.goalId}</Text>. If you want to make your goal private, you can do so <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})} style={[styles.ctaColor,styles.boldText]}>here</Text>.</Text>
+                          </View>
+                        ) : (
+                          <View style={[styles.standardBorder,styles.padding40]}>
+                            <Text style={[styles.topMargin]}>To crowdsource resources for this goal, make it public <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})} style={[styles.ctaColor,styles.boldText]}>here</Text>, then share this link: <Text onPress={() => Linking.openURL('https://www/guidedcompass.com/goals/' + this.state.goalId)} style={[styles.ctaColor,styles.boldText]}>{'https://www/guidedcompass.com/goals/' + this.state.goalId}</Text>.</Text>
+                          </View>
+                        )}
+                      </View>
+                    )}
 
                     <View style={[styles.row10]}>
                       <Text style={[styles.row10,styles.standardText]}>Title<Text style={[styles.errorColor]}>*</Text></Text>
@@ -5354,13 +5484,252 @@ class EditLog extends Component {
                                 numberOfLines={4}
                               />
                             </View>
+
+                            <View style={[styles.row10]}>
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn90,styles.rowDirection]}>
+                                  <View>
+                                    <Text style={[styles.row10]}>Strategies & Tactics</Text>
+                                  </View>
+                                  <View style={[styles.leftPadding,styles.topPadding]}>
+                                    <TouchableOpacity onPress={() => this.addItem('strategy')}>
+                                      <View style={[styles.padding5,styles.ctaBorder, { borderRadius: 10 }]}>
+                                        <Image source={{ uri: addIcon}} style={[styles.square10,styles.contain]} />
+                                      </View>
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                                <View style={[styles.width30]}>
+                                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                  <View style={[styles.leftMargin,styles.padding7]}>
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showStrategyDefinition: true })}>
+                                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                              </View>
+
+                              {(this.state.strategies && this.state.strategies.length > 0) && (
+                                <View>
+                                  {this.state.strategies.map((item, index) =>
+                                    <View style={[styles.topMargin,styles.bottomMargin]}>
+                                      <View style={[styles.rowDirection]}>
+                                        <View style={[styles.width30,styles.topPadding]}>
+                                          <TouchableOpacity onPress={() => this.addRemoveItems('Remove', index,'strategy')}>
+                                            <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
+                                          </TouchableOpacity>
+                                        </View>
+                                        <View style={[styles.calcColumn90,styles.leftPadding]}>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("strategy|name|" + index, text)}
+                                            value={item.name}
+                                            placeholder={"Add a strategy (e.g., create regular habits to make progress)"}
+                                            placeholderTextColor="grey"
+                                          />
+                                        </View>
+
+                                      </View>
+
+                                      {(item.tactics && item.tactics.length > 0) && (
+                                        <View>
+                                          {item.tactics.map((item2, index2) =>
+                                            <View style={[styles.leftPadding40,styles.topMargin,styles.bottomMargin]}>
+                                              <View style={[styles.rowDirection]}>
+                                                <View style={[styles.width30,styles.topPadding]} >
+                                                  <TouchableOpacity onPress={() => this.addRemoveItems('Remove', index,'tactic',index2)}>
+                                                    <Image source={{ uri: deniedIcon }} style={[styles.square20,styles.contain]} />
+                                                  </TouchableOpacity>
+                                                </View>
+                                                <View style={[styles.calcColumn130,styles.leftPadding]}>
+                                                  <TextInput
+                                                    style={styles.textInput}
+                                                    onChangeText={(text) => this.formChangeHandler("tactic|" + index + "|" + index2, text)}
+                                                    value={item2}
+                                                    placeholder={"Add a tactic (e.g., do 5 math problems a day after I work out each morning)"}
+                                                    placeholderTextColor="grey"
+                                                  />
+                                                </View>
+
+                                              </View>
+
+                                            </View>
+                                          )}
+                                        </View>
+                                      )}
+
+                                      <View style={[styles.leftPadding40,styles.topMargin,styles.bottomMargin]}>
+                                        <TouchableOpacity onPress={() => this.addItem('tactic',index)} style={[styles.padding5]}>
+                                          <Image source={{ uri: addIconBlue }} style={[styles.square20,styles.contain,styles.ctaBorder,styles.whiteBackground,styles.bottomMarginNegative18, { borderRadius: 12.5 }]} />
+                                        </TouchableOpacity>
+
+                                        <View style={[styles.ctaBorder,styles.leftMargin30]} />
+                                      </View>
+
+                                      <View style={[styles.spacer]} />
+                                    </View>
+                                  )}
+                                  <View style={[styles.spacer]} />
+                                </View>
+                              )}
+                            </View>
+
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text>Tag Supporters</Text>
+                                <Text style={[styles.descriptionText2,styles.bottomPadding5]}>Supporters of your goal will be notified as you make progress, and can provide resources/advice.</Text>
+                                <View style={[styles.halfSpacer]} />
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
+                                    <TextInput
+                                      style={styles.textInput}
+                                      onChangeText={(text) => this.formChangeHandler("searchMembers", text)}
+                                      value={this.state.searchStringMembers}
+                                      placeholder={"Search members..."}
+                                      placeholderTextColor="grey"
+                                    />
+                                  </View>
+                                  <View style={[styles.width70,styles.leftPadding]}>
+                                    <TouchableOpacity style={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(!this.state.searchStringMembers || this.state.searchStringMembers === '') ? true : false} onPress={() => this.addItem('member')}><Text style={[styles.whiteColor,styles.descriptionText1]}>Add</Text></TouchableOpacity>
+                                  </View>
+                                </View>
+
+                                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.row5]}>{this.state.successMessage}</Text>}
+
+                                {(this.state.searchIsAnimatingMembers) ? (
+                                  <View style={[styles.flexCenter,styles.flex1]}>
+                                    <View>
+                                      <View style={[styles.superSpacer]} />
+
+                                      <ActivityIndicator
+                                         animating = {this.state.searchIsAnimatingMembers}
+                                         color = '#87CEFA'
+                                         size = "large"
+                                         style={[styles.square80, styles.centerHorizontally]}/>
+
+                                      <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                      <Text style={[styles.centerText,styles.ctaColor,styles.boldText]}>Searching...</Text>
+
+                                    </View>
+                                  </View>
+                                ) : (
+                                  <View>
+                                    <View>
+                                      {(this.state.memberOptions && this.state.memberOptions.length > 0) && (
+                                        <View style={[styles.card,styles.topMargin]}>
+                                          {this.state.memberOptions.map((value, optionIndex) =>
+                                            <View key={value._id} style={[styles.bottomMargin5]}>
+                                              <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'member')}>
+                                                <View style={[styles.flex1,styles.rowDirection]}>
+                                                  <View style={[styles.width40]}>
+                                                    <View style={[styles.miniSpacer]} />
+                                                    <Image source={profileIconDark} style={[styles.square22,styles.contain]} />
+                                                  </View>
+                                                  <View style={[styles.calcColumn100]}>
+                                                    <Text style={[styles.ctaColor]}>{value.firstName} {value.lastName}</Text>
+                                                  </View>
+                                                </View>
+                                              </TouchableOpacity>
+                                            </View>
+                                          )}
+                                        </View>
+                                      )}
+                                    </View>
+
+                                    <View>
+                                      {this.renderTags('member')}
+                                    </View>
+
+                                  </View>
+                                )}
+                              </View>
+
+                            </View>
                           </View>
                         )}
                       </View>
                     )}
 
                     {(this.state.editExisting) && (
-                      <View style={[styles.row10]}>
+                      <View>
+
+                        <View style={[styles.row10]}>
+                          <View style={[styles.rowDirection]}>
+                            <View>
+                              <Text style={[styles.row10]}>Add Progress</Text>
+                            </View>
+                            <View style={[styles.leftPadding,styles.topPadding]}>
+                              <TouchableOpacity onPress={() => this.addItem('progress')}>
+                                <View style={[styles.padding5,styles.ctaBorder, { borderRadius: 10 }]}>
+                                  <Image source={{ uri: addIcon}} style={[styles.square10,styles.contain]} />
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+
+                          </View>
+
+                          {(this.state.progress && this.state.progress.length > 0) && (
+                            <View>
+                              {this.state.progress.map((item, index) =>
+                                <View style={[styles.topMargin]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.width30,styles.topPadding]} >
+                                      <TouchableOpacity onPress={() => this.addRemoveItems('Remove', index,'progress')}>
+                                        <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
+                                      </TouchableOpacity>
+                                    </View>
+                                    <View >
+                                      {(Platform.OS === 'ios') ? (
+                                        <View style={[styles.rowDirection]}>
+                                          <View style={[styles.width80,styles.topPadding5]}>
+                                            <DateTimePicker
+                                              testID="progressDaate"
+                                              value={(item.date) ? convertStringToDate(item.date,'dateOnly') : new Date()}
+                                              mode={'date'}
+                                              is24Hour={true}
+                                              display="default"
+                                              onChange={(e, d) => this.formChangeHandler("progress|date|" + index,d)}
+                                            />
+                                          </View>
+                                        </View>
+                                      ) : (
+                                        <View>
+                                          <View style={[styles.row5]}>
+                                            <Text style={[styles.standardText,styles.row10]}>Date Awarded{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                          </View>
+                                          <View>
+                                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Progress Date', selectedIndex: null, selectedName: "progress|date|" + index, selectedValue: item.date })}>
+                                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                                <View style={[styles.calcColumn115]}>
+                                                  <Text style={[styles.descriptionText1]}>{item.date}</Text>
+                                                </View>
+                                                <View style={[styles.width20,styles.topMargin5]}>
+                                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                                </View>
+                                              </View>
+                                            </TouchableOpacity>
+                                          </View>
+
+                                        </View>
+                                      )}
+                                    </View>
+                                    <View style={[styles.calcColumn170,styles.leftPadding]}>
+                                      <TextInput
+                                        style={styles.textInput}
+                                        onChangeText={(text) => this.formChangeHandler("progress|value|" + index, text)}
+                                        value={item.value}
+                                        placeholder={"(e.g., I got an interview from Google!)"}
+                                        placeholderTextColor="grey"
+                                      />
+                                    </View>
+
+                                  </View>
+                                </View>
+                              )}
+                            </View>
+                          )}
+                        </View>
                         {(this.state.goalType.description === 'Choose from alternatives') ? (
                           <View>
                             <View>
@@ -5432,85 +5801,17 @@ class EditLog extends Component {
                 )}
 
                 {(this.state.currentPage === 'Suggestions') && (
-                  <View style={[styles.topPadding20]}>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Suggestions</Text> include suggestions, resources, and other acts of help sent to help you achieve this goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
                     {(this.state.suggestions && this.state.suggestions.length > 0) ? (
                       <View style={[styles.topMargin20]}>
                         {this.state.suggestions.map((item, optionIndex) =>
                           <View key={item}>
-                            <View style={[styles.calcColumn60,styles.bottomMargin50,styles.standardBorder,styles.padding30]}>
-                              <View style={[styles.rowDirection]}>
-                                <View style={[styles.width60]}>
-                                  <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: profileIconDark}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
-                                </View>
-                                <View style={[styles.calcColumn180]}>
-                                  <Text style={[styles.headingText4]}>{item.senderFirstName} {item.senderLastName}</Text>
-                                  <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.topPadding5]}>{convertDateToString(item.createdAt,"daysAgo")}</Text>
-                                </View>
-
-                              </View>
-
-                              <Text style={[styles.topMargin20]}><Text style={[styles.descriptionTextColor]}>{item.senderFirstName} says:</Text> {item.message}</Text>
-
-                              {(item.selectedPeople && item.selectedPeople.length > 0) && (
-                                <View style={[styles.topMargin20]}>
-                                  <Text style={[styles.headingText6,styles.row10]}>Suggested Contacts</Text>
-
-                                  {item.selectedPeople.map((item2, optionIndex2) =>
-                                    <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2.firstName} {item2.lastName} ({item2.email}) [{item2.relationship}] - {item2.reason}</Text>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-
-                              {(item.selectedLinks && item.selectedLinks.length > 0) && (
-                                <View style={[styles.topMargin20]}>
-                                  <Text style={[styles.headingText6,styles.row10]}>Links to Resources</Text>
-
-                                  {item.selectedLinks.map((item2, optionIndex2) =>
-                                    <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. <TouchableOpacity onPress={() => Linking.openURL(item2.url)}>{item2.url}</TouchableOpacity> ({item2.category})</Text>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-
-                              {(item.selectedTimes && item.selectedTimes.length > 0) && (
-                                <View style={[styles.topMargin20]}>
-                                  <Text style={[styles.headingText6,styles.row10]}>Times to Chat / Connect</Text>
-
-                                  {item.selectedTimes.map((item2, optionIndex2) =>
-                                    <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {convertDateToString(new Date(item2.time),"datetime-2")}</Text>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-
-                              {(item.selectedProjects && item.selectedProjects.length > 0) && (
-                                <View style={[styles.topMargin20]}>
-                                  <Text style={[styles.headingText6,styles.row10]}>Suggested Projects to Work On</Text>
-
-                                  {item.selectedProjects.map((item2, optionIndex2) =>
-                                    <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2.name}: {item2.description}</Text>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-
-                              {(item.selectedCareers && item.selectedCareers.length > 0) && (
-                                <View style={[styles.topMargin20]}>
-                                  <Text style={[styles.headingText6,styles.row10]}>Suggested Careers to Pursue</Text>
-
-                                  {item.selectedCareers.map((item2, optionIndex2) =>
-                                    <View key={item2}>
-                                      <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2}</Text>
-                                    </View>
-                                  )}
-                                </View>
-                              )}
-                            </View>
+                            {this.renderSuggestion(item,optionIndex)}
                           </View>
                         )}
 
@@ -5518,7 +5819,23 @@ class EditLog extends Component {
                     ) : (
                       <View>
                         <Text style={[styles.errorColor]}>You have no suggestions yet.</Text>
-                        <Text style={[styles.topMargin20]}>People can provide suggestions for contacts, articles, videos, events, job opportunities and more if you share your goal with people: <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })} ><Text style={[styles.standardText,styles.ctaColor]}>{'https://www.guidedcompass.com/app/profile/' + this.state.username}</Text></TouchableOpacity>. Adjust your profile public settings according to what you want people to see by clicking on "Public Preferences" from your profile.</Text>
+                        {/*
+                        <Text style={[styles.topMargin20]}>People can provide suggestions for contacts, articles, videos, events, job opportunities and more if you share your goal with people: <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: this.state.username })} ><Text style={[styles.standardText,styles.ctaColor]}>{'https://www.guidedcompass.com/app/profile/' + this.state.username}</Text></TouchableOpacity>. Adjust your profile public settings according to what you want people to see by clicking on "Public Preferences" from your profile.</Text>*/}
+
+                        {(this.state.editExisting && !this.state.remoteAuth) && (
+                          <View style={[styles.row10]}>
+
+                            {(this.state.publicProfile && this.state.publicProfileExtent && this.state.publicPreferences && this.state.publicPreferences[2] && (this.state.publicPreferences[2].value === 'All' || this.state.publicPreferences[2].value === 'Some')) ? (
+                              <View style={[styles.standardBorder,styles.padding40]}>
+                                <Text style={[styles.topMargin]}>Share this link to crowdsource resources for this goal: <Text onPress={() => Linking.openURL('https://www/guidedcompass.com/goals/' + this.state.goalId)} style={[styles.ctaColor,styles.boldText]}>{'https://www/guidedcompass.com/goals/' + this.state.goalId}</Text>. If you want to make your goal private, you can do so <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})} style={[styles.ctaColor,styles.boldText]}>here</Text>.</Text>
+                              </View>
+                            ) : (
+                              <View style={[styles.standardBorder,styles.padding40]}>
+                                <Text style={[styles.topMargin]}>To crowdsource resources for this goal, make it public <Text onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})} style={[styles.ctaColor,styles.boldText]}>here</Text>, then share this link: <Text onPress={() => Linking.openURL('https://www/guidedcompass.com/goals/' + this.state.goalId)} style={[styles.ctaColor,styles.boldText]}>{'https://www/guidedcompass.com/goals/' + this.state.goalId}</Text>.</Text>
+                              </View>
+                            )}
+                          </View>
+                        )}
                       </View>
                     )}
                   </View>
@@ -5526,36 +5843,72 @@ class EditLog extends Component {
 
                 {(this.state.currentPage === 'People') && (
                   <View>
-                    <SubPeopleMatching navigation={this.props.navigation} userType={null} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>People</Text>  who have similar goals</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
+                    <SubPeopleMatching navigation={this.props.navigation} userType={"Peers"} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Courses') && (
-                  <View style={[styles.topPadding20]}>
-                    <SubCourses navigation={this.props.navigation} activeOrg={this.state.activeOrg} selectedGoal={this.state.selectedGoal} competencies={this.state.competencies} subNavSelected="Browse" pageSource="Goal"/>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Courses</Text>  that teach the relevant competencies tagged in your goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
+                    {(this.state.competencies && this.state.competencies.length > 0) ? (
+                      <SubCourses navigation={this.props.navigation} activeOrg={this.state.activeOrg} selectedGoal={this.state.selectedGoal} competencies={this.state.competencies} subNavSelected="Browse" pageSource="Goal"/>
+                    ) : (
+                      <View>
+                        <Text style={[styles.errorColor,styles.topMargin20]}>You have not tagged any competencies (skills & knowledge) in your goal</Text>
+                      </View>
+                    )}
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Careers') && (
-                  <View style={[styles.topPadding20]}>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Careers</Text> are any career paths that match this goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
                     <SubCareers navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Events') && (
-                  <View style={[styles.topPadding20]}>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Events</Text> include any career events that align with this goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
                     <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Events"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Projects') && (
-                  <View style={[styles.topPadding20]}>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Projects</Text> include any project opportunities that align with this goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
                     <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Projects"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
 
                 {(this.state.currentPage === 'Work') && (
-                  <View style={[styles.topPadding20]}>
+                  <View>
+                    <View>
+                      <Text style={[styles.topMargin20,styles.bottomMargin20]}><Text style={[styles.ctaColor,styles.boldText]}>Work</Text> include any work opportunities that align with this goal</Text>
+                      <View style={[styles.horizontalLine] }/>
+                    </View>
+
                     <SubOpportunities navigation={this.props.navigation} calculateMatches={this.state.calculateMatches} activeOrg={this.state.activeOrg} passedSubNavSelected={"Work"} changeSubNavSelected={this.changeSubNavSelected} pageSource="Goal" selectedGoal={this.state.selectedGoal} />
                   </View>
                 )}
@@ -7242,6 +7595,151 @@ class EditLog extends Component {
     return returnedDate
   }
 
+  renderSuggestion(item,optionIndex,inModal) {
+    console.log('renderSuggestion called')
+
+    let cardClass = [styles.calcColumn60,styles.bottomMargin50,styles.standardBorder,styles.padding30]
+    if (inModal) {
+      cardClass = [styles.flex1,styles.bottomMargin,styles.standardBorder,styles.padding30]
+    }
+
+    return (
+      <View key="suggestionKey">
+        <View style={cardClass}>
+          <View style={[styles.rowDirection]}>
+            <View style={[styles.width60]}>
+              <Image source={(item.pictureURL) ? { uri: item.pictureURL} : { uri: profileIconDark}} style={[styles.square50,styles.contain, { borderRadius: 25 }]} />
+            </View>
+            <View style={[styles.calcColumn180]}>
+              <Text style={[styles.headingText4]}>{item.senderFirstName} {item.senderLastName}</Text>
+              <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.topPadding5]}>{convertDateToString(item.createdAt,"daysAgo")}</Text>
+            </View>
+
+          </View>
+
+          <Text style={[styles.topMargin20]}><Text style={[styles.descriptionTextColor]}>{item.senderFirstName} says:</Text> {item.message}</Text>
+
+          {(item.selectedPeople && item.selectedPeople.length > 0) && (
+            <View style={[styles.topMargin20]}>
+              <Text style={[styles.headingText6,styles.row10]}>Suggested Contacts</Text>
+
+              {item.selectedPeople.map((item2, optionIndex2) =>
+                <View key={item2}>
+                  <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2.firstName} {item2.lastName} ({item2.email}) [{item2.relationship}] - {item2.reason}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {(item.selectedLinks && item.selectedLinks.length > 0) && (
+            <View style={[styles.topMargin20]}>
+              <Text style={[styles.headingText6,styles.row10]}>Links to Resources</Text>
+
+              {item.selectedLinks.map((item2, optionIndex2) =>
+                <View key={item2}>
+                  <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. <TouchableOpacity onPress={() => Linking.openURL(item2.url)}>{item2.url}</TouchableOpacity> ({item2.category})</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {(item.selectedTimes && item.selectedTimes.length > 0) && (
+            <View style={[styles.topMargin20]}>
+              <Text style={[styles.headingText6,styles.row10]}>Times to Chat / Connect</Text>
+
+              {item.selectedTimes.map((item2, optionIndex2) =>
+                <View key={item2}>
+                  <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {convertDateToString(new Date(item2.time),"datetime-2")}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {(item.selectedProjects && item.selectedProjects.length > 0) && (
+            <View style={[styles.topMargin20]}>
+              <Text style={[styles.headingText6,styles.row10]}>Suggested Projects to Work On</Text>
+
+              {item.selectedProjects.map((item2, optionIndex2) =>
+                <View key={item2}>
+                  <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2.name}: {item2.description}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {(item.selectedCareers && item.selectedCareers.length > 0) && (
+            <View style={[styles.topMargin20]}>
+              <Text style={[styles.headingText6,styles.row10]}>Suggested Careers to Pursue</Text>
+
+              {item.selectedCareers.map((item2, optionIndex2) =>
+                <View key={item2}>
+                  <Text style={[styles.headingText2,styles.boldText]}>{optionIndex2 + 1}. {item2}</Text>
+                </View>
+              )}
+            </View>
+          )}
+        </View>
+      </View>
+    )
+  }
+
+  itemClicked(item, optionIndex,direction) {
+    console.log('itemClicked called')
+
+    let suggestions = this.state.suggestions
+    if (direction === 'up') {
+      if (suggestions[optionIndex].liked) {
+        suggestions[optionIndex]['liked'] = false
+      } else {
+        suggestions[optionIndex]['liked'] = true
+        suggestions[optionIndex]['disliked'] = false
+      }
+    } else {
+      if (suggestions[optionIndex].disliked) {
+        suggestions[optionIndex]['disliked'] = false
+      } else {
+        suggestions[optionIndex]['disliked'] = true
+        suggestions[optionIndex]['liked'] = false
+      }
+    }
+
+    this.setState({ suggestions })
+    this.saveSuggestion(item,false)
+
+  }
+
+  saveSuggestion(selectedSuggestion,closeTheModal) {
+    console.log('saveSuggestion called')
+
+    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
+    const _id = selectedSuggestion._id
+    const liked = selectedSuggestion.liked
+    const disliked = selectedSuggestion.disliked
+    const feedback = selectedSuggestion.feedback
+
+    Axios.post('/api/suggestions', {
+      _id, liked, disliked, feedback
+    })
+    .then((response) => {
+      console.log('attempting to save addition to suggestion')
+      if (response.data.success) {
+        console.log('saved suggestion', response.data)
+
+        this.setState({ isSaving: false, successMessage: 'Successfully saved feedback'})
+        if (closeTheModal) {
+          this.closeModal()
+        }
+
+      } else {
+        console.log('did not save successfully')
+        this.setState({ isSaving: false, errorMessage: response.data.message })
+      }
+    }).catch((error) => {
+        console.log('save did not work', error);
+        this.setState({ errorMessage: 'there was an error saving suggestion', isSaving: false})
+    });
+  }
+
   render() {
 
     return (
@@ -7365,28 +7863,111 @@ class EditLog extends Component {
                 </View>
               ) : (
                 <ScrollView key="info" style={[styles.card,styles.fullScreenWidth]}>
-                  <View style={[styles.rowDirection]}>
-                    <View style={[styles.calcColumn100]}>
-                      <Text style={[styles.headingText2]}>S.M.A.R.T. Goals Defined</Text>
+                  {(this.state.showSmartDefinition) && (
+                    <View>
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn100]}>
+                          <Text style={[styles.headingText2]}>S.M.A.R.T. Goals Defined</Text>
+                        </View>
+                        <View style={[styles.width40]}>
+                          <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
+                            <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                      <Text style={[styles.headingText6]}>All goals should be:</Text>
+
+                      <View style={[styles.row10]}>
+                        <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>S</Text>pecific</Text>
+                        <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>M</Text>easurable</Text>
+                        <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>A</Text>chievable</Text>
+                        <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>R</Text>elevant</Text>
+                        <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>T</Text>ime-Bound</Text>
+                      </View>
                     </View>
-                    <View style={[styles.width40]}>
-                      <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
-                        <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
-                      </TouchableOpacity>
+                  )}
+
+                  {(this.state.showStrategyDefinition) && (
+                    <View>
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn100]}>
+                          <Text style={[styles.headingText2]}>Strategies & Tactics Defined</Text>
+                        </View>
+                        <View style={[styles.width40]}>
+                          <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
+                            <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                      <Text>In order to achieve your goals, we recommend you implement strategies & tactics. Tactics are a subset of a strategy. Here are definitions:</Text>
+
+                      <View style={[styles.row10]}>
+                        <View style={[styles.topMargin20]}>
+                          <Text><Text style={[styles.boldText,styles.ctaColor]}>Strategy</Text> is defined as a plan of action or policy designed to achieve a major or overall aim. For example, in order to achieve my goal of landing a software engineering job, I need to code everyday.</Text>
+                        </View>
+                        <View style={[styles.topMargin20]}>
+                          <Text><Text style={[styles.boldText,styles.ctaColor]}>Tactic</Text> is defined as an action carefully planned to achieve a specific end. For example, since my strategy is to code everyday, one of my tactics may be to code for 30 minutes after I exercise in the morning; another tactic may be to set a daily alarm.</Text>
+                        </View>
+                      </View>
+
                     </View>
-                  </View>
+                  )}
 
-                  <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                  {(this.state.showFeedback) && (
+                    <View>
+                      <View style={[styles.rowDirection]}>
+                        <View style={[styles.calcColumn100]}>
+                          <Text style={[styles.headingText2]}>Was This Useful?</Text>
+                        </View>
+                        <View style={[styles.width40]}>
+                          <TouchableOpacity style={[styles.topMargin]} onPress={() => this.closeModal()}>
+                            <Image source={{ uri: closeIcon}} style={[styles.square20,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
 
-                  <Text style={[styles.headingText6]}>All goals should be:</Text>
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                  <View style={[styles.row10]}>
-                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>S</Text>pecific</Text>
-                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>M</Text>easurable</Text>
-                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>A</Text>chievable</Text>
-                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>R</Text>elevant</Text>
-                    <Text style={[styles.topMargin20]}><Text style={[styles.boldText,styles.headingText4]}>T</Text>ime-Bound</Text>
-                  </View>
+                      {this.renderSuggestion(this.state.selectedSuggestion,this.state.selectedIndex,true)}
+
+                      <View style={[styles.row10,styles.rowDirection]}>
+                        <TouchableOpacity onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'up')}>
+                          <Image source={(this.state.selectedSuggestion.liked) ? { uri: thumbsUpBlueIcon} : { uri: thumbsUpIcon}} style={[styles.square30,styles.contain]} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.leftMargin15]} onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'down')}>
+                          <Image source={(this.state.selectedSuggestion.disliked) ? { uri: thumbsDownOrangeIcon} : { uri: thumbsDownIcon}} style={[styles.square30,styles.contain]} />
+                        </TouchableOpacity>
+
+                        <View style={[styles.row10]}>
+                          <TextInput
+                            style={styles.textArea}
+                            onChangeText={(text) => this.formChangeHandler("feedback", text)}
+                            value={this.state.selectedSuggestion.feedback}
+                            placeholder="How were you able to use their suggstion(s)/resource(s)?"
+                            placeholderTextColor="grey"
+                            multiline={true}
+                            numberOfLines={4}
+                          />
+                        </View>
+                      </View>
+
+                      {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text>}
+                      {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text>}
+
+                      {(this.state.selectedSuggestion.feedback) && (
+                        <View style={[styles.topMargin20]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.saveSuggestion(this.state.selectedSuggestion,true)}><Text style={[styles.standardText,styles.whiteColor]}>Send Feedback</Text></TouchableOpacity>
+                        </View>
+                      )}
+
+                    </View>
+                  )}
 
                 </ScrollView>
               )}

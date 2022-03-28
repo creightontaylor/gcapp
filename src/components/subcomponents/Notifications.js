@@ -196,6 +196,10 @@ class Notifications extends Component {
         } else if (this.state.notifications[index].type === 'Tagged in Post') {
           objectId = this.state.notifications[index].objectId
           notiPath = 'Home'
+        } else if (this.state.notifications[index].type === 'Referral Received') {
+          objectId = this.state.notifications[index].objectId
+          notiPath = 'OpportunityDetails'
+          additionalItem = ''
         }
       }
 

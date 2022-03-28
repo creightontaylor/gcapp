@@ -9,7 +9,7 @@ const standardColor = '#1e1e1e'
 const unselectedColor = 'grey'
 const faintColor = '#D2D2D2'
 const slightFaintColor = '#BEBEBE'
-const extremelyFaintColor = '#F5F5F5'
+const extremelyFaintColor = 'rgba(178,186,191,0.2)'
 const errorColor = '#F5A623'
 const middleColor = '#4C0099'
 const mainFont = "Tisa"
@@ -424,6 +424,9 @@ module.exports = StyleSheet.create({
   },
   leftMargin67: {
     marginLeft: 67
+  },
+  bottomMarginNegative18: {
+    marginBottom: -18
   },
   bottomMargin: {
     marginBottom: 10
