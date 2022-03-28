@@ -153,13 +153,8 @@ class ExternalProfile extends Component {
 
         let profileOptions = ['All','Posts','Projects','Goals','Passions','Assessments','Endorsements']
 
-        let loggedIn = false
-        if (cuFirstName && emailId) {
-          loggedIn = true
-        }
-
         this.setState({ emailId, cuFirstName, cuLastName, activeOrg, orgFocus, roleName, username, profileOptions, source,
-          matchScore, loggedIn
+          matchScore
         })
 
         if (username) {

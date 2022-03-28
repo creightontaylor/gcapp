@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Linking, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TouchableOpacity, AsyncStorage, Platform, ActivityIndicator, Switch, Linking, TextInput, Image } from 'react-native';
 const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import SubPicker from '../common/SubPicker';
 
 import {convertDateToString} from '../functions/convertDateToString';
 
@@ -27,6 +28,7 @@ const pathsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/a
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 const celebrationIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/celebration-icon.png';
+const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
 
 class GoalDetails extends Component {
     constructor(props) {
@@ -54,6 +56,7 @@ class GoalDetails extends Component {
         this.startWallowing = this.startWallowing.bind(this)
         this.formatStartDate = this.formatStartDate.bind(this)
         this.configureLink = this.configureLink.bind(this)
+        this.prepareDate = this.prepareDate.bind(this)
 
     }
 
@@ -288,64 +291,60 @@ class GoalDetails extends Component {
 
         return (
           <View key="taggedProjectItem">
-            <Link to={'/app/projects/' + itemObject._id} className="background-button standard-color full-width">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject })}>
               {(answer === 'a') ? (
-                <View>
-                  <View className="calc-column-offset-80 heading-text-5 right-text">
-                    <Text>A: {item.aName}</Text>
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.calcColumn140]}>
+                    <Text style={[styles.headingText5,styles.rightText]}>A: {item.aName}</Text>
                   </View>
-                  <View className="fixed-column-80 heading-text-5">
+                  <View style={[styles.width80]}>
                     {(item.aValue) && (
-                      <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                      <Text style={[styles.headingText5,styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                     )}
                   </View>
                 </View>
               ) : (
-                <View>
-                  <View className="fixed-column-80 heading-text-5">
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.width80]}>
                     {(item.bValue) ? (
-                      <Text className="bold-text cta-color">${item.bValue}</Text>
+                      <Text style={[styles.headingText5,styles.boldText,styles.ctaColor]}>${item.bValue}</Text>
                     ) : (
-                      <View className="width-40 height-30" />
+                      <View style={[styles.square30]} />
                     )}
                   </View>
-                  <View className="calc-column-offset-80 heading-text-5">
-                    <Text className="full-width right-text">B: {item.bName}</Text>
+                  <View style={[styles.calcColumn140]}>
+                    <Text style={[styles.headingText5,styles.rightText]}>B: {item.bName}</Text>
                   </View>
                 </View>
               )}
+            </TouchableOpacity>
 
-              <View className="clear" />
-            </Link>
-
-            <View className="row-5">
-              <View className="bottom-padding">
-                <View className="cta-border">
-                  <Link to={'/app/projects/' + itemObject._id} className={(answer === 'a') ? "background-button standard-color padding-20 full-width" : "background-button standard-color padding-20 full-width right-text"}>
+            <View style={[styles.row5]}>
+              <View style={[styles.bottomPadding]}>
+                <View style={[styles.ctaBorder]}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('ProjectDetails', { selectedProject: itemObject })} style={(answer === 'a') ? [styles.padding20] : [styles.padding20]}>
                     {(answer === 'a') ? (
-                      <View className="padding-20">
-                        <View className="fixed-column-60">
-                          <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} className="image-50-fit" />
+                      <View style={[styles.padding20,styles.rowDirection]}>
+                        <View style={[styles.width60]}>
+                          <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                         </View>
-                        <View className="calc-column-offset-60">
-                          <Text>{itemObject.name}</Text>
-                          <Text className="description-text-3 description-text-color">{itemObject.category} | {itemObject.hours} Hours</Text>
+                        <View style={[styles.calcColumn140]}>
+                          <Text style={[styles.standardText]}>{itemObject.name}</Text>
+                          <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.category} | {itemObject.hours} Hours</Text>
                         </View>
-                        <View className="clear" />
                       </View>
                     ) : (
-                      <View className="padding-20">
-                        <View className="calc-column-offset-60 right-padding">
-                          <Text>{itemObject.name}</Text>
-                          <Text className="description-text-3 description-text-color">{itemObject.category} | {itemObject.hours} Hours</Text>
+                      <View style={[styles.padding20,styles.rowDirection]}>
+                        <View style={[styles.calcColumn140,styles.rightPadding]}>
+                          <Text style={[styles.standardText,styles.rightText]}>{itemObject.name}</Text>
+                          <Text style={[styles.descriptionText3,styles.descriptionTextColor,styles.rightText]}>{itemObject.category} | {itemObject.hours} Hours</Text>
                         </View>
-                        <View className="fixed-column-60">
-                          <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} className="image-50-fit" />
+                        <View style={[styles.width60]}>
+                          <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                         </View>
-                        <View className="clear" />
                       </View>
                     )}
-                  </Link>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -354,32 +353,31 @@ class GoalDetails extends Component {
       } else if (type === 'work') {
         return (
           <View key="taggedWorkItem">
-            <Link to={'/app/opportunities/' + itemObject._id} className="background-button standard-color padding-20 full-width">
-              <View className="calc-column-offset-80">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject })} style={[styles.rowDirection,styles.padding20]}>
+              <View style={[styles.calcColumn140]}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 {(answer === 'a') ? (
-                  <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
-                  <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
-            </Link>
+            </TouchableOpacity>
 
-            <View className="row-5">
-              <View className="cta-border">
-                <Link to={'/app/opportunities/' + itemObject._id} className="background-button standard-color padding-20 full-width">
-                  <View className="padding-20">
-                    <View className="fixed-column-50">
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} className="image-40-fit" />
+            <View style={[styles.row5]}>
+              <View style={[styles.ctaBorder]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: itemObject })}>
+                  <View style={[styles.padding20,styles.rowDirection]}>
+                    <View style={[styles.width50]}>
+                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square40,styles.contain]} />
                     </View>
-                    <View className="calc-column-offset-50">
+                    <View style={[styles.calcColumn110]}>
                       {(itemObject.title) ? (
                         <Text>{itemObject.title}</Text>
                       ) : (
@@ -387,13 +385,13 @@ class GoalDetails extends Component {
                       )}
 
                       {(itemObject.employerName) && (
-                        <Text className="description-text-3 description-text-color">{itemObject.employerName}</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.employerName}</Text>
                       )}
 
                     </View>
-                    <View className="clear" />
+
                   </View>
-                </Link>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -401,42 +399,42 @@ class GoalDetails extends Component {
       } else if (type === 'career') {
         return (
           <View key="taggedCareerItem">
-            <Link to={'/app/careers/' + itemObject.name} className="background-button standard-color padding-20 full-width">
-              <View className="calc-column-offset-80">
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: itemObject })} style={[styles.rowDirection,styles.padding20]}>
+              <View style={[styles.calcColumn140]}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 {(answer === 'a') ? (
-                  <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
-                  <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
-            </Link>
 
-            <View className="bottom-padding">
-              <View className="cta-border">
-                <Link to={'/app/careers/' + itemObject.name} className="background-button standard-color padding-20 full-width">
-                  <View className="padding-20">
-                    <View className="fixed-column-60">
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} className="image-50-fit" />
+            </TouchableOpacity>
+
+            <View style={[styles.bottomPadding]}>
+              <View style={[styles.ctaBorder]}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('CareerDetails', { careerSelected: itemObject })}>
+                  <View style={[styles.padding20,styles.rowDirection]}>
+                    <View style={[styles.width60]}>
+                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
                     </View>
-                    <View className="calc-column-offset-60">
+                    <View style={[styles.calcColumn120]}>
                       <Text>{itemObject.name}</Text>
-                      <Text className="description-text-3 description-text-color">{itemObject.jobFamily}</Text>
+                      <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.jobFamily}</Text>
 
                       {(itemObject.marketData) && (
-                        <Text className="description-text-3 description-text-color"> | ${Number(itemObject.marketData.pay).toLocaleString()} avg pay</Text>
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}> | ${Number(itemObject.marketData.pay).toLocaleString()} avg pay</Text>
                       )}
                     </View>
-                    <View className="clear" />
+
                   </View>
-                </Link>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -444,43 +442,39 @@ class GoalDetails extends Component {
       } else if (type === 'competency') {
         return (
           <View key="taggedCompetencyItem">
-            <View className="bottom-padding">
-              <View className="calc-column-offset-80">
+            <View style={[styles.bottomPadding,styles.rowDirection]}>
+              <View style={[styles.calcColumn140]}>
                 {(answer === 'a') ? (
                   <Text>A: {item.aName}</Text>
                 ) : (
                   <Text>B: {item.bName}</Text>
                 )}
               </View>
-              <View className="fixed-column-80">
+              <View style={[styles.width80]}>
                 {(answer === 'a') ? (
-                  <Text className="bold-text right-text cta-color">${item.aValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.aValue}</Text>
                 ) : (
-                  <Text className="bold-text right-text cta-color">${item.bValue}</Text>
+                  <Text style={[styles.boldText,styles.rightText,styles.ctaColor]}>${item.bValue}</Text>
                 )}
               </View>
-              <View className="clear" />
             </View>
 
-            <View className="bottom-padding">
-              <View className="cta-border">
-                <View className="standard-color padding-20 full-width">
-                  <View>
-                    <View className="fixed-column-60">
-                      <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} className="image-50-fit" />
-                    </View>
-                    <View className="calc-column-offset-60">
-                      <Text>{itemObject.name}</Text>
-                      <Text className="description-text-3 description-text-color">{itemObject.category}</Text>
+            <View style={[styles.bottomPadding]}>
+              <View style={[styles.ctaBorder]}>
+                <View style={[styles.padding20,styles.rowDirection]}>
+                  <View style={[styles.width60]}>
+                    <Image source={(itemObject.imageURL) ? { uri: itemObject.imageURL} : { uri: defaultProfileItemIcon}} style={[styles.square50,styles.contain]} />
+                  </View>
+                  <View style={[styles.calcColumn140]}>
+                    <Text>{itemObject.name}</Text>
+                    <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.category}</Text>
 
-                      {(itemObject.description) && (
-                        <View>
-                          <View className="clear" />
-                          <Text className="description-text-3 description-text-color">{itemObject.description}</Text>
-                        </View>
-                      )}
-                    </View>
-                    <View className="clear" />
+                    {(itemObject.description) && (
+                      <View>
+
+                        <Text style={[styles.descriptionText3,styles.descriptionTextColor]}>{itemObject.description}</Text>
+                      </View>
+                    )}
                   </View>
                 </View>
               </View>
@@ -497,52 +491,52 @@ class GoalDetails extends Component {
       if (passedArray && passedArray.length > 0) {
         let backgroundColorClass = ''
         if (type === 'careers' || type === 'functions' || type === 'industries') {
-          backgroundColorClass = 'primary-background-light'
+          backgroundColorClass = [styles.primaryBackgroundLight]
         } else if (type === 'opportunities') {
-          backgroundColorClass = 'secondary-background-light'
+          backgroundColorClass = [styles.secondaryBackgroundLight]
         } else if (type === 'competencies') {
-          backgroundColorClass = 'tertiary-background-light'
+          backgroundColorClass = [styles.tertiaryBackgroundLight]
         } else if (type === 'hours') {
-          backgroundColorClass = 'quaternary-background-light'
+          backgroundColorClass = [styles.quaternaryBackgroundLight]
         } else if (type === 'payRanges') {
-          backgroundColorClass = 'quinary-background-light'
+          backgroundColorClass = [styles.quinaryBackgroundLight]
         } else if (type === 'schools') {
-          backgroundColorClass = 'senary-background-light'
+          backgroundColorClass = [styles.senaryBackgroundLight]
         } else if (type === 'majors') {
-          backgroundColorClass = 'septary-background-light'
+          backgroundColorClass = [styles.septaryBackgroundLight]
         }
 
         return (
-          <View key={type + "|0"} className={(inModal) && "display-inline center-text"}>
-            <View className={(inModal) ? "display-inline center-text" : "top-margin"}>
+          <View key={type + "|0"} style={(inModal) && [styles.centerText]}>
+            <View style={(inModal) ? [styles.centerText,styles.rowDirection,styles.flexWrap] : [styles.topMargin,styles.rowDirection,styles.flexWrap]}>
               {passedArray.map((value, optionIndex) =>
-                <View key={type + "|" + optionIndex} className={(inModal) ? "display-inline center-text" : "float-left"}>
+                <View key={type + "|" + optionIndex} style={(inModal) ? [styles.centerText] : []}>
                   {(optionIndex < 3) && (
-                    <View>
+                    <View style={[styles.rowDirection]}>
                       {(editMode) && (
-                        <View className="close-button-container-1" >
-                          <TouchableOpacity className="background-button" onPress={() => this.removeItem(type, optionIndex)}>
-                            <Image source={{ uri: deniedIcon}} className="image-auto-20" />
+                        <View style={[styles.topMarginNegative3,styles.rightMarginNegative12,styles.relativePosition,styles.zIndex1]} >
+                          <TouchableOpacity onPress={() => this.removeItem(type, optionIndex)}>
+                            <Image source={{ uri: deniedIcon}} style={[styles.square20,styles.contain]} />
                           </TouchableOpacity>
                         </View>
                       )}
-                      <View className={(inModal) ? "display-inline right-padding-5 center-text" : "float-left right-padding-5"}>
-                        <View className="half-spacer" />
-                        <View className={"rounded-corners row-7 horizontal-padding-5 " + backgroundColorClass}>
+                      <View style={(inModal) ? [styles.rightPadding5,styles.centerText] : [styles.rightPadding5]}>
+                        <View style={[styles.halfSpacer]} />
+                        <View style={[styles.roundedCorners,styles.row7,styles.horizontalPadding20, backgroundColorClass]}>
                           {(typeof value === 'object') ? (
                             <View>
                               {(value.title) && (
-                                <Text className="description-text-2">{value.title}</Text>
+                                <Text style={[styles.descriptionText2]}>{value.title}</Text>
                               )}
                               {(value.name) && (
-                                <Text className="description-text-2">{value.name}</Text>
+                                <Text style={[styles.descriptionText2]}>{value.name}</Text>
                               )}
                             </View>
                           ) : (
-                            <Text className="description-text-2">{value}</Text>
+                            <Text style={[styles.descriptionText2]}>{value}</Text>
                           )}
                         </View>
-                        <View className="half-spacer" />
+                        <View style={[styles.halfSpacer]} />
                       </View>
                     </View>
                   )}
@@ -812,6 +806,21 @@ class GoalDetails extends Component {
       }
     }
 
+    prepareDate(passedDate,type) {
+      console.log('prepareDate called', passedDate,type)
+
+      // console.log('see date: ', new Date(passedDate), new Date(passedDate).toString())
+      let returnedDate = new Date(passedDate)
+      if (type === 'date') {
+        returnedDate = convertDateToString(returnedDate,"hyphenatedDate")
+      } else if (type === 'time') {
+        returnedDate = convertDateToString(returnedDate,"hyphenatedDateTime").split("T")[1]
+      }
+      console.log('see date: ', returnedDate)
+
+      return returnedDate
+    }
+
     render() {
 
       return (
@@ -820,31 +829,31 @@ class GoalDetails extends Component {
             <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
              <ScrollView key="showShareButtons" style={[styles.flex1]}>
                 {(this.state.showGoalDetails) && (
-                  <View className="full-width padding-20">
-                     <Text className="heading-text-2 center-text">{this.state.selectedGoal.title}</Text>
+                  <View style={[styles.flex1,styles.padding20]}>
+                     <Text style={[styles.headingText2,styles.centerText]}>{this.state.selectedGoal.title}</Text>
 
                      {(this.state.selectedGoal.goalType) && (
-                       <Text className="full-width center-text top-margin description-text-1">{this.state.selectedGoal.goalType.describe} Goal by <Link to={this.configureLink(this.state.selectedGoal)} target="_blank">{this.state.selectedGoal.creatorFirstName} {this.state.selectedGoal.creatorLastName}</Link></Text>
+                       <Text style={[styles.descriptionText1,styles.centerText,styles.topMargin]}>{this.state.selectedGoal.goalType.describe} Goal by <Text style={[styles.ctaColor,styles.boldText]} onPress={() => this.props.navigation.navigate('Profile', { username: this.state.selectedGoal.creatorUsername })}>{this.state.selectedGoal.creatorFirstName} {this.state.selectedGoal.creatorLastName}</Text></Text>
                      )}
 
                      {(this.state.selectedGoal.startDate) ? (
-                       <Text className="full-width center-text top-margin description-text-2">{this.formatStartDate(this.state.selectedGoal.startDate)} - {convertDateToString(new Date(this.state.selectedGoal.deadline),"date-2")}</Text>
+                       <Text style={[styles.descriptionText2,styles.centerText,styles.topMargin]}>{this.formatStartDate(this.state.selectedGoal.startDate)} - {convertDateToString(new Date(this.state.selectedGoal.deadline),"date-2")}</Text>
                      ) : (
-                       <Text className="full-width center-text top-margin description-text-2">Deadline: {convertDateToString(new Date(this.state.selectedGoal.deadline),"date-2")}</Text>
+                       <Text style={[styles.descriptionText2,styles.centerText,styles.topMargin]}>Deadline: {convertDateToString(new Date(this.state.selectedGoal.deadline),"date-2")}</Text>
                      )}
 
                      {(this.state.selectedGoal.description) && (
-                       <Text className="top-margin-20 full-width center-text">{this.state.selectedGoal.description}</Text>
+                       <Text style={[styles.topMargin20,styles.centerText]}>{this.state.selectedGoal.description}</Text>
                      )}
 
                      {(this.state.selectedGoal.goalType && this.state.selectedGoal.goalType.name === 'Alternatives') && (
                        <View>
                          {(this.state.selectedGoal.pollQuestion) && (
-                           <Text className="heading-text-4 top-margin-40 full-width center-text">{this.state.selectedGoal.pollQuestion}</Text>
+                           <Text style={[styles.headingText4,styles.centerText,styles.topMargin40]}>{this.state.selectedGoal.pollQuestion}</Text>
                          )}
 
-                         <View className="top-margin-40">
-                           <View className="calc-column-offset-30-of-50">
+                         <View style={[styles.topMargin40,styles.rowDirection]}>
+                           <View style={[styles.flex45]}>
 
                              {(this.state.selectedGoal.aItem) && (
                                <View>
@@ -875,7 +884,7 @@ class GoalDetails extends Component {
 
                              {(this.state.selectedGoal.aLinks && this.state.selectedGoal.aLinks.length > 0) && (
                                <View>
-                                 <Text className="top-margin">Relevant Links</Text>
+                                 <Text style={[styles.topMargin]}>Relevant Links</Text>
                                  {this.state.selectedGoal.aLinks.map((item, optionIndex) =>
                                    <View>
                                      <Text style={[styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL(item)}>{optionIndex + 1}. {item}</Text>
@@ -884,13 +893,13 @@ class GoalDetails extends Component {
                                </View>
                              )}
 
-                             <Text className="top-margin-20">{this.state.selectedGoal.aCase}</Text>
+                             <Text style={[styles.topMargin20]}>{this.state.selectedGoal.aCase}</Text>
 
                            </View>
-                           <View className="fixed-column-60">
-                             <Text className="full-width center-text heading-text-2">VS</Text>
+                           <View style={[styles.flex10]}>
+                             <Text style={[styles.headingText2,styles.centerText]}>VS</Text>
                            </View>
-                           <View className="calc-column-offset-30-of-50">
+                           <View style={[styles.flex45]}>
                              {(this.state.selectedGoal.bItem) && (
                                <View>
                                  <View>
@@ -920,23 +929,23 @@ class GoalDetails extends Component {
 
                              {(this.state.selectedGoal.bLinks && this.state.selectedGoal.bLinks.length > 0) && (
                                <View>
-                                 <Text className="top-margin full-width right-text">Relevant Links</Text>
+                                 <Text style={[styles.topMargin,styles.rightText]}>Relevant Links</Text>
                                  {this.state.selectedGoal.bLinks.map((item, optionIndex) =>
-                                   <View className="full-width right-text">
+                                   <View style={[styles.rightText]}>
                                      <Text style={[styles.ctaColor,styles.boldText]} onPress={() => Linking.openURL(item)}>{optionIndex + 1}. {item}</Text>
                                    </View>
                                  )}
                                </View>
                              )}
 
-                             <Text className="top-margin-20 full-width right-text">{this.state.selectedGoal.bCase}</Text>
+                             <Text style={[styles.topMargin20,styles.rightText]}>{this.state.selectedGoal.bCase}</Text>
                            </View>
-                           <View className="clear" />
+
                          </View>
                        </View>
                      )}
 
-                     <View className="full-width center-text display-inline top-margin-20">
+                     <View style={[styles.centerText,styles.rowDirection,styles.flexWrap,styles.topMargin20]}>
                        {this.renderTags(this.state.selectedGoal.selectedCareers, 'careers', null, true)}
                        {this.renderTags(this.state.selectedGoal.selectedOpportunities, 'opportunities', null, true)}
                        {this.renderTags(this.state.selectedGoal.competencies, 'competencies', null, true)}
@@ -946,51 +955,49 @@ class GoalDetails extends Component {
                        {this.renderTags(this.state.selectedGoal.selectedPayRanges, 'payRanges', null, true)}
                        {this.renderTags(this.state.selectedGoal.selectedSchools, 'schools', null, true)}
                        {this.renderTags(this.state.selectedGoal.selectedMajors, 'majors', null, true)}
-                       <View className="clear" />
                      </View>
 
-                     <View>
+                     <View style={[styles.rowDirection,styles.flexWrap]}>
                        {(this.state.selectedGoal.intensity) && (
-                         <View className="top-margin-20 relative-column-33 center-text">
-                           <Text className="description-text-2 description-text-color row-10">Intensity</Text>
-                           <Text>{this.state.selectedGoal.intensity}</Text>
+                         <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
+                           <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Intensity</Text>
+                           <Text style={[styles.standardText]}>{this.state.selectedGoal.intensity}</Text>
                          </View>
                        )}
 
                        {(this.state.selectedGoal.budget) && (
-                         <View className="top-margin-20 relative-column-33 center-text">
-                           <Text className="description-text-2 description-text-color row-10">Budget</Text>
-                           <Text>{this.state.selectedGoal.budget}</Text>
+                         <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
+                           <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Budget</Text>
+                           <Text style={[styles.standardText]}>{this.state.selectedGoal.budget}</Text>
                          </View>
                        )}
 
                        {(this.state.selectedGoal.status) && (
-                         <View className="top-margin-20 relative-column-33 center-text">
-                           <Text className="description-text-2 description-text-color row-10">Status</Text>
-                           <Text>{this.state.selectedGoal.status}</Text>
+                         <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
+                           <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Status</Text>
+                           <Text style={[styles.standardText]}>{this.state.selectedGoal.status}</Text>
                          </View>
                        )}
-                       <View className="clear" />
                      </View>
 
                      {(this.state.selectedGoal.successDefined) && (
-                       <View className="top-margin-20">
-                         <Text className="description-text-2 description-text-color row-10">Success Defined</Text>
-                         <Text>{this.state.selectedGoal.successDefined}</Text>
+                       <View style={[styles.topMargin20]}>
+                         <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Success Defined</Text>
+                         <Text style={[styles.standardText]}>{this.state.selectedGoal.successDefined}</Text>
                        </View>
                      )}
 
                      {(this.state.selectedGoal.strategies && this.state.selectedGoal.strategies.length > 0) && (
-                       <View className="standard-border padding-20 top-margin-20">
-                        <Text className="heading-text-6">Strategies & Tactics</Text>
+                       <View style={[styles.standardBorder,styles.padding20,styles.topMargin20]}>
+                        <Text style={[styles.headingText6]}>Strategies & Tactics</Text>
                         {this.state.selectedGoal.strategies.map((item, optionIndex) =>
-                          <View key={ item.name} className="row-10">
-                            <Text className="description-text-1">Strategy #{optionIndex + 1}: {item.name}</Text>
+                          <View key={ item.name} style={[styles.row10]}>
+                            <Text style={[styles.descriptionText1]}>Strategy #{optionIndex + 1}: {item.name}</Text>
                             {(item.tactics && item.tactics.length > 0) && (
-                              <View className="row-10 left-padding-40">
+                              <View style={[styles.row10,styles.leftPadding40]}>
                                 {item.tactics.map((item2, optionIndex2) =>
                                   <View key={item2}>
-                                    <Text className="description-text-3">Tactic #{optionIndex2 + 1}: {item2}</Text>
+                                    <Text style={[styles.descriptionText3]}>Tactic #{optionIndex2 + 1}: {item2}</Text>
                                   </View>
                                 )}
                               </View>
@@ -1002,51 +1009,55 @@ class GoalDetails extends Component {
                      )}
 
                      {(this.state.selectedGoal.progress && this.state.selectedGoal.progress.length > 0) && (
-                       <View className="standard-border padding-20 top-margin-20">
-                        <Text className="heading-text-6">Progress</Text>
+                       <View style={[styles.standardBorder,styles.padding20,styles.topMargin20]}>
+                        <Text style={[styles.headingText6]}>Progress</Text>
                         {this.state.selectedGoal.progress.map((item, optionIndex) =>
-                          <View key={item.value} className="row-10">
-                            <View className="fixed-column-120">
-                              <Text className="description-text-1">{item.date}</Text>
+                          <View key={item.value} style={[styles.row10,styles.rowDirection]}>
+                            <View style={[styles.width80]}>
+                              <Text style={[styles.descriptionText1]}>{item.date}</Text>
                             </View>
-                            <View className="calc-column-offset-120 left-padding">
-                              <Text className="description-text-1">{item.value}</Text>
+                            <View style={[styles.calcColumn140,styles.leftPadding]}>
+                              <Text style={[styles.descriptionText1]}>{item.value}</Text>
                             </View>
-                            <View className="clear" />
-
                           </View>
                         )}
 
                        </View>
                      )}
 
-                     <View className="top-margin-40 center-text">
-                       <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin]} onPress={() => this.setState({ showGoalDetails: false, showHelpOutWidget: true })}><Text style={[styles.standardText,styles.whiteColor]}>Help Out</Text></TouchableOpacity>
-                       <TouchableOpacity style={[styles.btnPrimary, styles.ctaBorder, styles.flexCenter,styles.leftMargin]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                     <View style={[styles.topMargin40,styles.centerText,styles.rowDirection]}>
+                        <View style={[styles.flex50,styles.rightPadding]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.setState({ showGoalDetails: false, showHelpOutWidget: true })}><Text style={[styles.standardText,styles.whiteColor]}>Help Out</Text></TouchableOpacity>
+                        </View>
+                        <View style={[styles.flex50,styles.leftPadding]}>
+                          <TouchableOpacity style={[styles.btnPrimary, styles.ctaBorder, styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                        </View>
                      </View>
                   </View>
                 )}
 
                 {(this.state.showHelpOutWidget) && (
-                  <View key="showHelpOutWidget" className="full-width padding-20">
+                  <View key="showHelpOutWidget" style={[styles.flex1,styles.padding20]}>
 
                     {(this.state.showConfirmation) ? (
-                      <View className="flex-container flex-center full-space">
+                      <View style={[styles.flexCenter,styles.flex1]}>
                         <View>
-                          <View className="super-spacer" />
+                          <View style={[styles.superSpacer]} />
 
-                          <Image source={{ uri: celebrationIcon}} className={"image-auto-100 center-horizontally"} style={(this.state.wallow) ? { transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)', position: 'relative', transform: 'translate(50%)' } : { transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)', position: 'relative', transform: 'translate(10%)' }}/>
-
-                          <View className="spacer" /><View className="spacer" /><View className="spacer" />
-
-                          <View className="horizontal-padding">
-                            <Text className="heading-text-1 center-text cta-color bold-text">You're Awesome!</Text>
-                            <Text className="center-text bold-text row-20 description-text-color">Thanks for helping {this.state.profileData.firstName} out! We sent an email to both of you with details and your suggestion will be pinned to their goal profile for future reference.</Text>
+                          <View style={[styles.flexCenter]}>
+                            <Image source={{ uri: celebrationIcon}} style={(this.state.wallow) ? [styles.square100,styles.contain,{ transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)', position: 'relative', transform: 'translate(50%)' }] : [styles.square100,styles.contain,{ transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)', position: 'relative', transform: 'translate(10%)' }]}/>
                           </View>
 
-                          <View className="spacer" /><View className="spacer" /><View className="spacer" />
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                          <View className="full-width center-text">
+                          <View style={[styles.horizontalPadding30]}>
+                            <Text style={[styles.headingText1,styles.centerText,styles.ctaColor,styles.boldText]}>You're Awesome!</Text>
+                            <Text style={[styles.centerText,styles.boldText,styles.row20,styles.descriptionTextColor]}>Thanks for helping {this.state.profileData.firstName} out! We sent an email to both of you with details and your suggestion will be pinned to their goal profile for future reference.</Text>
+                          </View>
+
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                          <View style={[styles.centerText]}>
                             {(this.state.wallowing) ? (
                               <TouchableOpacity style={[styles.btnPrimary,styles.rightMargin,styles.errorBackgroundColor,styles.flexCenter]} onPress={() => this.stopWallowing()}><Text style={[styles.standardText,styles.whiteColor]}>Stop this Nonsense</Text></TouchableOpacity>
                             ) : (
@@ -1056,7 +1067,7 @@ class GoalDetails extends Component {
                             <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.leftMargin,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Help Others</Text></TouchableOpacity>
                           </View>
 
-                          <View className="spacer" /><View className="spacer" /><View className="spacer" />
+                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
                         </View>
                       </View>
@@ -1064,86 +1075,74 @@ class GoalDetails extends Component {
                       <View>
                         {(this.state.profileData) && (
                           <View>
-                            <Text className="heading-text-2 full-width center-text">Help {this.state.profileData.firstName} {this.state.profileData.lastName} Achieve Their Goal</Text>
-                            <Text className="heading-text-5 top-margin description-text-color full-width center-text">{this.state.selectedGoal.title} by {convertDateToString(new Date(this.state.selectedGoal.deadline),"datetime-2")}</Text>
-                            <View className="spacer" /><View className="spacer" />
+                            <Text style={[styles.headingText2,styles.centerText]}>Help {this.state.profileData.firstName} {this.state.profileData.lastName} Achieve Their Goal</Text>
+                            <Text style={[styles.headingText5,styles.topMargin,styles.descriptionTextColor,styles.centerText]}>{this.state.selectedGoal.title} by {convertDateToString(new Date(this.state.selectedGoal.deadline),"datetime-2")}</Text>
+                            <View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                            <Text className="heading-text-5 row-20">Click an icon to provide a resource <Text className="error-color bold-text">*</Text></Text>
+                            <Text style={[styles.headingText5,styles.row20]}>Click an icon to provide a resource <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
 
-                            <View className="row-10">
-                              <View className="float-left">
-                                <TouchableOpacity className="background-button" onPress={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
-                                  <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} className="image-auto-20" />
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View>
+                                <TouchableOpacity onPress={(this.state.showPeople) ? () => this.setState({ showPeople: false }) : () => this.setState({ showPeople: true })}>
+                                  <Image source={(this.state.showPeople) ? { uri: addPeopleIconBlue} : { uri: addPeopleIconDark}} style={[styles.square20,styles.contain]} />
                                 </TouchableOpacity>
                               </View>
-                              <View className="float-left left-padding-20">
-                                <TouchableOpacity className="background-button" onPress={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
-                                  <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} className="image-auto-20"/>
+                              {/*
+                              <View style={[styles.leftPadding20]}>
+                                <TouchableOpacity onPress={(this.state.showLink) ? () => this.setState({ showLink: false }) : () => this.setState({ showLink: true })}>
+                                  <Image source={(this.state.showLink) ? { uri: linkIconBlue} : { uri: linkIcon}} style={[styles.square20,styles.contain]}/>
+                                </TouchableOpacity>
+                              </View>*/}
+                              <View style={[styles.leftPadding20]}>
+                                <TouchableOpacity onPress={(this.state.showProject) ? () => this.setState({ showProject: false }) : () => this.setState({ showProject: true })}>
+                                  <Image source={(this.state.showProject) ? { uri: projectsIconBlue} : { uri: projectsIconDark}} style={[styles.square20,styles.contain]} />
                                 </TouchableOpacity>
                               </View>
-                              <View className="float-left left-padding-20">
-                                <TouchableOpacity className="background-button" onPress={(this.state.showSchedule) ? () => this.setState({ showSchedule: false }) : () => this.setState({ showSchedule: true })}>
-                                  <Image source={(this.state.showSchedule) ? { uri: phoneIconBlue} : { uri: phoneIconDark}} className="image-auto-20" />
+                              <View style={[styles.leftPadding20]}>
+                                <TouchableOpacity onPress={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })} style={[styles.rowDirection]}>
+                                  <Image source={(this.state.showPaths) ? { uri: pathsIconBlue} : { uri: pathsIconDark}} style={[styles.square20,styles.contain]} />
+                                  <Image source={(this.state.showPaths) ? { uri: tagIconBlue} : { uri: tagIconDark}} style={[styles.square9,styles.rightMargin5]} />
                                 </TouchableOpacity>
                               </View>
-                              <View className="float-left left-padding-20">
-                                <TouchableOpacity className="background-button" onPress={(this.state.showProject) ? () => this.setState({ showProject: false }) : () => this.setState({ showProject: true })}>
-                                  <Image source={(this.state.showProject) ? { uri: projectsIconBlue} : { uri: projectsIconDark}} className="image-auto-20" />
-                                </TouchableOpacity>
-                              </View>
-                              <View className="float-left left-padding-20">
-                                <TouchableOpacity className="background-button" onPress={(this.state.showPaths) ? () => this.setState({ showPaths: false }) : () => this.setState({ showPaths: true })}>
-                                  <Image source={(this.state.showPaths) ? { uri: pathsIconBlue} : { uri: pathsIconDark}} className="image-auto-20 float-left" />
-                                  <Image source={(this.state.showPaths) ? { uri: tagIconBlue} : { uri: tagIconDark}} className="image-auto-9 float-left right-margin-negative-24 right-margin-2" />
-                                  <View className="clear" />
-                                </TouchableOpacity>
-                              </View>
-
-                              <View className="clear" />
-                              <ReactTooltip />
                             </View>
 
                             {(this.state.showPeople) && (
-                              <View className="row-10">
-                                <View>
-                                  <View className="float-left">
-                                    <Text className="heading-text-5 bottom-margin-20">Suggest People Who Can Help</Text>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View>
+                                    <Text style={[styles.headingText5,styles.bottomMargin20]}>Suggest People Who Can Help</Text>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <TouchableOpacity className="background-button" onPress={() => this.addItem('entity')}>
-                                      <View className="cta-border padding-7 circle-corners">
-                                        <Image source={{ uri: addIcon}} className="image-auto-15" />
+                                  <View style={[styles.leftPadding]}>
+                                    <TouchableOpacity onPress={() => this.addItem('entity')}>
+                                      <View style={[styles.ctaBorder,styles.padding7,{ borderRadius: 14 }]}>
+                                        <Image source={{ uri: addIcon}} style={[styles.square14,styles.contain]} />
                                       </View>
                                     </TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
-                                  <ReactTooltip />
                                 </View>
 
-                                <View className="half-spacer" />
+                                <View style={[styles.halfSpacer]} />
 
                                 {(this.state.selectedPeople && this.state.selectedPeople.length > 0) ? (
                                   <View>
                                     {this.state.selectedPeople.map((item, optionIndex) =>
                                       <View key={item}>
-                                        <View className="top-margin-15">
-                                          <View className="float-left">
-                                            <Text className="heading-text-6">Contact #{optionIndex + 1}</Text>
+                                        <View style={[styles.topMargin15,styles.rowDirection]}>
+                                          <View>
+                                            <Text style={[styles.headingText6]}>Contact #{optionIndex + 1}</Text>
                                           </View>
-                                          <View className="float-left left-padding">
-                                            <TouchableOpacity className="background-button" onPress={() => this.removeItem('entity', optionIndex)}>
-                                              <View className="error-border padding-7 circle-corners">
-                                                <Image source={{ uri: closeIcon}} className="image-auto-10" />
+                                          <View style={[styles.leftPadding]}>
+                                            <TouchableOpacity onPress={() => this.removeItem('entity', optionIndex)}>
+                                              <View style={[styles.errorBorder,styles.padding7, { borderRadius: 12 }]}>
+                                                <Image source={{ uri: closeIcon}} style={[styles.square10,styles.contain]} />
                                               </View>
                                             </TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
-                                          <ReactTooltip />
                                         </View>
 
-                                        <View className="row-10">
-                                          <View className="container-left">
-                                            <Text className="profile-label">First Name</Text>
+                                        <View style={[styles.row10]}>
+                                          <View>
+                                            <Text style={[styles.row10]}>First Name</Text>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("people|firstName|" + optionIndex, text)}
@@ -1152,8 +1151,8 @@ class GoalDetails extends Component {
                                               placeholderTextColor="grey"
                                             />
                                           </View>
-                                          <View className="container-right">
-                                            <Text className="profile-label">Last Name</Text>
+                                          <View>
+                                            <Text style={[styles.row10]}>Last Name</Text>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("people|lastName|" + optionIndex, text)}
@@ -1162,11 +1161,10 @@ class GoalDetails extends Component {
                                               placeholderTextColor="grey"
                                             />
                                           </View>
-                                          <View className="clear" />
                                         </View>
-                                        <View className="row-10">
-                                          <View className="container-left">
-                                            <Text className="profile-label">Email</Text>
+                                        <View style={[styles.row10]}>
+                                          <View>
+                                            <Text style={[styles.row10]}>Email</Text>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("people|email|" + optionIndex, text)}
@@ -1175,8 +1173,8 @@ class GoalDetails extends Component {
                                               placeholderTextColor="grey"
                                             />
                                           </View>
-                                          <View className="container-right">
-                                            <Text className="profile-label">Relationship</Text>
+                                          <View>
+                                            <Text style={[styles.row10]}>Relationship</Text>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("people|relationship|" + optionIndex, text)}
@@ -1185,11 +1183,18 @@ class GoalDetails extends Component {
                                               placeholderTextColor="grey"
                                             />
                                           </View>
-                                          <View className="clear" />
                                         </View>
-                                        <View className="row-10">
-                                          <Text className="profile-label">Why are you connecting {this.state.profileData.firstName} to this person?</Text>
-                                          <textarea type="text" className="text-field" placeholder="How can this peron help?" name={"people|reason|" + optionIndex} value={item.reason} onChange={this.formChangeHandler}/>
+                                        <View style={[styles.row10]}>
+                                          <Text style={[styles.row10]}>Why are you connecting {this.state.profileData.firstName} to this person?</Text>
+                                          <TextInput
+                                            style={styles.textInput}
+                                            onChangeText={(text) => this.formChangeHandler("people|reason|" + optionIndex, text)}
+                                            value={item.reason}
+                                            placeholder="How can this peron help?"
+                                            placeholderTextColor="grey"
+                                            multiline={true}
+                                            numberOfLines={4}
+                                          />
                                         </View>
 
                                         <View style={[styles.horizontalLine]} />
@@ -1198,56 +1203,54 @@ class GoalDetails extends Component {
                                   </View>
                                 ) : (
                                   <View>
-                                   <View className="spacer" /><View className="spacer" />
+                                   <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                    <View style={[styles.horizontalLine]} />
                                   </View>
                                 )}
 
                               </View>
                             )}
-
+                            {/*
                             {(this.state.showLink) && (
-                              <View className="row-10">
-                                <View>
-                                  <View className="float-left">
-                                    <Text className="heading-text-5 bottom-margin-20">Share a Link to a Video, Event, Course, Article, Report, or Job Opportunity</Text>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn110]}>
+                                    <Text style={[styles.headingText5,styles.bottomMargin20]}>Share a Link to a Video, Event, Course, Article, Report, or Job Opportunity</Text>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <TouchableOpacity className="background-button" onPress={() => this.addItem('link')}>
-                                      <View className="cta-border padding-7 circle-corners">
-                                        <Image source={{ uri: addIcon}} className="image-auto-15" />
+                                  <View style={[styles.leftPadding,styles.width40]}>
+                                    <TouchableOpacity onPress={() => this.addItem('link')}>
+                                      <View style={[styles.ctaBorder,styles.padding7, { borderRadius: 15 }]}>
+                                        <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]} />
                                       </View>
                                     </TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
-                                  <ReactTooltip />
+
+
                                 </View>
 
-                                <View className="half-spacer" />
+                                <View style={[styles.halfSpacer]} />
 
                                 {(this.state.selectedLinks && this.state.selectedLinks.length > 0) ? (
                                   <View>
                                     {this.state.selectedLinks.map((item, optionIndex) =>
                                       <View key={item}>
 
-                                        <View className="top-margin-15">
-                                          <View className="float-left">
-                                            <Text className="heading-text-6">Link Resource #{optionIndex + 1}</Text>
+                                        <View style={[styles.topMargin15,styles.rowDirection]}>
+                                          <View>
+                                            <Text style={[styles.headingText6]}>Link Resource #{optionIndex + 1}</Text>
                                           </View>
-                                          <View className="float-left left-padding">
-                                            <TouchableOpacity className="background-button" onPress={() => this.removeItem('link', optionIndex)}>
-                                              <View className="error-border padding-7 circle-corners">
-                                                <Image source={{ uri: closeIcon}} className="image-auto-10"/>
+                                          <View style={[styles.leftPadding]}>
+                                            <TouchableOpacity onPress={() => this.removeItem('link', optionIndex)}>
+                                              <View style={[styles.errorBorder,styles.padding7, { borderRadus: 12 }]}>
+                                                <Image source={{ uri: closeIcon}} style={[styles.square10,styles.contain]}/>
                                               </View>
                                             </TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
-                                          <ReactTooltip />
                                         </View>
 
-                                        <View className="bottom-padding">
-                                          <View className="container-left">
-                                            <Text className="profile-label">Which type of resource is this?</Text>
+                                        <View style={[styles.bottomPadding]}>
+                                          <View>
+                                            <Text style={[styles.row10]}>Which type of resource is this?</Text>
                                             {(Platform.OS === 'ios') ? (
                                               <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Category', selectedIndex: null, selectedName: "link|category|" + optionIndex, selectedValue: item.category, selectedOptions: this.state.linkCategoryOptions, selectedSubKey: null })}>
                                                 <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
@@ -1271,8 +1274,8 @@ class GoalDetails extends Component {
                                               </View>
                                             )}
                                           </View>
-                                          <View className="container-right">
-                                            <Text className="profile-label">Paste the actual link below</Text>
+                                          <View>
+                                            <Text style={[styles.row10]}>Paste the actual link below</Text>
                                             <TextInput
                                               style={styles.textInput}
                                               onChangeText={(text) => this.formChangeHandler("link|url|" + optionIndex, text)}
@@ -1280,104 +1283,16 @@ class GoalDetails extends Component {
                                               placeholder="Http..."
                                               placeholderTextColor="grey"
                                             />
-                                            {(item.url && !item.url.startsWith('http')) && (
-                                              <View className="row-5">
-                                                <Text className="error-color bold-text description-text-2">The link must start with http</Text>
-                                              </View>
-                                            )}
-                                          </View>
-                                          <View className="clear" />
-                                          <View className="spacer" />
-                                        </View>
-
-                                        <View style={[styles.horizontalLine]} />
-                                      </View>
-                                    )}
-                                  </View>
-                                ) : (
-                                  <View>
-                                   <View className="spacer" /><View className="spacer" />
-                                   <View style={[styles.horizontalLine]} />
-                                  </View>
-                                )}
-                              </View>
-                            )}
-
-                            {(this.state.showSchedule) && (
-                              <View className="row-10">
-                                <View>
-                                  <View className="float-left">
-                                    <Text className="heading-text-5 bottom-margin-20">Offer Some Times You Are Available to Chat</Text>
-                                  </View>
-                                  <View className="float-left left-padding">
-                                    <TouchableOpacity className="background-button" onPress={() => this.addItem('time')}>
-                                      <View className="cta-border padding-7 circle-corners">
-                                        <Image source={{ uri: addIcon}} className="image-auto-15" />
-                                      </View>
-                                    </TouchableOpacity>
-                                  </View>
-                                  <View className="clear" />
-                                  <ReactTooltip />
-                                </View>
-
-                                <View className="half-spacer" />
-
-                                {(this.state.selectedTimes && this.state.selectedTimes.length > 0) ? (
-                                  <View>
-                                    {this.state.selectedTimes.map((item, optionIndex) =>
-                                      <View key={item}>
-                                        <View className="row-10">
-                                          <View className="fixed-column-40">
-                                            <View className="mini-spacer" /><View className="mini-spacer" />
-                                            <TouchableOpacity className="background-button" onPress={() => this.removeItem('time', optionIndex)}>
-                                              <View className="error-border padding-10 circle-corners">
-                                                <Image source={{ uri: closeIcon}} className="image-auto-13" />
-                                              </View>
-                                            </TouchableOpacity>
-                                          </View>
-                                          <View className="calc-column-offset-40">
-                                            <input type="datetime-local" className="date-picker" placeholder="Time to chat" name={"time|time|" + optionIndex} value={item.time} onChange={this.formChangeHandler} />
-                                            {/*
-                                            {(Platform.OS === 'ios') ? (
-                                              <View style={[styles.rowDirection]}>
-                                                <View style={[styles.calcColumn180]}>
-                                                  <Text style={[styles.standardText,styles.row10]}>Time to Chat</Text>
-                                                </View>
-                                                <View style={[styles.width120,styles.topPadding5]}>
-                                                  <DateTimePicker
-                                                    testID="DateTimePicker"
-                                                    value={(this.state.dateOfBirth) ? convertStringToDate(item.ti,'dateOnly') : new Date()}
-                                                    mode={'date'}
-                                                    is24Hour={true}
-                                                    display="default"
-                                                    onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                                                    minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                                                    maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                                                  />
-                                                </View>
+                                            {(item.url && !item.url.startsWith('http')) ? (
+                                              <View style={[styles.row5]}>
+                                                <Text style={[styles.errorColor,styles.boldText,styles.descriptionText2]}>The link must start with http</Text>
                                               </View>
                                             ) : (
-                                              <View>
-                                                <View style={[styles.row5]}>
-                                                  <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                                </View>
-                                                <View>
-                                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
-                                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                                      <View style={[styles.calcColumn115]}>
-                                                        <Text style={[styles.descriptionText1]}>{this.state.dateOfBirth}</Text>
-                                                      </View>
-                                                      <View style={[styles.width20,styles.topMargin5]}>
-                                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                                      </View>
-                                                    </View>
-                                                  </TouchableOpacity>
-                                                </View>
-                                              </View>
-                                            )}*/}
+                                              <View />
+                                            )}
                                           </View>
-                                          <View className="clear" />
-                                          <ReactTooltip />
+
+                                          <View style={[styles.spacer]} />
                                         </View>
 
                                         <View style={[styles.horizontalLine]} />
@@ -1386,53 +1301,53 @@ class GoalDetails extends Component {
                                   </View>
                                 ) : (
                                   <View>
-                                   <View className="spacer" /><View className="spacer" />
+                                   <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                    <View style={[styles.horizontalLine]} />
                                   </View>
                                 )}
                               </View>
-                            )}
+                            )}*/}
 
                             {(this.state.showProject) && (
-                              <View className="row-10">
-                                <View>
-                                  <View className="float-left">
-                                    <Text className="heading-text-5 bottom-margin-20">Suggest Projects to Work On</Text>
+                              <View style={[styles.row10]}>
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn110]}>
+                                    <Text style={[styles.headingText5,styles.bottomMargin20]}>Suggest Projects to Work On</Text>
                                   </View>
-                                  <View className="float-left left-padding">
-                                    <TouchableOpacity className="background-button" onPress={() => this.addItem('project')}>
-                                      <View className="cta-border padding-7 circle-corners">
-                                        <Image source={{ uri: addIcon}} className="image-auto-15"/>
+                                  <View style={[styles.leftPadding,styles.width40]}>
+                                    <TouchableOpacity onPress={() => this.addItem('project')}>
+                                      <View style={[styles.ctaBorder,styles.padding7, { borderRadius: 15 }]}>
+                                        <Image source={{ uri: addIcon}} style={[styles.square15,styles.contain]}/>
                                       </View>
                                     </TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
-                                  <ReactTooltip />
+
+
                                 </View>
 
-                                <View className="half-spacer" />
+                                <View style={[styles.halfSpacer]} />
 
                                 {(this.state.selectedProjects && this.state.selectedProjects.length > 0) ? (
                                   <View>
                                     {this.state.selectedProjects.map((item, optionIndex) =>
                                       <View key={item}>
-                                        <View className="top-margin-15">
-                                          <View className="float-left">
-                                            <Text className="heading-text-6">Suggested Project #{optionIndex + 1}</Text>
+                                        <View style={[styles.topMargin15,styles.rowDirection]}>
+                                          <View>
+                                            <Text style={[styles.headingText6]}>Suggested Project #{optionIndex + 1}</Text>
                                           </View>
-                                          <View className="float-left left-padding">
-                                            <TouchableOpacity className="background-button" onPress={() => this.removeItem('project', optionIndex)}>
-                                              <View className="error-border padding-7 circle-corners">
-                                                <Image source={{ uri: closeIcon}} className="image-auto-10"/>
+                                          <View style={[styles.leftPadding]}>
+                                            <TouchableOpacity onPress={() => this.removeItem('project', optionIndex)}>
+                                              <View style={[styles.errorBorder,styles.padding7, { borderRadius: 12 }]}>
+                                                <Image source={{ uri: closeIcon}} style={[styles.square10,styles.contain]}/>
                                               </View>
                                             </TouchableOpacity>
                                           </View>
-                                          <View className="clear" />
-                                          <ReactTooltip />
+
+
                                         </View>
 
-                                        <View className="row-10">
-                                          <Text className="profile-label">Name</Text>
+                                        <View style={[styles.row10]}>
+                                          <Text style={[styles.row10]}>Name</Text>
                                           <TextInput
                                             style={styles.textInput}
                                             onChangeText={(text) => this.formChangeHandler("project|name|" + optionIndex, text)}
@@ -1441,10 +1356,10 @@ class GoalDetails extends Component {
                                             placeholderTextColor="grey"
                                           />
                                         </View>
-                                        <View className="row-10">
-                                          <Text className="profile-label">Description</Text>
+                                        <View style={[styles.row10]}>
+                                          <Text style={[styles.row10]}>Description</Text>
                                           <TextInput
-                                            style={styles.textInput}
+                                            style={styles.textArea}
                                             onChangeText={(text) => this.formChangeHandler("project|description|" + optionIndex, text)}
                                             value={item.description}
                                             placeholder="Description of project..."
@@ -1459,7 +1374,7 @@ class GoalDetails extends Component {
                                   </View>
                                 ) : (
                                   <View>
-                                   <View className="spacer" /><View className="spacer" />
+                                   <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                    <View style={[styles.horizontalLine]} />
                                   </View>
                                 )}
@@ -1468,12 +1383,12 @@ class GoalDetails extends Component {
                             )}
 
                             {(this.state.showPaths) && (
-                              <View className="row-10">
-                                <Text className="heading-text-5 bottom-margin-20">Suggest Career Paths</Text>
-                                <View className="spacer" />
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.headingText5,styles.bottomMargin20]}>Suggest Career Paths</Text>
+                                <View style={[styles.spacer]} />
 
-                                <View>
-                                  <View className="calc-column-offset-70">
+                                <View style={[styles.rowDirection]}>
+                                  <View style={[styles.calcColumn130]}>
                                     <TextInput
                                       style={styles.textInput}
                                       onChangeText={(text) => this.formChangeHandler("searchCareers", text)}
@@ -1482,16 +1397,16 @@ class GoalDetails extends Component {
                                       placeholderTextColor="grey"
                                     />
                                   </View>
-                                  <View className="fixed-column-70 left-padding">
+                                  <View style={[styles.width70,styles.leftPadding]}>
                                     <TouchableOpacity style={(this.state.unready) ? [styles.btnSquarish,styles.mediumBackground,styles.standardBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.unready} onPress={() => this.addItem('career')}><Text style={[styles.standardText,styles.whiteColor]}>Add</Text></TouchableOpacity>
                                   </View>
-                                  <View className="clear" />
+
                                 </View>
 
-                                <View className="spacer" />
+                                <View style={[styles.spacer]} />
 
-                                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-2 error-color row-5">{this.state.errorMessage}</Text>}
-                                {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-2 cta-color row-5">{this.state.successMessage}</Text>}
+                                {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.errorMessage}</Text>}
+                                {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.row5]}>{this.state.successMessage}</Text>}
 
                                 {(this.state.searchIsAnimatingCareers) ? (
                                   <View style={[styles.flexCenter,styles.flex1]}>
@@ -1513,17 +1428,17 @@ class GoalDetails extends Component {
                                   <View>
                                     <View>
                                       {(this.state.careerOptions && this.state.careerOptions.length > 0) && (
-                                        <View className="card top-margin">
+                                        <View style={[styles.card,styles.topMargin]}>
                                           {this.state.careerOptions.map((value, optionIndex) =>
-                                            <View key={value._id} className="left-text bottom-margin-5 full-width">
-                                              <TouchableOpacity className="background-button full-width row-5 left-text" onPress={() => this.searchItemClicked(value, 'career')}>
-                                                <View className="full-width">
-                                                  <View className="fixed-column-40">
-                                                    <View className="mini-spacer" />
-                                                    <Image source={{ uri: careerMatchesIconDark}} className="image-auto-22" />
+                                            <View key={value._id} style={[styles.bottomMargin5]}>
+                                              <TouchableOpacity style={[styles.row5]} onPress={() => this.searchItemClicked(value, 'career')}>
+                                                <View style={[styles.rowDirection]}>
+                                                  <View style={[styles.width40]}>
+                                                    <View style={[styles.miniSpacer]} />
+                                                    <Image source={{ uri: careerMatchesIconDark}} style={[styles.square22,styles.contain]} />
                                                   </View>
-                                                  <View className="calc-column-offset-40">
-                                                    <Text className="cta-color">{value.name}</Text>
+                                                  <View style={[styles.calcColumn100]}>
+                                                    <Text style={[styles.standardText,styles.ctaColor]}>{value.name}</Text>
                                                   </View>
                                                 </View>
                                               </TouchableOpacity>
@@ -1535,11 +1450,11 @@ class GoalDetails extends Component {
 
                                     <View>
                                       {this.renderTags(this.state.selectedCareers, 'careers', true)}
-                                      <View className="clear" />
+
                                     </View>
 
                                     <View>
-                                     <View className="spacer" /><View className="spacer" />
+                                     <View style={[styles.spacer]} /><View style={[styles.spacer]} />
                                      <View style={[styles.horizontalLine]} />
                                     </View>
                                   </View>
@@ -1547,64 +1462,27 @@ class GoalDetails extends Component {
                               </View>
                             )}
 
-                            <Text className="heading-text-5 row-20">Share an accompanying message <Text className="error-color bold-text">*</Text></Text>
-                            <textarea className="text-field" type="text" placeholder="Add a message" name="message" value={this.state.message} onChange={this.formChangeHandler} />
+                            <Text style={[styles.headingText5,styles.row20]}>Share an accompanying message <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                            <TextInput
+                              style={styles.textArea}
+                              onChangeText={(text) => this.formChangeHandler("message", text)}
+                              value={this.state.message}
+                              placeholder="Add a message"
+                              placeholderTextColor="grey"
+                              multiline={true}
+                              numberOfLines={4}
+                            />
 
-                            {(!this.state.loggedIn) && (
-                              <View className="top-margin-20">
-                                <View style={[styles.horizontalLine]} />
+                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText1,styles.row5,styles.errorColor]}>{this.state.errorMessage}</Text>}
+                            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText1,styles.row5,styles.ctaColor]}>{this.state.successMessage}</Text>}
 
-                                <View className="row-20">
-                                  <Text className="heading-text-5">Your Information</Text>
-
-                                  <View className="row-10">
-                                    <View className="container-left">
-                                      <Text className="profile-label">First Name</Text>
-                                      <TextInput
-                                        style={styles.textInput}
-                                        onChangeText={(text) => this.formChangeHandler("cuFirstName", text)}
-                                        value={this.state.cuFirstName}
-                                        placeholder="Your first name"
-                                        placeholderTextColor="grey"
-                                      />
-                                    </View>
-                                    <View className="container-right">
-                                      <Text className="profile-label">Last Name</Text>
-                                      <TextInput
-                                        style={styles.textInput}
-                                        onChangeText={(text) => this.formChangeHandler("cuLastName", text)}
-                                        value={this.state.cuLastName}
-                                        placeholder="Your last name"
-                                        placeholderTextColor="grey"
-                                      />
-                                    </View>
-                                    <View className="clear" />
-                                  </View>
-                                  <View className="row-10">
-                                    <View className="container-left">
-                                      <Text className="profile-label">Email</Text>
-                                      <TextInput
-                                        style={styles.textInput}
-                                        onChangeText={(text) => this.formChangeHandler("emailId", text)}
-                                        value={this.state.emailId}
-                                        placeholder="Your email"
-                                        placeholderTextColor="grey"
-                                      />
-                                    </View>
-                                    <View className="clear" />
-                                  </View>
-
-                                </View>
-
+                            <View style={[styles.topPadding20,styles.rowDirection]}>
+                              <View style={[styles.flex50,styles.rightPadding]}>
+                                <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.sendResource()}><Text style={[styles.standardText,styles.whiteColor]}>Send</Text></TouchableOpacity>
                               </View>
-                            )}
-
-                            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text className="description-text-1 row-5 error-color">{this.state.errorMessage}</Text>}
-                            {(this.state.successMessage && this.state.successMessage !== '') && <Text className="description-text-1 row-5 cta-color">{this.state.successMessage}</Text>}
-
-                            <View className="top-padding-20">
-                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin]} onPress={() => this.sendResource()}><Text style={[styles.standardText,styles.whiteColor]}>Send Resource(s)</Text></TouchableOpacity>
-                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                              <View style={[styles.flex50,styles.leftPadding]}>
+                                <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Cancel</Text></TouchableOpacity>
+                              </View>
                             </View>
                           </View>
                         )}
