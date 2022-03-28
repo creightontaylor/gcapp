@@ -428,6 +428,9 @@ module.exports = StyleSheet.create({
   bottomMarginNegative18: {
     marginBottom: -18
   },
+  bottomMarginNegative35: {
+    marginBottom: -35
+  },
   bottomMargin: {
     marginBottom: 10
   },

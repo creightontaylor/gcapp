@@ -410,72 +410,56 @@ class Opportunities extends Component {
             problemTypeOptions, difficultyLevelOptions, popularityOptions, postDateOptions, pageSource });
 
           let placementPartners = []
-          if (orgFocus !== 'Placement') {
-            console.log('not a placement org')
+          Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
+          .then((response) => {
+            console.log('User details query attempted', response.data);
 
-            Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
-            .then((response) => {
-              console.log('User details query 1 attempted', response.data);
+            if (response.data.success) {
+               console.log('successfully retrieved user details')
 
-              if (response.data.success) {
-                 console.log('successfully retrieved user details')
+               const courseIds = response.data.user.courseIds
 
-                 const userDetails = response.data.user
-                 // let matchingCriteria = this.state.matchingCriteria
-                 // if (userDetails.matchingPreferences && userDetails.matchingPreferences.length > 0) {
-                 //   matchingCriteria = userDetails.matchingPreferences
-                 // }
-                 // console.log('show matchingCriteria: ', matchingCriteria, userDetails.matchingPreferences)
-                 const courseIds = response.data.user.courseIds
+               Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: email } })
+                .then((response2) => {
+                  console.log('query for assessment results worked');
 
-                 this.setState({ userDetails })
+                  if (response2.data.success) {
 
-                 Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: email } })
-                  .then((response2) => {
-                    console.log('query for assessment results worked');
+                    console.log('actual assessment results', response2.data)
 
-                    if (response2.data.success) {
+                    // let wpData = null
+                    // if (response.data.results.workPreferenceAnswers) {
+                    //   wpData
+                    // }
 
-                      console.log('actual assessment results in SubOpportunities', response2.data)
 
-                      let profile = response.data.user
-                      profile['workPreferences'] = response2.data.results.workPreferenceAnswers
-                      profile['interests'] = response2.data.results.interestScores
-                      profile['personality'] = response2.data.results.personalityScores
-                      profile['skills'] = response2.data.results.newSkillAnswers
-                      profile['gravitateValues'] = response2.data.results.topGravitateValues
-                      profile['employerValues'] = response2.data.results.topEmployerValues
+                    let profile = response.data.user
+                    profile['workPreferences'] = response2.data.results.workPreferenceAnswers
+                    profile['interests'] = response2.data.results.interestScores
+                    profile['personality'] = response2.data.results.personalityScores
+                    profile['skills'] = response2.data.results.newSkillAnswers
+                    profile['gravitateValues'] = response2.data.results.topGravitateValues
+                    profile['employerValues'] = response2.data.results.topEmployerValues
+                    profile['selectedGoal'] = this.props.selectedGoal
 
-                      // let matchingCriteria = this.state.matchingCriteria
-                      if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
-                        matchingCriteria = response.data.user.matchingPreferences
-                      }
-                      if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
-                        useCases = response.data.user.matchingUseCases
-                      }
-
-                      this.setState({ profile, matchingCriteria, useCases })
-                      // console.log('show pageSource here: ', this.props.pageSource)
-                      if (this.props.pageSource === 'Goal') {
-                        this.calculateMatches(true, true, false)
-                      }
-
-                    } else {
-                      console.log('no assessment results', response2.data)
-
-                      // let matchingCriteria = this.state.matchingCriteria
-                      if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
-                        matchingCriteria = response.data.user.matchingPreferences
-                      }
-                      if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
-                        useCases = response.data.user.matchingUseCases
-                      }
-                      this.setState({ matchingCriteria, useCases })
-
+                    // let matchingCriteria = this.state.matchingCriteria
+                    if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
+                      matchingCriteria = response.data.user.matchingPreferences
+                    }
+                    if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
+                      useCases = response.data.user.matchingUseCases
                     }
 
-                 }).catch((error) => {
-                    console.log('query for assessment results did not work', error);
+                    this.setState({ profile, matchingCriteria, useCases })
+
+                    console.log('show pageSource here: ', this.props.pageSource)
+                    if (this.props.pageSource === 'Goal') {
+                      this.calculateMatches(true, true, false, [this.props.pageSource], 1000, activeOrg)
+                    }
+
+                  } else {
+                    console.log('no assessment results', response2.data)
+
                     // let matchingCriteria = this.state.matchingCriteria
                     if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
                       matchingCriteria = response.data.user.matchingPreferences
@@ -484,219 +468,55 @@ class Opportunities extends Component {
                       useCases = response.data.user.matchingUseCases
                     }
                     this.setState({ matchingCriteria, useCases })
-                 })
+                  }
 
-                 Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email, includeCollaborations: true } })
-                 .then((response2) => {
-                  console.log('Projects query attempted', response2.data);
+               }).catch((error) => {
+                  console.log('query for assessment results did not work', error);
+                  // let matchingCriteria = this.state.matchingCriteria
+                  if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
+                    matchingCriteria = response.data.user.matchingPreferences
+                  }
+                  if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
+                    useCases = response.data.user.matchingUseCases
+                  }
+                  this.setState({ matchingCriteria, useCases })
+               })
 
-                    if (response2.data.success && response2.data.projects) {
-                      console.log('successfully retrieved projects')
+               Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
+               .then((response2) => {
+                 console.log('Org info query attempted within nested opportunities', response2.data);
 
-                      let profile = response.data.user
-                      profile['projects'] = response2.data.projects
-                      this.setState({ profile })
+                 if (response2.data.success) {
+                   console.log('org info query worked!')
 
-                    } else {
-                      console.log('no project data found', response2.data.message)
-                    }
-
-                 }).catch((error) => {
-                    console.log('Project query did not work', error);
-                 });
-
-                 Axios.get('https://www.guidedcompass.com/api/experience', { params: { emailId: email } })
-                 .then((response2) => {
-                  console.log('Experience query attempted', response2.data);
-
-                    if (response2.data.success && response2.data.experience) {
-                      console.log('successfully retrieved experience')
-
-                      let profile = response.data.user
-                      profile['experience'] = response2.data.experience
-                      this.setState({ profile })
-
-                    } else {
-                      console.log('no experience data found', response2.data.message)
-                    }
-
-                 }).catch((error) => {
-                    console.log('Experience query did not work', error);
-                 });
-
-                 Axios.get('https://www.guidedcompass.com/api/story', { params: { emailId: email } })
-                 .then((response2) => {
-                    console.log('Endorsement query worked', response2.data);
-
-                    if (response2.data.success) {
-
-                      if (response2.data.stories) {
-                        let profile = response.data.user
-                        profile['endorsements'] = response2.data.stories
-                        this.setState({ profile })
-                      }
-                    } else {
-                      console.log('no endorsements found: ', response2.data.message)
-                    }
-
-                 }).catch((error) => {
-                    console.log('Story query did not work', error);
-                 });
-
-                 const orgCode = activeOrg
-
-                 Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode } })
-                 .then((response2) => {
-                   console.log('Org info query attempted within nested opportunities', response2.data);
-
-                   if (response2.data.success) {
-                     console.log('org info query worked!')
-
-                     if (response2.data.orgInfo.placementPartners) {
-                       placementPartners = response2.data.orgInfo.placementPartners
-                     }
-
-                     let calculateMatches  = false
-                     if (this.props.calculateMatches) {
-                       calculateMatches = true
-                     }
-
-                     if (this.props.pageSource !== 'Goal') {
-                       this.retrievePostings(activeOrg, placementPartners, courseIds, pathway, calculateMatches)
-                     }
-
-                   } else {
-
-                     if (this.props.pageSource !== 'Goal') {
-                       if (userDetails.schoolDistrict === "Los Angeles Unified School District") {
-                         placementPartners = ['unite-la']
-                         this.retrievePostings(orgCode, placementPartners, courseIds, pathway)
-                       } else {
-                         console.log('catch all')
-                         this.retrievePostings(orgCode, placementPartners, courseIds, pathway)
-                       }
-                     }
+                   if (response2.data.orgInfo.placementPartners) {
+                     placementPartners = response2.data.orgInfo.placementPartners
                    }
-                 })
 
-              } else {
-               console.log('no user details data found', response.data.message)
-              }
-
-            }).catch((error) => {
-               console.log('User details query did not work', error);
-            });
-
-          } else {
-            //placement org
-
-            Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email } })
-            .then((response) => {
-              console.log('User details query attempted', response.data);
-
-              if (response.data.success) {
-                 console.log('successfully retrieved user details')
-
-                 const courseIds = response.data.user.courseIds
-
-                 Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: email } })
-                  .then((response2) => {
-                    console.log('query for assessment results worked');
-
-                    if (response2.data.success) {
-
-                      console.log('actual assessment results', response2.data)
-
-                      // let wpData = null
-                      // if (response.data.results.workPreferenceAnswers) {
-                      //   wpData
-                      // }
-
-
-                      let profile = response.data.user
-                      profile['workPreferences'] = response2.data.results.workPreferenceAnswers
-                      profile['interests'] = response2.data.results.interestScores
-                      profile['personality'] = response2.data.results.personalityScores
-                      profile['skills'] = response2.data.results.newSkillAnswers
-                      profile['gravitateValues'] = response2.data.results.topGravitateValues
-                      profile['employerValues'] = response2.data.results.topEmployerValues
-
-                      // let matchingCriteria = this.state.matchingCriteria
-                      if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
-                        matchingCriteria = response.data.user.matchingPreferences
-                      }
-                      if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
-                        useCases = response.data.user.matchingUseCases
-                      }
-
-                      this.setState({ profile, matchingCriteria, useCases })
-
-                      console.log('show pageSource here: ', this.props.pageSource)
-                      if (this.props.pageSource === 'Goal') {
-                        this.calculateMatches(true, true, false)
-                      }
-
-                    } else {
-                      console.log('no assessment results', response2.data)
-
-                      // let matchingCriteria = this.state.matchingCriteria
-                      if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
-                        matchingCriteria = response.data.user.matchingPreferences
-                      }
-                      if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
-                        useCases = response.data.user.matchingUseCases
-                      }
-                      this.setState({ matchingCriteria, useCases })
-                    }
-
-                 }).catch((error) => {
-                    console.log('query for assessment results did not work', error);
-                    // let matchingCriteria = this.state.matchingCriteria
-                    if (response.data.user.matchingPreferences && response.data.user.matchingPreferences.length > 0) {
-                      matchingCriteria = response.data.user.matchingPreferences
-                    }
-                    if (response.data.user.matchingUseCases && response.data.user.matchingUseCases.length > 0) {
-                      useCases = response.data.user.matchingUseCases
-                    }
-                    this.setState({ matchingCriteria, useCases })
-                 })
-
-                 Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
-                 .then((response2) => {
-                   console.log('Org info query attempted within nested opportunities', response2.data);
-
-                   if (response2.data.success) {
-                     console.log('org info query worked!')
-
-                     if (response2.data.orgInfo.placementPartners) {
-                       placementPartners = response2.data.orgInfo.placementPartners
-                     }
-
-                     let calculateMatches  = false
-                     if (this.props.calculateMatches) {
-                       calculateMatches = true
-                     }
-
-                     if (this.props.pageSource !== 'Goal') {
-                       this.retrievePostings(activeOrg, placementPartners, courseIds, pathway, calculateMatches)
-                     }
-
-                   } else {
-                     console.log('there was an error findign the org')
-
+                   let calculateMatches  = false
+                   if (this.props.calculateMatches) {
+                     calculateMatches = true
                    }
-                 }).catch((error) => {
-                    console.log('Error finding the org', error);
-                 });
 
-              } else {
-               console.log('no user details data found', response.data.message)
-              }
+                   if (this.props.pageSource !== 'Goal') {
+                     this.retrievePostings(activeOrg, placementPartners, courseIds, pathway, calculateMatches)
+                   }
 
-            }).catch((error) => {
-               console.log('User details query did not work', error);
-            });
-          }
+                 } else {
+                   console.log('there was an error findign the org')
+
+                 }
+               }).catch((error) => {
+                  console.log('Error finding the org', error);
+               });
+
+            } else {
+             console.log('no user details data found', response.data.message)
+            }
+
+          }).catch((error) => {
+             console.log('User details query did not work', error);
+          });
 
           Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
           .then((response) => {
@@ -837,7 +657,7 @@ class Opportunities extends Component {
           });
 
           if (calculateMatches) {
-            this.calculateMatches(true, true, false)
+            this.calculateMatches(true, true, false, null, null, queryOrgCode)
           }
         }
 
@@ -2942,8 +2762,8 @@ class Opportunities extends Component {
     }
   }
 
-  calculateMatches(matchingView, calcMatches, newPreferences) {
-    console.log('calculateMatches called', matchingView, calcMatches, newPreferences)
+  calculateMatches(matchingView, calcMatches, newPreferences, specificCriteria, resLimit, passedOrgCode) {
+    console.log('calculateMatches called', matchingView, calcMatches, newPreferences, specificCriteria, resLimit, passedOrgCode)
 
     if (matchingView) {
 
@@ -2958,7 +2778,10 @@ class Opportunities extends Component {
 
           // orgCode: queryOrgCode, placementPartners, postType, postTypes, pathway
           const profile = this.state.profile
-          const orgCode = this.state.orgCode
+          let orgCode = this.state.orgCode
+          if (!orgCode && passedOrgCode) {
+            orgCode = passedOrgCode
+          }
           const placementPartners = this.state.placementPartners
 
           const pathway = this.state.pathway
@@ -2996,10 +2819,13 @@ class Opportunities extends Component {
             const employeeCountOptions = self.state.employeeCountOptions
             const hourOptions = self.state.hourOptions
 
-            // query postings on back-end
-            Axios.put('https://www.guidedcompass.com/api/opportunities/matches', {
+            const queryObject = {
               profile, orgCode, placementPartners, postType, postTypes, pathway, matchingCriteria, useCases,
-              annualPayOptions, hourlyPayOptions, employeeCountOptions, hourOptions })
+              annualPayOptions, hourlyPayOptions, employeeCountOptions, hourOptions, specificCriteria, resLimit
+            }
+
+            // query postings on back-end
+            Axios.put('https://www.guidedcompass.com/api/opportunities/matches', queryObject)
             .then((response) => {
               console.log('Opportunity matches attempted', response.data);
 

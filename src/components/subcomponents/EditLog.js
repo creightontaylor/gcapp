@@ -249,13 +249,13 @@ class EditLog extends Component {
       const remoteAuth = await AsyncStorage.getItem('remoteAuth');
 
       let activeOrg = await AsyncStorage.getItem('activeOrg')
-      if (!activeOrg) {
-        activeOrg = 'guidedcompass'
-      }
+      // if (!activeOrg) {
+      //   activeOrg = 'guidedcompass'
+      // }
       //const email = 'harry@potter.com'
       this.setState({ emailId, postsAreLoading: true })
 
-      if (emailId !== null) {
+      if (activeOrg) {
         // We have data!!
         console.log('what is the email of this user', emailId);
 
@@ -263,7 +263,7 @@ class EditLog extends Component {
         let logTypeOptions = ['Goal','Session','Application','Interview','Offer','Passion']
 
         const editExisting = this.props.editExisting
-        const log = this.props.log
+        let log = this.props.log
         const logs = this.props.logs
         const selectedAdvisor = this.props.selectedAdvisor
         const passedLogType = this.props.passedLogType
@@ -589,6 +589,7 @@ class EditLog extends Component {
         if (logId !== 'new') {
           if (editExisting) {
             console.log('in editExisting')
+
             let advisorFirstName = ''
             let advisorLastName = ''
             let advisorEmail = ''
@@ -698,8 +699,8 @@ class EditLog extends Component {
                 goalType = log.goalType
               }
 
-              let selectedCareers = this.state.selectedCareers
-              let selectedCareerDetails = this.state.selectedCareerDetails
+              let selectedCareers = []
+              let selectedCareerDetails = []
               if (log.selectedCareers) {
                 for (let i = 1; i <= log.selectedCareers.length; i++) {
                   selectedCareerDetails.push(log.selectedCareers[i - 1])
@@ -707,10 +708,12 @@ class EditLog extends Component {
                 }
               }
 
-              let selectedOpportunities = this.state.selectedOpportunities
-              let selectedOpportunityDetails = this.state.selectedOpportunityDetails
+              let selectedOpportunities = []
+              let selectedOpportunityDetails = []
               if (log.selectedOpportunities) {
+                console.log('show length: ', log)
                 for (let i = 1; i <= log.selectedOpportunities.length; i++) {
+                  console.log('show each opportunity: ', i, log.selectedOpportunities[i - 1], selectedOpportunities)
                   selectedOpportunityDetails.push(log.selectedOpportunities[i - 1])
                   if (log.selectedOpportunities[i - 1].title) {
                     selectedOpportunities.push(log.selectedOpportunities[i - 1].title)
@@ -719,6 +722,7 @@ class EditLog extends Component {
                   }
                 }
               }
+              console.log('gimme opportunities: ', selectedOpportunities)
 
               let entrepreneurshipStage = this.state.entrepreneurshipStage
               if (log.entrepreneurshipStage) {
@@ -745,53 +749,53 @@ class EditLog extends Component {
                 budget = log.budget
               }
 
-              let competencies = this.state.competencies
+              let competencies = []
               if (log.competencies) {
                 competencies = log.competencies
               }
 
-              let selectedFunctions = this.state.selectedFunctions
+              let selectedFunctions = []
               if (log.selectedFunctions) {
                 selectedFunctions = log.selectedFunctions
               }
 
-              let selectedIndustries = this.state.selectedIndustries
+              let selectedIndustries = []
               if (log.selectedIndustries) {
                 selectedIndustries = log.selectedIndustries
               }
 
-              let selectedHours = this.state.selectedHours
+              let selectedHours = []
               if (log.selectedHours) {
                 selectedHours = log.selectedHours
               }
 
-              let selectedPayRanges = this.state.selectedPayRanges
+              let selectedPayRanges = []
               if (log.selectedPayRanges) {
                 selectedPayRanges = log.selectedPayRanges
               }
 
-              let selectedOptimizeOptions = this.state.selectedOptimizeOptions
+              let selectedOptimizeOptions = []
               if (log.selectedOptimizeOptions) {
                 selectedOptimizeOptions = log.selectedOptimizeOptions
               }
 
-              let selectedSkills = this.state.selectedSkills
+              let selectedSkills = []
               if (log.selectedSkills) {
                 selectedSkills = log.selectedSkills
               }
 
-              let selectedSchools = this.state.selectedSchools
+              let selectedSchools = []
               if (log.selectedSchools) {
                 selectedSchools = log.selectedSchools
               }
 
-              let selectedMajors = this.state.selectedMajors
+              let selectedMajors = []
               if (log.selectedMajors) {
                 selectedMajors = log.selectedMajors
               }
 
-              let selectedMembers = this.state.selectedMembers
-              let selectedMemberDetails = this.state.selectedMemberDetails
+              let selectedMembers = []
+              let selectedMemberDetails = []
               if (log.selectedMembers) {
                 for (let i = 1; i <= log.selectedMembers.length; i++) {
                   selectedMemberDetails.push(log.selectedMembers[i - 1])
@@ -1252,14 +1256,18 @@ class EditLog extends Component {
       strategies[index][name] = eventValue
 
       this.setState({ strategies })
-    } else if (event.target.name.includes("tactic|")) {
+    } else if (eventName.includes("tactic|")) {
       let strategies = this.state.strategies
 
-      const index = Number(event.target.name.split("|")[1])
-      const index2 = Number(event.target.name.split("|")[2])
+      const index = Number(eventName.split("|")[1])
+      const index2 = Number(eventName.split("|")[2])
 
-      strategies[index]['tactics'][index2] = event.target.value
+      strategies[index]['tactics'][index2] = eventValue
       this.setState({ strategies })
+    } else if (eventName === 'feedback') {
+      let selectedSuggestion = this.state.selectedSuggestion
+      selectedSuggestion['feedback'] = eventValue
+      this.setState({ selectedSuggestion })
     } else if (changeDateTime) {
       console.log('changeDateTime foo')
       if (mode === 'date') {
@@ -2861,7 +2869,7 @@ class EditLog extends Component {
   }
 
   renderTags(type) {
-    console.log('renderTags ', type, this.state.competencies)
+    console.log('renderTags called')
 
     if (type.includes('career')) {
       if (type === 'career') {
@@ -2932,7 +2940,7 @@ class EditLog extends Component {
       if (type === 'opportunity') {
         const selectedOpportunities = this.state.selectedOpportunities
         if (selectedOpportunities && selectedOpportunities.length > 0) {
-          console.log('about to in', selectedOpportunities)
+          // console.log('about to in', selectedOpportunities)
           return (
             <View key={"selectedOpportunities"}>
               <View style={[styles.spacer,styles.rowDirection,styles.flexWrap]} />
@@ -5576,7 +5584,7 @@ class EditLog extends Component {
 
                             <View>
                               <View style={[styles.row10]}>
-                                <Text>Tag Supporters</Text>
+                                <Text style={[styles.standardText]}>Tag Supporters</Text>
                                 <Text style={[styles.descriptionText2,styles.bottomPadding5]}>Supporters of your goal will be notified as you make progress, and can provide resources/advice.</Text>
                                 <View style={[styles.halfSpacer]} />
                                 <View style={[styles.rowDirection]}>
@@ -7678,6 +7686,25 @@ class EditLog extends Component {
               )}
             </View>
           )}
+
+          {(!inModal) && (
+            <View style={[styles.topMargin20]}>
+              <View style={[styles.horizontalLine]} />
+
+              <View style={[styles.topMargin,styles.rowDirection]}>
+                <TouchableOpacity onPress={() => this.itemClicked(item,optionIndex,'up')}>
+                  <Image source={(item.liked) ? { uri: thumbsUpBlueIcon} : { uri: thumbsUpIcon}} style={[styles.square25,styles.contain]}/>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.leftMargin15]} onPress={() => this.itemClicked(item,optionIndex,'down')}>
+                  <Image source={(item.disliked) ? { uri: thumbsDownOrangeIcon} : { uri: thumbsDownIcon}} style={[styles.square25,styles.contain]} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={[styles.leftMargin15]} onPress={() => this.setState({ modalIsOpen: true, showFeedback: true, selectedSuggestion: item, selectedIndex: optionIndex })}>
+                  <Image source={(item.feedback) ? { uri: feedbackIconBlue} : { uri: feedbackIconDark}} style={[styles.square25,styles.contain]} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
       </View>
     )
@@ -7717,7 +7744,7 @@ class EditLog extends Component {
     const disliked = selectedSuggestion.disliked
     const feedback = selectedSuggestion.feedback
 
-    Axios.post('/api/suggestions', {
+    Axios.post('https://www.guidedcompass.com/api/suggestions', {
       _id, liked, disliked, feedback
     })
     .then((response) => {
@@ -7936,13 +7963,15 @@ class EditLog extends Component {
 
                       {this.renderSuggestion(this.state.selectedSuggestion,this.state.selectedIndex,true)}
 
-                      <View style={[styles.row10,styles.rowDirection]}>
-                        <TouchableOpacity onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'up')}>
-                          <Image source={(this.state.selectedSuggestion.liked) ? { uri: thumbsUpBlueIcon} : { uri: thumbsUpIcon}} style={[styles.square30,styles.contain]} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.leftMargin15]} onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'down')}>
-                          <Image source={(this.state.selectedSuggestion.disliked) ? { uri: thumbsDownOrangeIcon} : { uri: thumbsDownIcon}} style={[styles.square30,styles.contain]} />
-                        </TouchableOpacity>
+                      <View style={[styles.row10]}>
+                        <View style={[styles.rowDirection]}>
+                          <TouchableOpacity onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'up')}>
+                            <Image source={(this.state.selectedSuggestion.liked) ? { uri: thumbsUpBlueIcon} : { uri: thumbsUpIcon}} style={[styles.square30,styles.contain]} />
+                          </TouchableOpacity>
+                          <TouchableOpacity style={[styles.leftMargin15]} onPress={() => this.itemClicked(this.state.selectedSuggestion,this.state.selectedIndex,'down')}>
+                            <Image source={(this.state.selectedSuggestion.disliked) ? { uri: thumbsDownOrangeIcon} : { uri: thumbsDownIcon}} style={[styles.square30,styles.contain]} />
+                          </TouchableOpacity>
+                        </View>
 
                         <View style={[styles.row10]}>
                           <TextInput

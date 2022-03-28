@@ -1644,69 +1644,107 @@ class ExternalProfile extends Component {
                               <View>
                                 {this.state.goals.map((value, index) =>
                                   <View key={index}>
-                                    <View style={[styles.standardBorder,styles.roundedCorners,styles.bottomMargin20,styles.whiteBackground,styles.mediumShadow,styles.fullScreenWidth]}>
-                                      <TouchableOpacity style={[styles.padding20]} disabled={true} onPress={() => this.setState({ modalIsOpen: true, showGoalDetails: true, selectedGoal: value }) }>
-                                        <View style={[styles.rowDirection]}>
-                                          <View style={[styles.width50]}>
-                                            <View style={[styles.miniSpacer]}/><View style={[styles.miniSpacer]}/>
-                                            <Image source={{ uri: targetIconOrange}} style={[styles.square40,styles.contain]} />
-                                          </View>
-                                          <View style={[styles.calcColumn110]}>
-                                            <Text style={[styles.headingText4,styles.curtailText]}>{value.title}</Text>
-                                            {(value.startDate) ? (
-                                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>{value.startDate} - {value.deadline}</Text>
-                                            ) : (
-                                              <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText]}>Deadline: {value.deadline}</Text>
-                                            )}
-                                          </View>
+
+                                    <View style={[styles.bottomMargin20]}>
+                                      <View style={[styles.flexCenter, styles.zIndex1]}>
+                                        <View style={[styles.square50,styles.flexCenter,styles.whiteBackground,styles.bottomMarginNegative35,styles.errorBorder,styles.padding10, { borderRadius: 25 }]}>
+                                          <Image source={{ uri: targetIconOrange }} style={[styles.square30,styles.contain]} />
                                         </View>
+                                      </View>
 
-                                        {this.renderTags(value.selectedCareers, 'careers')}
-                                        {this.renderTags(value.selectedOpportunities, 'opportunities')}
-                                        {this.renderTags(value.competencies, 'competencies')}
-                                        {this.renderTags(value.selectedFunctions, 'functions')}
-                                        {this.renderTags(value.selectedIndustries, 'industries')}
-                                        {this.renderTags(value.selectedHours, 'hours')}
-                                        {this.renderTags(value.selectedPayRanges, 'payRanges')}
-                                        {this.renderTags(value.selectedSchools, 'schools')}
-                                        {this.renderTags(value.selectedMajors, 'majors')}
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showGoalDetails: true, selectedGoal: value })}>
+                                        <View style={[styles.elevatedBox,styles.whiteBackground]} >
 
-                                        {(value.description) ? (
-                                          <View>
-                                            <Text style={[styles.descriptionText1,styles.descriptionTextColor,styles.curtailText,styles.topMargin]}>{value.description}</Text>
-                                          </View>
-                                        ) : (
-                                          <View />
-                                        )}
+                                          <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.spacer]} />
 
-                                        {(value.goalType && value.goalType.name === 'Alternatives') && (
-                                          <View>
-                                            {(value.pollQuestion) && (
-                                              <Text style={[styles.headingText5,styles.topMargin20]}>{value.pollQuestion}</Text>
+                                          <View style={[styles.horizontalPadding30]} >
+                                            <Text style={[styles.headingText5,styles.centerText]}>{value.title}</Text>
+
+                                            {(value.goalType) && (
+                                              <View style={[styles.topPadding20]}>
+                                                <Text style={[styles.descriptionText3,styles.centerText]}>[{value.goalType.description}]</Text>
+                                              </View>
                                             )}
-                                            <View style={[styles.topMargin20,styles.rowDirection,styles.flex1]}>
-                                              <View style={[styles.flex45]}>
-                                                <Text>{value.aName}</Text>
-                                              </View>
-                                              <View style={[styles.flex10]}>
-                                                <Text style={[styles.flex1,styles.centerText,styles.headingText4]}>VS</Text>
-                                              </View>
-                                              <View style={[styles.flex45]}>
-                                                <Text style={[styles.flex1,styles.rightText]}>{value.bName}</Text>
-                                              </View>
 
+                                            <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                                            <View style={[styles.horizontalLine]} />
+
+                                            <View style={[styles.topPadding20]}>
+                                              <Text style={[styles.descriptionText3,styles.centerText]}>by  <Text onPress={() => this.props.navigation.navigate('Profile', { username: value.creatorUsername })} style={[styles.ctaColor,styles.boldText]}>{value.creatorFirstName} {value.creatorLastName}</Text></Text>
                                             </View>
-                                          </View>
-                                        )}
 
-                                        <View style={[styles.topPadding20]}>
-                                          <View>
-                                            <TouchableOpacity style={[styles.btnSquarish]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.itemClicked(e,'helpOut', value)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Help Out</Text></TouchableOpacity>
+                                            <View style={[styles.topPadding20]}>
+                                              {(value.startDate) ? (
+                                                <Text style={[styles.descriptionText3,styles.centerText]}>{convertDateToString(new Date(value.startDate),"date-2")} - {convertDateToString(new Date(value.deadline),"date-2")}</Text>
+                                              ) : (
+                                                <Text style={[styles.descriptionText3,styles.centerText]}>Deadline: {convertDateToString(new Date(value.deadline),"date-2")}</Text>
+                                              )}
+                                            </View>
+
+                                            <View style={[styles.topPadding]}>
+                                              {this.renderTags(value.selectedCareers, 'careers')}
+                                              {this.renderTags(value.selectedOpportunities, 'opportunities')}
+                                              {this.renderTags(value.competencies, 'competencies')}
+                                              {this.renderTags(value.selectedFunctions, 'functions')}
+                                              {this.renderTags(value.selectedIndustries, 'industries')}
+                                              {this.renderTags(value.selectedHours, 'hours')}
+                                              {this.renderTags(value.selectedPayRanges, 'payRanges')}
+                                              {this.renderTags(value.selectedSchools, 'schools')}
+                                              {this.renderTags(value.selectedMajors, 'majors')}
+
+                                              {(value.description) ? (
+                                                <Text style={[styles.descriptionText3,styles.descriptionTextColor,styles.topMargin,styles.centerText]}>{value.description}</Text>
+                                              ) : (
+                                                <View />
+                                              )}
+
+                                              {(value.goalType && value.goalType.name === 'Alternatives') ? (
+                                                <View>
+                                                  {(value.pollQuestion) ? (
+                                                    <Text style={[styles.headingText5,styles.topMargin20]}>{value.pollQuestion}</Text>
+                                                  ) : (
+                                                    <View />
+                                                  )}
+                                                  <View style={[styles.topMargin20,styles.rowDirection]}>
+                                                    <View style={[styles.flex45]}>
+                                                      <Text style={[styles.standardText]}>{value.aName}</Text>
+                                                    </View>
+                                                    <View style={[styles.flex10]}>
+                                                      <Text style={[styles.centerText,styles.headingText4]}>VS</Text>
+                                                    </View>
+                                                    <View style={[styles.flex45]}>
+                                                      <Text style={[styles.rightText,styles.standardText]}>{value.bName}</Text>
+                                                    </View>
+                                                  </View>
+                                                </View>
+                                              ) : (
+                                                <View />
+                                              )}
+                                            </View>
+
+                                            <View style={[styles.topPadding20]}>
+                                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) =>  this.itemClicked(e,'helpOut', value)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Help Out</Text></TouchableOpacity>
+                                            </View>
+
+                                            {(this.state.sortCriteriaArray && this.state.sortCriteriaArray[index] && this.state.sortCriteriaArray[index].name) && (
+                                              <View style={[styles.topPadding]}>
+                                                <View style={[styles.halfSpacer]} />
+                                                <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.sortCriteriaArray[index].name}: {this.state.sortCriteriaArray[index].criteria}</Text>
+                                              </View>
+                                            )}
+                                            {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[index] && this.state.filterCriteriaArray[index].name) && (
+                                              <View style={[styles.topPadding]}>
+                                                <View style={[styles.halfSpacer]} />
+                                                <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.filterCriteriaArray[index].name}: {this.state.filterCriteriaArray[index].criteria}</Text>
+                                              </View>
+                                            )}
+
+                                            <View style={[styles.spacer]} />
                                           </View>
                                         </View>
                                       </TouchableOpacity>
                                     </View>
-
                                   </View>
                                 )}
                               </View>
@@ -1965,6 +2003,7 @@ class ExternalProfile extends Component {
 
                   {(this.state.showGoalDetails || this.state.showHelpOutWidget) && (
                     <View>
+
                       <SubGoalDetails navigation={this.props.navigation} selectedGoal={this.state.selectedGoal} modalIsOpen={this.state.modalIsOpen} closeModal={this.closeModal} showGoalDetails={this.state.showGoalDetails} showHelpOutWidget={this.state.showHelpOutWidget} profileData={this.state.profileData}/>
                    </View>
                   )}
