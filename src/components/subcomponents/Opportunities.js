@@ -42,7 +42,6 @@ class Opportunities extends Component {
         defaultFilterOption: 'All',
         defaultSortOption: 'No Sort Applied',
 
-        showCorrentTimeAdjustment: true,
         showAssignments: false,
         subNavSelected: 'All',
 
@@ -199,7 +198,7 @@ class Opportunities extends Component {
 
             const eventTypeOptions = response.data.workOptions[0].eventTypeOptions
 
-            const postTypeOptions = ['Event','Assignment','Problem','Challenge','Work','Scholarship']
+            const postTypeOptions = ['Event','Project','Work']
             const durationOptions = response.data.workOptions[0].durationOptions
             let functionOptions = response.data.workOptions[0].functionOptions
             const industryOptions = response.data.workOptions[0].industryOptions
@@ -499,7 +498,7 @@ class Opportunities extends Component {
                    }
 
                    if (this.props.pageSource !== 'Goal') {
-                     this.retrievePostings(activeOrg, placementPartners, courseIds, pathway, calculateMatches)
+                     this.retrievePostings(activeOrg, placementPartners, courseIds, pathway, calculateMatches, roleName)
                    }
 
                  } else {
@@ -589,8 +588,8 @@ class Opportunities extends Component {
      }
   }
 
-  retrievePostings(orgCode, placementPartners, courseIds, pathway, calculateMatches) {
-    console.log('retrievePostings called', orgCode, placementPartners, courseIds, pathway, calculateMatches)
+  retrievePostings(orgCode, placementPartners, courseIds, pathway, calculateMatches, roleName) {
+    console.log('retrievePostings called', orgCode, placementPartners, courseIds, pathway, calculateMatches, roleName)
 
     let postType = undefined
     if (this.props.passedType) {
@@ -611,7 +610,7 @@ class Opportunities extends Component {
     const pullPartnerPosts = true
 
     //only schools see this screen
-    Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode: queryOrgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, csWorkflow: true }})
+    Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode: queryOrgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, roleName, csWorkflow: true }})
     .then((response) => {
       console.log('Posted postings query attempted within subcomponent', response.data);
 
@@ -1109,45 +1108,20 @@ class Opportunities extends Component {
       } else if (postings[i - 1].postType === 'Event') {
         events.push(postings[i - 1])
 
+        let dateToTest = null
+        if (postings[i - 1].endDate && new Date(postings[i - 1].endDate)) {
+          dateToTest = postings[i - 1].endDate
+        } else if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
+          dateToTest = postings[i - 1].startDate
+        }
 
-        if (this.state.showCorrentTimeAdjustment) {
+        if (new Date(dateToTest).getTime() > new Date().getTime()) {
+          upcomingEvents.push(postings[i - 1])
+          adjustedPostings.push(postings[i - 1])
 
-          let dateToTest = null
-          if (postings[i - 1].endDate && new Date(postings[i - 1].endDate)) {
-            dateToTest = postings[i - 1].endDate
-          } else if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
-            dateToTest = postings[i - 1].startDate
-          }
-
-          if (new Date(dateToTest).getTime() > new Date().getTime()) {
-            upcomingEvents.push(postings[i - 1])
-            adjustedPostings.push(postings[i - 1])
-
-          } else {
-            pastEvents.push(postings[i - 1])
-            adjustedPostings.push(postings[i - 1])
-          }
         } else {
-          const startDateDate = new Date(postings[i - 1].startDate)
-          const timeDifferenceUnadjusted = new Date().getTime() - startDateDate.getTime()
-          const timeZoneDifferenceMiliseconds = (startDateDate.getTimezoneOffset()) * 60000
-          const timeDifference = timeDifferenceUnadjusted - timeZoneDifferenceMiliseconds
-          // console.log('show event values: ', timeDifference, postings[i - 1].title, postings[i - 1].startDate, typeof postings[i - 1].startDate)
-
-          // if (timeDifference > 0) {
-          //   eventPassed = true
-          // }
-
-          if (postings[i - 1].startDate && new Date(postings[i - 1].startDate)) {
-            if (timeDifference < 0) {
-              upcomingEvents.push(postings[i - 1])
-              adjustedPostings.push(postings[i - 1])
-
-            } else {
-              pastEvents.push(postings[i - 1])
-              adjustedPostings.push(postings[i - 1])
-            }
-          }
+          pastEvents.push(postings[i - 1])
+          adjustedPostings.push(postings[i - 1])
         }
 
       } else if (postings[i - 1].postType === 'Scholarship') {
@@ -1156,7 +1130,7 @@ class Opportunities extends Component {
         //perhaps scholarship
       }
 
-      if (postings[i - 1].postType === 'Assignment' || postings[i - 1].postType === 'Problem' || postings[i - 1].postType === 'Challenge') {
+      if (postings[i - 1].postType === 'Project' || postings[i - 1].postType === 'Assignment' || postings[i - 1].postType === 'Problem' || postings[i - 1].postType === 'Challenge') {
         if (postings[i - 1].attachToCourses) {
           // only for specific courses
           if (courseIds && courseIds.length > 0 && postings[i - 1].courses && postings[i - 1].courses.some(course => courseIds.includes(course._id))) {
@@ -1784,6 +1758,7 @@ class Opportunities extends Component {
     }
 
     const emailId = this.state.emailId
+    const roleName = this.state.roleName
 
     const self = this
     function officiallyFilter() {
@@ -1791,7 +1766,7 @@ class Opportunities extends Component {
 
       // console.log('first matchScore: ', postings[0].matchScore, postings[0].title, postings[0].name)
 
-      Axios.put('https://www.guidedcompass.com/api/postings/filter', {  searchString, filterString, filters, defaultFilterOption, index, search, postings, type, emailId })
+      Axios.put('https://www.guidedcompass.com/api/postings/filter', {  searchString, filterString, filters, defaultFilterOption, index, search, postings, type, emailId, roleName })
       .then((response) => {
         console.log('Posting filter query attempted', response.data);
 
@@ -2385,11 +2360,11 @@ class Opportunities extends Component {
 
       if (posting.postType === 'Event') {
         postingIcon = eventIconBlue
-      } else if (posting.postType === 'Assignment') {
+      } else if (posting.postType === 'Assignment' || posting.projectPromptType === 'Assignment') {
         postingIcon = assignmentsIconBlue
-      } else if (posting.postType === 'Problem') {
+      } else if (posting.postType === 'Problem' || posting.projectPromptType === 'Problem') {
         postingIcon = problemIconBlue
-      } else if (posting.postType === 'Challenge') {
+      } else if (posting.postType === 'Challenge' || posting.projectPromptType === 'Challenge') {
         postingIcon = challengeIconBlue
       } else if (posting.postType === 'Internship') {
         if (!posting.isActive) {
