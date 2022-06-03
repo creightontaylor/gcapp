@@ -715,14 +715,30 @@ class GoalDetails extends Component {
         const senderFirstName = this.state.cuFirstName
         const senderLastName = this.state.cuLastName
         const senderEmail = this.state.emailId
+        const senderUsername = this.state.username
 
         const recipientPictureURL = this.state.profileData.pictureURL
         const recipientFirstName = this.state.profileData.firstName
         const recipientLastName = this.state.profileData.lastName
         const recipientEmail = this.state.profileData.email
 
-        const goalId = this.state.selectedGoal._id
-        const goalTitle = this.state.selectedGoal.title
+        let goalId = null
+        let goalTitle = null
+        let itemType = null
+        let itemId = null
+        let itemTitle = null
+        if (this.state.selectedGoal) {
+          itemType = 'Goal'
+          itemId = this.state.selectedGoal._id
+          itemTitle = this.state.selectedGoal.title
+          goalId = this.state.selectedGoal._id
+          goalTitle = this.state.selectedGoal.title
+        } else if (this.state.selectedProject) {
+          itemType = 'Project'
+          itemId = this.state.selectedProject._id
+          itemTitle = this.state.selectedProject.name
+        }
+
         const message = this.state.message
 
         const orgCode = this.state.goalOrgCode
@@ -733,34 +749,103 @@ class GoalDetails extends Component {
         const updatedAt = new Date()
 
         // save and send
-        Axios.post('https://www.guidedcompass.com/api/suggestions', {
-          senderPictureURL, senderFirstName, senderLastName, senderEmail,
-          recipientPictureURL, recipientFirstName, recipientLastName, recipientEmail,
-          goalId, goalTitle, message,
-          selectedPeople, selectedLinks, selectedTimes, selectedProjects, selectedCareers,
-          createdAt, updatedAt
-        })
-        .then((response) => {
-          console.log('attempting to save addition to suggestion')
-          if (response.data.success) {
-            console.log('saved suggestion', response.data)
+        // Axios.post('https://www.guidedcompass.com/api/suggestions', {
+        //   senderPictureURL, senderFirstName, senderLastName, senderEmail,
+        //   recipientPictureURL, recipientFirstName, recipientLastName, recipientEmail,
+        //   goalId, goalTitle, message,
+        //   selectedPeople, selectedLinks, selectedTimes, selectedProjects, selectedCareers,
+        //   createdAt, updatedAt
+        // })
+        // .then((response) => {
+        //   console.log('attempting to save addition to suggestion')
+        //   if (response.data.success) {
+        //     console.log('saved suggestion', response.data)
+        //
+        //     this.setState({successMessage: response.data.message, isSaving: false, message: '',
+        //       selectedPeople: [], selectedLinks: [], selectedTimes: [], selectedProjects: [], selectedCareers: [],
+        //       showConfirmation: true
+        //     })
+        //
+        //     // this.closeModal()
+        //     window.scrollTo(0, 0)
+        //
+        //   } else {
+        //     console.log('did not save successfully')
+        //     this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+        //   }
+        // }).catch((error) => {
+        //     console.log('save did not work', error);
+        //     this.setState({ errorMessage: 'there was an error saving suggestion', isSaving: false})
+        // });
 
-            this.setState({successMessage: response.data.message, isSaving: false, message: '',
-              selectedPeople: [], selectedLinks: [], selectedTimes: [], selectedProjects: [], selectedCareers: [],
-              showConfirmation: true
-            })
+        const headerImageURL = this.state.headerImageURL
 
-            // this.closeModal()
-            window.scrollTo(0, 0)
+        const self = this
+        function actuallySendSuggestion(unsubscribed) {
+          console.log('actuallySendSuggestion called')
 
-          } else {
-            console.log('did not save successfully')
-            this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
-          }
+          // save and send
+          Axios.post('https://www.guidedcompass.com/api/suggestions', {
+            senderPictureURL, senderFirstName, senderLastName, senderEmail, senderUsername,
+            unsubscribed, headerImageURL,
+            recipientPictureURL, recipientFirstName, recipientLastName, recipientEmail,
+            itemType, goalId, goalTitle, itemId, itemTitle, message,
+            selectedPeople, selectedLinks, selectedTimes, selectedProjects, selectedCareers,
+            createdAt, updatedAt
+          })
+          .then((response) => {
+            console.log('attempting to save addition to suggestion')
+            if (response.data.success) {
+              console.log('saved suggestion', response.data)
+
+              self.setState({successMessage: response.data.message, isSaving: false, message: '',
+                selectedPeople: [], selectedLinks: [], selectedTimes: [], selectedProjects: [], selectedCareers: [],
+                showConfirmation: true
+              })
+
+              // this.closeModal()
+              // window.scrollTo(0, 0)
+
+            } else {
+              console.log('did not save successfully')
+              self.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+            }
+          }).catch((error) => {
+              console.log('save did not work', error);
+              self.setState({ errorMessage: 'there was an error saving suggestion', isSaving: false})
+          });
+        }
+
+        // check notification preferences
+        Axios.get('https://www.guidedcompass.com/api/users/profile/details/' + recipientEmail, { params: { emailId: recipientEmail } })
+         .then((response) => {
+           console.log('query for profile data worked');
+
+           if (response.data.success) {
+
+             console.log('profile data received', response.data)
+
+             const notificationPreferences = response.data.user.notificationPreferences
+             let unsubscribed = null
+             if (notificationPreferences && notificationPreferences.length > 0) {
+               for (let i = 1; i <= notificationPreferences.length; i++) {
+                 if (notificationPreferences[i - 1].slug === 'new-suggestions' && notificationPreferences[i - 1].enabled === false) {
+                   unsubscribed = true
+                 }
+               }
+             }
+
+             actuallySendSuggestion(unsubscribed)
+
+           } else {
+             console.log('error response', response.data)
+
+             actuallySendSuggestion(null)
+           }
+
         }).catch((error) => {
-            console.log('save did not work', error);
-            this.setState({ errorMessage: 'there was an error saving suggestion', isSaving: false})
-        });
+             console.log('query for profile info did not work', error);
+        })
       }
     }
 
@@ -958,25 +1043,31 @@ class GoalDetails extends Component {
                      </View>
 
                      <View style={[styles.rowDirection,styles.flexWrap]}>
-                       {(this.state.selectedGoal.intensity) && (
+                       {(this.state.selectedGoal.intensity) ? (
                          <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
                            <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Intensity</Text>
                            <Text style={[styles.standardText]}>{this.state.selectedGoal.intensity}</Text>
                          </View>
+                       ) : (
+                         <View />
                        )}
 
-                       {(this.state.selectedGoal.budget) && (
+                       {(this.state.selectedGoal.budget) ? (
                          <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
                            <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Budget</Text>
                            <Text style={[styles.standardText]}>{this.state.selectedGoal.budget}</Text>
                          </View>
+                       ) : (
+                         <View />
                        )}
 
-                       {(this.state.selectedGoal.status) && (
+                       {(this.state.selectedGoal.status) ? (
                          <View style={[styles.topMargin20,styles.flex33,styles.centerText]}>
                            <Text style={[styles.descriptionText2,styles.descriptionTextColor,styles.row10]}>Status</Text>
                            <Text style={[styles.standardText]}>{this.state.selectedGoal.status}</Text>
                          </View>
+                       ) : (
+                         <View />
                        )}
                      </View>
 

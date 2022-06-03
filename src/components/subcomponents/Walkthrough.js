@@ -527,12 +527,16 @@ class Walkthrough extends Component {
       <ScrollView>
         <View style={[styles.flex1,styles.lightBackground,styles.padding20]}>
           <View style={[styles.topMargin20,styles.flex1,styles.alignCenter,styles.rowDirection]}>
-            <View style={[styles.flex20]}>
-              <TouchableOpacity onPress={() => this.setState({ pageIndex: this.state.pageIndex - 1 })} style={[styles.rowDirection]}>
-                <Image source={{ uri: rightCarrotBlue }} style={[styles.square10,styles.contain,styles.rightMargin5,styles.topMargin5,styles.rotate180]} />
-                <Text style={[styles.ctaColor,styles.descriptionText2,styles.boldText]}>Back</Text>
-              </TouchableOpacity>
-            </View>
+            {(this.state.pageIndex > 1) ? (
+              <View style={[styles.flex20]}>
+                <TouchableOpacity onPress={() => this.setState({ pageIndex: this.state.pageIndex - 1 })} style={[styles.rowDirection]}>
+                  <Image source={{ uri: rightCarrotBlue }} style={[styles.square10,styles.contain,styles.rightMargin5,styles.topMargin5,styles.rotate180]} />
+                  <Text style={[styles.ctaColor,styles.descriptionText2,styles.boldText]}>Back</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={[styles.flex20]} />
+            )}
 
             <View style={[styles.flex60,styles.alignCenter]}>
               <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
@@ -544,6 +548,9 @@ class Walkthrough extends Component {
               </TouchableOpacity>
             </View>
           </View>
+
+          {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.errorColor,styles.bottomPadding,styles.calcColumn60,styles.rightText,styles.standardText,styles.row5]}>{this.state.errorMessage}</Text>}
+          {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.ctaColor,styles.bottomPadding,styles.calcColumn60,styles.rightText,styles.standardText,styles.row5]}>{this.state.successMessage}</Text>}
 
           <View style={[styles.topMargin20,styles.flex1]}>
             <View style={[styles.flex1,styles.rowDirection]}>

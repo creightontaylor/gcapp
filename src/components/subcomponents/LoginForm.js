@@ -32,8 +32,7 @@ class LogInForm extends Component {
       employerName: '',
 
       subscribed: true,
-      confirmEmail: false,
-      showEmployerWalkthrough: true,
+      mfaEnabled: false,
 
       employers: [],
 
@@ -63,6 +62,9 @@ class LogInForm extends Component {
     this.itemClicked = this.itemClicked.bind(this)
     this.closeModal = this.closeModal.bind(this)
 
+    this.resendCode = this.resendCode.bind(this)
+    this.submitCode = this.submitCode.bind(this)
+
   }
 
   componentDidMount() {
@@ -73,7 +75,7 @@ class LogInForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called within login form ', this.props, prevProps)
+    console.log('componentDidUpdate called within login form ')
 
     if (this.props.roleName !== prevProps.roleName || this.props.orgCode !== prevProps.orgCode || this.props.courseId !== prevProps.courseId || this.props.workId !== prevProps.workId || this.props.fromExternal !== prevProps.fromExternal) {
       this.retrieveData()
@@ -114,6 +116,18 @@ class LogInForm extends Component {
       //     roleName, activeOrg, orgFocus, orgName, remoteAuth
       //   })
       // }
+
+      let verifyCode = await AsyncStorage.getItem('verifyCode')
+      if (verifyCode && verifyCode === 'true') {
+        const emailId = await AsyncStorage.getItem('email')
+        const username = await AsyncStorage.getItem('username');
+        const cuFirstName = await AsyncStorage.getItem('firstName');
+        const cuLastName = await AsyncStorage.getItem('lastName');
+
+        const showVerifyCode = true
+
+        this.setState({ email, firstName, lastName, username, showVerifyCode })
+      }
 
       let orgCode = this.props.orgCode
       const courseId = this.props.courseId
@@ -545,7 +559,7 @@ class LogInForm extends Component {
                 }
 
                 const openToMentoring = true
-                const confirmEmail = this.state.confirmEmail
+                const mfaEnabled = this.state.mfaEnabled
 
                 let requestAccess = false
                 if (!this.state.originalRoleName && activeOrg === 'guidedcompass') {
@@ -570,13 +584,15 @@ class LogInForm extends Component {
                   { name: 'Endorsement', value: 'All', publicItems: []},
                 ]
 
+                const verificationCode = Math.floor(Math.random() * 100000)
+
                 const userObject = {
             			firstName,lastName, username, email, password, gradYear, pathway, orgName, courseIds, workIds,
                   orgContactFirstName, orgContactLastName, orgContactEmail,
                   activeOrg, myOrgs, roleName, otherRoleName, school, schoolDistrict, jobTitle, employerName, accountCode,
                   createdAt, updatedAt, platform, openToMentoring, benefits, headerImageURL,
-                  isAdvisor, isOrganization, isEmployer, confirmEmail, workMode, requestAccess, unsubscribed,
-                  publicProfileExtent, publicPreferences
+                  isAdvisor, isOrganization, isEmployer, mfaEnabled, workMode, requestAccess, unsubscribed,
+                  publicProfileExtent, publicPreferences, verificationCode
             		}
 
                 Axios.post('https://www.guidedcompass.com/api/users/register', userObject)
@@ -619,11 +635,16 @@ class LogInForm extends Component {
                         AsyncStorage.removeItem('studentAlias')
                       }
 
+                      if (self.state.mfaEnabled) {
+                        AsyncStorage.setItem('verifyCode', pathway)
+                      }
+
                       self.setState({ isWaiting: false })
 
                       if (roleName === 'Student') {
-                        if (self.state.confirmEmail) {
-                          self.props.navigation.navigate('ConfirmEmail', { activeOrg, email })
+                        if (self.state.mfaEnabled) {
+                          // self.props.navigation.navigate('ConfirmEmail', { activeOrg, email })
+                          self.setState({ showVerifyCode: true, isSaving: false, isWaiting: false })
                         } else {
                           if (self.state.roleName.toLowerCase() === 'worker') {
                             console.log('going to work mode immediately')
@@ -642,7 +663,6 @@ class LogInForm extends Component {
                         }
 
                       } else if (roleName === 'Admin' || roleName === 'admin' || roleName === 'WBLC') {
-                        // confirmEmail turned off because email isn't dynamic yet
 
                         if (requestAccess) {
                           self.setState({ successMessage: 'Your registration has been recorded. Please allow 1-2 business days for our team to determine next steps. We may need to admit you to an existing organization or create a new organization for you.' })
@@ -652,7 +672,6 @@ class LogInForm extends Component {
 
                       } else if (roleName === 'Employer') {
                         console.log('the role name is employer', accountCode)
-                        // confirmEmail turned off because email isn't dynamic yet
 
                         if (requestAccess) {
                           self.setState({ successMessage: 'Your registration has been recorded. Please allow 1-2 business days for our team to determine next steps. We may need to admit you to an existing employer account or create a new employer account for you. In the meantime, you can always post at:',  successLink: 'https://www.guidedcompass.com/employers/post' })
@@ -671,7 +690,7 @@ class LogInForm extends Component {
                     }
 
                     // also changes publicProfile
-                    Axios.get('https://www.guidedcompass.com/api/profile/confirm-unique-username', { params: { emailId: email, username, doNotPublicize: true } })
+                    Axios.get('https://www.guidedcompass.com/api/profile/confirm-unique-username', { params: { emailId: email, username } })
                     .then((response) => {
                       console.log('Confirm unique username query attempted', response.data);
 
@@ -823,99 +842,125 @@ class LogInForm extends Component {
   completeSignIn(email, responseData,orgCode, orgFocus, publicOrg, placementPartners, orgName) {
     console.log('completeSignIn called', email, orgCode, orgFocus, publicOrg, placementPartners, orgName)
 
-    AsyncStorage.setItem('email', email)
-    if (responseData.user.pictureURL) {
-      AsyncStorage.setItem('pictureURL', responseData.user.pictureURL)
-    }
+    if (this.state.mfaEnabled) {
 
-    AsyncStorage.setItem('username', responseData.user.username)
-    AsyncStorage.setItem('firstName', responseData.user.firstName)
-    AsyncStorage.setItem('lastName', responseData.user.lastName)
-    if (responseData.user.pathway) {
-      AsyncStorage.setItem('pathway', responseData.user.pathway)
-    }
+      const emailId = this.state.email
+      const verificationCode = Math.floor(Math.random() * 100000)
 
-    if (responseData.user.workMode === true) {
-      AsyncStorage.setItem('workMode', 'true')
-    } else {
-      AsyncStorage.setItem('workMode', 'false')
-    }
+      const postBody = { emailId, verificationCode }
 
-    if (responseData.user.isAdvisor) {
-      AsyncStorage.setItem('isAdvisor', 'true')
-    } else {
-      AsyncStorage.setItem('isAdvisor', 'false')
-      AsyncStorage.setItem('isAdvisee', 'true')
-    }
+      Axios.post('https://www.guidedcompass.com/api/send-verification-code', postBody)
+      .then((response) => {
 
-    if (responseData.user.orgAffiliation) {
-      if (responseData.user.orgAffiliation === 'admin') {
-        console.log('user is an admin')
-        AsyncStorage.setItem('orgAffiliation', 'admin')
-      } else {
-        console.log('user is not an admin')
-        AsyncStorage.setItem('orgAffiliation', '')
-      }
-    } else {
-      console.log('no orgAffiliation found')
-      AsyncStorage.setItem('orgAffiliation', '')
-    }
-    if (responseData.user.myOrgs) {
-      AsyncStorage.setItem('myOrgs', JSON.stringify(responseData.user.myOrgs))
-    }
+        if (response.data.success) {
+          //save values
+          console.log('New verification code sent', response.data);
+          this.setState({ showVerifyCode: true })
 
-    if (responseData.user.activeOrg) {
-      AsyncStorage.setItem('activeOrg', responseData.user.activeOrg)
-      AsyncStorage.setItem('orgName', orgName)
-      if (orgFocus && orgFocus !== '') {
-        AsyncStorage.setItem('orgFocus', orgFocus)
-      }
-
-      if (responseData.user.activeOrg === 'guidedcompass') {
-        publicOrg = true
-      }
-
-      if (publicOrg) {
-        AsyncStorage.setItem('publicOrg', JSON.stringify(publicOrg))
-      }
-    }
-
-    if (placementPartners) {
-      AsyncStorage.setItem('placementPartners', JSON.stringify(placementPartners))
-    }
-
-    console.log('show roleName on signin: ', responseData.user.roleName)
-    if (responseData.user.roleName) {
-      AsyncStorage.setItem('roleName', responseData.user.roleName)
-    }
-
-    if (responseData.user.remoteAuth) {
-      AsyncStorage.setItem('remoteAuth', responseData.user.remoteAuth)
-    }
-
-    this.setState({ isWaiting: false })
-
-    if (this.props.fromAdvisor) {
-      // mentor or teacher
-
-      if (responseData.user.roleName !== 'Student') {
-        this.setState({ successMessage: "You have been signed up. The mobile app isn't the best user experience, so please sign on using the web app at www.guidedcompass.com"})
-      } else {
-        // error - students can't view
-        this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
-      }
-
-    } else {
-
-      console.log('show oppId and oppOrg: ', responseData, this.state.opportunityId, this.props.opportunityOrg)
-      if (this.state.opportunityId) {
-        if (responseData.user && responseData.user.myOrgs && !responseData.user.myOrgs.includes('unite-la') && this.props.opportunityOrg === 'unite-la') {
-          this.props.navigation.navigate('AddWorkspaces', { opportunityOrg: this.props.opportunityOrg, opportunityId: this.state.opportunityId})
         } else {
-          this.props.navigation.navigate('OpportunityDetails', { opportunityId: this.state.opportunityId})
+          console.error('there was an error sending the verification code ', response.data.message);
+          this.setState({ errorMessage: response.data.message })
+
+        }
+      }).catch((error) => {
+          console.log('The new verification code send did not work', error);
+          this.setState({ errorMessage: error.toString() })
+      });
+    } else {
+      AsyncStorage.setItem('email', email)
+      if (responseData.user.pictureURL) {
+        AsyncStorage.setItem('pictureURL', responseData.user.pictureURL)
+      }
+
+      AsyncStorage.setItem('username', responseData.user.username)
+      AsyncStorage.setItem('firstName', responseData.user.firstName)
+      AsyncStorage.setItem('lastName', responseData.user.lastName)
+      if (responseData.user.pathway) {
+        AsyncStorage.setItem('pathway', responseData.user.pathway)
+      }
+
+      if (responseData.user.workMode === true) {
+        AsyncStorage.setItem('workMode', 'true')
+      } else {
+        AsyncStorage.setItem('workMode', 'false')
+      }
+
+      if (responseData.user.isAdvisor) {
+        AsyncStorage.setItem('isAdvisor', 'true')
+      } else {
+        AsyncStorage.setItem('isAdvisor', 'false')
+        AsyncStorage.setItem('isAdvisee', 'true')
+      }
+
+      if (responseData.user.orgAffiliation) {
+        if (responseData.user.orgAffiliation === 'admin') {
+          console.log('user is an admin')
+          AsyncStorage.setItem('orgAffiliation', 'admin')
+        } else {
+          console.log('user is not an admin')
+          AsyncStorage.setItem('orgAffiliation', '')
         }
       } else {
-        this.props.navigation.navigate('App')
+        console.log('no orgAffiliation found')
+        AsyncStorage.setItem('orgAffiliation', '')
+      }
+      if (responseData.user.myOrgs) {
+        AsyncStorage.setItem('myOrgs', JSON.stringify(responseData.user.myOrgs))
+      }
+
+      if (responseData.user.activeOrg) {
+        AsyncStorage.setItem('activeOrg', responseData.user.activeOrg)
+        AsyncStorage.setItem('orgName', orgName)
+        if (orgFocus && orgFocus !== '') {
+          AsyncStorage.setItem('orgFocus', orgFocus)
+        }
+
+        if (responseData.user.activeOrg === 'guidedcompass') {
+          publicOrg = true
+        }
+
+        if (publicOrg) {
+          AsyncStorage.setItem('publicOrg', JSON.stringify(publicOrg))
+        }
+      }
+
+      if (placementPartners) {
+        AsyncStorage.setItem('placementPartners', JSON.stringify(placementPartners))
+      }
+
+      console.log('show roleName on signin: ', responseData.user.roleName)
+      if (responseData.user.roleName) {
+        AsyncStorage.setItem('roleName', responseData.user.roleName)
+      }
+
+      if (responseData.user.remoteAuth) {
+        AsyncStorage.setItem('remoteAuth', responseData.user.remoteAuth)
+      }
+
+      this.setState({ isWaiting: false })
+
+      if (this.props.fromAdvisor) {
+        // mentor or teacher
+
+        if (responseData.user.roleName !== 'Student') {
+          this.setState({ successMessage: "You have been signed up. The mobile app isn't the best user experience, so please sign on using the web app at www.guidedcompass.com"})
+        } else {
+          // error - students can't view
+          this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
+        }
+
+      } else {
+
+        console.log('show oppId and oppOrg: ', responseData, this.state.opportunityId, this.props.opportunityOrg)
+        if (this.state.opportunityId) {
+          if (responseData.user && responseData.user.myOrgs && !responseData.user.myOrgs.includes('unite-la') && this.props.opportunityOrg === 'unite-la') {
+            this.props.navigation.navigate('AddWorkspaces', { opportunityOrg: this.props.opportunityOrg, opportunityId: this.state.opportunityId})
+          } else {
+            this.props.navigation.navigate('OpportunityDetails', { opportunityId: this.state.opportunityId})
+          }
+        } else {
+          this.props.navigation.navigate('App')
+        }
       }
     }
   }
@@ -953,6 +998,276 @@ class LogInForm extends Component {
 
   }
 
+  resendCode() {
+    console.log('resendCode called')
+
+    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
+
+    const emailId = this.state.email
+    const verificationCode = Math.floor(Math.random() * 100000)
+
+    const postBody = { emailId, verificationCode }
+
+    Axios.post('https://www.guidedcompass.com/api/send-verification-code', postBody)
+    .then((response) => {
+
+      if (response.data.success) {
+        //save values
+        console.log('New verification code sent', response.data);
+        this.setState({ successMessage: response.data.message })
+
+      } else {
+        console.error('there was an error sending the verification code ', response.data.message);
+        this.setState({ errorMessage: response.data.message })
+
+      }
+    }).catch((error) => {
+        console.log('The new verification code send did not work', error);
+        this.setState({ errorMessage: error.toString() })
+
+    });
+  }
+
+  submitCode() {
+    console.log('submitCode called')
+
+    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
+
+    const emailId = this.state.email
+    const verificationCode = this.state.verificationCode
+
+    const postBody = { emailId, verificationCode }
+
+    Axios.post('https://www.guidedcompass.com/api/verify-code', postBody)
+    .then((response) => {
+
+      if (response.data.success) {
+        //save values
+        console.log('Code successfully verified ', response.data);
+        // this.setState({ successMessage: response.data.message })
+
+        AsyncStorage.removeItem('verifyCode')
+
+        const skipWalkthrough = this.state.skipWalkthrough
+        const requestAccess = this.state.requestAccess
+
+        const activeOrg = response.data.user.activeOrg
+        const firstName = response.data.user.firstName
+        const lastName = response.data.user.lastName
+        const email = response.data.user.email
+        const roleName = response.data.user.roleName
+        const otherRoleName = response.data.user.otherRoleName
+        const accountCode = response.data.user.accountCode
+        const jobTitle = response.data.user.jobTitle
+        const employerName = response.data.user.employerName
+        const workMode = response.data.user.workMode
+
+        const createdAt = new Date()
+        const updatedAt = new Date()
+
+        if ((!this.props.modalIsOpen && this.props.type && this.props.type === 'SignUp') || (this.props.modalIsOpen && !this.state.signInPage)) {
+          // sign up
+          if (roleName === 'Student') {
+            if (this.state.roleName.toLowerCase() === 'worker') {
+              console.log('going to work mode immediately')
+              this.props.navigation.navigate('Home')
+            } else {
+              if (skipWalkthrough) {
+                if (this.state.opportunityId) {
+                  this.props.navigation.navigate('OpportunityDetails', { objectId: this.state.opportunityId })
+                } else {
+                  this.props.navigation.navigate('Home')
+                }
+              } else {
+                this.props.navigation.navigate('Walkthrough', { opportunityId: this.state.opportunityId })
+              }
+            }
+
+          // } else if (roleName === 'Admin' || roleName === 'admin' || roleName === 'WBLC') {
+          //   // this.props.history.push('/organizations/' + activeOrg + '/dashboard')
+          //
+          //   if (requestAccess) {
+          //     this.setState({ successMessage: 'Your registration has been recorded. Please allow 1-2 business days for our team to determine next steps. We may need to admit you to an existing organization or create a new organization for you.' })
+          //   } else {
+          //     if (this.state.mfaEnabled) {
+          //       // this.props.history.push('/organizations/' + activeOrg + '/confirm-email/' + activeOrg + '/' + email)
+          //       this.setState({ showVerifyCode: true })
+          //     } else {
+          //       this.props.history.push('/organizations/' + activeOrg + '/dashboard')
+          //     }
+          //   }
+
+          // } else if (roleName === 'Employer') {
+          //   console.log('the role name is employer', accountCode)
+          //   // this.props.history.push('/employers/' + accountCode + '/dashboard')
+          //
+          //   if (this.props.modalIsOpen) {
+          //
+          //     const sharePartners = [activeOrg]
+          //     const contactFirstName = firstName
+          //     const contactLastName = lastName
+          //     const contactEmail = email
+          //     const contactTitle = jobTitle
+          //     const orgContacts = [{ contactFirstName, contactLastName, contactEmail, contactTitle }]
+          //
+          //     const accountBody = {
+          //       accountCode, employerName, orgContacts,
+          //       contactFirstName, contactLastName, contactTitle, contactEmail,
+          //       sharePartners, activeOrg, createdAt, updatedAt
+          //     }
+          //
+          //     Axios.post('/api/account/create', accountBody)
+          //     .then((response) => {
+          //
+          //       if (response.data.success) {
+          //         //save values
+          //         console.log('Account update save worked', response.data);
+          //
+          //         this.props.passData({ success: true, message: response.data.message })
+          //
+          //       } else {
+          //         console.error('there was an error saving the employer ', response.data.message);
+          //         this.props.passData({ success: true, message: response.data.message })
+          //       }
+          //     }).catch((error) => {
+          //         console.log('The employer save did not work', error);
+          //         this.props.passData({ success: true, message: response.data.message })
+          //     });
+          //
+          //   } else {
+          //     if (requestAccess) {
+          //       this.setState({ successMessage: 'Your registration has been recorded. Please allow 1-2 business days for our team to determine next steps. We may need to admit you to an existing employer account or create a new employer account for you. In the meantime, you can always post at:',  successLink: 'https://www.guidedcompass.com/employers/post' })
+          //     } else {
+          //       if (this.state.showEmployerWalkthrough) {
+          //         this.props.history.push('/employers/' + accountCode + '/walkthrough')
+          //       } else {
+          //         this.props.history.push('/employers/' + accountCode + '/dashboard')
+          //       }
+          //     }
+          //   }
+
+          } else {
+
+            if (this.props.modalIsOpen) {
+              this.props.passData({ success: true, message: response.data.message })
+            } else {
+              if (requestAccess && roleName === 'Other') {
+                this.setState({ successMessage: 'Your registration has been recorded. Please allow 1-2 business days for our team to determine next steps.' })
+              } else {
+                this.props.history.push('/advisor')
+              }
+            }
+          }
+        } else {
+          // sign in
+
+          AsyncStorage.setItem('email', email)
+          if (response.data.user.pictureURL) {
+            AsyncStorage.setItem('pictureURL', response.data.user.pictureURL)
+          }
+
+          AsyncStorage.setItem('username', response.data.user.username)
+          AsyncStorage.setItem('firstName', response.data.user.firstName)
+          AsyncStorage.setItem('lastName', response.data.user.lastName)
+          if (response.data.user.pathway) {
+            AsyncStorage.setItem('pathway', response.data.user.pathway)
+          }
+
+          if (response.data.user.workMode === true) {
+            AsyncStorage.setItem('workMode', 'true')
+          } else {
+            AsyncStorage.setItem('workMode', 'false')
+          }
+
+          if (response.data.user.isAdvisor) {
+            AsyncStorage.setItem('isAdvisor', 'true')
+          } else {
+            AsyncStorage.setItem('isAdvisor', 'false')
+            AsyncStorage.setItem('isAdvisee', 'true')
+          }
+
+          if (response.data.user.orgAffiliation) {
+            if (response.data.user.orgAffiliation === 'admin') {
+              console.log('user is an admin')
+              AsyncStorage.setItem('orgAffiliation', 'admin')
+            } else {
+              console.log('user is not an admin')
+              AsyncStorage.setItem('orgAffiliation', '')
+            }
+          } else {
+            console.log('no orgAffiliation found')
+            AsyncStorage.setItem('orgAffiliation', '')
+          }
+          if (response.data.user.myOrgs) {
+            AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
+          }
+
+          if (response.data.user.activeOrg) {
+            AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
+            // AsyncStorage.setItem('orgName', orgName)
+            // if (orgFocus && orgFocus !== '') {
+            //   AsyncStorage.setItem('orgFocus', orgFocus)
+            // }
+
+            // if (response.data.user.activeOrg === 'guidedcompass') {
+            //   publicOrg = true
+            // }
+            //
+            // if (publicOrg) {
+            //   AsyncStorage.setItem('publicOrg', JSON.stringify(publicOrg))
+            // }
+          }
+
+          // if (placementPartners) {
+          //   AsyncStorage.setItem('placementPartners', JSON.stringify(placementPartners))
+          // }
+
+          if (response.data.user.roleName) {
+            AsyncStorage.setItem('roleName', response.data.user.roleName)
+          }
+
+          if (response.data.user.remoteAuth) {
+            AsyncStorage.setItem('remoteAuth', response.data.user.remoteAuth)
+          }
+
+          this.setState({ isWaiting: false })
+
+          if (this.props.fromAdvisor) {
+            // mentor or teacher
+
+            if (response.data.user.roleName !== 'Student') {
+              this.setState({ successMessage: "You have been signed up. The mobile app isn't the best user experience, so please sign on using the web app at www.guidedcompass.com"})
+            } else {
+              // error - students can't view
+              this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
+            }
+
+          } else {
+
+            if (this.state.opportunityId) {
+              if (response.data.user && response.data.user.myOrgs && !response.data.user.myOrgs.includes('unite-la') && this.props.opportunityOrg === 'unite-la') {
+                this.props.navigation.navigate('AddWorkspaces', { opportunityOrg: this.props.opportunityOrg, opportunityId: this.state.opportunityId})
+              } else {
+                this.props.navigation.navigate('OpportunityDetails', { opportunityId: this.state.opportunityId})
+              }
+            } else {
+              this.props.navigation.navigate('App')
+            }
+          }
+        }
+
+      } else {
+        console.error('there was an error verifying the verification code ', response.data.message);
+
+        this.setState({ isSaving: false, errorMessage: response.data.message, error: { message: response.data.message }})
+
+      }
+    }).catch((error) => {
+        console.log('The verification code verification did not work', error);
+        this.setState({ isSaving: false, errorMessage: error.toString() })
+    });
+  }
+
   render() {
 
     return (
@@ -961,161 +1276,413 @@ class LogInForm extends Component {
 
         <ImageBackground source={{uri: 'https://www.guidedcompass.com/public-server/mobile-app/compass-mobile-background-image.png'}} style={[styles.absolutePosition,styles.absoluteTop0,styles.absoluteLeft0,styles.absoluteRight0,styles.absoluteBottom0,styles.fullScreenWidth,styles.fullScreenHeight]}>
           <ScrollView>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-              {(this.props.type && this.props.type === 'SignUp') ? (
-                <View>
-                  <View style={[styles.rowDirection,styles.topMargin20]}>
-                    <View style={[styles.flex20]}>
-                      <View style={[styles.square30]} />
+            {(this.state.showVerifyCode) ? (
+              <View>
+                <View style={[styles.rowDirection,styles.topMargin20]}>
+                  <View style={[styles.flex20]}>
+                    <View style={[styles.square30]} />
+                  </View>
+                  <View style={[styles.flex60]}>
+                    <View style={[styles.rowDirection,styles.flexCenter]}>
+                      <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: logoImg}} style={[styles.horizontalPadding10,styles.width150,styles.height50,styles.contain,styles.topMargin25]} /></TouchableOpacity>
                     </View>
-                    <View style={[styles.flex60]}>
-                      <View style={[styles.rowDirection,styles.flexCenter]}>
-                        <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: logoImg}} style={[styles.horizontalPadding10,styles.width150,styles.height50,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        {/*
-                        {(this.state.orgCode && this.state.orgLogoURI) ? (
-                          <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: addIcon}} style={[styles.horizontalPadding10,styles.square16,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        )}
-                        {(this.state.orgCode && this.state.orgLogoURI) && (
-                          <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: this.state.orgLogoURI}} style={[styles.horizontalPadding10,styles.square30,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        )}*/}
-                      </View>
-                    </View>
-                    <View style={[styles.flex20]}>
-                      {(this.state.courseName) && (
-                        <View>
-                          <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-                          <Text style={[styles.descriptionText2,styles.rightText,styles.whiteColor]}>Course:</Text>
-                          <Text style={[styles.rightText,styles.whiteColor]}>{this.state.courseName}</Text>
-                        </View>
-                      )}
+                  </View>
+                  <View style={[styles.flex20]}>
+                  </View>
+                </View>
+
+                <View style={[styles.standardBorder,styles.topMargin30]}>
+                  <Text style={[styles.standardText,styles.whiteColor,styles.topPadding20,styles.centerText]}>Verify Your Identity</Text>
+
+                  <View style={[styles.padding40]}>
+                    <View style={[styles.row10]}>
+                      <Text style={[styles.standardText,styles.whiteColor,styles.centerText]}>A verification code has been sent to your email. Enter the code to continue.</Text>
                     </View>
 
+                    <View style={[styles.row10]}>
+
+                      <TextInput
+                        style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                        onChangeText={(text) => this.formChangeHandler("verificationCode", text)}
+                        value={this.state.verificationCode}
+                        placeholder="e.g. 123..."
+                        placeholderTextColor={styles.faintColor.color}
+                        keyboardType='numeric'
+                      />
+                    </View>
+
+                    <View style={[styles.row15]}>
+                      <TouchableOpacity style={(this.state.verificationCode) ? [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter,styles.washOut2]} disabled={(this.state.verificationCode) ? false : true} onPress={() => this.submitCode()}><Text style={[styles.descriptionText2,styles.whiteColor]}>Continue</Text></TouchableOpacity>
+                    </View>
+
+                    <View style={[styles.row5]}>
+                      <TouchableOpacity onPress={() => this.resendCode()}><Text style={[styles.ctaColor,styles.boldText]}>Resend code </Text></TouchableOpacity>
+                    </View>
+
+                    {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text style={[styles.descriptionText2,styles.row5,styles.errorColor]}>{this.state.errorMessage}</Text> : <View />}
+                    {(this.state.successMessage && this.state.successMessage !== '') ? <Text style={[styles.descriptionText2,styles.row5,styles.ctaColor]}>{this.state.successMessage}</Text> : <View />}
+
+                    <View style={[styles.topPadding20]}>
+                      <Text style={[styles.descriptionText2,styles.whiteColor,styles.centerText]}>Need help? <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}><Text style={[styles.descriptionText2,styles.ctaColor]}>Contact us</Text></TouchableOpacity></Text>
+                    </View>
                   </View>
 
-                  <View style={[styles.padding30]}>
-                    {/*
-                    {(this.state.orgName) ? (
-                      <View style={[styles.bottomMargin20]}>
-                        {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
-                          <Text style={[styles.standardText,styles.whiteColor]}>{this.state.orgName} {this.state.roleName} Sign Up</Text>
-                        ) : (
-                          <Text style={[styles.standardText,styles.errorColor,styles.whiteColor]}>Invalid Role Name</Text>
-                        )}
+                </View>
+              </View>
+            ) : (
+              <View>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                  {(this.props.type && this.props.type === 'SignUp') ? (
+                    <View>
+                      <View style={[styles.rowDirection,styles.topMargin20]}>
+                        <View style={[styles.flex20]}>
+                          <View style={[styles.square30]} />
+                        </View>
+                        <View style={[styles.flex60]}>
+                          <View style={[styles.rowDirection,styles.flexCenter]}>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: logoImg}} style={[styles.horizontalPadding10,styles.width150,styles.height50,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            {/*
+                            {(this.state.orgCode && this.state.orgLogoURI) ? (
+                              <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: addIcon}} style={[styles.horizontalPadding10,styles.square16,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            )}
+                            {(this.state.orgCode && this.state.orgLogoURI) && (
+                              <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: this.state.orgLogoURI}} style={[styles.horizontalPadding10,styles.square30,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            )}*/}
+                          </View>
+                        </View>
+                        <View style={[styles.flex20]}>
+                        </View>
+
                       </View>
-                    ) : (
-                      <View style={[styles.bottomMargin20]}>
-                        {(this.state.roleName) ? (
-                          <View>
-                            {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
-                              <Text style={[styles.standardText,styles.centerText,styles.whiteColor]}>{this.state.roleName} Sign Up</Text>
-                            ) : (
-                              <Text style={[styles.standardText,styles.centerText,styles.whiteColor]}>Invalid Role Name</Text>
+
+                      <View style={[styles.padding30]}>
+                        {(this.state.successMessage) ? (
+                          <View style={[styles.horizontalPadding30]}>
+                            <Text style={[styles.ctaColor,styles.standardText]}>{this.state.successMessage}</Text>
+                            {(this.state.successLink) && (
+                              <View style={[styles.topPadding20]}>
+                                <TouchableOpacity onPress={() => Linking.openURL(this.state.successLink)}><Text style={[styles.ctaColor,styles.standardText,styles.boldText]}>{this.state.successLink}</Text></TouchableOpacity>
+                              </View>
                             )}
                           </View>
                         ) : (
-                          <Text style={[styles.standardText,styles.centerText,styles.whiteColor]}>Your handy career advisor</Text>
-                        )}
-                      </View>
-                    )}*/}
-
-                    {(this.state.successMessage) ? (
-                      <View style={[styles.horizontalPadding30]}>
-                        <Text style={[styles.ctaColor,styles.standardText]}>{this.state.successMessage}</Text>
-                        {(this.state.successLink) && (
-                          <View style={[styles.topPadding20]}>
-                            <TouchableOpacity onPress={() => Linking.openURL(this.state.successLink)}><Text style={[styles.ctaColor,styles.standardText,styles.boldText]}>{this.state.successLink}</Text></TouchableOpacity>
-                          </View>
-                        )}
-                      </View>
-                    ) : (
-                      <View>
-                        {(!this.state.originalRoleName) && (
                           <View>
-                            <View style={[styles.row10]}>
-                              <View style={[styles.rowDirection]}>
-                                <View style={[styles.calcColumn105]}>
-                                  <Text style={[styles.standardText,styles.row10,styles.whiteColor]}>Which best describes you?<Text style={[styles.errorColor]}>*</Text></Text>
-                                </View>
-                                <View style={[styles.width45,styles.leftPadding]}>
-                                  <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                  <View style={[styles.notiBubbleInfo7of9, { borderRadius: 15 }]}>
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRoleDefinitions: true })}>
-                                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
-                                    </TouchableOpacity>
+                            {(!this.state.originalRoleName) && (
+                              <View>
+                                <View style={[styles.row10]}>
+                                  <View style={[styles.rowDirection]}>
+                                    <View style={[styles.calcColumn105]}>
+                                      <Text style={[styles.standardText,styles.row10,styles.whiteColor]}>Which best describes you?<Text style={[styles.errorColor]}>*</Text></Text>
+                                    </View>
+                                    <View style={[styles.width45,styles.leftPadding]}>
+                                      <View style={[styles.halfSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                      <View style={[styles.notiBubbleInfo7of9, { borderRadius: 15 }]}>
+                                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showRoleDefinitions: true })}>
+                                          <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                                        </TouchableOpacity>
+                                      </View>
+                                    </View>
                                   </View>
+
+                                  {(Platform.OS === 'ios') ? (
+                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Role Name", selectedIndex: null, selectedName: "roleName", selectedValue: this.state.roleName, selectedOptions: this.state.roleNameOptions, selectedSubKey: null })}>
+                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20,styles.whiteBackground]}>
+                                        <View style={[styles.calcColumn115]}>
+                                          <Text style={[styles.descriptionText1,styles.white]}>{this.state.roleName}</Text>
+                                        </View>
+                                        <View style={[styles.width20,styles.topMargin5]}>
+                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                        </View>
+                                      </View>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <Picker
+                                      selectedValue={this.state.roleName}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("roleName",itemValue)
+                                      }>
+                                      {this.state.roleNameOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  )}
+                                  {/*
+                                  <View style={[styles.rowDirection,styles.flexWrap]}>
+                                    {this.state.roleNameOptions.map((value, index) =>
+                                      <View key={value}>
+                                        <View style={[styles.rightPadding,styles.bottomPadding5]}>
+                                          <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
+                                            {(this.state.roleName === value) ? (
+                                              <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.whiteBorder,styles.whiteBackground]}>
+                                                <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
+                                              </View>
+                                            ) : (
+                                              <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.whiteBorder]}>
+                                                <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
+                                              </View>
+                                            )}
+                                          </TouchableOpacity>
+                                        </View>
+                                      </View>
+                                    )}
+                                  </View>*/}
                                 </View>
                               </View>
+                            )}
 
-                              {(Platform.OS === 'ios') ? (
-                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: "Role Name", selectedIndex: null, selectedName: "roleName", selectedValue: this.state.roleName, selectedOptions: this.state.roleNameOptions, selectedSubKey: null })}>
-                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20,styles.whiteBackground]}>
-                                    <View style={[styles.calcColumn115]}>
-                                      <Text style={[styles.descriptionText1,styles.white]}>{this.state.roleName}</Text>
-                                    </View>
-                                    <View style={[styles.width20,styles.topMargin5]}>
-                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                    </View>
+                            {(!this.state.rolesSupported.includes(this.state.roleName)) ? (
+                              <View style={[styles.topMargin20]}>
+                                <Text style={[styles.standardText,styles.whiteColor]}>{this.state.unsupportedRoleErrorMessage}</Text>
+                              </View>
+                            ) : (
+                              <KeyboardAvoidingView behavior="padding">
+                                <View style={[styles.topPadding]}>
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("firstName", text)}
+                                      value={this.state.firstName}
+                                      placeholder="First name..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                    />
                                   </View>
-                                </TouchableOpacity>
-                              ) : (
-                                <Picker
-                                  selectedValue={this.state.roleName}
-                                  onValueChange={(itemValue, itemIndex) =>
-                                    this.formChangeHandler("roleName",itemValue)
-                                  }>
-                                  {this.state.roleNameOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                </Picker>
-                              )}
-                              {/*
-                              <View style={[styles.rowDirection,styles.flexWrap]}>
-                                {this.state.roleNameOptions.map((value, index) =>
-                                  <View key={value}>
-                                    <View style={[styles.rightPadding,styles.bottomPadding5]}>
-                                      <TouchableOpacity onPress={() => this.itemClicked(value,'roleName')}>
-                                        {(this.state.roleName === value) ? (
-                                          <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.whiteBorder,styles.whiteBackground]}>
-                                            <Text style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>{value}</Text>
-                                          </View>
-                                        ) : (
-                                          <View style={[styles.row7,styles.horizontalPadding20,styles.slightlyRoundedCorners,styles.whiteBorder]}>
-                                            <Text style={[styles.descriptionText2,styles.whiteColor,styles.boldText]}>{value}</Text>
+                                  <View style={[styles.row10]}>
+                                  <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("lastName", text)}
+                                      value={this.state.lastName}
+                                      placeholder="Last name..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                    />
+                                  </View>
+
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("email", text)}
+                                      value={this.state.email}
+                                      placeholder="Email..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                      autoCapitalize='none'
+                                    />
+                                  </View>
+
+                                  <View style={[styles.row10]}>
+                                    <TextInput
+                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                      onChangeText={(text) => this.formChangeHandler("password", text)}
+                                      value={this.state.password}
+                                      placeholder="Password..."
+                                      placeholderTextColor={styles.faintColor.color}
+                                      autoCapitalize='none'
+                                      secureTextEntry={true}
+                                    />
+                                  </View>
+
+                                  <View style={[styles.row10,styles.rowDirection]}>
+                                    <View style={[styles.calcColumn105]}>
+                                      <TextInput
+                                        style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.descriptionText1,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}
+                                        onChangeText={(text) => this.formChangeHandler("orgCode", text)}
+                                        value={this.state.orgCode}
+                                        placeholder="Org code (optional)"
+                                        placeholderTextColor={styles.faintColor.color}
+                                        autoCapitalize='none'
+                                      />
+                                    </View>
+                                    <View style={[styles.width45,styles.leftPadding,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}>
+                                      <View style={[styles.topMargin5,styles.notiBubbleInfo7of9, { borderRadius: 15 }]}>
+                                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showOrgCodeDefinition: true })}>
+                                          <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
+                                        </TouchableOpacity>
+                                      </View>
+                                    </View>
+
+                                  </View>
+
+                                  {(this.state.roleName && this.state.roleName.toLowerCase() === 'student') && (
+                                    <View>
+                                      {(this.state.includePathway) && (
+                                        <View style={[styles.row10]}>
+                                          <Text style={[styles.standardText,styles.row10]}>Pathway</Text>
+                                          <Picker
+                                            selectedValue={this.state.pathway}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("pathway",itemValue)
+                                            }>
+                                            {this.state.pathwayOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
+                                          </Picker>
+                                        </View>
+                                      )}
+
+                                    </View>
+                                  )}
+
+                                  {((this.state.roleName && this.state.roleName.toLowerCase() === 'mentor') || (this.state.roleName && this.state.roleName.toLowerCase() === 'employer representative')) && (
+                                    <View>
+                                      <View style={[styles.row10]}>
+                                        <TextInput
+                                          style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                          onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
+                                          value={this.state.jobTitle}
+                                          placeholder="Job Title..."
+                                          placeholderTextColor={styles.faintColor.color}
+                                        />
+                                      </View>
+                                      <View style={[styles.row10]}>
+                                        <TextInput
+                                          style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                          onChangeText={(text) => this.formChangeHandler("employerName", text)}
+                                          value={this.state.employerName}
+                                          placeholder="Employer name..."
+                                          placeholderTextColor={styles.faintColor.color}
+                                        />
+                                        {(this.state.employers.length > 0) && (
+                                          <View>
+                                            <View style={[styles.spacer]} />
+
+                                            {this.state.employers.map(value =>
+                                              <View key={value._id} style={[styles.row5]}>
+                                                <TouchableOpacity onPress={() => this.employerClicked(value)}>
+                                                  <View style={[styles.rowDirection]}>
+                                                    <View style={[styles.rightPadding]}>
+                                                      <Image source={{ uri: employersIconBlue}} style={[styles.square22,styles.contain]} />
+                                                    </View>
+                                                    <View>
+                                                      <Text style={[styles.ctaColor]}>{value.employerName}</Text>
+                                                    </View>
+                                                  </View>
+                                                </TouchableOpacity>
+                                              </View>)}
                                           </View>
                                         )}
-                                      </TouchableOpacity>
+                                      </View>
                                     </View>
+                                  )}
+
+                                  {(this.state.roleName === 'Teacher' || this.state.roleName === 'Counselor' || this.state.roleName === 'Work-Based Learning Coordinator') && (
+                                    <View>
+                                      <View style={[styles.row10]}>
+                                        <TextInput
+                                          style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
+                                          onChangeText={(text) => this.formChangeHandler("school", text)}
+                                          value={this.state.school}
+                                          placeholder={(this.state.roleName === 'Work-Based Learning Coordinator') ? "Program Name" : "School Name"}
+                                          placeholderTextColor={styles.faintColor.color}
+                                        />
+                                      </View>
+                                    </View>
+                                  )}
+                                </View>
+
+                                {(this.state.roleName === 'Student / Career Seeker') && (
+                                  <View style={[styles.row10,styles.rowDirection]}>
+                                    <View style={[styles.width80]}>
+                                      <Switch
+                                         onValueChange = {(value) => this.formChangeHandler("subscribed", value)}
+                                         value = {this.state.subscribed}
+                                      />
+                                    </View>
+                                    <View style={[styles.calcColumn140]}>
+                                      <Text style={[styles.descriptionText3,styles.whiteColor]}>Receive weekly opportunities email based on interests.</Text>
+                                    </View>
+
                                   </View>
                                 )}
-                              </View>*/}
-                            </View>
+
+                                <View style={[styles.row10]}>
+                                    <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.signUp()}>
+                                        <Text style={[styles.standardText,styles.whiteColor]}>Sign Up</Text>
+                                    </TouchableOpacity>
+
+                                    {(this.state.error && this.state.error.message) ? (
+                                      <Text style={[styles.errorColor,styles.centerText,styles.standardText,styles.row5]}>{this.state.error.message}</Text>
+                                    ) : (
+                                      <View />
+                                    )}
+
+                                    <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Already have an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId, opportunityOrg: this.props.opportunityOrg })} style={[styles.descriptionText2,styles.ctaColor]}>Sign in instead</Text></Text>
+
+                                    {(!this.state.orgCode || this.state.orgCode === '') ? (
+                                      <View>
+                                        <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Don't know your org's org code? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')} style={[styles.ctaColor,styles.boldText,styles.descriptionText2]}>Click Here</Text> to request.</Text>
+                                      </View>
+                                    ) : (
+                                      <View />
+                                    )}
+                                </View>
+                              </KeyboardAvoidingView>
+                            )}
+
                           </View>
                         )}
-
-                        {(!this.state.rolesSupported.includes(this.state.roleName)) ? (
-                          <View style={[styles.topMargin20]}>
-                            <Text style={[styles.standardText,styles.whiteColor]}>{this.state.unsupportedRoleErrorMessage}</Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View>
+                      <View style={[styles.rowDirection,styles.topMargin20]}>
+                        <View style={[styles.flex20]}>
+                          <View style={[styles.square30]} />
+                        </View>
+                        <View style={[styles.flex60]}>
+                          <View style={[styles.rowDirection,styles.flexCenter]}>
+                            <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: logoImg}} style={[styles.horizontalPadding10,styles.width150,styles.height50,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            {/*
+                            {(this.state.orgCode && this.state.orgLogoURI) ? (
+                              <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: addIcon}} style={[styles.horizontalPadding10,styles.square16,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            )}
+                            {(this.state.orgCode && this.state.orgLogoURI) && (
+                              <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: this.state.orgLogoURI}} style={[styles.horizontalPadding10,styles.square30,styles.contain,styles.topMargin25]} /></TouchableOpacity>
+                            )}*/}
                           </View>
-                        ) : (
-                          <KeyboardAvoidingView behavior="padding">
-                            <View style={[styles.topPadding]}>
-                              <View style={[styles.row10]}>
-                                <TextInput
-                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                  onChangeText={(text) => this.formChangeHandler("firstName", text)}
-                                  value={this.state.firstName}
-                                  placeholder="First name..."
-                                  placeholderTextColor={styles.faintColor.color}
-                                />
-                              </View>
-                              <View style={[styles.row10]}>
-                              <TextInput
-                                  style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                  onChangeText={(text) => this.formChangeHandler("lastName", text)}
-                                  value={this.state.lastName}
-                                  placeholder="Last name..."
-                                  placeholderTextColor={styles.faintColor.color}
-                                />
-                              </View>
+                        </View>
+                        <View style={[styles.flex20]}>
+                          {(this.state.courseName) && (
+                            <View>
+                              <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                              <Text style={[styles.descriptionText2,styles.rightText,styles.whiteColor]}>Course:</Text>
+                              <Text style={[styles.rightText,styles.whiteColor]}>{this.state.courseName}</Text>
+                            </View>
+                          )}
+                        </View>
 
+                      </View>
+
+                      <View style={[styles.padding30]}>
+                          {(this.state.orgName) ? (
+                            <View style={[styles.bottomMargin20]}>
+                              {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
+                                <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>{this.state.orgName} {this.state.roleName} Sign In</Text>
+                              ) : (
+                                <View>
+                                  {(this.props.type && this.props.type === 'SignUp') ? (
+                                    <View>
+                                      <Text style={[styles.standardText,styles.errorColor, styles.centerText]}>Invalid Role Name</Text>
+                                    </View>
+                                  ) : (
+                                    <View />
+                                  )}
+                                </View>
+                              )}
+                            </View>
+                          ) : (
+                            <View style={[styles.bottomMargin20]}>
+                              {(this.state.roleName) ? (
+                                <View>
+                                  {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
+                                    <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>{this.state.roleName} Sign In</Text>
+                                  ) : (
+                                    <View />
+                                  )}
+                                </View>
+                              ) : (
+                                <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>Sign In</Text>
+                              )}
+                            </View>
+                          )}
+
+                          <View style={[styles.screenHeight10]} />
+
+                          <KeyboardAvoidingView behavior="padding">
+                            <View>
                               <View style={[styles.row10]}>
                                 <TextInput
                                   style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
@@ -1126,7 +1693,6 @@ class LogInForm extends Component {
                                   autoCapitalize='none'
                                 />
                               </View>
-
                               <View style={[styles.row10]}>
                                 <TextInput
                                   style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
@@ -1138,251 +1704,33 @@ class LogInForm extends Component {
                                   secureTextEntry={true}
                                 />
                               </View>
-
-                              <View style={[styles.row10,styles.rowDirection]}>
-                                <View style={[styles.calcColumn105]}>
-                                  <TextInput
-                                    style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.descriptionText1,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}
-                                    onChangeText={(text) => this.formChangeHandler("orgCode", text)}
-                                    value={this.state.orgCode}
-                                    placeholder="Org code (optional)"
-                                    placeholderTextColor={styles.faintColor.color}
-                                    autoCapitalize='none'
-                                  />
-                                </View>
-                                <View style={[styles.width45,styles.leftPadding,styles.whiteUnderline,styles.offsetUnderline,styles.height40]}>
-                                  <View style={[styles.topMargin5,styles.notiBubbleInfo7of9, { borderRadius: 15 }]}>
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showOrgCodeDefinition: true })}>
-                                      <Image source={{ uri: questionMarkBlue}} style={[styles.square14,styles.contain]} />
-                                    </TouchableOpacity>
-                                  </View>
-                                </View>
-
-                              </View>
-
-                              {(this.state.roleName && this.state.roleName.toLowerCase() === 'student') && (
-                                <View>
-                                  {(this.state.includePathway) && (
-                                    <View style={[styles.row10]}>
-                                      <Text style={[styles.standardText,styles.row10]}>Pathway</Text>
-                                      <Picker
-                                        selectedValue={this.state.pathway}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("pathway",itemValue)
-                                        }>
-                                        {this.state.pathwayOptions.map(value => <Picker.Item key={value.title} label={value.title} value={value.title} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-                              )}
-
-                              {((this.state.roleName && this.state.roleName.toLowerCase() === 'mentor') || (this.state.roleName && this.state.roleName.toLowerCase() === 'employer representative')) && (
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <TextInput
-                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                      onChangeText={(text) => this.formChangeHandler("jobTitle", text)}
-                                      value={this.state.jobTitle}
-                                      placeholder="Job Title..."
-                                      placeholderTextColor={styles.faintColor.color}
-                                    />
-                                  </View>
-                                  <View style={[styles.row10]}>
-                                    <TextInput
-                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                      onChangeText={(text) => this.formChangeHandler("employerName", text)}
-                                      value={this.state.employerName}
-                                      placeholder="Employer name..."
-                                      placeholderTextColor={styles.faintColor.color}
-                                    />
-                                    {(this.state.employers.length > 0) && (
-                                      <View>
-                                        <View style={[styles.spacer]} />
-
-                                        {this.state.employers.map(value =>
-                                          <View key={value._id} style={[styles.row5]}>
-                                            <TouchableOpacity onPress={() => this.employerClicked(value)}>
-                                              <View style={[styles.rowDirection]}>
-                                                <View style={[styles.rightPadding]}>
-                                                  <Image source={{ uri: employersIconBlue}} style={[styles.square22,styles.contain]} />
-                                                </View>
-                                                <View>
-                                                  <Text style={[styles.ctaColor]}>{value.employerName}</Text>
-                                                </View>
-                                              </View>
-                                            </TouchableOpacity>
-                                          </View>)}
-                                      </View>
-                                    )}
-                                  </View>
-                                </View>
-                              )}
-
-                              {(this.state.roleName === 'Teacher' || this.state.roleName === 'Counselor' || this.state.roleName === 'Work-Based Learning Coordinator') && (
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <TextInput
-                                      style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                                      onChangeText={(text) => this.formChangeHandler("school", text)}
-                                      value={this.state.school}
-                                      placeholder={(this.state.roleName === 'Work-Based Learning Coordinator') ? "Program Name" : "School Name"}
-                                      placeholderTextColor={styles.faintColor.color}
-                                    />
-                                  </View>
-                                </View>
-                              )}
                             </View>
-
-                            {(this.state.roleName === 'Student / Career Seeker') && (
-                              <View style={[styles.row10,styles.rowDirection]}>
-                                <View style={[styles.width80]}>
-                                  <Switch
-                                     onValueChange = {(value) => this.formChangeHandler("subscribed", value)}
-                                     value = {this.state.subscribed}
-                                  />
-                                </View>
-                                <View style={[styles.calcColumn140]}>
-                                  <Text style={[styles.descriptionText3,styles.whiteColor]}>Receive weekly opportunities email based on interests.</Text>
-                                </View>
-
-                              </View>
-                            )}
 
                             <View style={[styles.row10]}>
-                                <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} disabled={this.state.isSaving} onPress={() => this.signUp()}>
-                                    <Text style={[styles.standardText,styles.whiteColor]}>Sign Up</Text>
-                                </TouchableOpacity>
+                                <View style={[styles.topMargin]}>
+                                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.signIn()}>
+                                    <Text style={[styles.standardText,styles.whiteColor]}>Sign In</Text>
+                                  </TouchableOpacity>
+                                </View>
 
-                                {(this.state.error && this.state.error.message) ? (
-                                  <Text style={[styles.errorColor,styles.centerText,styles.standardText,styles.row5]}>{this.state.error.message}</Text>
-                                ) : (
-                                  <View />
-                                )}
+                                <View style={[styles.topMargin30]}>
+                                  <Text style={[styles.standardText,styles.errorColor]}>{this.state.error.message}</Text>
+                                  <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Haven't created an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId })} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Sign up instead</Text></Text>
 
-                                <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Already have an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId, opportunityOrg: this.props.opportunityOrg })} style={[styles.descriptionText2,styles.ctaColor]}>Sign in instead</Text></Text>
+                                  <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Forgot your password? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/reset-password')} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Reset password</Text></Text>
+                                </View>
 
-                                {(!this.state.orgCode || this.state.orgCode === '') ? (
-                                  <View>
-                                    <Text style={[styles.centerText,styles.whiteColor,styles.descriptionText2,styles.topMargin20]}>Don't know your org's org code? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')} style={[styles.ctaColor,styles.boldText,styles.descriptionText2]}>Click Here</Text> to request.</Text>
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
+
+                                <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
                             </View>
                           </KeyboardAvoidingView>
-                        )}
 
                       </View>
-                    )}
-                  </View>
-                </View>
-              ) : (
-                <View>
-                  <View style={[styles.rowDirection,styles.topMargin20]}>
-                    <View style={[styles.flex20]}>
-                      <View style={[styles.square30]} />
                     </View>
-                    <View style={[styles.flex60]}>
-                      <View style={[styles.rowDirection,styles.flexCenter]}>
-                        <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: logoImg}} style={[styles.horizontalPadding10,styles.width150,styles.height50,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        {/*
-                        {(this.state.orgCode && this.state.orgLogoURI) ? (
-                          <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: addIcon}} style={[styles.horizontalPadding10,styles.square16,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        )}
-                        {(this.state.orgCode && this.state.orgLogoURI) && (
-                          <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com')}><Image source={{ uri: this.state.orgLogoURI}} style={[styles.horizontalPadding10,styles.square30,styles.contain,styles.topMargin25]} /></TouchableOpacity>
-                        )}*/}
-                      </View>
-                    </View>
-                    <View style={[styles.flex20]}>
-                      {(this.state.courseName) && (
-                        <View>
-                          <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-                          <Text style={[styles.descriptionText2,styles.rightText,styles.whiteColor]}>Course:</Text>
-                          <Text style={[styles.rightText,styles.whiteColor]}>{this.state.courseName}</Text>
-                        </View>
-                      )}
-                    </View>
-
-                  </View>
-
-                  <View style={[styles.padding30]}>
-                      {(this.state.orgName) ? (
-                        <View style={[styles.bottomMargin20]}>
-                          {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
-                            <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>{this.state.orgName} {this.state.roleName} Sign In</Text>
-                          ) : (
-                            <Text style={[styles.standardText,styles.errorColor, styles.centerText]}>Invalid Role Name</Text>
-                          )}
-                        </View>
-                      ) : (
-                        <View style={[styles.bottomMargin20]}>
-                          {(this.state.roleName) ? (
-                            <View>
-                              {(this.state.roleName && this.validateRoleName(this.state.roleName)) ? (
-                                <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>{this.state.roleName} Sign In</Text>
-                              ) : (
-                                <Text style={[styles.standardText,styles.errorColor, styles.centerText]}>Invalid Role Name</Text>
-                              )}
-                            </View>
-                          ) : (
-                            <Text style={[styles.standardText,styles.whiteColor, styles.centerText]}>Sign In</Text>
-                          )}
-                        </View>
-                      )}
-
-                      <View style={[styles.screenHeight10]} />
-
-                      <KeyboardAvoidingView behavior="padding">
-                        <View>
-                          <View style={[styles.row10]}>
-                            <TextInput
-                              style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                              onChangeText={(text) => this.formChangeHandler("email", text)}
-                              value={this.state.email}
-                              placeholder="Email..."
-                              placeholderTextColor={styles.faintColor.color}
-                              autoCapitalize='none'
-                            />
-                          </View>
-                          <View style={[styles.row10]}>
-                            <TextInput
-                              style={[styles.whiteColor,styles.bottomMargin,styles.horizontalPadding10,styles.whiteUnderline,styles.offsetUnderline, styles.height40,styles.descriptionText1]}
-                              onChangeText={(text) => this.formChangeHandler("password", text)}
-                              value={this.state.password}
-                              placeholder="Password..."
-                              placeholderTextColor={styles.faintColor.color}
-                              autoCapitalize='none'
-                              secureTextEntry={true}
-                            />
-                          </View>
-                        </View>
-
-                        <View style={[styles.row10]}>
-                            <View style={[styles.topMargin]}>
-                              <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.signIn()}>
-                                <Text style={[styles.standardText,styles.whiteColor]}>Sign In</Text>
-                              </TouchableOpacity>
-                            </View>
-
-                            <View style={[styles.topMargin30]}>
-                              <Text style={[styles.standardText,styles.errorColor]}>{this.state.error.message}</Text>
-                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Haven't created an account? <Text onPress={() => this.props.navigation.navigate(this.state.toggleLink, { orgCode: this.state.orgCode, courseId: this.state.courseId, workId: this.state.workId, roleName: this.state.roleName, opportunityId: this.state.opportunityId })} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Sign up instead</Text></Text>
-
-                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.row5]}>Forgot your password? <Text onPress={() => Linking.openURL('https://www.guidedcompass.com/reset-password')} style={[styles.descriptionText2,styles.ctaColor,styles.boldText]}>Reset password</Text></Text>
-                            </View>
-
-
-                            <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
-                        </View>
-                      </KeyboardAvoidingView>
-
-                  </View>
-                </View>
-              )}
-            </TouchableWithoutFeedback>
+                  )}
+                </TouchableWithoutFeedback>
+              </View>
+            )}
           </ScrollView>
 
         </ImageBackground>

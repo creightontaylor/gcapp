@@ -18,6 +18,7 @@ const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/a
 const socialIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/social-icon-dark.png';
 
 import SubPicker from '../common/SubPicker';
+import SubRenderProfiles from '../common/RenderProfiles';
 
 class PeopleMatching extends Component {
   constructor(props) {
@@ -37,12 +38,9 @@ class PeopleMatching extends Component {
 
     this.retrieveData = this.retrieveData.bind(this)
     this.formChangeHandler = this.formChangeHandler.bind(this)
-    this.renderProfiles = this.renderProfiles.bind(this)
     this.calculateMatches = this.calculateMatches.bind(this)
     this.toggleSearchBar = this.toggleSearchBar.bind(this)
-    this.favoriteItem = this.favoriteItem.bind(this)
     this.closeModal = this.closeModal.bind(this)
-    this.followPerson = this.followPerson.bind(this)
 
   }
 
@@ -86,9 +84,10 @@ class PeopleMatching extends Component {
       //const email = 'harry@potter.com'
       this.setState({ emailId, postsAreLoading: true })
 
+      console.log('what is the email of this user 1', emailId);
       if (emailId !== null) {
         // We have data!!
-        console.log('what is the email of this user', emailId);
+        console.log('what is the email of this user 2', emailId);
 
         this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
           roleName, activeOrg, orgFocus, orgName, remoteAuth
@@ -172,7 +171,6 @@ class PeopleMatching extends Component {
              let profile = { firstName: cuFirstName, lastName: cuLastName, email: emailId }
              profile['zipcode'] = response.data.user.zipcode
 
-             // pulling these out for followPerson()
              const pictureURL = response.data.user.pictureURL
              const headline = response.data.user.headline
 
@@ -515,233 +513,6 @@ class PeopleMatching extends Component {
     }
   }
 
-  followPerson(e, person) {
-    console.log('followPerson called', e, person)
-
-    e.stopPropagation()
-    e.preventDefault()
-
-    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
-
-    const senderPictureURL = this.state.pictureURL
-    const senderEmail = this.state.emailId
-    const senderFirstName = this.state.cuFirstName
-    const senderLastName = this.state.cuLastName
-    const senderUsername = this.state.username
-    const senderHeadline = this.state.headline
-    const recipientPictureURL = person.pictureURL
-    const recipientEmail = person.email
-    const recipientFirstName = person.firstName
-    const recipientLastName = person.lastName
-    const recipientUsername = person.username
-    const recipientHeadline = person.headline
-    const relationship = 'Peer'
-    const orgCode = this.state.activeOrg
-    const orgName = this.state.orgName
-
-    const friend = {
-      senderPictureURL, senderEmail, senderFirstName, senderLastName, senderUsername, senderHeadline,
-      recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
-      relationship, orgCode, orgName }
-
-    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
-    .then((response) => {
-
-      if (response.data.success) {
-
-        friend['active'] = false
-        friend['friend2Email'] = recipientEmail
-
-        let friends = this.state.friends
-        friends.push(friend)
-        console.log('show friends: ', friends)
-        this.setState({ successMessage: response.data.message, friends })
-
-      } else {
-
-        this.setState({ errorMessage: response.data.message })
-      }
-    }).catch((error) => {
-        console.log('Advisee request send did not work', error);
-    });
-  }
-
-  renderProfiles() {
-    console.log('renderProfiles called')
-
-    let rows = []
-
-    if (this.state.members) {
-      for (let i = 1; i <= this.state.members.length; i++) {
-
-        const index = i - 1
-
-        let matchScore = this.state.members[i - 1].matchScore
-        // const matchScore = 50
-        // if (this.state.matchScores) {
-        //   if (this.state.filteredResults) {
-        //     matchScore = null
-        //   } else if (this.state.matchScores[i - 1]) {
-        //     matchScore = this.state.matchScores[i - 1]
-        //   }
-        // }
-
-        rows.push(
-          <View key={i}>
-            <View>
-              <TouchableOpacity onPress={(this.state.userType === 'Peers') ? () => this.props.navigation.navigate('Profile', { username: this.state.members[i - 1].username}) : () => this.props.navigation.navigate('AdvisorProfile', { username: this.state.members[i - 1].username})}>
-                <View style={[styles.card,styles.centerHorizontally,styles.fullScreenWidth,styles.topMargin20]}>
-                  <View style={[styles.rowDirection]}>
-                    <View style={[styles.flex15]}>
-                      {(matchScore) ? (
-                        <View style={[styles.flex1]}>
-                          <Progress.Circle progress={matchScore / 100} size={styles.width50.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
-                        </View>
-                      ) : (
-                        <View />
-                      )}
-                    </View>
-                    <View style={[styles.flex70, styles.flexCenter]}>
-                      {(this.state.members[i - 1].pictureURL) ? (
-                        <Image source={{ uri: this.state.members[i - 1].pictureURL}} style={[styles.square100,styles.contain, { borderRadius: 50 }]} />
-                      ) : (
-                        <Image source={{ uri: profileIconDark}} style={[styles.square60,styles.contain]} />
-                      )}
-                    </View>
-                    <View style={[styles.flex15]}>
-                      {(this.props.pageSource === 'Profiles') ? (
-                        <View>
-                          {(this.state.members[i - 1].publicProfile) ? (
-                            <View>
-                              {(this.state.members[i - 1].publicProfileExtent) ? (
-                                <View>
-                                  {(this.state.members[i - 1].publicProfileExtent === 'Public') ? (
-                                    <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>{this.state.members[i - 1].publicProfileExtent}</Text>
-                                  ) : (
-                                    <Text style={[styles.middleColor,styles.descriptionText4,styles.rightText]}>{this.state.members[i - 1].publicProfileExtent}</Text>
-                                  )}
-                                </View>
-                              ) : (
-                                <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>Public</Text>
-                              )}
-                            </View>
-                          ) : (
-                            <View>
-                              <Text style={[styles.errorColor,styles.descriptionText4,styles.rightText]}>Private</Text>
-                            </View>
-                          )}
-                        </View>
-                      ) : (
-                        <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.favoriteItem(this.state.members[index]) } style={[styles.alignEnd]}>
-                          <Image source={(this.state.favorites.includes(this.state.members[i - 1]._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  </View>
-
-                  <Text style={[styles.centerText,styles.headingText5,styles.topPadding]}>{this.state.members[i - 1].firstName} {this.state.members[i - 1].lastName}</Text>
-                  {(this.state.members[i - 1].school) ? (
-                    <Text style={[styles.centerText,styles.descriptionText1,styles.topPadding]}>{this.state.members[i - 1].school}{this.state.members[i - 1].gradYear && " '" + this.state.members[i - 1].gradYear}</Text>
-                  ) : (
-                    <View />
-                  )}
-                  {(this.state.members[i - 1].major) ? (
-                    <Text style={[styles.centerText,styles.descriptionText2,styles.topPadding5]}>{this.state.members[i - 1].major}</Text>
-                  ) : (
-                    <View />
-                  )}
-
-                  <View style={[styles.topPadding20]}>
-                    {(this.props.pageSource === 'Profiles') ? (
-                      <View>
-                        {(this.state.friends.some(friend => (friend.friend1Email === this.state.members[i - 1].email || friend.friend2Email === this.state.members[i - 1].email))) ? (
-                          <View>
-
-                            {(this.state.friends.some(friend => (friend.friend1Email === this.state.members[i - 1].email || friend.friend2Email === this.state.members[i - 1].email) && friend.active)) ? (
-                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: this.state.members[i - 1]})}>
-                                <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]}>
-                                  <Text style={[styles.descriptionText1,styles.ctaColor]}>Message</Text>
-                                </TouchableOpacity>
-                              </TouchableOpacity>
-                            ) : (
-                              <TouchableOpacity style={[styles.btnSquarish,styles.mediumBackground, styles.flexCenter]} disabled={true}><Text style={[styles.whiteColor,styles.descriptionText1]}>Pending</Text></TouchableOpacity>
-                            )}
-                          </View>
-                        ) : (
-                          <View>
-                            {console.log('email in question: ', this.state.members[i - 1].email, this.state.members[i - 1].firstName, this.state.members[i - 1].lastName)}
-                            <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,this.state.members[i - 1])}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
-                          </View>
-                        )}
-                      </View>
-                    ) : (
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: this.state.members[i - 1]})}>
-                        <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}>
-                          <Text style={[styles.descriptionText1,styles.whiteColor]}>Message</Text>
-                        </TouchableOpacity>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-
-                  {(this.state.filterCriteriaArray && this.state.filterCriteriaArray[i - 1] && this.state.filterCriteriaArray[i - 1].name) && (
-                    <View style={[styles.topPadding]}>
-                      <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.filterCriteriaArray[i - 1].name}: {this.state.filterCriteriaArray[i - 1].criteria}</Text>
-                    </View>
-                  )}
-
-                  <View style={[styles.spacer]} />
-                </View>
-              </TouchableOpacity>
-            </View>
-
-
-            <View style={[styles.spacer]} />
-
-          </View>
-        )
-      }
-    }
-
-    return rows
-
-  }
-
-  favoriteItem(item, type) {
-    console.log('favoriteItem called', item, type, this.state.members)
-
-    this.setState({ errorMessage: null, successMessage: null, isSaving: true })
-
-    let itemId = item._id
-
-    let favoritesArray = this.state.favorites
-    if (favoritesArray.includes(itemId)) {
-      const index = favoritesArray.indexOf(itemId)
-      favoritesArray.splice(index, 1)
-    } else {
-      favoritesArray.push(itemId)
-    }
-
-    Axios.post('https://www.guidedcompass.com/api/favorites/save', {
-      favoritesArray, emailId: this.state.emailId
-    })
-    .then((response) => {
-      console.log('attempting to save addition to favorites')
-      if (response.data.success) {
-        console.log('saved addition to favorites', response.data)
-
-        this.setState({ successMessage: 'Saved as a favorite!', favorites: favoritesArray, isSaving: false })
-
-      } else {
-        console.log('did not save successfully')
-        this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
-      }
-    }).catch((error) => {
-        console.log('save did not work', error);
-        this.setState({ errorMessage: 'there was an error saving favorites', isSaving: false})
-    });
-  }
-
-
   toggleSearchBar(action) {
     console.log('toggleSearchBar called ', action)
 
@@ -929,8 +700,11 @@ class PeopleMatching extends Component {
 
             {(this.state.members && this.state.members.length > 0) ? (
               <View>
-                {this.renderProfiles()}
-
+                <SubRenderProfiles
+                  favorites={this.state.favorites} members={this.state.members} friends={this.state.friends}
+                  pageSource={this.props.pageSource} navigation={this.props.navigation} userType={this.state.userType}
+                  filterCriteriaArray={this.state.filterCriteriaArray}
+                />
               </View>
             ) : (
               <View>

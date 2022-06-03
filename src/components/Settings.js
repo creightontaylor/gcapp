@@ -1232,10 +1232,16 @@ class Settings extends Component {
                     <View>
                       <View style={[styles.row15]}>
                         <View style={styles.bottomPadding10}>
-                          <Text style={[styles.standardText]}>Email Preferences</Text>
+                          <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/notification-preferences/types/email/' + this.state.emailId)}>
+                            <Text style={[styles.standardText]}>Adjust Your Notification Preferences >></Text>
+                          </TouchableOpacity>
                         </View>
-
+                        {/*
                         <View style={[styles.rowDirection,styles.row10]}>
+
+                            <Text style={[styles.descriptionText3]}>Adjust your notification preferences ></Text>
+                          </TouchableOpacity>
+
                           <View style={[styles.width60]}>
                             <Switch
                                onValueChange = {(value) => this.formChangeHandler('subscribed',value)}
@@ -1245,7 +1251,7 @@ class Settings extends Component {
                           <View style={[styles.calcColumn120]}>
                             <Text style={[styles.descriptionText3]}>Receive weekly emails of event, project, and work opportunities based on your interests.</Text>
                           </View>
-                        </View>
+                        </View>*/}
 
                         {(this.state.serverErrorMessage && this.state.serverErrorMessage !== '') && <Text style={[styles.descriptionText3,styles.boldText,styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
                       </View>
@@ -1253,7 +1259,7 @@ class Settings extends Component {
                       <View style={styles.lightHorizontalLine} />
 
                       <View style={[styles.row20]}>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text style={[styles.standardText]}>{(this.state.publicProfile) ? "Make Your Profile Private" : "Make Your Profile Public"}</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfileDetails', { category: 'Visibility Preferences'})}><Text style={[styles.standardText]}>Adjust Your Privacy Settings</Text></TouchableOpacity>
                       </View>
 
                       <View style={styles.lightHorizontalLine} />

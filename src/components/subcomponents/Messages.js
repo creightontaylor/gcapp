@@ -259,8 +259,23 @@ class Messages extends Component {
              console.log('successfully retrieved profile information')
 
              const pictureURL = response.data.user.pictureURL
-             this.setState({ pictureURL })
+             const headline = response.data.user.headline
+             let schoolName = response.data.user.school
+             if (response.data.user.education && response.data.user.education.length > 0) {
+               schoolName = response.data.user.education[0].name
+               if (response.data.user.education.length > 1) {
+                 for (let i = 1; i <= response.data.user.education.length; i++) {
+                   if (response.data.user.education[i - 1] && this.state.education[i - 1].isContinual) {
+                     schoolName = response.data.user.education[i - 1].name
+                   }
+                 }
+               }
+             }
+             const jobTitle = response.data.user.jobTitle
+             const employerName = response.data.user.employerName
+             const notificationPreferences = response.data.user.notificationPreferences
 
+             this.setState({ pictureURL, headline, schoolName, jobTitle, employerName, notificationPreferences })
 
            } else {
              console.log('no profile data found', response.data.message)
@@ -369,6 +384,14 @@ class Messages extends Component {
       const senderFirstName = this.state.cuFirstName
       const senderLastName = this.state.cuLastName
       const senderEmail = this.state.emailId
+
+      const senderPictureURL = this.state.pictureURL
+      const senderHeadline = this.state.headline
+      const senderUsername = this.state.username
+      const senderSchoolName = this.state.schoolName
+      const senderJobTitle = this.state.jobTitle
+      const senderEmployerName = this.state.employerName
+
       const orgCode = this.state.activeOrg
       const accountCode = this.state.accountCode
 
@@ -379,53 +402,104 @@ class Messages extends Component {
       let members = [{ firstName: this.state.cuFirstName, lastName: this.state.cuLastName, email: this.state.emailId, pictureURL: this.state.pictureURL, username: this.state.username, roleName: this.state.roleName }]
       members = members.concat(recipients)
 
+      let messageThreadURL = null
+      if (!this.state.recipient.roleName || this.state.recipient.roleName === 'Student' || this.state.recipient.roleName === 'Career-Seeker') {
+        messageThreadURL = 'https://www.guidedcompass.com/app/messaging'
+      } else if (this.state.recipient.roleName === 'Advisor' || this.state.recipient.roleName === 'Teacher' || this.state.recipient.roleName === 'Mentor') {
+        messageThreadURL = 'https://www.guidedcompass.com/advisor/messaging'
+      } else if (this.state.recipientRoleName === 'WBLC' || this.state.recipient.roleName === 'Work-Based Learning Coordinator' || this.state.recipient.roleName === 'Admin') {
+        messageThreadURL = 'https://www.guidedcompass.com/organizations/' + orgCode + '/messaging'
+      } else if (this.state.recipientRoleName === 'Employer' || this.state.recipient.roleName === 'Employer Representative') {
+        messageThreadURL = 'https://www.guidedcompass.com/employers/' + this.state.recipient.accountCode + '/messaging'
+      }
+
       const createdAt = new Date()
       const updatedAt = new Date()
 
-      Axios.post('https://www.guidedcompass.com/api/messages/send', {
-        emailId, message, senderFirstName, senderLastName, senderEmail, orgCode, accountCode, recipients, members,
-        createdAt, updatedAt
-      })
-      .then((response) => {
-        console.log('attempting to save addition to groups', message, senderEmail)
+      const self = this
+      function actuallySendMessage(unsubscribed) {
+        console.log('actuallySendMessage called')
 
-        if (response.data.success) {
-          console.log('saved addition to groups', response.data)
+        Axios.post('https://www.guidedcompass.com/api/messages/send', {
+          emailId, message, senderFirstName, senderLastName, senderEmail,
+          senderPictureURL, senderHeadline, senderUsername, senderSchoolName, senderJobTitle, senderEmployerName,
+          orgCode, accountCode, recipients, members, messageThreadURL, unsubscribed,
+          createdAt, updatedAt
+        })
+        .then((response) => {
+          console.log('attempting to save addition to groups', message, senderEmail)
 
-          const inboxObject = response.data.inboxObject
-          let inboxes = this.state.inboxes
-          if (inboxObject) {
-            if (inboxes) {
-              inboxes.unshift(inboxObject)
+          if (response.data.success) {
+            console.log('saved addition to groups', response.data)
+
+            const inboxObject = response.data.inboxObject
+            let inboxes = self.state.inboxes
+            if (inboxObject) {
+              if (inboxes) {
+                inboxes.unshift(inboxObject)
+              } else {
+                inboxes = [inboxObject]
+              }
             } else {
-              inboxes = [inboxObject]
+              inboxes[self.state.inboxSelected]['lastMessage'] = message
+              inboxes[self.state.inboxSelected]['senderEmail'] = self.state.emailId
             }
+
+            const returnedMessage = response.data.messageObject
+            let messages = self.state.messages
+            if (returnedMessage) {
+              if (messages) {
+                messages.push(returnedMessage)
+              } else {
+                messages = [returnedMessage]
+              }
+            }
+
+            self.setState({ successMessage: null, isSaving: false, messageDraft: '', newMessage: false, inboxSelected: 0, messages, inboxes })
+            self.scrollToBottom();
+
           } else {
-            inboxes[this.state.inboxSelected]['lastMessage'] = message
-            inboxes[this.state.inboxSelected]['senderEmail'] = this.state.emailId
+            console.log('did not save successfully')
+            self.setState({ errorMessage: 'returned error:' + response.data.message, isSaving: false })
           }
+        }).catch((error) => {
+            console.log('save did not work', error);
+            self.setState({ errorMessage: 'there was an sending the message', error, isSaving: false})
+        });
+      }
 
-          const returnedMessage = response.data.messageObject
-          let messages = this.state.messages
-          if (returnedMessage) {
-            if (messages) {
-              messages.push(returnedMessage)
-            } else {
-              messages = [returnedMessage]
-            }
-          }
+      // check/update notification preferences assuming one recipient
+      Axios.get('https://www.guidedcompass.com/api/users/profile/details/' + recipients[0].email, { params: { emailId: recipients[0].email } })
+       .then((response) => {
+         console.log('query for profile data worked');
 
-          this.setState({ successMessage: null, isSaving: false, messageDraft: '', newMessage: false, inboxSelected: 0, messages, inboxes })
-          this.scrollToBottom();
+         if (response.data.success) {
 
-        } else {
-          console.log('did not save successfully')
-          this.setState({ errorMessage: 'returned error:' + response.data.message, isSaving: false })
-        }
+           console.log('profile data received', response.data)
+
+           const notificationPreferences = response.data.user.notificationPreferences
+           let unsubscribed = null
+           if (notificationPreferences && notificationPreferences.length > 0) {
+             for (let i = 1; i <= notificationPreferences.length; i++) {
+               if (notificationPreferences[i - 1].slug === 'new-suggestions' && notificationPreferences[i - 1].enabled === false) {
+                 unsubscribed = true
+               }
+             }
+           }
+
+           recipients[0]['notificationPreferences'] = notificationPreferences
+           actuallySendMessage(unsubscribed, recipients)
+
+         } else {
+           console.log('error response', response.data)
+
+           actuallySendMessage(null)
+         }
+
       }).catch((error) => {
-          console.log('save did not work', error);
-          this.setState({ errorMessage: 'there was an sending the message', error, isSaving: false})
-      });
+           console.log('query for profile info did not work', error);
+      })
+
     }
   }
 

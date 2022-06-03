@@ -200,68 +200,97 @@ export const signIn = async(email, password, orgFocus)=>{
   } else {
 
     return await Axios.post('https://www.guidedcompass.com/api/users/login', { email, password })
-    .then((response) => {
+    .then(async(response) => {
       console.log('Login attempted', response.data);
 
         if (response.data.success) {
           console.log('Login worked', email)
 
-          AsyncStorage.setItem('email', email)
-          AsyncStorage.setItem('username', response.data.user.username)
-          AsyncStorage.setItem('firstName', response.data.user.firstName)
-          AsyncStorage.setItem('lastName', response.data.user.lastName)
-          AsyncStorage.setItem('unreadNotificationsCount', 0)
+          const orgCode = response.data.user.activeOrg
+          return await Axios.get('/api/org', { params: { orgCode} })
+          .then((response2) => {
+            console.log('Org info query attempted for orgFocus on login', response2.data);
 
-          if (response.data.user.workMode === true) {
-            AsyncStorage.setItem('workMode', 'true')
-          } else {
-            AsyncStorage.setItem('workMode', 'false')
-          }
+            if (response2.data.success) {
 
-          if (response.data.user.isAdvisor) {
-            AsyncStorage.setItem('isAdvisor', 'true')
-          } else {
-            AsyncStorage.setItem('isAdvisor', 'false')
-            AsyncStorage.setItem('isAdvisee', 'true')
-          }
+              const orgName = response2.data.orgInfo.orgName
+              let publicOrg = response2.data.orgInfo.isPublic
+              const placementPartners = response2.data.orgInfo.placementPartners
 
-          if (response.data.user.orgAffiliation) {
-            if (response.data.user.orgAffiliation === 'admin') {
-              AsyncStorage.setItem('orgAffiliation', 'admin')
+              AsyncStorage.setItem('email', email)
+              AsyncStorage.setItem('username', response.data.user.username)
+              AsyncStorage.setItem('firstName', response.data.user.firstName)
+              AsyncStorage.setItem('lastName', response.data.user.lastName)
+              AsyncStorage.setItem('unreadNotificationsCount', 0)
+
+              if (response.data.user.workMode === true) {
+                AsyncStorage.setItem('workMode', 'true')
+              } else {
+                AsyncStorage.setItem('workMode', 'false')
+              }
+
+              if (response.data.user.isAdvisor) {
+                AsyncStorage.setItem('isAdvisor', 'true')
+              } else {
+                AsyncStorage.setItem('isAdvisor', 'false')
+                AsyncStorage.setItem('isAdvisee', 'true')
+              }
+
+              if (response.data.user.orgAffiliation) {
+                if (response.data.user.orgAffiliation === 'admin') {
+                  AsyncStorage.setItem('orgAffiliation', 'admin')
+                } else {
+                  AsyncStorage.setItem('orgAffiliation', '')
+                }
+              } else {
+                AsyncStorage.setItem('orgAffiliation', '')
+              }
+              if (response.data.user.myOrgs) {
+                AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
+              }
+
+              if (response.data.user.activeOrg) {
+                AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
+                AsyncStorage.setItem('orgFocus', orgFocus)
+                AsyncStorage.setItem('orgName', orgName)
+
+                if (response.data.user.activeOrg === 'guidedcompass') {
+                  publicOrg = true
+                }
+
+                if (publicOrg) {
+                  AsyncStorage.setItem('publicOrg', JSON.stringify(publicOrg))
+                }
+
+                if (placementPartners) {
+                  AsyncStorage.setItem('placementPartners', JSON.stringify(placementPartners))
+                }
+              }
+              // console.log('show roleName on signin: ', response.data.user.roleName)
+              if (response.data.user.roleName) {
+                AsyncStorage.setItem('roleName', response.data.user.roleName)
+              }
+
+              if (this.props.fromAdvisor) {
+                // mentor or teacher
+
+                if (response.data.user.roleName !== 'Student') {
+
+                  return { success: true, message: 'successfully logged in as advisor', user: response.data.user }
+                } else {
+                  // error - students can't view
+                  this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
+                }
+
+              } else {
+
+                return { success: true, message: 'successfully logged in as student', user: response.data.user }
+              }
+
             } else {
-              AsyncStorage.setItem('orgAffiliation', '')
+
             }
-          } else {
-            AsyncStorage.setItem('orgAffiliation', '')
-          }
-          if (response.data.user.myOrgs) {
-            AsyncStorage.setItem('myOrgs', JSON.stringify(response.data.user.myOrgs))
-          }
-
-          if (response.data.user.activeOrg) {
-            AsyncStorage.setItem('activeOrg', response.data.user.activeOrg)
-            AsyncStorage.setItem('orgFocus', orgFocus)
-          }
-          console.log('show roleName on signin: ', response.data.user.roleName)
-          if (response.data.user.roleName) {
-            AsyncStorage.setItem('roleName', response.data.user.roleName)
-          }
-
-          if (this.props.fromAdvisor) {
-            // mentor or teacher
-
-            if (response.data.user.roleName !== 'Student') {
-
-              return { success: true, message: 'successfully logged in as advisor', user: response.data.user }
-            } else {
-              // error - students can't view
-              this.setState({ error: { message: 'Error, you dont have permission to view this portal'}})
-            }
-
-          } else {
-
-            return { success: true, message: 'successfully logged in as student', user: response.data.user }
-          }
+          })
 
         } else {
           console.log('login did not work', response.data.message)

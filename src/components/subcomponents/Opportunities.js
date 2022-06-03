@@ -607,10 +607,11 @@ class Opportunities extends Component {
 
     const recent = true
     const active = true
+    const excludeUnlisted = true
     const pullPartnerPosts = true
 
     //only schools see this screen
-    Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode: queryOrgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, roleName, csWorkflow: true }})
+    Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode: queryOrgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, excludeUnlisted, pullPartnerPosts, roleName, csWorkflow: true }})
     .then((response) => {
       console.log('Posted postings query attempted within subcomponent', response.data);
 

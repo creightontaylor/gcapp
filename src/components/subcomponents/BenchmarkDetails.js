@@ -25,6 +25,7 @@ const challengeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.c
 const opportunitiesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-blue.png';
 
 import SubEndorsementDetails from '../common/EndorsementDetails';
+import SubRenderProfiles from '../common/RenderProfiles';
 
 import {convertDateToString} from '../functions/convertDateToString';
 
@@ -53,7 +54,6 @@ class BenchmarkDetails extends Component {
     this.prepareEndorsement = this.prepareEndorsement.bind(this)
     this.closeModal = this.closeModal.bind(this)
 
-    this.followPerson = this.followPerson.bind(this)
     this.pullCourses = this.pullCourses.bind(this)
     this.renderCourses = this.renderCourses.bind(this)
     this.renderOpportunities = this.renderOpportunities.bind(this)
@@ -1491,57 +1491,6 @@ class BenchmarkDetails extends Component {
     this.setState({ favorites: favoritesArray })
   }
 
-  followPerson(e, person) {
-    console.log('followPerson called', e, person)
-
-    e.stopPropagation()
-    e.preventDefault()
-
-    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
-
-    const senderPictureURL = this.state.pictureURL
-    const senderEmail = this.state.emailId
-    const senderFirstName = this.state.cuFirstName
-    const senderLastName = this.state.cuLastName
-    const senderUsername = this.state.username
-    const senderHeadline = this.state.headline
-    const recipientPictureURL = person.pictureURL
-    const recipientEmail = person.email
-    const recipientFirstName = person.firstName
-    const recipientLastName = person.lastName
-    const recipientUsername = person.username
-    const recipientHeadline = person.headline
-    const relationship = 'Peer'
-    const orgCode = this.state.activeOrg
-    const orgName = this.state.orgName
-
-    const friend = {
-      senderPictureURL, senderEmail, senderFirstName, senderLastName, senderUsername, senderHeadline,
-      recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
-      relationship, orgCode, orgName }
-
-    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
-    .then((response) => {
-
-      if (response.data.success) {
-
-        friend['active'] = false
-        friend['friend2Email'] = recipientEmail
-
-        let friends = this.state.friends
-        friends.push(friend)
-        console.log('show friends: ', friends)
-        this.setState({ successMessage: response.data.message, friends })
-
-      } else {
-
-        this.setState({ errorMessage: response.data.message })
-      }
-    }).catch((error) => {
-        console.log('Advisee request send did not work', error);
-    });
-  }
-
   render() {
 
     let benchmarkLinkPrefix = ''
@@ -1944,6 +1893,7 @@ class BenchmarkDetails extends Component {
                                   </View>
                                 )}
                               </View>
+
                               <View style={[styles.row10]}>
                                 {((this.state.selectedBenchmark.highPrioritySoftSkills && this.state.selectedBenchmark.highPrioritySoftSkills.length > 0) || (this.state.selectedBenchmark.lowPrioritySoftSkills && this.state.selectedBenchmark.lowPrioritySoftSkills.length > 0)) && (
                                   <View style={[styles.row10]}>
@@ -2559,83 +2509,10 @@ class BenchmarkDetails extends Component {
                             <View>
                               {(this.state.followers && this.state.followers.length > 0) ? (
                                 <View>
-                                  {this.state.followers.map((item, optionIndex) =>
-                                    <View key={item.email}>
-                                      <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { username: item.username})}>
-                                        <View style={[styles.card,styles.centerHorizontally,styles.fullScreenWidth,styles.topMargin20]}>
-                                          <View style={[styles.rowDirection]}>
-                                            <View style={[styles.flex15]} />
-                                            <View style={[styles.flex70, styles.flexCenter]}>
-                                              {(item.pictureURL) ? (
-                                                <Image source={{ uri: item.pictureURL}} style={[styles.square100,styles.contain, { borderRadius: 50 }]} />
-                                              ) : (
-                                                <Image source={{ uri: profileIconDark}} style={[styles.square60,styles.contain]} />
-                                              )}
-                                            </View>
-                                            <View style={[styles.flex15]}>
-                                              {(this.props.pageSource === 'Profiles') ? (
-                                                <View>
-                                                  {(item.publicProfile) ? (
-                                                    <View>
-                                                      {(item.publicProfileExtent) ? (
-                                                        <View>
-                                                          {(item.publicProfileExtent === 'Public') ? (
-                                                            <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>{item.publicProfileExtent}</Text>
-                                                          ) : (
-                                                            <Text style={[styles.middleColor,styles.descriptionText4,styles.rightText]}>{item.publicProfileExtent}</Text>
-                                                          )}
-                                                        </View>
-                                                      ) : (
-                                                        <Text style={[styles.ctaColor,styles.descriptionText4,styles.rightText]}>Public</Text>
-                                                      )}
-                                                    </View>
-                                                  ) : (
-                                                    <View>
-                                                      <Text style={[styles.errorColor,styles.descriptionText4,styles.rightText]}>Private</Text>
-                                                    </View>
-                                                  )}
-                                                </View>
-                                              ) : (
-                                                <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.favoriteItem(item) } style={[styles.alignEnd]}>
-                                                  <Image source={(this.state.favorites.includes(item._id)) ? { uri: favoritesIconBlue} : { uri: favoritesIconGrey}} style={[styles.square20,styles.contain]}/>
-                                                </TouchableOpacity>
-                                              )}
-                                            </View>
-                                          </View>
-
-                                          <Text style={[styles.centerText,styles.headingText5,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
-                                          {(item.school) ? (
-                                            <Text style={[styles.centerText,styles.descriptionText1,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
-                                          ) : (
-                                            <View />
-                                          )}
-                                          {(item.major) ? (
-                                            <Text style={[styles.centerText,styles.descriptionText2,styles.topPadding5]}>{item.major}</Text>
-                                          ) : (
-                                            <View />
-                                          )}
-
-                                          <View style={[styles.topPadding20]}>
-                                            {(this.props.pageSource === 'Profiles') ? (
-                                              <View>
-                                                <View>
-                                                  <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item)}><Text style={[styles.descriptionText1,styles.whiteColor]}>Connect</Text></TouchableOpacity>
-                                                </View>
-                                              </View>
-                                            ) : (
-                                              <TouchableOpacity onPress={() => this.props.navigation.navigate('Messages', { recipient: item})}>
-                                                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}>
-                                                  <Text style={[styles.descriptionText1,styles.whiteColor]}>Message</Text>
-                                                </TouchableOpacity>
-                                              </TouchableOpacity>
-                                            )}
-                                          </View>
-
-                                          <View style={[styles.spacer]} />
-                                        </View>
-                                      </TouchableOpacity>
-                                    </View>
-                                  )}
+                                  <SubRenderProfiles
+                                    favorites={this.state.favorites} members={this.state.followers} friends={this.state.friends}
+                                    pageSource={this.props.pageSource} navigation={this.props.navigation} userType="Peers"
+                                  />
                                 </View>
                               ) : (
                                 <View />

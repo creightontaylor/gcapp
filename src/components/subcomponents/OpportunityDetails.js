@@ -1710,10 +1710,15 @@ class OpportunityDetails extends Component {
           const announcementDate = this.state.selectedOpportunity.announcementDate
           const postingId = this.state.selectedOpportunity._id
           const postingName = this.state.selectedOpportunity.name
+          const projectPromptType = this.state.selectedOpportunity.projectPromptType
+          const projectConfirmationSubjectLine = this.state.selectedOpportunity.projectConfirmationSubjectLine
+          const projectConfirmationMessage = this.state.selectedOpportunity.projectConfirmationMessage
+
           const projectId = this.state.selectedProject._id
           const projectName = this.state.selectedProject.name
           const postType = this.state.selectedOpportunity.postType
           const orgContactEmail = this.state.orgContactEmail
+
 
           let orgName = this.state.selectedOpportunity.orgName
           if (this.state.postingOrgName) {
@@ -1740,9 +1745,10 @@ class OpportunityDetails extends Component {
           //save submission
           Axios.post('https://www.guidedcompass.com/api/projects/submit', {
             emailId, cuFirstName, cuLastName, contributorFirstName, contributorLastName, contributorEmail,
-            postingId, postingName, projectId, projectName, orgContactEmail, orgName, announcementDate, postType,
+            postingId, postingName, projectId, projectName, orgContactEmail, orgName, announcementDate,
+            projectPromptType, projectConfirmationSubjectLine, projectConfirmationMessage, postType,
             orgCode, url, category, description, startDate, endDate, collaborators, collaboratorCount, hours,
-            isContinual, totalHours, focus, departments
+            isContinual, totalHours, focus, departments, pathways
           })
           .then((response) => {
 
@@ -1861,6 +1867,10 @@ class OpportunityDetails extends Component {
                 const contributorEmail = this.state.selectedOpportunity.contributorEmail
                 const postingId = this.state.selectedOpportunity._id
                 const postingName = this.state.selectedOpportunity.name
+                const projectPromptType = this.state.selectedOpportunity.projectPromptType
+                const projectConfirmationSubjectLine = this.state.selectedOpportunity.projectConfirmationSubjectLine
+                const projectConfirmationMessage = this.state.selectedOpportunity.projectConfirmationMessage
+
                 const projectId = response.data._id
                 const projectName = name
                 const orgContactEmail = this.state.orgContactEmail
@@ -1878,7 +1888,8 @@ class OpportunityDetails extends Component {
                 //save submission
                 Axios.post('https://www.guidedcompass.com/api/projects/submit', {
                   emailId, cuFirstName, cuLastName, contributorFirstName, contributorLastName, contributorEmail,
-                  postingId, postingName, projectId, projectName, orgContactEmail, totalHours, focus,
+                  postingId, postingName, projectPromptType, projectConfirmationSubjectLine, projectConfirmationMessage,
+                  projectId, projectName, orgContactEmail, totalHours, focus,
                   orgCode, url, category, description, startDate, endDate, collaborators, collaboratorCount, hours
                 })
                 .then((response) => {
@@ -1945,23 +1956,130 @@ class OpportunityDetails extends Component {
       const postingTitle = this.state.selectedOpportunity.title
 
       let questions = []
+      const pictureURL = this.state.pictureURL
       let firstName = this.state.cuFirstName
       let lastName = this.state.cuLastName
       let email = this.state.emailId
-      const schoolName = this.state.school
-      let jobTitle = 'N/A'
-      let employerName = 'N/A'
+      const username = this.state.username
+      let phoneNumber = this.state.phoneNumber
+
+      // if ((this.state.roleName === 'Student' || this.state.roleName === 'Career-Seeker' || this.state.roleName === 'Student / Career Seeker') && this.state.selectedOpportunity && this.state.selectedOpportunity.rsvpComponents.some(comp => comp.name === 'Phone Number')) {
+      //   const pIndex = this.state.selectedOpportunity.rsvpComponents.findIndex(comp => comp.name === 'Phone Number')
+      //   if (this.state.selectedOpportunity.rsvpComponents[pIndex].required) {
+      //     if (!phoneNumber || phoneNumber === '' || phoneNumber.length < 7 || phoneNumber.length > 14)
+      //     return this.setState({ errorMessage: 'Please add a valid phone number', disableSubmit: false})
+      //   }
+      // }
 
       const orgCode = this.state.activeOrg
-      const accountCode = 'N/A'
+      let accountCode = 'N/A'
+      if (this.state.accountCode && this.state.accountCode !== '') {
+        accountCode = this.state.accountCode
+      } else {
+        if (employerName) {
+          accountCode = employerName.replace('"','').replace("<","").replace(">","").replace("%","").replace("{","").replace("}","").replace("|","").replace("^","").replace("~","").replace("[","").replace("]","").replace("`","").replace(/ /g,"").replace(/,/g,"").toLowerCase()
+        }
+      }
+
       let roleName = "Student"
+      let rsvpType = ''
+      if (window.location.pathname.includes('/app')) {
+        roleName = 'Student'
+      } else {
+        if (this.props.pageSource === 'landingPage') {
+          if (this.state.roleName === 'Other') {
+            roleName = this.state.otherRoleName
+            rsvpType = roleName
+          } else {
+            if (this.state.roleName === 'Student / Career Seeker') {
+              roleName = 'Student'
+              rsvpType = roleName
+            } else if (this.state.roleName === 'Employer Representative / Mentor') {
+              roleName = 'Mentor'
+              rsvpType = roleName
+            } else {
+              roleName = this.state.roleName
+              rsvpType = roleName
+            }
+          }
+        } else {
+          roleName = this.state.roleName
+        }
+      }
+
+      const otherRoleName = this.state.otherRoleName
+
+      let schoolName = this.state.school
+      let gradDate = null
+      let gradYear = null
+      let degree = null
+      let major = null
+      if (this.props.pageSource === 'landingPage' && !this.state.customAssessment) {
+        schoolName = this.state.schoolName
+        gradYear = this.state.gradYear
+        gradDate = this.state.gradDate
+
+        degree = this.state.degree
+        major = this.state.major
+      } else {
+        if (this.state.education && this.state.education.length > 0) {
+          gradDate = this.state.education[0].endDate
+          if (gradDate && gradDate.split(" ") && gradDate.split(" ")[1]) {
+            gradYear = gradDate.split(" ")[1]
+          }
+
+          degree = this.state.education[0].degree
+          major = this.state.education[0].major
+          if (this.state.education.length > 1) {
+            for (let i = 1; i <= this.state.education.length; i++) {
+              if (this.state.education[i - 1] && this.state.education[i - 1].isContinual) {
+                gradDate = this.state.education[i - 1].endDate
+                if (gradDate && gradDate.split(" ") && gradDate.split(" ")[1]) {
+                  gradYear = gradDate.split(" ")[1]
+                }
+
+                degree = this.state.education[i - 1].degree
+                major = this.state.education[i - 1].major
+              }
+            }
+          }
+        }
+      }
+
+      // let activities = []
+      // let otherAnswers = []
+      const studentActivityInterests = this.state.studentActivityInterests
+      let teacherActivityInterests = this.state.teacherActivityInterests
+      let mentorActivityInterests = this.state.mentorActivityInterests
+
+      let jobTitle = 'N/A'
+      let employerName = 'N/A'
+      if (this.props.landingPage) {
+        jobTitle = this.state.jobTitle
+        employerName = this.state.employerName
+
+        if (roleName === 'Student') {
+          teacherActivityInterests = null
+          jobTitle = null
+          employerName = null
+          mentorActivityInterests = null
+        }
+      }
+
+      const industries = this.state.industries
+      const functions = this.state.functions
+
+      const departments = this.state.selectedOpportunity.departments
+      const pathways = this.state.selectedOpportunity.pathways
+      const subscribedForReminders = this.state.subscribedForReminders
 
       const createdAt = new Date()
       const updatedAt = new Date()
 
-      const existingUser = true
-      const departments = this.state.selectedOpportunity.departments
-      const pathways = this.state.selectedOpportunity.pathways
+      let existingUser = true
+      if (this.props.pageSource === 'landingPage') {
+        existingUser = false
+      }
 
       //stuff for email notification
       const orgName = this.state.selectedOpportunity.orgName
@@ -1969,13 +2087,124 @@ class OpportunityDetails extends Component {
       const orgContactLastName = this.state.selectedOpportunity.orgContactLastName
       const orgContactEmail = this.state.selectedOpportunity.orgContactEmail
       const location = this.state.selectedOpportunity.location
+      const rsvpConfirmationSubjectLine = this.state.selectedOpportunity.rsvpConfirmationSubjectLine
+      const rsvpConfirmationMessage = this.state.selectedOpportunity.rsvpConfirmationMessage
       const startDate = this.state.startDateString
       const endDate = this.state.endDateString
 
+      // for new sign ups
+      let dateOfBirth = this.state.dateOfBirth
+      let gender = this.state.gender
+      let race = this.state.race
+      let races = this.state.races
+      let selfDescribedRace = this.state.selfDescribedRace
+      let address = this.state.address
+      let zipcode = this.state.zipcode
+      let numberOfMembers = this.state.numberOfMembers
+      let householdIncome = this.state.householdIncome
+      let workAuthorization = this.state.workAuthorization
+      let adversityList = this.state.adversityList
+      let educationStatus = this.state.educationStatus
+      let education = this.state.education
+
+      let alternativePhoneNumber = this.state.alternativePhoneNumber
+      let alternativeEmail = this.state.alternativeEmail
+      let referrerName = this.state.referrerName
+      let referrerEmail = this.state.referrerEmail
+      let referrerOrg = this.state.referrerOrg
+
+      let rsvpResponses = []
+      if (roleName === 'Student' || this.state.roleName === 'Student / Career Seeker') {
+
+        rsvpResponses.push({ question: 'First Name', answer: firstName })
+        rsvpResponses.push({ question: 'Last Name', answer: lastName })
+        rsvpResponses.push({ question: 'Email', answer: email })
+        rsvpResponses.push({ question: 'Role Name', answer: roleName })
+        rsvpResponses.push({ question: 'Other Role Name', answer: otherRoleName})
+
+        // verify that all required fields are filled out
+        if (this.state.customAssessment && this.state.customAssessment.questions) {
+          let customAssessment = this.state.customAssessment
+          for (let i = 1; i <= this.state.customAssessment.questions.length; i++) {
+            if (this.state.customAssessment.questions[i - 1].required && !this.state.responses[this.state.survey.questions.length + i - 1]) {
+              return this.setState({ errorMessage: this.state.customAssessment.questions[i - 1].name + ' is a required field.', disableSubmit: false})
+            } else {
+              rsvpResponses.push({
+                question: this.state.customAssessment.questions[i - 1].name,
+                answer: this.state.responses[this.state.survey.questions.length + i - 1]
+              })
+            }
+
+            if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'dateOfBirth') || (customAssessment.questions[i - 1].name === 'Date of Birth' || customAssessment.questions[i - 1].name === 'Birthdate')) {
+              dateOfBirth = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'gender') || (this.state.customAssessment.questions[i - 1].name === 'Gender')) {
+              gender = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'race') || (this.state.customAssessment.questions[i - 1].name === 'Race')) {
+              race = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'races') || (this.state.customAssessment.questions[i - 1].name === 'Races')) {
+              races = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'selfDescribedRace') || (this.state.customAssessment.questions[i - 1].name === 'Self Described Race (Optional - If You Answered Self-Describe)')) {
+              selfDescribedRace = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'address') || (this.state.customAssessment.questions[i - 1].name === 'Home Address')) {
+              address = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'zipcode') || (this.state.customAssessment.questions[i - 1].name === 'Zip Code')) {
+              zipcode = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'numberOfMembers') || (this.state.customAssessment.questions[i - 1].name === 'Number of Members in Household')) {
+              numberOfMembers = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'householdIncome') || (this.state.customAssessment.questions[i - 1].name === 'Estimated Household Income')) {
+              householdIncome = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'workAuthorization') || (this.state.customAssessment.questions[i - 1].name === 'Work Authorization')) {
+              workAuthorization = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'adversityList') || (this.state.customAssessment.questions[i - 1].name === 'Background Information')) {
+              adversityList = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'educationStatus') || (this.state.customAssessment.questions[i - 1].name === 'Education Status')) {
+              educationStatus = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'phoneNumber') || (this.state.customAssessment.questions[i - 1].name === 'Phone Number')) {
+              phoneNumber = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'alternativePhoneNumber') || (this.state.customAssessment.questions[i - 1].name === 'Alternative Phone Number')) {
+              alternativePhoneNumber = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'alternativeEmail') || (this.state.customAssessment.questions[i - 1].name === 'Alternative Email')) {
+              alternativeEmail = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'referrerName') || (customAssessment.questions[i - 1].name === 'Referrer Name')) {
+              referrerName = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'referrerEmail') || (customAssessment.questions[i - 1].name === 'Referrer Email')) {
+              referrerEmail = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'referrerOrg') || (customAssessment.questions[i - 1].name === 'Referrer Org')) {
+              referrerOrg = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'education|name') || (customAssessment.questions[i - 1].name === 'Education Name')) {
+              schoolName = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'education|degree') || (customAssessment.questions[i - 1].name === 'Education Degree')) {
+              degree = this.state.responses[this.state.survey.questions.length + i - 1]
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'education|endDate') || (customAssessment.questions[i - 1].name === 'Education Grad Year')) {
+              gradDate = this.state.responses[this.state.survey.questions.length + i - 1]
+              if (gradDate && gradDate.split(" ") && gradDate.split(" ")[1]) {
+                gradYear = gradDate.split(" ")[1]
+              }
+            } else if ((customAssessment.questions[i - 1].mapToProfile && customAssessment.questions[i - 1].shortname === 'education|major') || (customAssessment.questions[i - 1].name === 'Referrer Major')) {
+              major = this.state.responses[this.state.survey.questions.length + i - 1]
+            }
+          }
+        } else {
+          rsvpResponses.push({ question: 'Education Status', answer: educationStatus })
+          rsvpResponses.push({ question: 'School Name', answer: schoolName })
+          rsvpResponses.push({ question: 'Grad Date', answer: gradDate})
+          rsvpResponses.push({ question: 'Degree Type', answer: degree })
+          rsvpResponses.push({ question: 'Major / Pathway', answer: major})
+          rsvpResponses.push({ question: 'Activity Interests', answer: studentActivityInterests })
+        }
+      }
+
+
       Axios.post('https://www.guidedcompass.com/api/rsvp', {
-        postingId, postingTitle, questions, firstName, lastName, email, schoolName, jobTitle, employerName, orgCode,
-        accountCode, roleName, createdAt, updatedAt, existingUser, departments, pathways,
-        orgName, orgContactFirstName, orgContactLastName, orgContactEmail, location, startDate, endDate })
+        postingId, postingTitle, rsvpType, questions, pictureURL, firstName, lastName, email, username, phoneNumber,
+        alternativePhoneNumber, alternativeEmail,
+        studentActivityInterests, teacherActivityInterests, mentorActivityInterests,
+        schoolName, jobTitle, employerName, orgCode,
+        accountCode, roleName, otherRoleName, createdAt, updatedAt, existingUser,
+        gradDate, gradYear, degree, major, industries, functions, departments, pathways, subscribedForReminders,
+        orgName, orgContactFirstName, orgContactLastName, orgContactEmail, location, startDate, endDate, rsvpResponses,
+        rsvpConfirmationSubjectLine, rsvpConfirmationMessage
+      })
       .then((response) => {
 
         if (response.data.success) {

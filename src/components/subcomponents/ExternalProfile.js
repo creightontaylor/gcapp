@@ -92,7 +92,6 @@ class ExternalProfile extends Component {
     this.renderShareButtons = this.renderShareButtons.bind(this)
     this.renderTags = this.renderTags.bind(this)
     this.itemClicked = this.itemClicked.bind(this)
-    this.sendResource = this.sendResource.bind(this)
 
     this.removeItem = this.removeItem.bind(this)
     this.renderTaggedItem = this.renderTaggedItem.bind(this)
@@ -560,7 +559,6 @@ class ExternalProfile extends Component {
                      cuProfile['email'] = response.data.user.email
                      cuProfile['zipcode'] = response.data.user.zipcode
 
-                     // pulling these out for followPerson()
                      const pictureURL = response.data.user.pictureURL
                      const headline = response.data.user.headline
 
@@ -711,7 +709,7 @@ class ExternalProfile extends Component {
 
     this.setState({ modalIsOpen: false, showProjectDetail: false, showAssessmentDetail: false, showEndorsementDetail: false,
       showMessageWidget: false, showComments: false, showShareButtons: false, showGoalDetails: false, showHelpOutWidget: false,
-      showPassionDetail: false, selectedPassion: null, selectedGoal: null
+      showPassionDetail: false, selectedPassion: null, selectedGoal: null, enlargeImage: false, selectedImage: null
     });
 
   }
@@ -824,30 +822,65 @@ class ExternalProfile extends Component {
     const orgCode = this.state.activeOrg
     const orgName = this.state.orgName
 
-    const friend = {
+    const accompanyingMessage = this.state.accompanyingMessage
+    const headerImageURL = this.state.headerImageURL
+
+    let friend = {
       senderPictureURL, senderEmail, senderFirstName, senderLastName, senderUsername, senderHeadline,
       recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
-      relationship, orgCode, orgName }
+      relationship, orgCode, orgName, accompanyingMessage, headerImageURL
+    }
 
-    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
-    .then((response) => {
+    const self = this
+    async function asyncFollowPerson(unsubscribed) {
+      console.log('asyncFollowPerson called')
 
-      if (response.data.success) {
+      friend['unsubscribed'] = unsubscribed
 
+      const returnedValue = await requestConnection(friend)
+      console.log('show returnedValue: ', returnedValue)
+
+      if (returnedValue.success) {
         friend['active'] = false
         friend['friend2Email'] = recipientEmail
 
-        let friends = this.state.friends
+        let friends = self.state.friends
         friends.push(friend)
         console.log('show friends: ', friends)
-        this.setState({ successMessage: response.data.message, friends })
-
+        self.setState({ successMessage: returnedValue.message, friends })
       } else {
-
-        this.setState({ errorMessage: response.data.message })
+        self.setState({ errorMessage: returnedValue.message })
       }
+    }
+
+    // pull notification preferences of the owner
+    Axios.get('https://www.guidedcompass.com/api/users/profile/details', { params: { email: recipientEmail } })
+    .then((response) => {
+      console.log('Profile query for notipreferences attempted', response.data);
+
+       if (response.data.success) {
+         console.log('successfully retrieved profile information')
+         const notificationPreferences = response.data.user.notificationPreferences
+
+         let unsubscribed = null
+         if (notificationPreferences && notificationPreferences.length > 0) {
+           for (let i = 1; i <= notificationPreferences.length; i++) {
+             if (notificationPreferences[i - 1].slug === 'incoming-comments' && notificationPreferences[i - 1].enabled === false) {
+               unsubscribed = true
+             }
+           }
+         }
+
+         asyncFollowPerson(unsubscribed)
+
+       } else {
+         console.log('no profile data found', response.data.message)
+
+         asyncFollowPerson()
+       }
+
     }).catch((error) => {
-        console.log('Advisee request send did not work', error);
+       console.log('Profile query did not work', error);
     });
   }
 
@@ -968,136 +1001,6 @@ class ExternalProfile extends Component {
       let selectedCareers = this.state.selectedCareers
       selectedCareers.splice(index,1)
       this.setState({ selectedCareers })
-    }
-  }
-
-  sendResource() {
-    console.log('sendResource called')
-
-    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
-
-    if (!this.state.message || this.state.message === '') {
-      this.setState({ isSaving: false, errorMessage: 'Please add an accompanying message'})
-    } else if (!this.state.cuFirstName || this.state.cuFirstName === '') {
-      this.setState({ isSaving: false, errorMessage: 'Please add your first name'})
-    } else if (!this.state.cuLastName || this.state.cuLastName === '') {
-      this.setState({ isSaving: false, errorMessage: 'Please add your last name'})
-    } else if (!this.state.emailId || this.state.emailId === '') {
-      this.setState({ isSaving: false, errorMessage: 'Please add your email'})
-    } else if (!this.state.emailId.includes('@')) {
-      this.setState({ isSaving: false, errorMessage: 'Please add a valid email for your email'})
-    } else {
-      let selectedPeople = null
-      if (this.state.selectedPeople && this.state.selectedPeople.length > 0) {
-        selectedPeople = []
-        for (let i = 1; i <= this.state.selectedPeople.length; i++) {
-          if (this.state.selectedPeople[i - 1].firstName === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a first name for each person you recommend'})
-          } else if (this.state.selectedPeople[i - 1].lastName === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a last name for each person you recommend'})
-          } else if (this.state.selectedPeople[i - 1].email === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add an email for each person you recommend'})
-          } else if (!this.state.selectedPeople[i - 1].email.includes('@')) {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a valid email for each person you recommend'})
-          } else if (this.state.selectedPeople[i - 1].relationship === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add your relationship for each person you recommend'})
-          } else if (this.state.selectedPeople[i - 1].reason === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a reason for each person you recommend'})
-          } else {
-            selectedPeople.push(this.state.selectedPeople[i - 1])
-          }
-        }
-      }
-
-      let selectedLinks = null
-      if (this.state.selectedLinks && this.state.selectedLinks.length > 0) {
-        selectedLinks = []
-        for (let i = 1; i <= this.state.selectedLinks.length; i++) {
-          if (this.state.selectedLinks[i - 1].category === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a category to each of your suggested links'})
-          } else if (this.state.selectedLinks[i - 1].url === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a link to each of your suggested links'})
-          } else {
-            selectedLinks.push(this.state.selectedLinks[i - 1])
-          }
-        }
-      }
-
-      let selectedTimes = null
-      if (this.state.selectedTimes && this.state.selectedTimes.length > 0) {
-        selectedTimes = []
-        for (let i = 1; i <= this.state.selectedTimes.length; i++) {
-          if (this.state.selectedTimes[i - 1].time === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please select a time for each of your suggested times'})
-          } else {
-            selectedTimes.push(this.state.selectedTimes[i - 1])
-          }
-        }
-      }
-
-      let selectedProjects = null
-      if (this.state.selectedProjects && this.state.selectedProjects.length > 0) {
-        selectedProjects = []
-        for (let i = 1; i <= this.state.selectedProjects.length; i++) {
-          if (this.state.selectedProjects[i - 1].name === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a name to each of your suggested projects'})
-          } else if (this.state.selectedProjects[i - 1].description === '') {
-            return this.setState({ isSaving: false, errorMessage: 'Please add a description to each of your suggested projects'})
-          } else {
-            selectedProjects.push(this.state.selectedProjects[i - 1])
-          }
-        }
-      }
-
-      let selectedCareers = null
-      if (this.state.selectedCareers && this.state.selectedCareers.length > 0) {
-        selectedCareers = this.state.selectedCareers
-      }
-
-      const senderPictureURL = this.state.pictureURL
-      const senderFirstName = this.state.cuFirstName
-      const senderLastName = this.state.cuLastName
-      const senderEmail = this.state.emailId
-
-      const recipientPictureURL = this.state.profileData.pictureURL
-      const recipientFirstName = this.state.profileData.firstName
-      const recipientLastName = this.state.profileData.lastName
-      const recipientEmail = this.state.profileData.email
-
-      const goalId = this.state.selectedGoal._id
-      const goalTitle = this.state.selectedGoal.title
-      const message = this.state.message
-
-      const createdAt = new Date()
-      const updatedAt = new Date()
-
-      // save and send
-      Axios.post('https://www.guidedcompass.com/api/suggestions', {
-        senderPictureURL, senderFirstName, senderLastName, senderEmail,
-        recipientPictureURL, recipientFirstName, recipientLastName, recipientEmail,
-        goalId, goalTitle, message,
-        selectedPeople, selectedLinks, selectedTimes, selectedProjects, selectedCareers,
-        createdAt, updatedAt
-      })
-      .then((response) => {
-        console.log('attempting to save addition to suggestion')
-        if (response.data.success) {
-          console.log('saved suggestion', response.data)
-
-          this.setState({successMessage: response.data.message, isSaving: false, message: '',
-            selectedPeople: [], selectedLinks: [], selectedTimes: [], selectedProjects: [], selectedCareers: []
-          })
-
-          this.closeModal()
-
-        } else {
-          console.log('did not save successfully')
-          this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
-        }
-      }).catch((error) => {
-          console.log('save did not work', error);
-          this.setState({ errorMessage: 'there was an error saving suggestion', isSaving: false})
-      });
     }
   }
 
@@ -1332,7 +1235,10 @@ class ExternalProfile extends Component {
                 <View style={[styles.rowDirection]}>
                   <View style={[styles.width85,styles.topPadding5]}>
                     <View>
-                      <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square70,styles.contain, { borderRadius: 40 }]}/>
+                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, enlargeImage: true, selectedImage: this.state.profileData.pictureURL })}>
+                        <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.square70,styles.contain, { borderRadius: 40 }]}/>
+                      </TouchableOpacity>
+
                       {(this.testActiveFriendship(this.state.friends)) ? (
                         <View style={[styles.rowDirection,styles.topMargin]}>
                           <View>
@@ -2012,6 +1918,17 @@ class ExternalProfile extends Component {
                   )}
 
                 </View>
+              )}
+
+              {(this.state.enlargeImage) && (
+                <Modal isVisible={this.state.modalIsOpen} style={styles.modal}>
+                 <Image source={(this.state.profileData.pictureURL) ? { uri: this.state.profileData.pictureURL} : { uri: defaultProfileImage}} style={[styles.flex1,styles.contain]}/>
+                 <TouchableOpacity onPress={() => this.closeModal()} style={[styles.flexCenter,styles.topMargin20,styles.bottomMargin20]}>
+                  <View style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]}>
+                    <Text style={[styles.descriptionText1,styles.whiteColor]}>Close View</Text>
+                  </View>
+                 </TouchableOpacity>
+               </Modal>
               )}
 
             </View>

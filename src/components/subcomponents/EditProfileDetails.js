@@ -954,6 +954,11 @@ class EditProfileDetails extends Component {
             }
           }
 
+          let education = [{ name: '' }]
+          if (responseData.user.education && responseData.user.education.length > 0) {
+            education = responseData.user.education
+          }
+
           this.setState({
               firstNameValue: response.data.user.firstName,
               lastNameValue: response.data.user.lastName,
@@ -963,7 +968,7 @@ class EditProfileDetails extends Component {
               customWebsiteURL: response.data.user.customWebsiteURL,
               videoResumeURL: response.data.user.videoResumeURL,
               educationStatus: response.data.user.educationStatus,
-              education: response.data.user.education,
+              education,
               school: response.data.user.school,
               schoolName: response.data.user.school,
               schoolDistrict: response.data.user.schoolDistrict,
@@ -6157,12 +6162,12 @@ class EditProfileDetails extends Component {
                             </View>
 
                             <View style={styles.row30}>
-                              <Text style={[styles.standardText,styles.row10]}>Summary</Text>
+                              <Text style={[styles.standardText,styles.row10]}>Summary / Noteworthy Accomplishments</Text>
                               <TextInput
                                 style={styles.textArea}
                                 onChangeText={(text) => this.formChangeHandler("education|summary|" + optionIndex, text)}
                                 value={item.summary}
-                                placeholder="Education summary"
+                                placeholder={"(e.g., our 4-person, 3-month group project at Washington High School won the " + new Date().getFullYear() + " annual pitch competition)"}
                                 placeholderTextColor="grey"
                                 multiline={true}
                                 numberOfLines={4}

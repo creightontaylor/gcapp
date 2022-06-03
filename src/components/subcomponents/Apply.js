@@ -1202,6 +1202,18 @@ class Apply extends Component {
       }
       this.setState({ tasks })
       this.checkCompleteness(tasks)
+    } else if (this.state.tasks[index].shorthand === 'vaccinations') {
+      if (answer) {
+        this.setState({ isVaccinated: true, basicFormHasChanged: true })
+        tasks[index]['isCompleted'] = true
+        tasks[index]['message'] = 'Vaccination question successfully completed!'
+      } else {
+        this.setState({ isVaccinated: false, basicFormHasChanged: true })
+        tasks[index]['isCompleted'] = false
+        tasks[index]['message'] = 'You must be vaccinated or be exempt from vaccination to submit for this role!'
+      }
+      this.setState({ tasks })
+      this.checkCompleteness(tasks)
     } else {
 
     }
@@ -2138,6 +2150,12 @@ class Apply extends Component {
       const homeless = this.state.homeless
       const incarcerated = this.state.incarcerated
       const adversityList = this.state.adversityList
+
+      const isVaccinated = this.state.isVaccinated
+
+      const applicationConfirmationSubjectLine = this.state.selectedPosting.applicationConfirmationSubjectLine
+      const applicationConfirmationMessage = this.state.selectedPosting.applicationConfirmationMessage
+
       // console.log('show expte')
       Axios.post('https://www.guidedcompass.com/api/applications', {
         _id, postingId: this.state.selectedPosting._id, postingTitle: this.state.selectedPosting.title, postingEmployerName, postingLocation: this.state.selectedPosting.location,
@@ -2155,10 +2173,11 @@ class Apply extends Component {
         applicationComponents: this.state.selectedPosting.applicationComponents, stage: 'Applied', isActive: true,
         postType: this.state.selectedPosting.postType, subPostType: this.state.selectedPosting.subPostType,
         workflowType: this.state.selectedPosting.workflowType,
+        applicationConfirmationSubjectLine, applicationConfirmationMessage,
         orgCode, accountCode,
         politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict, dacaStatus,
         postingOrgCode, postingOrgName, postingOrgContactEmail,
-        endorsements, projects, experience, extras, posterEmail,
+        endorsements, projects, experience, extras, posterEmail, isVaccinated,
         createdAt: new Date(), updatedAt: new Date()
       }).then((response) => {
         console.log('attempting to save')
@@ -2196,6 +2215,7 @@ class Apply extends Component {
               resumeURL, coverLetterURL, linkedInURL, customWebsiteURL, videoResumeURL, letterOfRecommendationURL, identificationURL, transcriptURL,
               dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
+              isVaccinated,
               updatedAt
             }
 
@@ -2618,6 +2638,28 @@ class Apply extends Component {
         <View key={"expandedTask" + index} style={[styles.topPadding]}>
           <View style={[styles.row10,styles.standardText]}>
             {this.renderQuestions(task.shorthand)}
+          </View>
+        </View>
+      )
+    } else if (task.shorthand === 'vaccinations') {
+      return (
+        <View key={"expandedTask" + index} style={[styles.topPadding]}>
+          <View style={[styles.row10]}>
+            <Text style={[styles.standardText]}>This position requires documented proof of COVID-19 vaccination or a qualifying exemption letter (medical or religious). Will you be able to provide this documentation upon hiring?</Text>
+            <View>
+              <View style={[styles.rowDirection]}>
+                <View style={[styles.row5,styles.rightPadding]}>
+                  <TouchableOpacity style={(this.state.isVaccinated === true) ? [styles.row5,styles.horizontalPadding30,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor] : [styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onClick={() => this.actionTapped(index, true, true)}>
+                    <Text style={(this.state.isVaccinated === true) ? [styles.descriptionText2,styles.whiteColor] : [styles.descriptionText2]}>Yes</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={[styles.row5,styles.rightPadding]}>
+                  <TouchableOpacity style={(this.state.isVaccinated === false) ? [styles.row5,styles.horizontalPadding30,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor] : [styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onClick={() => this.actionTapped(index, true, false)}>
+                    <Text style={(this.state.isVaccinated === true) ? [styles.descriptionText2,styles.whiteColor] : [styles.descriptionText2]}>No</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       )

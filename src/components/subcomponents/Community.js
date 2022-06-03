@@ -22,9 +22,12 @@ const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png'
 const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png'
 const addPeopleIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-people-icon-dark.png'
+const targetIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon.png';
 
 import SubInviteMembers from '../common/InviteMembers';
 import SubEditGroup from '../common/EditGroup';
+import SubRenderProfiles from '../common/RenderProfiles';
+import SubRenderGoals from '../common/RenderGoals';
 
 class Community extends Component {
   constructor(props) {
@@ -33,6 +36,7 @@ class Community extends Component {
       showAccountabiliyGroupCTA: true,
       favoriteIds: [],
       friends: [],
+      goalFollows: [],
       projectFollows: [],
       employerFollows: [],
       groupsJoined: []
@@ -40,7 +44,6 @@ class Community extends Component {
 
     this.retrieveData = this.retrieveData.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
-    this.followPerson = this.followPerson.bind(this)
     this.joinGroup = this.joinGroup.bind(this)
     this.viewItem = this.viewItem.bind(this)
     this.decideOnRequest = this.decideOnRequest.bind(this)
@@ -391,7 +394,28 @@ class Community extends Component {
         function pullOtherItems(favoriteIds) {
           console.log('pullOtherItems called')
 
-          Axios.get('https://www.guidedcompass.com/api/projects', { params: { orgCode: activeOrg, resLimit, favoriteIds } })
+          Axios.get('https://www.guidedcompass.com/api/logs/goals', { params: { orgCode: activeOrg, resLimit, favoriteIds, publicExtentArray: ['Members Only','Public'] } })
+          .then((response) => {
+            console.log('Goals query attempted', response.data);
+
+              if (response.data.success) {
+                console.log('successfully retrieved goals')
+
+                if (response.data.goals) {
+
+                  const goals = response.data.goals
+                  self.setState({ goals })
+                }
+
+              } else {
+                console.log('no goal data found', response.data.message)
+              }
+
+          }).catch((error) => {
+              console.log('Goal query did not work', error);
+          });
+
+          Axios.get('https://www.guidedcompass.com/api/projects', { params: { orgCode: activeOrg, resLimit, favoriteIds, publicExtentArray: ['Members Only','Public'] } })
           .then((response) => {
             console.log('Projects query attempted', response.data);
 
@@ -432,7 +456,7 @@ class Community extends Component {
               console.log('Employer query did not work for some reason', error);
           });
         }
-        console.log('show emailId: ', emailId)
+        // console.log('show emailId: ', emailId)
         Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId } })
         .then((response) => {
           console.log('Favorites query attempted', response.data);
@@ -607,59 +631,6 @@ class Community extends Component {
     });
   }
 
-  followPerson(e,person, index) {
-    console.log('followPerson called', e, person, index)
-
-    e.preventDefault()
-
-    this.setState({ isSaving: true, errorMessage: null, successMessage: null })
-
-    const senderPictureURL = this.state.pictureURL
-    const senderEmail = this.state.emailId
-    const senderFirstName = this.state.cuFirstName
-    const senderLastName = this.state.cuLastName
-    const senderUsername = this.state.username
-    const senderHeadline = this.state.headline
-    const recipientPictureURL = person.pictureURL
-    const recipientEmail = person.email
-    const recipientFirstName = person.firstName
-    const recipientLastName = person.lastName
-    const recipientUsername = person.username
-    const recipientHeadline = person.headline
-    const relationship = 'Peer'
-    const orgCode = this.state.activeOrg
-    const orgName = this.state.orgName
-
-    const friend = {
-      senderPictureURL, senderEmail, senderFirstName, senderLastName, senderUsername, senderHeadline,
-      recipientPictureURL, recipientEmail, recipientFirstName, recipientLastName, recipientUsername, recipientHeadline,
-      relationship, orgCode, orgName }
-
-    Axios.post('https://www.guidedcompass.com/api/friend/request', friend)
-    .then((response) => {
-
-      if (response.data.success) {
-
-        friend['active'] = false
-        friend['friend2Email'] = recipientEmail
-
-        let friends = this.state.friends
-        friends.push(friend)
-
-        let suggestedPeople = this.state.suggestedPeople
-        suggestedPeople[index]['activeRequest'] = true
-        console.log('show friends: ', friends)
-        this.setState({ successMessage: response.data.message, friends, suggestedPeople })
-
-      } else {
-
-        this.setState({ errorMessage: response.data.message })
-      }
-    }).catch((error) => {
-        console.log('Advisee request send did not work', error);
-    });
-  }
-
   joinGroup(e, group, index, joinGroup) {
     console.log('joinGroup called', e, group, index, joinGroup)
 
@@ -827,7 +798,8 @@ class Community extends Component {
   closeModal() {
     console.log('closeModal in projects: ')
 
-    this.setState({ modalIsOpen: false, showPeopleYouFollow: false, showProjectsYouFollow: false, showEmployersYouFollow: false,
+    this.setState({ modalIsOpen: false, showPeopleYouFollow: false, showProjectsYouFollow: false,
+      showGoalsYouFollow: false, showEmployersYouFollow: false,
       showGroupsYouJoined: false, showInviteMembersWidget: false, showEditGroup: false
     });
   }
@@ -846,77 +818,32 @@ class Community extends Component {
         <View key={entity}>
           {(items && items.length > 0) && (
             <View>
-              {items.map((item, optionIndex) =>
-                <View key={item + optionIndex}>
-                  <View>
-                    <TouchableOpacity onPress={() => this.viewItem('profile',item)} style={styles.calcColumn40}>
-                      <View style={[styles.card,styles.standardBorder,styles.calcColumn40,styles.centerHorizontally]}>
-                        <View style={[styles.rowDirection]}>
-                          <View style={[styles.flex15]}>
-                            {(item.matchScore) && (
-                              <View style={[styles.square30,styles.contain]}>
-                                {/*
-                                <CircularProgressBar
-                                  percentage={item.matchScore}
-                                  text={`${item.matchScore}%`}
-                                  styles={{
-                                    path: { stroke: `rgba(110, 190, 250, ${item.matchScore / 100})` },
-                                    text: { fill: '#6EBEFA', fontSize: '26px' },
-                                    trail: { stroke: 'transparent' }
-                                  }}
-                                />*/}
-                              </View>
-                            )}
-                          </View>
-                          <View style={[styles.flex70,styles.flexCenter]}>
-                            {(item.pictureURL) ? (
-                              <Image source={{ uri: item.pictureURL }} style={[styles.profileThumbnail80,styles.centerItem]} />
-                            ) : (
-                              <Image source={{uri: profileIconDark}} style={[styles.square60,styles.contain,styles.centerItem]} />
-                            )}
-                          </View>
-                          <View style={[styles.flex15,styles.height30]} />
+              <SubRenderProfiles
+                favorites={this.state.favoriteIds} members={items} friends={this.state.allRelationships}
+                pageSource={"Profiles"} navigation={this.props.navigation} userType="Peers"
+              />
+            </View>
+          )}
+        </View>
+      )
+    } else if (entity === 'goals') {
 
-                        </View>
+      let items = this.state.goals
+      if (type === 'existing') {
+        items = this.state.goalFollows
+      }
 
-                        <Text style={[styles.calcColumn100,styles.centerText,styles.headingText6,styles.topPadding]}>{item.firstName} {item.lastName}</Text>
-                        {(item.school) ? (
-                          <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding]}>{item.school}{item.gradYear && " '" + item.gradYear}</Text>
-                        ) : (
-                          <View />
-                        )}
-                        {(item.major) ? (
-                          <Text style={[styles.calcColumn100,styles.centerText,styles.descriptionText3,styles.topPadding5]}>{item.major}</Text>
-                        ) : (
-                          <View />
-                        )}
-
-                        <View style={[styles.topPadding20]}>
-                          <View style={[styles.calcColumn100]}>
-                            {(item.active || item.activeRequest) ? (
-                              <View>
-                                {(item.active) ? (
-                                  <TouchableOpacity onPress={() => this.viewItem('messages', item)} style={[styles.calcColumn100,styles.btnSquarish,styles.ctaBackgroundColor, styles.whiteColor,styles.descriptionText3,styles.leftMargin5,styles.flexCenter]}>
-                                      <Text style={styles.whiteColor}>Message</Text>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.calcColumn100,styles.btnSquarish,styles.descriptionText1,styles.mediumBackground,styles.flexCenter]} disabled={true}><Text style={styles.whiteColor}>Pending</Text></View>
-                                )}
-                              </View>
-                            ) : (
-                              <TouchableOpacity style={[styles.calcColumn100,styles.btnSquarish,styles.descriptionText1,styles.ctaBackgroundColor,styles.whiteColor,styles.flexCenter]} disabled={(this.state.isSaving) ? true : false} onPress={(e) => this.followPerson(e,item,optionIndex)}><Text style={styles.whiteColor}>Connect</Text></TouchableOpacity>
-                            )}
-                          </View>
-                        </View>
-                        <View style={styles.spacer} />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.spacer} /><View style={styles.spacer} />
-                </View>
-              )}
-
+      return (
+        <View key={entity}>
+          {(items && items.length > 0) && (
+            <View>
+              <SubRenderGoals
+                navigation={this.props.navigation} favorites={this.state.favoriteIds}
+                filteredGoals={items} profileData={null}
+                filterCriteriaArray={this.state.filterCriteriaArray}
+                sortCriteriaArray={this.state.sortCriteriaArray}
+                org={this.state.activeOrg} fromCommunity={true}
+              />
             </View>
           )}
         </View>
@@ -1215,6 +1142,21 @@ class Community extends Component {
                 </View>
 
                 <View style={[styles.row10,styles.descriptionText1]}>
+                  <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showGoalsYouFollow: true })}>
+                    <View style={styles.width30}>
+                      <Image source={{uri: targetIcon }} style={[styles.square20,styles.contain]} />
+                    </View>
+                    <View style={styles.calcColumn100}>
+                      <Text>Goals you follow</Text>
+                    </View>
+                    <View style={[styles.width30,styles.rightText]}>
+                      <Text style={[styles.ctaColor]}>{this.state.goalFollows.length}</Text>
+                    </View>
+
+                  </TouchableOpacity>
+                </View>
+
+                <View style={[styles.row10,styles.descriptionText1]}>
                   <TouchableOpacity style={[styles.fullScreenWidth,styles.rowDirection]} onPress={() => this.setState({ modalIsOpen: true, showProjectsYouFollow: true })}>
                     <View style={styles.width30}>
                       <Image source={{uri: projectsIconDark}} style={[styles.square20,styles.contain]} />
@@ -1453,6 +1395,30 @@ class Community extends Component {
 
               </TouchableOpacity>*/}
             </View>
+          </View>
+
+          <View style={[styles.cardClearPadding,styles.padding20,styles.bottomMargin30]}>
+            <View style={styles.rowDirection}>
+              <View style={[styles.calcColumn130]}>
+                <Text style={[styles.headingText5]}>Goals to Follow</Text>
+                <View style={styles.spacer} />
+              </View>
+              {(!this.state.remoteAuth) && (
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Goals')} style={[styles.width80,styles.rightText,styles.rowDirection,styles.justifyEnd]}>
+                  <View style={[styles.rightPadding,styles.topMargin5]}>
+                    <Text style={[styles.descriptionText2,styles.rightText]}>Browse</Text>
+                  </View>
+                  <View style={[styles.topMargin]}>
+                    <Image source={{ uri: rightCarrotBlue}} style={[styles.square10,styles.contain]} />
+                  </View>
+
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.spacer} /><View style={styles.spacer} /><View style={styles.spacer} />
+
+            {this.renderItems('goals','recommended')}
 
           </View>
 
@@ -1588,6 +1554,32 @@ class Community extends Component {
                   <View style={styles.spacer} />
                   <View style={[styles.lightHorizontalLine]} />
                   {this.renderItems('people','existing')}
+
+                  <View style={styles.spacer} />
+                 <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>
+                </View>
+              )}
+
+              {(this.state.showGoalsYouFollow) && (
+                <View style={[styles.flex1]}>
+                  <View style={[styles.topMargin30]}>
+                    <View style={[styles.topPadding30,styles.bottomPadding,styles.calcColumn120,styles.rowDirection,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.headingText6]}>{this.state.goalFollows.length} Goals You Follow</Text>
+                      </View>
+                      <View style={[styles.width30,styles.topPadding,styles.alignEnd]}>
+                        <TouchableOpacity onPress={() => this.closeModal()}>
+                          <Image source={{ uri: closeIcon}} style={[styles.square15,styles.contain]} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View style={styles.spacer} />
+                  <View style={[styles.lightHorizontalLine]} />
+
+                  {this.renderItems('goals','existing')}
+
 
                   <View style={styles.spacer} />
                  <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.ctaColor]}>Close View</Text></TouchableOpacity>

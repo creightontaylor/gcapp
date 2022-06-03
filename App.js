@@ -48,6 +48,7 @@ import GroupDetails from './src/components/GroupDetails';
 import ProjectDetails from './src/components/ProjectDetails';
 import CreatePost from './src/components/CreatePost';
 import Profiles from './src/components/Profiles';
+import Goals from './src/components/Goals';
 import Projects from './src/components/Projects';
 import Groups from './src/components/Groups';
 import Employers from './src/components/Employers';
@@ -339,6 +340,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="ProjectDetails" component={ProjectDetails} />
           <Stack.Screen name="CreatePost" component={CreatePost}/>
           <Stack.Screen name="Profiles" component={Profiles} />
+          <Stack.Screen name="Goals" component={Goals} />
           <Stack.Screen name="Projects" component={Projects} />
           <Stack.Screen name="Groups" component={Groups} />
           <Stack.Screen name="Employers" component={Employers} />
