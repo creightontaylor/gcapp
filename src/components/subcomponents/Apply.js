@@ -745,6 +745,11 @@ class Apply extends Component {
               education = response.data.user.education
             }
 
+            let certificates = null
+            if (response.data.user.certificates) {
+              certificates = response.data.user.certificates
+            }
+
             let schoolName = ''
             if (response.data.user.school) {
               schoolName = response.data.user.school
@@ -952,7 +957,8 @@ class Apply extends Component {
               coverLetterURL, letterOfRecommendationURL, identificationURL,
               isTranscript, transcriptURL,
               tasks, firstName, lastName, phoneNumber, alternativePhoneNumber, alternativeEmail,
-              educationStatus, education, schoolName, major, degree, gradYear, linkedInURL, customWebsiteURL, videoResumeURL, isPortfolio, pictureURL, zipcode,
+              educationStatus, education, schoolName, major, degree, gradYear,
+              certificates, linkedInURL, customWebsiteURL, videoResumeURL, isPortfolio, pictureURL, zipcode,
               dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
               politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict,
@@ -2131,6 +2137,8 @@ class Apply extends Component {
         }
       }
 
+      const certificates = this.state.certificates
+
       const zipcode = this.state.zipcode
       const phoneNumber = this.state.phoneNumber
       const alternativePhoneNumber = this.state.alternativePhoneNumber
@@ -2160,7 +2168,8 @@ class Apply extends Component {
       Axios.post('https://www.guidedcompass.com/api/applications', {
         _id, postingId: this.state.selectedPosting._id, postingTitle: this.state.selectedPosting.title, postingEmployerName, postingLocation: this.state.selectedPosting.location,
         pathways: this.state.selectedPosting.pathways, departments: this.state.selectedPosting.departments,
-        firstName, lastName, email, username, educationStatus, education, schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
+        firstName, lastName, email, username, educationStatus, education, schoolName, degree, major, gradYear,
+        certificates, phoneNumber, zipcode, pictureURL,
         alternativePhoneNumber, alternativeEmail,
         resumeURL, coverLetterURL, linkedInURL, customWebsiteURL, videoResumeURL, letterOfRecommendationURL, identificationURL, transcriptURL,
         dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
@@ -2211,7 +2220,7 @@ class Apply extends Component {
 
             const userObject = {
               emailId, firstName, lastName, educationStatus, education, school: schoolName, degree, major, gradYear, phoneNumber, zipcode, pictureURL,
-              alternativePhoneNumber, alternativeEmail,
+              alternativePhoneNumber, alternativeEmail, certificates,
               resumeURL, coverLetterURL, linkedInURL, customWebsiteURL, videoResumeURL, letterOfRecommendationURL, identificationURL, transcriptURL,
               dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
@@ -2481,7 +2490,8 @@ class Apply extends Component {
 
         let basicInfo = {
           firstName: this.state.firstName, lastName: this.state.lastName,
-          schoolName: this.state.schoolName, gradYear: this.state.gradYear, education: this.state.education
+          schoolName: this.state.schoolName, gradYear: this.state.gradYear, education: this.state.education,
+          certificates: this.state.certificates
         }
         basicInfo[name] = value
 

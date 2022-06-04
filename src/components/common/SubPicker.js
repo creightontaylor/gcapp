@@ -7,13 +7,13 @@ const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appIm
 
 class SubPicker extends Component {
     constructor(props) {
-        super(props)
+      super(props)
 
-        this.state = {
-        }
+      this.state = {
+      }
 
-        this.retrieveData = this.retrieveData.bind(this)
-        this.formChangeHandler = this.formChangeHandler.bind(this)
+      this.retrieveData = this.retrieveData.bind(this)
+      this.formChangeHandler = this.formChangeHandler.bind(this)
 
     }
 

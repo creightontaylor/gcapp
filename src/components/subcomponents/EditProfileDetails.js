@@ -89,6 +89,7 @@ class EditProfileDetails extends Component {
       hometownOptions: [],
       schoolOptions: [],
       pathwayOptions: [],
+      newPathwayOptions: [],
       gradYearOptions: [],
       degreeOptions: [],
       educationStatusOptions: [],
@@ -152,6 +153,9 @@ class EditProfileDetails extends Component {
         { label: "Not Ideal", value: "2"},
         { label: "Avoiding employers like this at all costs", value: "1"},
       ],
+      estimatedHoursOptions: [],
+      certificateOptions: [],
+      addCertificateMethodOptions: ['','Yes, select from options','No, create a new certificate'],
 
       postOptions: [],
       projectOptions: [],
@@ -400,7 +404,12 @@ class EditProfileDetails extends Component {
               const includeAlternativeContacts = response.data.orgInfo.includeAlternativeContacts
               const allowMultipleRaces = response.data.orgInfo.allowMultipleRaces
 
-              this.setState({ requirePersonalInfo, includeAlternativeContacts, allowMultipleRaces })
+              let certificateOptions = []
+              if (response.data.orgInfo.certificateOptions) {
+                certificateOptions = [{ name: '' }].concat(response.data.orgInfo.certificateOptions)
+              }
+
+              this.setState({ requirePersonalInfo, includeAlternativeContacts, allowMultipleRaces, certificateOptions })
 
               Axios.get('https://www.guidedcompass.com/api/workoptions')
               .then((response) => {
@@ -544,13 +553,16 @@ class EditProfileDetails extends Component {
                     }
                   }
 
+                  const estimatedHoursOptions = response.data.workOptions[0].durationOptions
+
                   this.setState({ functionOptions, industryOptions, gradYearOptions, pathwayOptions,
                     workDistanceOptions, hoursPerWeekOptions, workTypeOptions, hourlyPayOptions, payOptions: annualPayOptions,
                     projectCategoryOptions, dateOptions,educationDateOptions, collaboratorOptions, hourOptions, degreeOptions,
                     politicalAlignmentOptions, registrationOptions, hometownOptions, schoolOptions,
                     basicCountOptions, householdIncomeOptions, fosterYouthOptions, homelessOptions, incarceratedOptions,
                     adversityListOptions, careerGoalOptions, educationStatusOptions,
-                    raceOptions, genderOptions, numberOfMembersOptions, workAuthorizationOptions
+                    raceOptions, genderOptions, numberOfMembersOptions, workAuthorizationOptions,
+                    estimatedHoursOptions
                   })
 
                 } else {
@@ -578,6 +590,31 @@ class EditProfileDetails extends Component {
 
         }).catch((error) => {
             console.log('Org info query did not work for some reason', error);
+        });
+
+        Axios.get('https://www.guidedcompass.com/api/pathways', { params: { orgCode: activeOrg }})
+        .then((response) => {
+          console.log('Pathways query attempted no 1', response.data);
+
+          if (response.data.success) {
+            console.log('pathway query worked no 1')
+
+            if (response.data.pathways.length !== 0) {
+
+              let newPathwayOptions = []
+              if (response.data.pathways && response.data.pathways.length > 0) {
+                newPathwayOptions = [{ title: '' }].concat(response.data.pathways)
+              }
+
+              this.setState({ newPathwayOptions });
+            }
+
+          } else {
+            console.log('pathway query did not work', response.data.message)
+          }
+
+        }).catch((error) => {
+            console.log('Pathway query did not work for some reason', error);
         });
 
         if (this.props.fromAdvisor) {
@@ -959,6 +996,11 @@ class EditProfileDetails extends Component {
             education = responseData.user.education
           }
 
+          let certificates = []
+          if (responseData.user.certificates && responseData.user.certificates.length > 0) {
+            certificates = responseData.user.certificates
+          }
+
           this.setState({
               firstNameValue: response.data.user.firstName,
               lastNameValue: response.data.user.lastName,
@@ -968,7 +1010,7 @@ class EditProfileDetails extends Component {
               customWebsiteURL: response.data.user.customWebsiteURL,
               videoResumeURL: response.data.user.videoResumeURL,
               educationStatus: response.data.user.educationStatus,
-              education,
+              education, certificates,
               school: response.data.user.school,
               schoolName: response.data.user.school,
               schoolDistrict: response.data.user.schoolDistrict,
@@ -1239,6 +1281,42 @@ class EditProfileDetails extends Component {
       if (name === 'name') {
         this.searchSchools(eventValue)
       }
+    } else if (eventName.includes('certificate|')) {
+      const name = eventName.split("|")[1]
+      const index = Number(eventName.split("|")[2])
+
+      let certificates = this.state.certificates
+      certificates[index][name] = eventValue
+
+      console.log('is name correct 1? ', index, name, certificates)
+      if (name === 'certificateOption') {
+
+        let selectedCertificateOption = null
+        for (let i = 1; i <= this.state.certificateOptions.length; i++) {
+          if (this.state.certificateOptions[i - 1].name === eventValue) {
+            selectedCertificateOption = this.state.certificateOptions[i - 1]
+          }
+        }
+        console.log('is name correct 2? ', selectedCertificateOption)
+        if (selectedCertificateOption) {
+          certificates[index]['name'] = selectedCertificateOption.name
+          certificates[index]['issuer'] = selectedCertificateOption.issuer
+          certificates[index]['estimatedHours'] = selectedCertificateOption.estimatedHours
+          certificates[index]['pathway'] = selectedCertificateOption.pathway
+          certificates[index]['workFunction'] = selectedCertificateOption.workFunction
+          certificates[index]['industry'] = selectedCertificateOption.industry
+          certificates[index]['description'] = selectedCertificateOption.description
+        }
+      }
+
+      this.setState({ certificates, textFormHasChanged: true, selectedValue: eventValue })
+
+      if (this.props.fromApply) {
+        this.props.passData('certificates', certificates, null, 'basic')
+      }
+      // if (name === 'name') {
+      //   this.searchSchools(eventValue)
+      // }
     } else if (eventName === 'firstName') {
       this.setState({ firstNameValue: eventValue, textFormHasChanged: true })
       if (this.props.fromApply) {
@@ -2715,6 +2793,8 @@ class EditProfileDetails extends Component {
             }
           }
 
+          const certificates = this.state.certificates
+
           let race = this.state.race
           const races = this.state.races
           const selfDescribedRace = this.state.selfDescribedRace
@@ -2777,6 +2857,7 @@ class EditProfileDetails extends Component {
             emailId, rawPictureURL, pictureURL,
             firstNameValue, lastNameValue,
             linkedInURL, resumeURL, customWebsiteURL, videoResumeURL, headline, educationStatus, education, school,
+            certificates,
             dateOfBirth, phoneNumber, alternativeEmail, alternativePhoneNumber, address, city,
             degree, major, pathway, gradYear, race, races, selfDescribedRace, gender, veteran, workAuthorization,
             politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict, dacaStatus,
@@ -3490,6 +3571,16 @@ class EditProfileDetails extends Component {
       }
 
       this.setState({ education })
+    } else if (type === 'certificate') {
+      console.log('adding a certificate')
+      let certificates = this.state.certificates
+      if (certificates) {
+        certificates.unshift({ name: '' })
+      } else {
+        certificates = [{ name: '' }]
+      }
+
+      this.setState({ certificates })
 
     } else {
       console.log('there was an error')
@@ -4782,6 +4873,10 @@ class EditProfileDetails extends Component {
       let education = this.state.education
       education.splice(index,1)
       this.setState({ education })
+    } else if (type === 'certificate') {
+      let certificates = this.state.certificates
+      certificates.splice(index,1)
+      this.setState({ certificates })
     } else if (type === 'resume') {
 
       const emailId = this.state.emailId
@@ -6182,6 +6277,253 @@ class EditProfileDetails extends Component {
                               <View />
                             )}
 
+                          </View>
+                        )}
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+
+                    {(this.props.fromApply) ? (
+                      <View style={[styles.topMargin20]}>
+                        <View style={styles.horizontalLine} />
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                  </View>
+
+                  <View>
+                    <View style={styles.spacer} /><View style={styles.spacer} />
+                    <View style={styles.horizontalLine} />
+
+                    <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+
+                    <View style={[styles.row10,styles.rowDirection]}>
+
+                      <View>
+                        <Text style={[styles.headingText3]}>Certificates, Badges, & Certifications</Text>
+                      </View>
+                      <View style={styles.leftPadding}>
+                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                        <TouchableOpacity onPress={() => this.addItem('certificate')} style={[styles.padding7,styles.standardBorder, {borderRadius: 13 }]}>
+                          <Image source={{ uri: addIcon}} style={[styles.square12,styles.contain]}/>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View>
+                    {(this.state.certificates) ? (
+                      <View>
+                        {this.state.certificates.map((item, optionIndex) =>
+                          <View key={optionIndex}>
+                            <View style={styles.spacer} />
+                            <View style={[styles.row10,styles.rowDirection]}>
+                              <View style={[styles.calcColumn80]}>
+                                <Text style={[styles.headingText6]}>Certificate #{optionIndex + 1}{(item.name) ? ": " + item.name : ""}</Text>
+                              </View>
+                              <View style={styles.width20}>
+                                <TouchableOpacity style={[styles.calcColumn60,styles.rightText]} onPress={() => this.deleteItem('certificate', optionIndex)}>
+                                  <Image source={{ uri: deleteIconDark}} style={[styles.square15,styles.contain,styles.pinRight]} />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+
+                            <View>
+                              {(this.state.certificateOptions && this.state.certificateOptions.length > 0) ? (
+                                <View>
+                                  <View style={[styles.row10]}>
+                                    <Text style={[styles.standardText,styles.row10]}>Select an option from {this.state.orgName}'s list? <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                    {(Platform.OS === 'ios') ? (
+                                      <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Select an option', selectedIndex: optionIndex, selectedName: "certificate|addCertificateMethod|" + optionIndex, selectedValue: item.addCertificateMethod, selectedOptions: this.state.addCertificateMethodOptions, selectedSubKey: null })}>
+                                        <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                          <View style={[styles.calcColumn115]}>
+                                            <Text style={[styles.descriptionText1]}>{item.addCertificateMethod}</Text>
+                                          </View>
+                                          <View style={[styles.width20,styles.topMargin5]}>
+                                            <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <View style={[styles.standardBorder]}>
+                                        <Picker
+                                          selectedValue={item.addCertificateMethod}
+                                          onValueChange={(itemValue, itemIndex) =>
+                                            this.formChangeHandler("certificate|addCertificateMethod|" + optionIndex,itemValue)
+                                          }>
+                                          {this.state.addCertificateMethodOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                        </Picker>
+                                      </View>
+                                    )}
+                                  </View>
+                                  {(item.addCertificateMethod === 'Yes, select from options') ? (
+                                    <View style={[styles.row10]}>
+                                      <Text style={[styles.standardText,styles.row10]}>Select a certificate / badge {this.state.orgName}'s list? <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                      {(Platform.OS === 'ios') ? (
+                                        <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Select a certificate / badge ', selectedIndex: optionIndex, selectedName: "certificate|certificateOption|" + optionIndex, selectedValue: item.certificateOption, selectedOptions: this.state.certificateOptions, selectedSubKey: null })}>
+                                          <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                            <View style={[styles.calcColumn115]}>
+                                              <Text style={[styles.descriptionText1]}>{item.certificateOption}</Text>
+                                            </View>
+                                            <View style={[styles.width20,styles.topMargin5]}>
+                                              <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                            </View>
+                                          </View>
+                                        </TouchableOpacity>
+                                      ) : (
+                                        <View style={[styles.standardBorder]}>
+                                          <Picker
+                                            selectedValue={item.certificateOption}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                              this.formChangeHandler("certificate|certificateOption|" + optionIndex,itemValue)
+                                            }>
+                                            {this.state.certificateOption.map(value => <Picker.Item label={value} value={value} />)}
+                                          </Picker>
+                                        </View>
+                                      )}
+                                    </View>
+                                  ) : (
+                                    <View />
+                                  )}
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Name <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("certificate|name|" + optionIndex , text)}
+                                  value={item.name}
+                                  placeholder="(e.g., Adobe Photoshop)..."
+                                  placeholderTextColor="grey"
+                                />
+                              </View>
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Avg Estimated Hours to Achieve <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Avg Estimated Hours to Achieve', selectedIndex: optionIndex, selectedName: "certificate|estimatedHours|" + optionIndex, selectedValue: item.estimatedHours, selectedOptions: this.state.estimatedHoursOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.estimatedHours}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.estimatedHours}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("certificate|estimatedHours|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.estimatedHoursOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Pathway <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pathway', selectedIndex: optionIndex, selectedName: "certificate|pathway|" + optionIndex, selectedValue: item.pathway, selectedOptions: this.state.newPathwayOptions, selectedSubKey: 'title' })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.pathway}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.pathway}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("certificate|pathway|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.newPathwayOptions.map(value => <Picker.Item label={value.title} value={value.title} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Function <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Function', selectedIndex: optionIndex, selectedName: "certificate|workFunction|" + optionIndex, selectedValue: item.workFunction, selectedOptions: this.state.functionOptions, selectedSubKey: 'value' })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.workFunction}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.workFunction}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("certificate|workFunction|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.functionOptions.map(value => <Picker.Item label={value.value} value={value.value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Industry <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: optionIndex, selectedName: "certificate|industry|" + optionIndex, selectedValue: item.industry, selectedOptions: this.state.industryOptions, selectedSubKey: 'value' })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.industry}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.industry}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("certificate|industry|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.industryOptions.map(value => <Picker.Item label={value.value} value={value.value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Description <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <TextInput
+                                  style={styles.textArea}
+                                  onChangeText={(text) => this.formChangeHandler("certificate|description|" + optionIndex, text)}
+                                  value={item.description}
+                                  placeholder="Add a description of the certificate, badge, or certification..."
+                                  placeholderTextColor="grey"
+                                  multiline={true}
+                                  numberOfLines={4}
+                                />
+                              </View>
+
+                              {(this.state.errorMessage && this.state.errorMessage !== '') ? <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.errorMessage}</Text> : <View />}
+                              {(this.state.successMessage && this.state.successMessage !== '') ? <Text style={[styles.errorColor,styles.descriptionText2,styles.row5]}>{this.state.successMessage}</Text> : <View />}
+
+                            </View>
                           </View>
                         )}
                       </View>
@@ -8179,6 +8521,7 @@ class EditProfileDetails extends Component {
 
                   {(this.state.showPicker) && (
                     <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
+                      {console.log('show me value plz: ', this.state.selectedValue)}
                       <SubPicker
                         selectedSubKey={this.state.selectedSubKey}
                         selectedName={this.state.selectedName}
