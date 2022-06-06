@@ -1207,7 +1207,7 @@ class Settings extends Component {
                         emailId={this.state.emailId} activeOrg={this.state.activeOrg} myOrgs={this.state.myOrgs}
                         sharePartners={this.state.sharePartners} roleName={this.state.roleName}
                         academies={this.state.academies} academyCodes={this.state.academyCodes}
-                        accountCode={this.state.emp}
+                        accountCode={this.state.emp} navigation={this.props.navigation}
                       />
                     </View>
                   )}
@@ -1286,7 +1286,7 @@ class Settings extends Component {
                         emailId={this.state.emailId} activeOrg={this.state.activeOrg} myOrgs={this.state.myOrgs}
                         sharePartners={this.state.sharePartners} roleName={this.state.roleName}
                         academies={this.state.academies} academyCodes={this.state.academyCodes}
-                        accountCode={this.state.emp}
+                        accountCode={this.state.emp} navigation={this.props.navigation}
                       />
                     </View>
                   )}

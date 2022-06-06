@@ -458,11 +458,11 @@ class SwitchOrgs extends Component {
         if (passedIndex === remainder) {
           if (this.state.dataToShare[index]) {
             rows.push(
-              <View key={i.toString + "dataToShare"}>
-                <View className="float-left right-margin">
-                  <Image source={{ uri: checkmarkIcon}} className="image-auto-20" />
+              <View key={i.toString + "dataToShare"} style={[styles.rowDirection]}>
+                <View style={[styles.rightMargin]}>
+                  <Image source={{ uri: checkmarkIcon}} style={[styles.square20,styles.contain]} />
                 </View>
-                <View className="float-left">
+                <View>
                   <Text style={[styles.standardText]}>{this.state.dataToShare[index]}</Text>
                 </View>
 
@@ -482,10 +482,10 @@ class SwitchOrgs extends Component {
         <View>
           {(this.props.academies) ? (
             <View>
-              <View className="float-left right-padding">
+              <View>
                 <Text style={[styles.standardText,styles.row10]}>Switch Career Academies</Text>
               </View>
-
+              {/*
               {(this.state.editMode) && (
                 <View>
                   <View className="filter-field-search half-width">
@@ -512,7 +512,7 @@ class SwitchOrgs extends Component {
                   {(this.state.serverErrorMessage) && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
                   <View style={[styles.spacer]} />
                 </View>
-              )}
+              )}*/}
 
               <View style={[styles.rowDirection,styles.flexWrap]}>
                 {this.renderOrganizations('academies')}
@@ -525,21 +525,23 @@ class SwitchOrgs extends Component {
           ) : (
             <View>
               <View>
-                <View className="float-left right-padding">
-                  <Text style={[styles.standardText,styles.row10]}>Manage My Organizations</Text>
+                <View style={[styles.rowDirection]}>
+                  <View style={[styles.flex90]}>
+                    <Text style={[styles.standardText,styles.row10]}>Manage My Organizations</Text>
+                  </View>
+                  <View style={[styles.flex10,styles.alignEnd]}>
+                    <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('AddWorkspaces')}>
+                      <Image source={{ uri: addIconBlue}} style={[styles.square20,styles.contain]} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View className="float-left right-padding">
-                  <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
-                  <TouchableOpacity className="background-button" onPress={() => this.setState({ editMode: true })}>
-                    <Image source={{ uri: addIconBlue}} className="image-auto-20" />
-                  </TouchableOpacity>
-                </View>
-
+                {/*
                 {(this.state.editMode) && (
                   <View>
                     <View className="filter-field-search half-width">
                       <View className="search-icon-container">
-                        <Image source={{ uri: searchIcon}}/>
+                        <Image source={{ uri: searchIcon}}/ style={[styles.square15,styles.contain]}>
                       </View>
                       <View className="filter-search-container calc-column-offset-50" >
                         <input type="text" className="text-field clear-border" placeholder="Search by org code..." name="search" value={this.state.searchString} onChange={this.formChangeHandler}/>
@@ -556,7 +558,7 @@ class SwitchOrgs extends Component {
                     {(this.state.serverErrorMessage) && <Text style={[styles.errorColor]}>{this.state.serverErrorMessage}</Text>}
                     <View style={[styles.spacer]} />
                   </View>
-                )}
+                )}*/}
 
                 <View style={[styles.rowDirection,styles.flexWrap]}>
                   {this.renderOrganizations('all')}
