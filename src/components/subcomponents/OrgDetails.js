@@ -275,7 +275,7 @@ class OrgDetails extends Component {
     }
 
     if (value.cta === 'Join Workspace') {
-      if (value.signUpFields) {
+      if (value.signUpFields && value.signUpFields.length > 0) {
         if (passedSignUpFields) {
           const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
@@ -335,7 +335,7 @@ class OrgDetails extends Component {
     } else if (value.cta === 'Request Access' || value.cta === 'Join Waitlist') {
       console.log('request access')
 
-      if (value.signUpFields) {
+      if (value.signUpFields && value.signUpFields.length > 0) {
         if (passedSignUpFields) {
           const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
@@ -720,7 +720,7 @@ class OrgDetails extends Component {
                           <View style={[styles.bottomMargin,styles.flex50,styles.rightPadding]}>
                             <TouchableOpacity style={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, this.state.orgSelected, null, true)}>
                               <View style={[styles.rowDirection]}>
-                                <View style={[styles.width30,styles.rightPadding,styles.topMargin5,styles.flexCenter]}>
+                                <View style={[styles.width30,styles.rightPadding5,styles.flexCenter]}>
                                   <Image source={(this.state.joinRequests && this.state.joinRequests.includes(this.state.orgSelected.orgCode)) ? { uri: timeIconBlue} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
                                 </View>
                                 <View>

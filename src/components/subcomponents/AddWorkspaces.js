@@ -40,6 +40,7 @@ class AddWorkspaces extends Component {
     this.renderManipulators = this.renderManipulators.bind(this)
     this.openSignUpFieldsModal = this.openSignUpFieldsModal.bind(this)
     this.passData = this.passData.bind(this)
+    this.toggleSearchBar = this.toggleSearchBar.bind(this)
 
   }
 
@@ -83,6 +84,8 @@ class AddWorkspaces extends Component {
         // We have data!!
         console.log('what is the email of this user', emailId);
 
+        this.props.navigation.setOptions({ headerTitle: "Add & Manage Communities" })
+
         // this.setState({ emailId, username, cuFirstName, cuLastName, firstName: cuFirstName, lastName: cuLastName,
         //   roleName, activeOrg, orgFocus, orgName, remoteAuth
         // })
@@ -90,19 +93,20 @@ class AddWorkspaces extends Component {
         let accountCode = this.props.accountCode
 
         let itemFilters = [
+          { name: 'Featured', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Yes','No']) },
           { name: 'Org Type', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Workforce','Education']) },
           { name: 'Number of Members', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['< 30','30 - 100','101 - 500','501 - 1,000','1,001 - 5,000','5,001+']) },
           { name: 'Diversity-Focused', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Yes','No']) },
           { name: 'Low-Income Focused', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Yes','No']) },
           { name: 'Avg Rating', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['< 2 Stars', '2 - 3 Stars','3 - 4 Stars','4 - 5 Stars']) },
           { name: 'Review', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['< 5 Reviews','5 - 10 Reviews','11 - 25 Reviews','24+ Reviews'])},
-          { name: 'Added', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Yes','No']) },
         ]
+        // { name: 'Added', value: this.state.defaultFilterOption, options: [this.state.defaultFilterOption].concat(['Yes','No']) },
 
         if (activeOrg || accountCode) {
           this.setState({ emailId: email, cuFirstName, cuLastName, username, activeOrg, orgFocus, accountCode, itemFilters, isAnimating: true })
 
-          let workspaceParams = { isActive: true, isPublic: true }
+          let workspaceParams = { isActive: true, sortByPublic: true, resLimit: 50 }
 
           if (workspaceParams.isActive) {
             Axios.get('https://www.guidedcompass.com/api/org/all', { params: workspaceParams })
@@ -201,7 +205,7 @@ class AddWorkspaces extends Component {
     }
 
     if (value.cta === 'Join Workspace') {
-      if (value.signUpFields) {
+      if (value.signUpFields && value.signUpFields.length > 0) {
         if (passedSignUpFields) {
           const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
@@ -261,7 +265,7 @@ class AddWorkspaces extends Component {
     } else if (value.cta === 'Request Access' || value.cta === 'Join Waitlist') {
       console.log('request access')
 
-      if (value.signUpFields) {
+      if (value.signUpFields && value.signUpFields.length > 0) {
         if (passedSignUpFields) {
           const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
@@ -456,108 +460,100 @@ class AddWorkspaces extends Component {
     if (type === 'filter') {
       let filters = this.state.itemFilters
 
-      // if (filters) {
-      //
-      //   let rows = []
-      //   for (let i = 1; i <= filters.length; i++) {
-      //     rows.push(
-      //       <View key={filters[i - 1] + i.toString()}>
-      //         <View>
-      //           <View className="float-left row-10 right-padding-20">
-      //             <View className="float-left light-border">
-      //               <View className="float-left right-padding-5 left-padding nowrap top-margin-negative-2">
-      //                 <View style={[styles.spacer]} />
-      //                 <Text className="standard-color">{filters[i - 1].name}</Text>
-      //               </View>
-      //               <View className="float-left">
-      //                 <Picker
-      //                   selectedValue={filters[i - 1].value}
-      //                   onValueChange={(itemValue, itemIndex) =>
-      //                     this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
-      //                   }>
-      //                   {filters[i - 1].options.map(value => <Picker.Item key={value} label={value} value={value} />)}
-      //                 </Picker>
-      //               </View>
-      //               <View className="dropdown-arrow-container">
-      //                 <Image source={{ uri: dropdownArrow}}/>
-      //               </View>
-      //             </View>
-      //           </View>
-      //         </View>
-      //       </View>
-      //     )
-      //   }
-      //
-      //   return rows
-      //
-      // }
+      console.log('show filters: ', filters)
+
+      if (filters) {
+
+        let rows = []
+        for (let i = 1; i <= filters.length; i++) {
+          rows.push(
+            <View key={filters[i - 1] + i.toString()}>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{filters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: filters[i - 1].name, selectedIndex: i - 1, selectedName: "filter|" + filters[i - 1].name, selectedValue: filters[i - 1].value, selectedOptions: filters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{filters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={filters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("filter|" + filters[i - 1].name,itemValue)
+                      }>
+                      {filters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
+                )}
+              </View>
+            </View>
+          )
+        }
+
+        return rows
+
+      }
     } else if (type === 'sort') {
-      // let sorters = []
-      //
-      // if (this.state.showV2App) {
-      //   if (this.state.subNavSelected === 'Events') {
-      //     // events
-      //     sorters = this.state.eventSorters
-      //   } else if (this.state.subNavSelected === 'Projects') {
-      //     // projects
-      //     sorters = this.state.projectSorters
-      //   } else if (this.state.subNavSelected === 'Work') {
-      //     // work
-      //     sorters = this.state.workSorters
-      //   } else if (this.state.subNavSelected === 'All') {
-      //     sorters = this.state.allSorters
-      //   }
-      // } else {
-      //   if (this.state.viewIndex === 1) {
-      //     // events
-      //     sorters = this.state.eventSorters
-      //   } else if (this.state.viewIndex === 5) {
-      //     // projects
-      //     sorters = this.state.projectSorters
-      //   } else if (this.state.viewIndex === 7) {
-      //     // work
-      //     sorters = this.state.workSorters
-      //   } else if (this.state.viewIndex === 8) {
-      //     // work
-      //     sorters = this.state.allSorters
-      //   }
-      // }
-      //
-      // if (sorters) {
-      //
-      //   let rows = []
-      //   for (let i = 1; i <= sorters.length; i++) {
-      //     rows.push(
-      //       <View key={sorters[i - 1] + i.toString()}>
-      //         <View>
-      //           <View className="float-left row-10 right-padding-20">
-      //             <View className="float-left light-border">
-      //               <View className="float-left right-padding-5 left-padding nowrap top-margin-negative-2">
-      //                 <View style={[styles.spacer]} />
-      //                 <Text className="standard-color">{sorters[i - 1].name}</Text>
-      //               </View>
-      //               <View className="float-left">
-                        // <Picker
-                        //   selectedValue={sorters[i - 1].value}
-                        //   onValueChange={(itemValue, itemIndex) =>
-                        //     this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
-                        //   }>
-                        //   {sorters[i - 1].options.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                        // </Picker>
-      //               </View>
-      //               <View className="dropdown-arrow-container">
-      //                 <Image source={{ uri: dropdownArrow}}/>
-      //               </View>
-      //             </View>
-      //           </View>
-      //         </View>
-      //       </View>
-      //     )
-      //   }
-      //
-      //   return rows
-      //
-      // }
+      let sorters = []
+
+      if (this.state.subNavSelected === 'Events') {
+        // events
+        sorters = this.state.eventSorters
+      } else if (this.state.subNavSelected === 'Projects') {
+        // projects
+        sorters = this.state.projectSorters
+      } else if (this.state.subNavSelected === 'Work') {
+        // work
+        sorters = this.state.workSorters
+      } else if (this.state.subNavSelected === 'All') {
+        sorters = this.state.allSorters
+      }
+
+      if (sorters) {
+
+        let rows = []
+        for (let i = 1; i <= sorters.length; i++) {
+          rows.push(
+            <View key={sorters[i - 1] + i.toString()}>
+              <View style={[styles.row10]}>
+                <Text style={[styles.descriptionTextColor,styles.descriptionText3]}>{sorters[i - 1].name}</Text>
+                {(Platform.OS === 'ios') ? (
+                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: sorters[i - 1].name, selectedIndex: i - 1, selectedName: "sort|" + sorters[i - 1].name, selectedValue: sorters[i - 1].value, selectedOptions: sorters[i - 1].options, selectedSubKey: null })}>
+                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                      <View style={[styles.calcColumn115]}>
+                        <Text style={[styles.descriptionText1]}>{sorters[i - 1].value}</Text>
+                      </View>
+                      <View style={[styles.width20,styles.topMargin5]}>
+                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={[styles.standardBorder]}>
+                    <Picker
+                      selectedValue={sorters[i - 1].value}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.formChangeHandler("sort|" + sorters[i - 1].name,itemValue)
+                      }>
+                      {sorters[i - 1].options.map(value => <Picker.Item label={value} value={value} />)}
+                    </Picker>
+                  </View>
+                )}
+              </View>
+            </View>
+          )
+        }
+
+        return rows
+
+      }
     }
   }
 
@@ -667,6 +663,19 @@ class AddWorkspaces extends Component {
 
   }
 
+  toggleSearchBar(action) {
+    console.log('toggleSearchBar called ', action)
+
+    let showingSearchBar = this.state.showingSearchBar
+    if (showingSearchBar) {
+      showingSearchBar = false
+    } else {
+      showingSearchBar = true
+    }
+
+    this.setState({ showingSearchBar })
+  }
+
   render() {
 
     return (
@@ -685,7 +694,7 @@ class AddWorkspaces extends Component {
                 )}
 
                 <View style={(this.props.fromWalkthrough) ? [styles.calcColumn180] : [styles.calcColumn140]}>
-                  <Text style={[styles.headingText3,styles.centerText]}>Add Workspaces</Text>
+                  <Text style={[styles.headingText3,styles.centerText]}>Manage Communities</Text>
                 </View>
                 <View style={[styles.width40,styles.alignEnd]}>
                   <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/contact')}>
@@ -695,46 +704,95 @@ class AddWorkspaces extends Component {
               </View>
 
               <Text style={[styles.flex1,styles.centerText,styles.topPadding]}>
-                  Workspaces are personalized spaces for members of workforce programs. They help these organizations support and guide you to opportunities you love. Once you join a workspace, their logo will appear on the top-left of your screen.
+                  Communities are dedicated portals or workspaces of educational, workforce, staffing, and other career development institutions. Your core profile transfers, but events, projects, work opportunities, pathways, and members will differ.
               </Text>
             </View>
           </View>
-          {/*
-          {(this.props.fromAdvisor) && (
-            <View className={(this.props.fromWalkthrough) ? "full-width" : "width-70-percent center-horizontally max-width-1400"}>
-              <View className="filter-field-search full-width white-background clear-margin medium-shadow">
-                <View className="search-icon-container">
-                  <Image source={{ uri: searchIcon}} className="image-auto-28 padding-5" />
+
+          <View className={(this.props.fromWalkthrough) ? "full-width" : "width-70-percent center-horizontally max-width-1400"}>
+            {/*
+            <View className="filter-field-search full-width white-background clear-margin medium-shadow">
+              <View className="search-icon-container">
+                <Image source={{ uri: searchIcon}} className="image-auto-28 padding-5" />
+              </View>
+              <View className="filter-search-container calc-column-offset-100-static">
+                <input type="text" className="text-field clear-border" placeholder={"Search 500+ organizations..."} name="searchString" value={this.state.searchString} onChange={this.formChangeHandler}/>
+              </View>
+              <View className="search-icon-container top-margin-negative-3">
+                <TouchableOpacity type="button" className="background-button" onPress={(this.state.showingSearchBar) ? () => this.setState({ showingSearchBar: false }) : () => this.setState({ showingSearchBar: true })}>
+                  <View className={(this.state.showingSearchBar) ? "cta-border rounded-corners row-5 horizontal-padding-10 description-text-3 cta-background-color white-text" : "standard-border rounded-corners row-5 horizontal-padding-10 description-text-3"}>Filter</View>
+                </TouchableOpacity>
+              </View>
+            </View>*/}
+
+            <View style={[styles.rowDirection,styles.whiteBackground,styles.horizontalPadding,styles.topMargin15]}>
+              <View style={[styles.calcColumn100,styles.lightBorder,styles.rightMargin10, styles.rowDirection]}>
+                <View style={[styles.row7,styles.horizontalPadding3,styles.topMargin3,styles.leftMargin5]}>
+                  <Image source={{ uri: searchIcon}} style={[styles.square17,styles.contain,styles.padding5]}/>
                 </View>
-                <View className="filter-search-container calc-column-offset-100-static">
-                  <input type="text" className="text-field clear-border" placeholder={"Search 500+ organizations..."} name="searchString" value={this.state.searchString} onChange={this.formChangeHandler}/>
-                </View>
-                <View className="search-icon-container top-margin-negative-3">
-                  <TouchableOpacity type="button" className="background-button" onPress={(this.state.showingSearchBar) ? () => this.setState({ showingSearchBar: false }) : () => this.setState({ showingSearchBar: true })}>
-                    <View className={(this.state.showingSearchBar) ? "cta-border rounded-corners row-5 horizontal-padding-10 description-text-3 cta-background-color white-text" : "standard-border rounded-corners row-5 horizontal-padding-10 description-text-3"}>Filter</View>
-                  </TouchableOpacity>
-                </View>
+                {(Platform.OS === 'ios') ? (
+                  <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
+                  <TextInput
+                    style={[styles.height30,styles.descriptionText2]}
+                    onChangeText={(text) => this.formChangeHandler('searchString', text)}
+                    value={this.state.searchString}
+                    placeholder={"Search Org Communities..."}
+                    placeholderTextColor="grey"
+                  />
+                  </View>
+                ) : (
+                  <View style={[styles.calcColumn130,styles.topPadding3,styles.leftPadding5]}>
+                    <TextInput
+                      style={[styles.height40,styles.descriptionText2,styles.topMarginNegative5]}
+                      onChangeText={(text) => this.formChangeHandler('searchString', text)}
+                      value={this.state.searchString}
+                      placeholder={"Search Org Communities..."}
+                      placeholderTextColor="grey"
+                    />
+                  </View>
+                )}
+
               </View>
 
-
-              {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.calcColumn30,styles.centerText,styles.row5]}>{this.state.errorMessage}</Text>}
-              {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.calcColumn30,styles.centerText,styles.row5]}>{this.state.successMessage}</Text>}
-
-              {(this.state.showingSearchBar) && (
-                <View className="row box-container-1 white-background medium-shadow">
-                  <View>
-                    <Text className="heading-text-4">Filter Results</Text>
-                    <View style={[styles.halfSpacer]} />
-
-                    {(this.renderManipulators('filter'))}
-
-
-                    <View style={[styles.spacer]} />
-                  </View>
-                </View>
-              )}
+              <View style={[styles.horizontalPadding3,styles.leftPadding]}>
+                <TouchableOpacity onPress={() => this.toggleSearchBar('show')} >
+                  {(this.state.showingSearchBar) ? <View style={[styles.ctaBackgroundColor,styles.flexCenter,styles.row7,styles.horizontalPadding,styles.slightlyRoundedCorners]}><Text style={[styles.whiteColor]}>Filter</Text></View> : <View style={[styles.ctaBorder,styles.whiteBackground, styles.flexCenter,styles.row7,styles.horizontalPadding,styles.slightlyRoundedCorners]}><Text style={[styles.ctaColor]}>Filter</Text></View>}
+                </TouchableOpacity>
+              </View>
             </View>
-          )}*/}
+
+
+            {(this.state.errorMessage && this.state.errorMessage !== '') && <Text style={[styles.descriptionText2,styles.errorColor,styles.calcColumn30,styles.centerText,styles.row5]}>{this.state.errorMessage}</Text>}
+            {(this.state.successMessage && this.state.successMessage !== '') && <Text style={[styles.descriptionText2,styles.ctaColor,styles.calcColumn30,styles.centerText,styles.row5]}>{this.state.successMessage}</Text>}
+
+            {(this.state.showingSearchBar) && (
+              <View style={[styles.card,styles.topMargin20, styles.bottomMargin20]}>
+                <View>
+                  {(this.state.subNavSelected !== "Featured") && (
+                    <View>
+
+                      <Text style={[styles.standardText]}>Filter</Text>
+                      <View style={styles.halfSpacer} />
+                      {(this.renderManipulators('filter'))}
+
+                      <View style={styles.spacer} />
+
+                      {(this.state.itemSorters && this.state.itemSorters.length > 0) && (
+                        <View>
+                          <View style={[styles.horizontalLine]} />
+                          <View style={styles.spacer} /><View style={styles.spacer} />
+                          <Text style={[styles.standardText]}>Sort</Text>
+                          <View style={styles.halfSpacer} />
+                          {(this.renderManipulators('sort'))}
+                        </View>
+                      )}
+                    </View>
+                  )}
+
+                </View>
+              </View>
+            )}
+          </View>
 
           <View style={(this.props.fromWalkthrough) ? [styles.calcColumn80,styles.topMargin20] : [styles.fullScreenWidth,styles.row20]}>
             <View>
@@ -771,9 +829,21 @@ class AddWorkspaces extends Component {
                                 <Image source={(value.webLogoURIColor) ? { uri: value.webLogoURIColor} : { uri: industryIconDark}} style={[styles.square90,styles.contain]}/>
                               </View>
                               <Text style={[styles.headingText4,styles.centerText]}>{value.orgName}</Text>
-                              <Text style={[styles.descriptionText2,styles.centerText]}>{value.orgDescription}</Text>
-                              <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.region}</Text>
-                              <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.thirdTitle}</Text>
+                              {(value.orgDescription) ? (
+                                <Text style={[styles.descriptionText2,styles.centerText]}>{value.orgDescription}</Text>
+                              ) : (
+                                <View />
+                              )}
+                              {(value.region) ? (
+                                <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.region}</Text>
+                              ) : (
+                                <View />
+                              )}
+                              {(value.thirdTitle) ? (
+                                <Text style={[styles.descriptionText2,styles.topPadding,styles.descriptionTextColor,styles.centerText]}>{value.thirdTitle}</Text>
+                              ) : (
+                                <View />
+                              )}
 
                               <View style={[styles.bottomMargin20,styles.flex1]}>
                                 <View style={[styles.rowDirection,styles.flexCenter]}>

@@ -992,13 +992,13 @@ class EditProfileDetails extends Component {
           }
 
           let education = [{ name: '' }]
-          if (responseData.user.education && responseData.user.education.length > 0) {
-            education = responseData.user.education
+          if (response.data.user.education && response.data.user.education.length > 0) {
+            education = response.data.user.education
           }
 
           let certificates = []
-          if (responseData.user.certificates && responseData.user.certificates.length > 0) {
-            certificates = responseData.user.certificates
+          if (response.data.user.certificates && response.data.user.certificates.length > 0) {
+            certificates = response.data.user.certificates
           }
 
           this.setState({
@@ -2176,6 +2176,20 @@ class EditProfileDetails extends Component {
       this.setState({ selectedAssessment: eventValue, selectedValue: eventValue })
     } else if (eventName === 'selectedEndorsement') {
       this.setState({ selectedEndorsement: eventValue, selectedValue: eventValue })
+    } else if (eventName === 'publicProfileExtent') {
+      console.log('in publicProfileExtent')
+      if (eventValue === 'Only Connections and Members' || eventValue === 'Public') {
+        // must be over 18
+        if (!this.state.dateOfBirth) {
+          // prompt to enter date of birth
+          this.closeModal()
+          this.setState({ modalIsOpen: true, showBirthdate: true, tempPublicProfileExtent: eventValue, selectedValue: eventValue })
+        } else {
+          this.setState({ [eventName]: eventValue, textFormHasChanged: true, selectedValue: eventValue })
+        }
+      } else {
+        this.setState({ [eventName]: eventValue, textFormHasChanged: true, selectedValue: eventValue })
+      }
     } else {
       console.log('there was an error in formChangeHandler')
       this.setState({ [eventName]: eventValue, textFormHasChanged: true, selectedValue: eventValue })
@@ -2580,14 +2594,17 @@ class EditProfileDetails extends Component {
         const dateOfBirth = birthdate
         const updatedAt = new Date()
 
+        const userObject = { emailId, dateOfBirth, updatedAt }
+
         Axios.post('https://www.guidedcompass.com/api/users/profile/details', userObject)
         .then((response) => {
 
           if (response.data.success) {
             console.log('successfully saved profile')
 
-            self.setState({ isSaving: false, modalIsOpen: false })
+            self.setState({ isSaving: false, modalIsOpen: false, publicProfileExtent: self.state.tempPublicProfileExtent })
             self.savePreferences(false, true)
+            self.closeModal()
 
           } else {
             console.log('profile save was not successful')
@@ -6331,7 +6348,7 @@ class EditProfileDetails extends Component {
                             </View>
 
                             <View>
-                              {(this.state.certificateOptions && this.state.certificateOptions.length > 0) ? (
+                              {(this.state.certificateOptions && this.state.certificateOptions.length > 1) ? (
                                 <View>
                                   <View style={[styles.row10]}>
                                     <Text style={[styles.standardText,styles.row10]}>Select an option from {this.state.orgName}'s list? <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
@@ -8458,7 +8475,8 @@ class EditProfileDetails extends Component {
                   )}
 
                   {(this.state.showBirthdate) && (
-                    <View key="showIndustry" style={[styles.calcColumn60,styles.padding20]}>
+                    <View key="showIndustry" style={[styles.flex1,styles.padding30]}>
+                      <View style={styles.spacer} />
                       <Text style={[styles.headingText2]}>Are you over 18?</Text>
                       <View style={styles.spacer} />
                       <Text style={[styles.standardText]}>Currently, you must be over 18 to set your profile to public.</Text>
@@ -8467,7 +8485,7 @@ class EditProfileDetails extends Component {
 
                         {(Platform.OS === 'ios') ? (
                           <View style={[styles.rowDirection]}>
-                            <View style={[styles.calcColumn180]}>
+                            <View style={[styles.calcColumn200]}>
                               <Text style={[styles.standardText,styles.row10]}>Date of Birth</Text>
                             </View>
                             <View style={[styles.width120,styles.topPadding5]}>
@@ -8504,14 +8522,14 @@ class EditProfileDetails extends Component {
                         )}
                       </View>
 
-                      {(this.state.publicPreferencesErrorMessage) && <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text>}
+                      {(this.state.publicPreferencesErrorMessage) ? <Text style={[styles.errorColor,styles.descriptionText2]}>{this.state.publicPreferencesErrorMessage}</Text> : <View />}
 
-                      <View style={[styles.row20,styles.rowDirection]}>
-                        <View style={styles.rightPadding}>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.whiteColor]} onPress={() => this.verifyLegalAge()}>Make Profile Public</TouchableOpacity>
+                      <View style={[styles.row20,styles.rowDirection,styles.flexWrap]}>
+                        <View style={[styles.rightPadding,styles.topMargin]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]} onPress={() => this.verifyLegalAge()}><Text style={[styles.standardText,styles.whiteColor]}>Make Profile Public</Text></TouchableOpacity>
                         </View>
-                        <View>
-                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaColor,styles.ctaBorder,styles.whiteBackground]} onPress={() => this.closeModal()}>Close View</TouchableOpacity>
+                        <View style={[styles.rightPadding,styles.topMargin]}>
+                          <TouchableOpacity style={[styles.btnPrimary,styles.ctaBorder,styles.whiteBackground,styles.flexCenter]} onPress={() => this.closeModal()}><Text style={[styles.standardText,styles.ctaColor]}>Close View</Text></TouchableOpacity>
                         </View>
 
 

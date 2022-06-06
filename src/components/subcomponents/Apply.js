@@ -3137,7 +3137,7 @@ class Apply extends Component {
                       )}
                     </View>
 
-                    {(this.state.selectedPosting.orgCode === this.state.activeOrg || (this.state.placementPartners && this.state.placementPartners.includes(this.state.activeOrg)) || (this.state.postingOrgCode === 'sandbox')) ? (
+                    {(this.state.selectedPosting.orgCode === this.state.activeOrg || (this.state.placementPartners && this.state.placementPartners.includes(this.state.activeOrg)) || (this.state.postingOrgCode === 'sandbox') || this.state.selectedPosting.orgCode !== 'unite-la') ? (
                       <View>
                         {(this.state.application) && (
                           <View style={[styles.calcColumn60]}>
@@ -3195,7 +3195,7 @@ class Apply extends Component {
                       </View>
                     ) : (
                       <View style={[styles.row20]}>
-                        <Text style={[styles.standardText,styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <Text style={[styles.standardText,styles.ctaColor]} onPress={() => this.switchWorkspaces()}>here</Text> to switch workspaces.</Text>
+                        <Text style={[styles.standardText,styles.errorColor]}>You must apply for this opportunity in the {this.state.selectedPosting.orgName} workspace. Click <Text style={[styles.standardText,styles.ctaColor]} onPress={() => this.switchWorkspaces()}>here</Text> to switch communities.</Text>
                       </View>
                     )}
 

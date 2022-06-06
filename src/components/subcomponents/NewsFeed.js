@@ -7,15 +7,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 import SubRenderPosts from '../common/RenderPosts';
 
-// const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
 const assigneeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignee-icon-dark.png';
-// const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
-// const eventIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/event-icon-dark.png';
-// const assignmentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assignments-icon-dark.png';
-// const problemIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/problem-icon-dark.png';
-// const challengeIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/challenge-icon-dark.png';
-// const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/career-matches-icon-dark.png';
-// const projectsIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/projects-icon-dark.png';
 const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
 // const targetIconOrange = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/target-icon-orange.png';
@@ -481,7 +473,7 @@ class NewsFeed extends Component {
               <View style={[styles.flex1]}>
                 <View style={[styles.rowDirection,styles.row20]}>
                   <View style={[styles.calcColumn110]}>
-                    <Text style={[styles.headingText4]}>Switch Workspaces</Text>
+                    <Text style={[styles.headingText4]}>Switch Communities</Text>
                   </View>
                   <View style={[styles.width30, styles.topMargin5]}>
                     <TouchableOpacity onPress={() => this.closeModal()}>
@@ -554,7 +546,7 @@ class NewsFeed extends Component {
                         <Image source={{ uri: addIconBlue }} style={[styles.square15,styles.contain ]} />
                       </View>
                       <View style={[styles.calcColumn90]}>
-                        <Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Join Org Workspaces</Text>
+                        <Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Join Org Communities</Text>
                       </View>
                     </View>
                   </TouchableOpacity>
