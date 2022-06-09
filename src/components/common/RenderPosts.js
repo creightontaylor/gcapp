@@ -5,13 +5,6 @@ import Modal from 'react-native-modal';
 import { WebView } from 'react-native-webview';
 const styles = require('../css/style');
 
-// import {
-//   EmailShareButton,FacebookShareButton,LinkedinShareButton, PinterestShareButton,RedditShareButton,
-//   TwitterShareButton,WhatsappShareButton,WorkplaceShareButton,
-//
-//   EmailIcon,FacebookIcon,LinkedinIcon, PinterestIcon,RedditIcon,TwitterIcon,WhatsappIcon, WorkplaceIcon
-// } from "react-share";
-
 const experienceIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/experience-icon.png'
 const educationIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/education-icon.png'
 const favoritesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-dark.png'
@@ -1298,8 +1291,11 @@ class RenderPosts extends Component {
       const postId = this.state.posts[this.state.selectedIndex]._id
       const postName = this.state.posts[this.state.selectedIndex].message
       const emailId = this.state.emailId
-      const posterFirstName = this.state.cuFirstName
-      const posterLastName = this.state.cuLastName
+
+      const posterFirstName = this.state.posts[this.state.selectedIndex].firstName
+      const posterLastName = this.state.posts[this.state.selectedIndex].lastName
+      const reporterFirstName = this.state.cuFirstName
+      const reporterLastName = this.state.cuLastName
 
       let selectedPreferences = this.state.selectedPreferences
       if (type === 'report') {
@@ -1307,7 +1303,8 @@ class RenderPosts extends Component {
       }
 
       Axios.post('https://www.guidedcompass.com/api/group-posts/report', {
-        postId, postName, emailId, posterFirstName, posterLastName, type, selectedPreferences
+        postId, postName, emailId, posterFirstName, posterLastName, reporterFirstName, reporterLastName,
+        type, selectedPreferences
       }).then((response) => {
         console.log('attempting to remove favorites')
         if (response.data.success) {

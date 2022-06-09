@@ -256,7 +256,7 @@ class RenderSignUpFields extends Component {
                       style={styles.textInput}
                       onChangeText={(text) => this.formChangeHandler(value.shorthand, text)}
                       value={this.state[value.shorthand]}
-                      placeholder="Your answer..."
+                      placeholder={(value.placeholder) ? value.placeholder : "Your answer..."}
                       placeholderTextColor="grey"
                     />
                   )}

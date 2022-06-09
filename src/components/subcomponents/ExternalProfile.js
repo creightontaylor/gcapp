@@ -655,12 +655,12 @@ class ExternalProfile extends Component {
           this.setState({ animating: false, selectedMentor, matchScore })
 
         } else {
-          console.log('Career match did not work', response.data.message)
+          console.log('Opportunity match did not work', response.data.message)
           this.setState({ animating: false, matchingView: true, errorMessage: 'there was an error: ' + response.data.message, selectedMentor })
         }
 
     }).catch((error) => {
-        console.log('Career match did not work for some reason', error);
+        console.log('Opportunity match did not work for some reason', error);
         this.setState({ animating: false, matchingView: true, errorMessage: 'there was an error', selectedMentor })
     });
   }

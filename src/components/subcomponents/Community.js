@@ -332,6 +332,8 @@ class Community extends Component {
                     email = response.data.friends[i - 1].friend2Email
                     username = response.data.friends[i - 1].friend2Username
                     headline = response.data.friends[i - 1].friend2Headline
+
+                    friendIds.push(response.data.friends[i - 1].friend2Email)
                   } else {
                     pictureURL = response.data.friends[i - 1].friend1PictureURL
                     firstName = response.data.friends[i - 1].friend1FirstName
@@ -339,6 +341,8 @@ class Community extends Component {
                     email = response.data.friends[i - 1].friend1Email
                     username = response.data.friends[i - 1].friend1Username
                     headline = response.data.friends[i - 1].friend1Headline
+
+                    friendIds.push(response.data.friends[i - 1].friend1Email)
                   }
 
                   if (response.data.friends[i - 1].activeRequest && response.data.friends[i - 1].requesterEmail !== emailId) {
@@ -349,8 +353,6 @@ class Community extends Component {
                     if (response.data.friends[i - 1].isRead === false) {
                       unreadRequests.push(response.data.friends[i - 1])
                     }
-
-                    friendIds.push(response.data.friends[i - 1]._id)
                   } else if (response.data.friends[i - 1].active) {
                     friends.push({ friendshipId, pictureURL, firstName, lastName, email, username, headline, active, activeRequest })
                   }

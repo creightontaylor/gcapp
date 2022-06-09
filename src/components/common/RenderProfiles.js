@@ -177,7 +177,12 @@ class RenderProfiles extends Component {
           friend['friend2Email'] = recipientEmail
 
           let friends = self.state.friends
-          friends.push(friend)
+          if (self.state.friends) {
+            friends.push(friend)
+          } else {
+            friends = [friend]
+          }
+
           // console.log('show friends: ', friends)
           self.setState({ successMessage: returnedValue.message, friends })
         } else {

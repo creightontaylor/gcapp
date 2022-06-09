@@ -205,7 +205,7 @@ class AddWorkspaces extends Component {
     }
 
     if (value.cta === 'Join Workspace') {
-      if (value.signUpFields && value.signUpFields.length > 0) {
+      if (value.signUpFieldsRequired && value.signUpFieldsRequired.length > 0) {
         if (passedSignUpFields) {
           const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
