@@ -278,7 +278,7 @@ class Matches extends Component {
       const orgCode = this.state.activeOrg
       const placementPartners = this.state.placementPartners
       const pathway = null
-      const resLimit = 3
+      const resLimit = 500
 
       const self = this
 
@@ -367,7 +367,7 @@ class Matches extends Component {
               console.log('employer match query worked')
 
               if (response.data.courses && response.data.courses.length > 0) {
-                
+
                 let courseMatches = []
                 for (let i = 1; i <= 3; i++) {
                   if (response.data.courses[i - 1]) {
@@ -405,18 +405,19 @@ class Matches extends Component {
             if (response.data.success) {
               console.log('opportunity match query worked')
 
-              let matchScores = response.data.matchScores
-              let eventMatches = []
-              if (response.data.postings && response.data.postings.length > 0) {
-                for (let i = 1; i <= 3; i++) {
-                  if (response.data.postings[i - 1] && matchScores && matchScores.length > 0) {
-                    let posting = response.data.postings[i - 1]
-                    posting['matchScore'] = matchScores[i - 1]
-                    eventMatches.push(posting)
-                  }
-                }
-              }
+              // let matchScores = response.data.matchScores
+              // let eventMatches = []
+              // if (response.data.postings && response.data.postings.length > 0) {
+              //   for (let i = 1; i <= 3; i++) {
+              //     if (response.data.postings[i - 1] && matchScores && matchScores.length > 0) {
+              //       let posting = response.data.postings[i - 1]
+              //       posting['matchScore'] = matchScores[i - 1]
+              //       eventMatches.push(posting)
+              //     }
+              //   }
+              // }
 
+              const eventMatches = response.data.topEventMatches
               this.setState({ eventsAnimating: false, eventMatches })
 
             } else {
@@ -445,18 +446,19 @@ class Matches extends Component {
             if (response.data.success) {
               console.log('project match query worked')
 
-              let matchScores = response.data.matchScores
-              let projectMatches = []
-              if (response.data.postings && response.data.postings.length > 0) {
-                for (let i = 1; i <= 3; i++) {
-                  if (response.data.postings[i - 1] && matchScores && matchScores.length > 0) {
-                    let posting = response.data.postings[i - 1]
-                    posting['matchScore'] = matchScores[i - 1]
-                    projectMatches.push(posting)
-                  }
-                }
-              }
+              // let matchScores = response.data.matchScores
+              // let projectMatches = []
+              // if (response.data.postings && response.data.postings.length > 0) {
+              //   for (let i = 1; i <= 3; i++) {
+              //     if (response.data.postings[i - 1] && matchScores && matchScores.length > 0) {
+              //       let posting = response.data.postings[i - 1]
+              //       posting['matchScore'] = matchScores[i - 1]
+              //       projectMatches.push(posting)
+              //     }
+              //   }
+              // }
 
+              const projectMatches = response.data.topProjectMatches
               this.setState({ projectsAnimating: false, projectMatches })
 
             } else {
@@ -484,18 +486,19 @@ class Matches extends Component {
             if (response.data.success) {
               console.log('opportunity match query worked')
 
-              let matchScores = response.data.matchScores
-              let workMatches = []
-              if (response.data.postings && response.data.postings.length > 0) {
-                for (let i = 1; i <= 3; i++) {
-                  if (response.data.postings[i - 1] && matchScores[i - 1]) {
-                    let posting = response.data.postings[i - 1]
-                    posting['matchScore'] = matchScores[i - 1]
-                    workMatches.push(posting)
-                  }
-                }
-              }
+              // let matchScores = response.data.matchScores
+              // let workMatches = []
+              // if (response.data.postings && response.data.postings.length > 0) {
+              //   for (let i = 1; i <= 3; i++) {
+              //     if (response.data.postings[i - 1] && matchScores[i - 1]) {
+              //       let posting = response.data.postings[i - 1]
+              //       posting['matchScore'] = matchScores[i - 1]
+              //       workMatches.push(posting)
+              //     }
+              //   }
+              // }
 
+              const workMatches = response.data.topWorkMatches
               this.setState({ workAnimating: false, workMatches })
 
             } else {
@@ -525,7 +528,7 @@ class Matches extends Component {
               console.log('peer match query worked')
 
 
-              let peerMatches = response.data.members
+              let peerMatches = response.data.topPeerMatches
               // let matchScores = response.data.matchScores
               self.setState({ peersAnimating: false, peerMatches })
 
@@ -557,7 +560,7 @@ class Matches extends Component {
               console.log('mentor match query worked')
 
 
-              let mentorMatches = response.data.members
+              let mentorMatches = response.data.topMentorMatches
               // let matchScores = response.data.matchScores
               self.setState({ mentorsAnimating: false, mentorMatches })
 
@@ -583,7 +586,7 @@ class Matches extends Component {
             if (response.data.success) {
               console.log('group match query worked')
 
-              let groupMatches = response.data.groups
+              let groupMatches = response.data.topGroupMatches
               // let matchScores = response.data.matchScores
               self.setState({ groupsAnimating: false, groupMatches })
 
