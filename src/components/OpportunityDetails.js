@@ -23,7 +23,7 @@ class OpportunityDetails extends Component {
     try {
       const email = await AsyncStorage.getItem('email')
 
-      console.log('show me values in EditProfileDetails', email, this.props);
+      console.log('show me values in parentOppDetails: ', email, this.props);
 
       if (email !== null) {
         // We have data!!

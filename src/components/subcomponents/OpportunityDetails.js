@@ -168,7 +168,7 @@ class OpportunityDetails extends Component {
   retrieveData = async() => {
     try {
 
-      console.log('this is causing the error')
+      // console.log('this is causing the error')
       const emailId = await AsyncStorage.getItem('email')
       let email = emailId
       const username = await AsyncStorage.getItem('username');

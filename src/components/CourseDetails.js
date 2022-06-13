@@ -34,6 +34,9 @@ class CourseDetails extends Component {
           if (this.props.route.params.selectedCourse) {
             courseId = this.props.route.params.selectedCourse.id
           }
+          if (this.props.route.params.courseId) {
+            courseId = this.props.route.params.courseId
+          }
 
           console.log('show params: ', this.props.route.params)
         }
