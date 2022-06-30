@@ -711,7 +711,7 @@ class EditLog extends Component {
               let selectedOpportunities = []
               let selectedOpportunityDetails = []
               if (log.selectedOpportunities) {
-                console.log('show length: ', log)
+                // console.log('show length: ', log)
                 for (let i = 1; i <= log.selectedOpportunities.length; i++) {
                   console.log('show each opportunity: ', i, log.selectedOpportunities[i - 1], selectedOpportunities)
                   selectedOpportunityDetails.push(log.selectedOpportunities[i - 1])

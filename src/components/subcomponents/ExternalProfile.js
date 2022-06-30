@@ -1316,6 +1316,14 @@ class ExternalProfile extends Component {
                 {((this.state.publicProfile || this.state.viewableProfile) || this.state.friends.some(friend => (friend.friend1Email === this.state.profileData.email) || friend.friend2Email === this.state.profileData.email)) ? (
                   <View style={[styles.topPadding,styles.leftPadding85]}>
 
+                    {(this.state.emailId === this.state.profileData.email) ? (
+                      <View>
+                        <Text style={[styles.descriptionText2,styles.ctaColor]}>This is you</Text>
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+
                     {(this.testActiveFriendship(this.state.friends)) ? (
                       <View style={[styles.rowDirection]}>
                         <View style={[styles.rightPadding]}>
@@ -1359,7 +1367,6 @@ class ExternalProfile extends Component {
                           </View>
                         )}
                       </View>
-
                     )}
 
                   </View>

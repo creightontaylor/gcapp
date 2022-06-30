@@ -642,7 +642,7 @@ class Walkthrough extends Component {
                             <View style={[styles.calcColumn60]}>
                               <Text style={[styles.descriptionText2,styles.centerText]}>Were you referred by one of our workforce partners?</Text>
                               <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-                              <TouchableOpacity style={[styles.row5]} onPress={() => this.setState({ modalIsOpen: true, showAddWorkspaces: true })}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline,styles.boldText,styles.centerText]}>Join Their Workspace</Text></TouchableOpacity>
+                              <TouchableOpacity style={[styles.row5]} onPress={() => this.setState({ modalIsOpen: true, showAddWorkspaces: true })}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline,styles.boldText,styles.centerText]}>Join Their Community</Text></TouchableOpacity>
                             </View>
                           )}
                         </View>
