@@ -165,6 +165,7 @@ class EditProfileDetails extends Component {
       endorsementOptions: [],
       careerGoalOptions: [],
       resumeOptions: [],
+      certificateDegreeTypeOptions: ['','Certificate','Badge','Certification'],
 
       projects: [],
       experience: [],
@@ -2429,19 +2430,25 @@ class EditProfileDetails extends Component {
     }.bind(this));
   }
 
-  switchPreferences(change) {
-    console.log('switchPreferences called', change)
+  switchPreferences(change, type, index) {
+    console.log('switchPreferences called', change, type, index)
 
-    if (change) {
-
-      if (this.state.confirmUsername) {
-        this.savePreferences(false, true)
-      } else {
-        this.savePreferences(false, false, false)
-      }
+    if (type === 'certificate') {
+      let certificates = this.state.certificates
+      certificates[index]['isContinual'] = change
+      this.setState({ certificates, formHasChanged: true })
     } else {
+      if (change) {
 
-      this.savePreferences(true, null)
+        if (this.state.confirmUsername) {
+          this.savePreferences(false, true)
+        } else {
+          this.savePreferences(false, false, false)
+        }
+      } else {
+
+        this.savePreferences(true, null)
+      }
     }
   }
 
@@ -6515,6 +6522,32 @@ class EditProfileDetails extends Component {
                               )}
 
                               <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Type <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Select an option', selectedIndex: optionIndex, selectedName: "certificate|degreeType|" + optionIndex, selectedValue: item.degreeType, selectedOptions: this.state.certificateDegreeTypeOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{item.degreeType}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={item.degreeType}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("certificate|degreeType|" + optionIndex,itemValue)
+                                      }>
+                                      {this.state.certificateDegreeTypeOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+
+                              <View style={[styles.row10]}>
                                 <Text style={[styles.standardText,styles.row10]}>Name <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
@@ -6581,7 +6614,7 @@ class EditProfileDetails extends Component {
                               </View>
 
                               <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Pathways <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <Text style={[styles.standardText,styles.row10]}>Pathways</Text>
 
                                 <View style={[styles.rowDirection]}>
                                   <View style={[styles.calcColumn130]}>
@@ -6623,7 +6656,7 @@ class EditProfileDetails extends Component {
                               </View>
 
                               <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Work Functions <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <Text style={[styles.standardText,styles.row10]}>Work Functions</Text>
 
                                 <View style={[styles.rowDirection]}>
                                   <View style={[styles.calcColumn130]}>
@@ -6665,7 +6698,7 @@ class EditProfileDetails extends Component {
                               </View>
 
                               <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Industry <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <Text style={[styles.standardText,styles.row10]}>Industry</Text>
                                 {(Platform.OS === 'ios') ? (
                                   <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: optionIndex, selectedName: "certificate|industry|" + optionIndex, selectedValue: item.industry, selectedOptions: this.state.industryOptions, selectedSubKey: 'value' })}>
                                     <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
@@ -6690,12 +6723,21 @@ class EditProfileDetails extends Component {
                                 )}
                               </View>
 
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <Text style={[styles.standardText,styles.row10]}>Are you still working on this {(item.category) ? "Certificate" : item.category}?</Text>
+                                <Switch
+                                   onValueChange = {(value) => this.switchPreferences(value,'certificate',optionIndex)}
+                                   value = {item.isContinual}
+                                   disabled={this.state.isSaving}
+                                />
+                              </View>
+
                               <View>
                                 <View style={[styles.row10]}>
                                   {(Platform.OS === 'ios') ? (
                                     <View style={[styles.rowDirection]}>
                                       <View style={[styles.calcColumn180]}>
-                                        <Text style={[styles.standardText,styles.row10]}>Date Issued</Text>
+                                        <Text style={[styles.standardText,styles.row10]}>Date Issued/Expected to be Issued</Text>
                                       </View>
                                       <View style={[styles.width120,styles.topPadding5]}>
                                         <DateTimePicker
@@ -6711,7 +6753,7 @@ class EditProfileDetails extends Component {
                                   ) : (
                                     <View>
                                       <View style={[styles.row5]}>
-                                        <Text style={[styles.standardText,styles.row10]}>Date Issued</Text>
+                                        <Text style={[styles.standardText,styles.row10]}>Date Issued/Expected to be Issued</Text>
                                       </View>
 
                                       <View>
