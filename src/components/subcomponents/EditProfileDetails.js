@@ -2437,6 +2437,10 @@ class EditProfileDetails extends Component {
       let certificates = this.state.certificates
       certificates[index]['isContinual'] = change
       this.setState({ certificates, formHasChanged: true })
+    } else if (type === 'complete') {
+      let certificates = this.state.certificates
+      certificates[index]['isCompleted'] = change
+      this.setState({ certificates, formHasChanged: true })
     } else {
       if (change) {
 
@@ -6724,10 +6728,19 @@ class EditProfileDetails extends Component {
                               </View>
 
                               <View style={[styles.row10,styles.rowDirection]}>
-                                <Text style={[styles.standardText,styles.row10]}>Are you still working on this {(item.category) ? "Certificate" : item.category}?</Text>
+                                <Text style={[styles.standardText,styles.row10]}>Are you still working on this {(item.degreeType) ? item.degreeType : "Certificate"}?</Text>
                                 <Switch
                                    onValueChange = {(value) => this.switchPreferences(value,'certificate',optionIndex)}
                                    value = {item.isContinual}
+                                   disabled={this.state.isSaving}
+                                />
+                              </View>
+
+                              <View style={[styles.row10,styles.rowDirection]}>
+                                <Text style={[styles.standardText,styles.row10]}>Did you complete this {(item.degreeType) ? item.degreeType : "Certificate"}?</Text>
+                                <Switch
+                                   onValueChange = {(value) => this.switchPreferences(value,'complete',optionIndex)}
+                                   value = {item.isCompleted}
                                    disabled={this.state.isSaving}
                                 />
                               </View>
@@ -6737,7 +6750,7 @@ class EditProfileDetails extends Component {
                                   {(Platform.OS === 'ios') ? (
                                     <View style={[styles.rowDirection]}>
                                       <View style={[styles.calcColumn180]}>
-                                        <Text style={[styles.standardText,styles.row10]}>Date Issued/Expected to be Issued</Text>
+                                        <Text style={[styles.standardText,styles.row10]}>Date Issued</Text>
                                       </View>
                                       <View style={[styles.width120,styles.topPadding5]}>
                                         <DateTimePicker
@@ -6776,7 +6789,7 @@ class EditProfileDetails extends Component {
                               </View>
 
                               <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Link to Certificate, Badge, or Certification <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <Text style={[styles.standardText,styles.row10]}>Link to {(item.degreeType) ? item.degreeType : "Certificate"} <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                                 <TextInput
                                   style={styles.textInput}
                                   onChangeText={(text) => this.formChangeHandler("certificate|url|" + optionIndex , text)}

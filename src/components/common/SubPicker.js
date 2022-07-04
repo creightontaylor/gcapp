@@ -48,7 +48,7 @@ class SubPicker extends Component {
     }
 
     render() {
-      // console.log('show the value: ', this.props.selectedValue)
+      console.log('show the value: ', this.props.selectedValue)
       return (
         <View style={[styles.flex1,styles.pinBottom,styles.justifyEnd]}>
           <View style={[styles.card,styles.absoluteBottom0,styles.absoluteLeft0,styles.absoluteRight0]}>

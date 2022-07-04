@@ -285,7 +285,7 @@ class EditProfile extends Component {
                           <Image source={{ uri: profileIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                         </View>
                         <View style={styles.calcColumn160}>
-                          <Text style={[styles.headingText5]}>Basic Info</Text>
+                          <Text style={[styles.headingText6]}>Basic Info</Text>
                         </View>
                         <View style={styles.width50}>
                           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -302,7 +302,7 @@ class EditProfile extends Component {
                             <Image source={{ uri: abilitiesIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                           </View>
                           <View style={styles.calcColumn160}>
-                            <Text style={[styles.headingText5]}>{(this.state.assessmentCount + this.state.assessmentCount > 0) && this.state.assessmentCount + ' '}Career Assessments</Text>
+                            <Text style={[styles.headingText6]}>{(this.state.assessmentCount + this.state.assessmentCount > 0) && this.state.assessmentCount + ' '}Career Assessments</Text>
                           </View>
                           <View style={styles.width50}>
                             <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -319,7 +319,7 @@ class EditProfile extends Component {
                           <Image source={{ uri: logIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                         </View>
                         <View style={styles.calcColumn160}>
-                          <Text style={[styles.headingText5]}>Advising Sessions</Text>
+                          <Text style={[styles.headingText6]}>Advising Sessions</Text>
                         </View>
                         <View style={styles.width50}>
                           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem]}  />
@@ -335,7 +335,7 @@ class EditProfile extends Component {
                           <Image source={{ uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.centerItem]} />
                         </View>
                         <View style={styles.calcColumn160}>
-                          <Text style={[styles.headingText5]}>{(this.state.favorites && this.state.favorites.length) && this.state.favorites.length + ' '}Favorites</Text>
+                          <Text style={[styles.headingText6]}>{(this.state.favorites && this.state.favorites.length) && this.state.favorites.length + ' '}Favorites</Text>
                         </View>
                         <View style={styles.width50}>
                           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -351,7 +351,7 @@ class EditProfile extends Component {
                           <Image source={{ uri: socialIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
                         </View>
                         <View style={styles.calcColumn160}>
-                          <Text style={[styles.headingText5]}>My Social Posts</Text>
+                          <Text style={[styles.headingText6]}>My Social Posts</Text>
                         </View>
                         <View style={styles.width50}>
                           <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -368,7 +368,7 @@ class EditProfile extends Component {
                             <Image source={{ uri: courseIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
                           </View>
                           <View style={styles.calcColumn160}>
-                            <Text style={[styles.headingText5]}>My Curriculum Posts</Text>
+                            <Text style={[styles.headingText6]}>My Curriculum Posts</Text>
                           </View>
                           <View style={styles.width50}>
                             <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -483,7 +483,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: profileIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Basic Info <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                              <Text style={[styles.headingText6]}>Basic Info <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -498,7 +498,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: opportunitiesIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Projects, Experience, & Other Details <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                              <Text style={[styles.headingText6]}>Projects, Experience, & Other Details <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -514,7 +514,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: abilitiesIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>{(this.state.assessmentCount + this.state.assessmentCount > 0) && this.state.assessmentCount + ' '}Career Assessments <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                              <Text style={[styles.headingText6]}>{(this.state.assessmentCount + this.state.assessmentCount > 0) && this.state.assessmentCount + ' '}Career Assessments <Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -530,11 +530,97 @@ class EditProfile extends Component {
                               <Image source={{ uri: endorsementIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>{(this.state.endorsements && this.state.endorsements.length > 0) && this.state.endorsements.length + ' '}Competency Endorsements</Text>
+                              <Text style={[styles.headingText6]}>{(this.state.endorsements && this.state.endorsements.length > 0) && this.state.endorsements.length + ' '}Competency Endorsements</Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
                             </View>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+
+                      <View style={[styles.row15]}>
+                        <View style={[styles.row15]}>
+                          <Text style={[styles.headingText4]}>Planning & Development</Text>
+                        </View>
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Logs')}>
+                          <View style={[styles.row15,styles.rowDirection]}>
+                            <View style={styles.width40}>
+                              <View style={[styles.miniSpacer]} />
+                              <Image source={{ uri: logIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
+                            </View>
+                            <View style={[styles.calcColumn130]}>
+                              <Text style={[styles.headingText6]}>{(this.state.logs && this.state.logs.length > 0) && this.state.logs.length + ' '}Career Goals & Other Logs</Text>
+                            </View>
+                            <View style={[styles.width30,styles.leftPadding]}>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('MyCourses')}>
+                          <View style={[styles.row15,styles.rowDirection]}>
+                            <View style={styles.width40}>
+                              <View style={[styles.miniSpacer]} />
+                              <Image source={{ uri: courseIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
+                            </View>
+                            <View style={[styles.calcColumn130]}>
+                              <Text style={[styles.headingText6]}>My Training Programs & Courses</Text>
+                            </View>
+                            <View style={[styles.width30,styles.leftPadding]}>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Favorites')}>
+                          <View style={[styles.row15,styles.rowDirection]}>
+                            <View style={styles.width40}>
+                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                              <Image source={{ uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.centerItem]} />
+                            </View>
+                            <View style={[styles.calcColumn130]}>
+                              <Text style={[styles.headingText6]}>{(this.state.favorites && this.state.favorites.length) && this.state.favorites.length + ' '}Favorites</Text>
+                            </View>
+                            <View style={[styles.width30,styles.leftPadding]}>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Completions')}>
+                          <View style={[styles.row15,styles.rowDirection]}>
+                            <View style={styles.width40}>
+                              <View style={[styles.miniSpacer]} />
+                              <Image source={{ uri: checkmarkDarkGreyIcon}} style={[styles.square22,styles.contain,styles.centerItem]} />
+                            </View>
+                            <View style={[styles.calcColumn130]}>
+                              <Text style={[styles.headingText6]}>Completed Items</Text>
+                            </View>
+                            <View style={[styles.width30,styles.leftPadding]}>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
+                            </View>
+
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Matches')}>
+                          <View style={[styles.row15,styles.rowDirection]}>
+                            <View style={styles.width40}>
+                              <View style={[styles.miniSpacer]} />
+                              <Image source={{ uri: benchmarksIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
+                            </View>
+                            <View style={[styles.calcColumn130]}>
+                              <Text style={[styles.headingText6]}>My Top Matches</Text>
+                            </View>
+                            <View style={[styles.width30,styles.leftPadding]}>
+                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
+                            </View>
+
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -551,7 +637,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: publicIcon}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Profile Visibility Preferences</Text>
+                              <Text style={[styles.headingText6]}>Profile Visibility Preferences</Text>
                             </View>
 
                             <View style={[styles.width30,styles.leftPadding]}>
@@ -565,54 +651,6 @@ class EditProfile extends Component {
                           </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Logs')}>
-                          <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width40}>
-                              <View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: logIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
-                            </View>
-                            <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>{(this.state.logs && this.state.logs.length > 0) && this.state.logs.length + ' '}Career Goals & Other Logs</Text>
-                            </View>
-                            <View style={[styles.width30,styles.leftPadding]}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Favorites')}>
-                          <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width40}>
-                              <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: favoritesIconGrey}} style={[styles.square20,styles.contain,styles.centerItem]} />
-                            </View>
-                            <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>{(this.state.favorites && this.state.favorites.length) && this.state.favorites.length + ' '}Favorites</Text>
-                            </View>
-                            <View style={[styles.width30,styles.leftPadding]}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Completions')}>
-                          <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width40}>
-                              <View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: checkmarkDarkGreyIcon}} style={[styles.square22,styles.contain,styles.centerItem]} />
-                            </View>
-                            <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Completed Items</Text>
-                            </View>
-                            <View style={[styles.width30,styles.leftPadding]}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('MySocialPosts')}>
                           <View style={[styles.row15,styles.rowDirection]}>
                             <View style={styles.width40}>
@@ -620,23 +658,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: socialIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>My Social Posts</Text>
-                            </View>
-                            <View style={[styles.width30,styles.leftPadding]}>
-                              <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
-                            </View>
-
-                          </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Matches')}>
-                          <View style={[styles.row15,styles.rowDirection]}>
-                            <View style={styles.width40}>
-                              <View style={[styles.miniSpacer]} />
-                              <Image source={{ uri: benchmarksIconDark}} style={[styles.square22,styles.contain,styles.centerItem]} />
-                            </View>
-                            <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>My Top Matches</Text>
+                              <Text style={[styles.headingText6]}>My Social Posts</Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -649,7 +671,7 @@ class EditProfile extends Component {
 
                       <View style={[styles.row15]}>
                         <View style={[styles.row15]}>
-                          <Text style={[styles.headingText4]}>Tools</Text>
+                          <Text style={[styles.headingText4]}>Builder Tools</Text>
                         </View>
 
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('ResumeBuilder')}>
@@ -659,7 +681,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: resumeIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Resume Builder</Text>
+                              <Text style={[styles.headingText6]}>Resume Builder</Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -675,7 +697,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: moneyIconDark}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Financial Planner</Text>
+                              <Text style={[styles.headingText6]}>Financial Planner</Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />
@@ -691,7 +713,7 @@ class EditProfile extends Component {
                               <Image source={{ uri: targetIcon}} style={[styles.square25,styles.contain,styles.centerItem]} />
                             </View>
                             <View style={[styles.calcColumn130]}>
-                              <Text style={[styles.headingText5]}>Career Plan Builder</Text>
+                              <Text style={[styles.headingText6]}>Career Plan Builder</Text>
                             </View>
                             <View style={[styles.width30,styles.leftPadding]}>
                               <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square20,styles.contain,styles.centerItem,styles.pinRight]} />

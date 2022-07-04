@@ -4,6 +4,7 @@ const styles = require('../css/style');
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 import {Picker} from '@react-native-picker/picker';
+import * as Progress from 'react-native-progress';
 
 const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-icon.png';
 const recommendIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/recommend-icon.png';
@@ -121,6 +122,13 @@ class Courses extends Component {
         industryOptions: [],
         intensityOptions: [],
 
+        categoryOptions: ['','Training Program','Course'],
+        degreeTypeOptions: [],
+        functionOptions: [],
+        orgPathwayOptions: [],
+        orgPriceOptions: ['','$0','$1 - $100','$101 - $500','$501 - $1,000','$1,001 - $5,000','$5,000+'],
+        orgDurationOptions: [],
+
         schedule: [],
         weekTwo: [],
 
@@ -163,6 +171,7 @@ class Courses extends Component {
     this.calculateMatches = this.calculateMatches.bind(this)
     this.renderBrowseCourses = this.renderBrowseCourses.bind(this)
     this.closeModal = this.closeModal.bind(this)
+    this.enrollInCourse = this.enrollInCourse.bind(this)
 
   }
 
@@ -354,7 +363,11 @@ class Courses extends Component {
                 }
               }
 
-              this.setState({ industryOptions })
+              let functionOptions = response.data.workOptions[0].functionOptions
+              let degreeTypeOptions = response.data.workOptions[0].degreeOptions
+              let orgDurationOptions = response.data.workOptions[0].durationOptions
+
+              this.setState({ industryOptions, functionOptions, degreeTypeOptions, orgDurationOptions })
 
             } else {
               console.log('no industry data found', response.data.message)
@@ -370,7 +383,7 @@ class Courses extends Component {
 
            if (response2.data.success) {
 
-             console.log('actual assessment results', response2.data)
+             console.log('actual assessment results')
 
              let profile = { firstName: cuFirstName, lastName: cuLastName, email }
              profile['workPreferences'] = response2.data.results.workPreferenceAnswers
@@ -445,6 +458,28 @@ class Courses extends Component {
             console.log('Emails query did not work for some reason', error);
         });
 
+        Axios.get('https://www.guidedcompass.com/api/pathways', { params: { orgCode: org } })
+        .then((response) => {
+          console.log('Pathways query attempted no 1');
+
+          if (response.data.success) {
+            console.log('pathway query worked no 1')
+
+            if (response.data.pathways.length !== 0) {
+
+              const orgPathwayOptions = [{ title: '' }].concat(response.data.pathways)
+
+              this.setState({ orgPathwayOptions });
+            }
+
+          } else {
+            console.log('pathway query did not work', response.data.message)
+          }
+
+        }).catch((error) => {
+            console.log('Pathway query did not work for some reason', error);
+        });
+
         Axios.get('https://www.guidedcompass.com/api/favorites', { params: { emailId: email } })
        .then((response) => {
          console.log('Favorites query attempted');
@@ -460,7 +495,7 @@ class Courses extends Component {
                console.log('Favorites detail query attempted');
 
                if (response2.data.success) {
-                 console.log('successfully retrieved favorites detail', response2.data.favorites)
+                 console.log('successfully retrieved favorites detail')
 
                  let favoritedCareers = []
                  let favoritedCareerDetails = []
@@ -601,10 +636,10 @@ class Courses extends Component {
               } else {
 
                 let name = response.data.benchmarks[i - 1].jobFunction
-                console.log('show the value 1: ', name)
+                // console.log('show the value 1: ', name)
                 if (!names.includes(name)) {
                   names.push(name)
-                  console.log('show the value 2: ', name)
+                  // console.log('show the value 2: ', name)
                   // let skillTraits = response.data.benchmarks[i - 1].skills.concat(response.data.benchmarks[i - 1].traits)
                   let skills = response.data.benchmarks[i - 1].skills
 
@@ -629,7 +664,7 @@ class Courses extends Component {
 
 
                 }
-                console.log('show pathwayOptions: ', pathwayOptions)
+                // console.log('show pathwayOptions: ', pathwayOptions)
 
               }
             }
@@ -644,16 +679,83 @@ class Courses extends Component {
             console.log('Benchmark query did not work', error);
         });
 
-        if (this.props.pageSource === 'Goal') {
-          if (this.props.competencies && this.props.competencies.length > 0) {
-            // this.getCourseMatches(this.props.selectedGoal)
-            this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue)
-          } else {
-            // this.getCourseMatches(this.props.selectedGoal)
-            this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue)
-          }
+        Axios.get('https://www.guidedcompass.com/api/courses/enrollments', { params: { emailId: email } })
+        .then((response) => {
+         console.log('Enrollments query attempted');
+
+         if (response.data.success) {
+           console.log('successfully retrieved enrollments')
+
+           const enrollments = response.data.enrollments
+
+           this.setState({ enrollments })
+
+         } else {
+           console.log('no enrollments data found', response.data.message)
+         }
+
+        }).catch((error) => {
+           console.log('Enrollments query did not work', error);
+        });
+
+        if (this.props.source === 'Udemy') {
+          this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
         } else {
-          this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue)
+          Axios.get('https://www.guidedcompass.com/api/courses', { params: { orgCode: org } })
+          .then((response) => {
+            console.log('Org courses info query attempted-----------------------------', response.data.success, org);
+
+            if (response.data.success && response.data.courses) {
+              console.log('org courses info query worked', response.data.courses.length)
+
+              const courses = response.data.courses
+              const filteredCourses = courses
+              let queryOrgCourses = true
+              this.setState({ courses, queryOrgCourses })
+
+              if (this.props.pageSource === 'Goal') {
+                if (this.props.competencies && this.props.competencies.length > 0) {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+                } else {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+                }
+              } else {
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+              }
+
+            } else {
+              console.log('org courses info query did not work', response.data.message)
+
+              // if (this.props.pageSource === 'Goal') {
+              //   if (this.props.competencies && this.props.competencies.length > 0) {
+              //     // this.getCourseMatches(this.props.selectedGoal)
+              //     this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              //   } else {
+              //     // this.getCourseMatches(this.props.selectedGoal)
+              //     this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              //   }
+              // } else {
+              //   this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              // }
+            }
+
+          }).catch((error) => {
+              console.log('org courses query did not work for some reason', error);
+
+              // if (this.props.pageSource === 'Goal') {
+              //   if (this.props.competencies && this.props.competencies.length > 0) {
+              //     // this.getCourseMatches(this.props.selectedGoal)
+              //     this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              //   } else {
+              //     // this.getCourseMatches(this.props.selectedGoal)
+              //     this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              //   }
+              // } else {
+              //   this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              // }
+          });
         }
       }
      } catch (error) {
@@ -662,8 +764,8 @@ class Courses extends Component {
      }
   }
 
-  pullCourses(searchValue, priceValue, durationValue, difficultyLevelValue) {
-    console.log('pullCourses called', searchValue, priceValue, durationValue, difficultyLevelValue)
+  pullCourses(searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject) {
+    console.log('pullCourses called', searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject)
 
     this.setState({ animating: true, errorMessage: null, successMessage: null })
 
@@ -686,11 +788,11 @@ class Courses extends Component {
       durationValue = this.state.durationValue
     }
 
-    if (difficultyLevelValue) {
+    if (difficultyLevelValue && difficultyLevelValue.toLowerCase()) {
       difficultyLevelValue = difficultyLevelValue.toLowerCase()
     }
 
-    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue } })
+    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject } })
     .then((response) => {
       console.log('Courses query attempted');
 
@@ -716,7 +818,7 @@ class Courses extends Component {
   }
 
   formChangeHandler = (eventName,eventValue) => {
-    console.log('formChangeHandler called')
+    console.log('formChangeHandler called', eventName, eventValue)
 
     if (eventName === 'search') {
       console.log('in search')
@@ -733,22 +835,35 @@ class Courses extends Component {
         const nameArray = eventName.split("|")
         if (nameArray[1] === 'price') {
           const priceValue = eventValue
-          this.setState({ priceValue })
-          this.pullCourses(this.state.selectedSkill, priceValue.toLowerCase(), this.state.durationValue, this.state.difficultyLevelValue)
+          this.setState({ priceValue, selectedValue: eventValue })
+          this.pullCourses(this.state.selectedSkill, priceValue.toLowerCase(), this.state.durationValue, this.state.difficultyLevelValue, this.state.queryOrgCourses, this.state.org)
         } else if (nameArray[1] === 'duration') {
           let durationValue = eventValue
-          this.setState({ durationValue })
+          this.setState({ durationValue, selectedValue: eventValue })
 
           if (durationValue === 'Extra Long') {
             durationValue = 'extraLong'
           } else {
             durationValue = durationValue.toLowerCase()
           }
-          this.pullCourses(this.state.selectedSkill, this.state.priceValue, durationValue, this.state.difficultyLevelValue)
+          this.pullCourses(this.state.selectedSkill, this.state.priceValue, durationValue, this.state.difficultyLevelValue, this.state.queryOrgCourses, this.state.org)
         } else if (nameArray[1] === 'difficultyLevel') {
           const difficultyLevelValue = eventValue
-          this.setState({ difficultyLevelValue })
-          this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, difficultyLevelValue)
+          this.setState({ difficultyLevelValue, selectedValue: eventValue })
+          this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, difficultyLevelValue, this.state.queryOrgCourses, this.state.org)
+        } else {
+          this.setState({ [nameArray[1]]: eventValue, selectedValue: eventValue })
+          // console.log('show me: ', this.state.degreeType)
+          let filterObject = {
+            selectedSkill: this.state.selectedSkill,
+            priceValue: this.state.priceValue,
+            durationValue: this.state.durationValue,
+            difficultyLevelValue: this.state.difficultyLevelValue
+          }
+
+          filterObject[nameArray[1]] = eventValue
+
+          this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, eventValue, this.state.queryOrgCourses, this.state.org, filterObject)
         }
       } else {
 
@@ -1018,7 +1133,9 @@ class Courses extends Component {
       }
 
       delayFilter();
+
     } else {
+
       const categoryValue = null
       const subcategoryValue = null
       const priceValue = this.state.priceValue
@@ -1820,6 +1937,131 @@ class Courses extends Component {
     }
   }
 
+  enrollInCourse(item, type,e,isCompleted) {
+    console.log('enrollInCourse called', item, type)
+
+    // e.preventDefault()
+    // e.stopPropagation()
+
+    this.setState({ errorMessage: null, successMessage: null, isSaving: true })
+
+    let _id = null
+    let eIndex = null
+    if (this.state.enrollments && this.state.enrollments.some(enrollment => enrollment.courseId === item._id)) {
+      eIndex = this.state.enrollments.findIndex(enrollment => enrollment.courseId === item._id)
+      _id = this.state.enrollments[eIndex]._id
+    }
+
+    if ((isCompleted) || (!_id && !isCompleted)) {
+      const firstName = this.state.cuFirstName
+      const lastName = this.state.cuLastName
+      const email = this.state.emailId
+      const username = this.state.username
+      const pictureURL = this.state.pictureURL
+      const courseId = item._id
+      const courseImageURL = item.imageURL
+      let courseName = item.name
+      if (item.title) {
+        courseName = item.title
+      }
+      const courseCategory = item.category
+      const courseDegreeType = item.degreeType
+      const courseSchoolName = item.schoolName
+      const courseSchoolURL = item.schoolURL
+      const courseDescription = item.description
+      const courseEstimatedHours = item.estimatedHours
+      const courseProgramMethod = item.programMethod
+      const courseDifficultyLevel = item.difficultyLevel
+
+      const orgCode = this.state.orgCode
+      const orgName = this.state.orgName
+      console.log('description? ', courseDescription)
+      const createdAt = new Date()
+      const updatedAt = new Date()
+
+      const enrollmentObject = {
+        _id, firstName, lastName, email, username, pictureURL,
+        courseId, courseImageURL, courseName, courseCategory, courseDegreeType,
+        courseSchoolName, courseSchoolURL, courseDescription, courseEstimatedHours, courseProgramMethod, courseDifficultyLevel,
+        isCompleted, orgCode, orgName, createdAt, updatedAt
+      }
+
+      Axios.post('https://www.guidedcompass.com/api/enrollments', enrollmentObject)
+      .then((response) => {
+        console.log('attempting to save addition to favorites')
+        if (response.data.success) {
+          console.log('saved addition to favorites', response.data)
+
+          let itemId = item._id
+
+          let enrollments = this.state.enrollments
+
+          if (isCompleted && eIndex > -1) {
+            // enrollments[eIndex]['isCompleted'] = true
+
+            if (enrollments) {
+              enrollments.push(enrollmentObject)
+            } else {
+              enrollments = [enrollmentObject]
+            }
+
+            if (item.degreeType === 'Badge' || item.degreeType === 'Certificate' || item.degreeType === 'Certification') {
+              // save as certificate
+
+              const certificate = {
+                courseId: item._id, name: item.name, imageURL: item.imageURL, category: item.category,
+                programURL: item.programURL, schoolURL: item.schoolURL, schoolName: item.schoolName,
+                degreeType: item.degreeType, programMethod: item.programMethod, location: item.location,
+                estimatedHours: item.estimatedHours, description: item.description, gradeLevel: item.gradeLevel,
+                knowledgeLevel: item.knowledgeLevel, functions: item.functions, pathways: item.pathways,
+                price: item.price, isCompleted: true, updateCertificate: true,
+                email: this.state.emailId, createdAt: new Date(), updatedAt: new Date()
+              }
+
+              Axios.post('/api/certificates', certificate)
+              .then((response) => {
+                console.log('attempting to post certificate')
+
+                if (response.data.success) {
+                  console.log('saved post to certificate', response.data)
+
+
+                } else {
+                  console.log('did not save certificate successfully')
+                  this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+                }
+              }).catch((error) => {
+                  console.log('saving certificate did not work', error);
+                  this.setState({ errorMessage: 'there was an error saving enrollment certificate', isSaving: false})
+              });
+
+            }
+          } else {
+            if (enrollments && enrollments.some(selectedCourse => selectedCourse.courseId === item._id)) {
+              // const index = enrollments.findIndex(selectedCourse => selectedCourse.courseId === item._id)
+              // enrollments.splice(index, 1)
+            } else if (enrollments) {
+              enrollments.push(enrollmentObject)
+            } else {
+              enrollments = [enrollmentObject]
+            }
+          }
+
+          this.setState({ successMessage: 'Saved enrollment!', enrollments, isSaving: false })
+
+        } else {
+          console.log('did not save enrollment successfully')
+          this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+        }
+      }).catch((error) => {
+          console.log('save did not work', error);
+          this.setState({ errorMessage: 'there was an error saving enrollment', isSaving: false})
+      });
+    } else {
+      this.setState({ isSaving: false, errorMessage: 'You have already enrolled in this course/program'})
+    }
+  }
+
   deleteItem(item, parentIndex, childIndex) {
     console.log('deleteItem called', item, parentIndex, childIndex)
 
@@ -1848,13 +2090,16 @@ class Courses extends Component {
         const useCases = this.state.useCases
         const budget = this.state.budget
 
+        const queryOrgCourses = this.state.queryOrgCourses
+        const orgCode = this.state.org
+
         const self = this
 
         function officiallyCalculate() {
           console.log('officiallyCalculate called')
 
           // query postings on back-end
-          Axios.put('https://www.guidedcompass.com/api/courses/matches', { profile, matchingCriteria, useCases, budget })
+          Axios.put('https://www.guidedcompass.com/api/courses/matches', { profile, matchingCriteria, useCases, budget, queryOrgCourses, orgCode })
           .then((response) => {
             console.log('Course matches attempted', response.data);
 
@@ -1971,7 +2216,7 @@ class Courses extends Component {
                                 style={[styles.descriptionText2]}
                                 onChangeText={(text) => this.formChangeHandler('search',text)}
                                 value={this.state.searchString}
-                                placeholder="Search 10,000+ courses..."
+                                placeholder={(this.state.queryOrgCourses) ? "Search " + this.state.courses.length + " training programs & courses" : "Search 10,000+ courses..."}
                                 placeholderTextColor="grey"
                               />
                             </View>
@@ -2006,105 +2251,408 @@ class Courses extends Component {
                   <View style={[styles.row10]}>
                     <Text style={[styles.standardText]}>Filters</Text>
 
-                    <View style={[styles.row10]}>
+                    {(this.state.queryOrgCourses) ? (
                       <View>
-                        <View>
-                          <View style={[styles.spacer]} />
-                          <Text style={[styles.standardText,styles.descriptionTextColor]}>Price</Text>
-                        </View>
-                        <View>
-                          {(Platform.OS === 'ios') ? (
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Price', selectedIndex: null, selectedName: "filter|price", selectedValue: this.state.priceValue, selectedOptions: this.state.priceOptions, selectedSubKey: null })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.priceValue}</Text>
-                                </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Category</Text>
                               </View>
-                            </TouchableOpacity>
-                          ) : (
-                            <View style={[styles.standardBorder]}>
-                              <Picker
-                                selectedValue={this.state.priceValue}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("filter|price",itemValue)
-                                }>
-                                {this.state.priceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Category', selectedIndex: null, selectedName: "filter|category", selectedValue: this.state.category, selectedOptions: this.state.categoryOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.category}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.category}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|category",itemValue)
+                                      }>
+                                      {this.state.categoryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
                             </View>
-                          )}
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Degree Type</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Degree Type', selectedIndex: null, selectedName: "filter|degreeType", selectedValue: this.state.degreeType, selectedOptions: this.state.degreeTypeOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.degreeType}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.degreeType}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|degreeType",itemValue)
+                                      }>
+                                      {this.state.degreeTypeOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Pathway</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Pathway', selectedIndex: null, selectedName: "filter|pathway", selectedValue: this.state.pathway, selectedOptions: this.state.orgPathwayOptions, selectedSubKey: 'title' })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.orgPathwayValue}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.pathway}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|pathway",itemValue)
+                                      }>
+                                      {this.state.orgPathwayOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Work Function</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Function', selectedIndex: null, selectedName: "filter|function", selectedValue: this.state.function, selectedOptions: this.state.functionOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.function}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.function}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|function",itemValue)
+                                      }>
+                                      {this.state.functionOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Industry</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Industry', selectedIndex: null, selectedName: "filter|industry", selectedValue: this.state.industry, selectedOptions: this.state.industryOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.industry}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.industry}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|industry",itemValue)
+                                      }>
+                                      {this.state.industryOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Teaching Method</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Teaching Method', selectedIndex: null, selectedName: "filter|programMethod", selectedValue: this.state.programMethod, selectedOptions: this.state.programMethodOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.programMethod}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.programMethod}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|programMethod",itemValue)
+                                      }>
+                                      {this.state.programMethodOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Price</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Price', selectedIndex: null, selectedName: "filter|price", selectedValue: this.state.priceValue, selectedOptions: this.state.priceOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.priceValue}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.priceValue}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|price",itemValue)
+                                      }>
+                                      {this.state.priceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Duration</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Duration', selectedIndex: null, selectedName: "filter|duration", selectedValue: this.state.durationValue, selectedOptions: this.state.durationOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.durationValue}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.durationValue}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|duration",itemValue)
+                                      }>
+                                      {this.state.durationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+
+                          <View style={[styles.row10]}>
+                            <View>
+                              <View>
+                                <View style={[styles.spacer]} />
+                                <Text style={[styles.standardText,styles.descriptionTextColor]}>Difficulty Level</Text>
+                              </View>
+                              <View>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Difficulty Level', selectedIndex: null, selectedName: "filter|difficultyLevel", selectedValue: this.state.difficultyLevelValue, selectedOptions: this.state.difficultyLevelOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.difficultyLevelValue}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.difficultyLevelValue}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("filter|price",itemValue)
+                                      }>
+                                      {this.state.difficultyLevelOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+                              </View>
+                            </View>
+                          </View>
+                      </View>
+                    ) : (
+                      <View>
+                        <View style={[styles.row10]}>
+                          <View>
+                            <View>
+                              <View style={[styles.spacer]} />
+                              <Text style={[styles.standardText,styles.descriptionTextColor]}>Price</Text>
+                            </View>
+                            <View>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Price', selectedIndex: null, selectedName: "filter|price", selectedValue: this.state.priceValue, selectedOptions: this.state.priceOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.priceValue}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.priceValue}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("filter|price",itemValue)
+                                    }>
+                                    {this.state.priceOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={[styles.row10]}>
+                          <View>
+                            <View>
+                              <View style={[styles.spacer]} />
+                              <Text style={[styles.standardText,styles.descriptionTextColor]}>Duration</Text>
+                            </View>
+                            <View>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Duration', selectedIndex: null, selectedName: "filter|duration", selectedValue: this.state.durationValue, selectedOptions: this.state.durationOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.durationValue}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.durationValue}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("filter|duration",itemValue)
+                                    }>
+                                    {this.state.durationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={[styles.row10]}>
+                          <View>
+                            <View>
+                              <View style={[styles.spacer]} />
+                              <Text style={[styles.standardText,styles.descriptionTextColor]}>Difficulty Level</Text>
+                            </View>
+                            <View>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Difficulty Level', selectedIndex: null, selectedName: "filter|difficultyLevel", selectedValue: this.state.difficultyLevelValue, selectedOptions: this.state.difficultyLevelOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.difficultyLevelValue}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.difficultyLevelValue}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("filter|price",itemValue)
+                                    }>
+                                    {this.state.difficultyLevelOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+                            </View>
+                          </View>
                         </View>
                       </View>
-                    </View>
-
-                    <View style={[styles.row10]}>
-                      <View>
-                        <View>
-                          <View style={[styles.spacer]} />
-                          <Text style={[styles.standardText,styles.descriptionTextColor]}>Duration</Text>
-                        </View>
-                        <View>
-                          {(Platform.OS === 'ios') ? (
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Duration', selectedIndex: null, selectedName: "filter|duration", selectedValue: this.state.durationValue, selectedOptions: this.state.durationOptions, selectedSubKey: null })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.durationValue}</Text>
-                                </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          ) : (
-                            <View style={[styles.standardBorder]}>
-                              <Picker
-                                selectedValue={this.state.durationValue}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("filter|duration",itemValue)
-                                }>
-                                {this.state.durationOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-                            </View>
-                          )}
-                        </View>
-                      </View>
-                    </View>
-
-                    <View style={[styles.row10]}>
-                      <View>
-                        <View>
-                          <View style={[styles.spacer]} />
-                          <Text style={[styles.standardText,styles.descriptionTextColor]}>Difficulty Level</Text>
-                        </View>
-                        <View>
-                          {(Platform.OS === 'ios') ? (
-                            <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Difficulty Level', selectedIndex: null, selectedName: "filter|difficultyLevel", selectedValue: this.state.difficultyLevelValue, selectedOptions: this.state.difficultyLevelOptions, selectedSubKey: null })}>
-                              <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                <View style={[styles.calcColumn115]}>
-                                  <Text style={[styles.descriptionText1]}>{this.state.difficultyLevelValue}</Text>
-                                </View>
-                                <View style={[styles.width20,styles.topMargin5]}>
-                                  <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                </View>
-                              </View>
-                            </TouchableOpacity>
-                          ) : (
-                            <View style={[styles.standardBorder]}>
-                              <Picker
-                                selectedValue={this.state.difficultyLevelValue}
-                                onValueChange={(itemValue, itemIndex) =>
-                                  this.formChangeHandler("filter|price",itemValue)
-                                }>
-                                {this.state.difficultyLevelOptions.map(value => <Picker.Item key={value} label={value} value={value} />)}
-                              </Picker>
-                            </View>
-                          )}
-                        </View>
-                      </View>
-                    </View>
-
+                    )}
 
                   </View>
 
@@ -2141,16 +2689,8 @@ class Courses extends Component {
                       <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: value })} style={[styles.calcColumn120,styles.rowDirection]}>
                         <View style={[styles.width50]}>
                           {(value.matchScore) ? (
-                            <View style={[styles.padding10]}>
-                              <CircularProgressBar
-                                percentage={value.matchScore}
-                                text={`${value.matchScore}%`}
-                                styles={{
-                                  path: { stroke: `rgba(110, 190, 250, ${value.matchScore / 100})` },
-                                  text: { fill: '#6EBEFA', fontSize: '26px' },
-                                  trail: { stroke: 'transparent' }
-                                }}
-                              />
+                            <View style={[styles.padding5]}>
+                              <Progress.Circle progress={value.matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                             </View>
                           ) : (
                             <Image source={{ uri: value.image_125_H}} style={[styles.square40,styles.contain]}/>

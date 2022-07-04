@@ -32,6 +32,7 @@ import Endorsements from './src/components/Endorsements';
 import RequestEndorsements from './src/components/RequestEndorsements';
 import Logs from './src/components/Logs';
 import EditLog from './src/components/EditLog';
+import MyCourses from './src/components/MyCourses';
 import Favorites from './src/components/Favorites';
 import Completions from './src/components/Completions';
 import MySocialPosts from './src/components/MySocialPosts';
@@ -324,6 +325,7 @@ export default class App extends Component<Props> {
           <Stack.Screen name="RequestEndorsements" component={RequestEndorsements} />
           <Stack.Screen name="Logs" component={Logs} />
           <Stack.Screen name="EditLog" component={EditLog} />
+          <Stack.Screen name="MyCourses" component={MyCourses} />
           <Stack.Screen name="Favorites" component={Favorites} />
           <Stack.Screen name="Completions" component={Completions} />
           <Stack.Screen name="MySocialPosts" component={MySocialPosts} />
