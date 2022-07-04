@@ -24,6 +24,7 @@ const upvoteIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/
 const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
 const profileIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/profile-icon-dark.png';
 const favoritesIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-white.png';
+const addLessonIconWhite = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-lesson-icon-white.png";
 const shareIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/share-icon-dark.png';
 const closeIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/close-icon.png';
 

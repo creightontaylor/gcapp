@@ -29,6 +29,8 @@ const careerMatchesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const opportunitiesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-blue.png';
 const learningObjectivesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/learning-objectives-icon-blue.png';
 const favoritesIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-blue.png';
+const addLessonIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-lesson-icon-blue.png';
+const addLessonIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/add-lesson-icon-dark.png';
 const matchIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/match-icon.png';
 const matchIconSelected = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/match-icon-selected.png';
 const filterIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/filter-icon.png';
@@ -728,33 +730,33 @@ class Courses extends Component {
             } else {
               console.log('org courses info query did not work', response.data.message)
 
-              // if (this.props.pageSource === 'Goal') {
-              //   if (this.props.competencies && this.props.competencies.length > 0) {
-              //     // this.getCourseMatches(this.props.selectedGoal)
-              //     this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              //   } else {
-              //     // this.getCourseMatches(this.props.selectedGoal)
-              //     this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              //   }
-              // } else {
-              //   this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              // }
+              if (this.props.pageSource === 'Goal') {
+                if (this.props.competencies && this.props.competencies.length > 0) {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                } else {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                }
+              } else {
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              }
             }
 
           }).catch((error) => {
               console.log('org courses query did not work for some reason', error);
 
-              // if (this.props.pageSource === 'Goal') {
-              //   if (this.props.competencies && this.props.competencies.length > 0) {
-              //     // this.getCourseMatches(this.props.selectedGoal)
-              //     this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              //   } else {
-              //     // this.getCourseMatches(this.props.selectedGoal)
-              //     this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              //   }
-              // } else {
-              //   this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
-              // }
+              if (this.props.pageSource === 'Goal') {
+                if (this.props.competencies && this.props.competencies.length > 0) {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                } else {
+                  // this.getCourseMatches(this.props.selectedGoal)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                }
+              } else {
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+              }
           });
         }
       }
@@ -2699,66 +2701,125 @@ class Courses extends Component {
 
                         </View>
                         <View style={[styles.calcColumn170]}>
-                          <Text style={[styles.headingText5]}>{value.title}</Text>
+                          <Text style={[styles.headingText5]}>{(value.name) ? value.name : value.title}</Text>
+                          {(value.schoolName) && (
+                            <Text style={[styles.descriptionText3,styles.bottomMargin,styles.topMargin5]}>by {value.schoolName}</Text>
+                          )}
                           <Text style={[styles.descriptionText1,styles.descriptionText1]}>{value.headline}</Text>
 
                           <View style={[styles.halfSpacer]} />
 
-                          {(value.duration) && (
-                            <View style={[styles.rowDirection]}>
-                              <View style={[styles.rightMargin]}>
-                                <Image source={{ uri: timeIconBlue}} style={[styles.square15,styles.contain]}/>
+                          <View style={[styles.rowDirection,styles.flexWrap]}>
+                            {(value.category) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: courseIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.category}</Text>
+                                </View>
                               </View>
-                              <View style={[styles.rightMargin]}>
-                                <Text style={[styles.descriptionText3]}>{value.duration}</Text>
-                              </View>
-                            </View>
-                          )}
+                            )}
 
-                          {(value.price) && (
-                            <View style={[styles.rowDirection]}>
-                              <View style={[styles.rightMargin]}>
-                                <Image source={{ uri: moneyIconBlue}} style={[styles.square15,styles.contain]}/>
+                            {(value.duration) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: timeIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.duration}</Text>
+                                </View>
                               </View>
-                              <View style={[styles.rightMargin]}>
-                                <Text style={[styles.descriptionText3]}>{value.price}</Text>
-                              </View>
-                            </View>
-                          )}
+                            )}
 
-                          {(value.difficultyLevel) && (
-                            <View style={[styles.rowDirection]}>
-                              <View style={[styles.rightMargin]}>
-                                <Image source={{ uri: difficultyIconBlue}} style={[styles.square15,styles.contain]}/>
+                            {(value.estimatedHours) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: timeIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.estimatedHours}</Text>
+                                </View>
                               </View>
-                              <View style={[styles.rightMargin]}>
-                                <Text style={[styles.descriptionText3]}>{value.difficultyLevel ? value.difficultyLevel : "Beginner"}</Text>
-                              </View>
-                            </View>
-                          )}
+                            )}
 
-                          {(value.rating && value.ratingCount) && (
-                            <View style={[styles.rowDirection]}>
-                              <View style={[styles.rightMargin]}>
-                                <Image source={{ uri: ratingsIconBlue}} style={[styles.square15,styles.contain]}/>
+                            {(value.price) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: moneyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.price}</Text>
+                                </View>
                               </View>
-                              <View style={[styles.rightMargin]}>
-                                <Text style={[styles.descriptionText3]}>{value.rating} / 5.0 - {value.ratingCount} Ratings</Text>
-                              </View>
-                            </View>
-                          )}
+                            )}
 
-                          {(value.studentCount) && (
-                            <View style={[styles.rowDirection]}>
-                              <View style={[styles.rightMargin]}>
-                                <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                            {(value.degreeType) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: ratingsIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.degreeType}</Text>
+                                </View>
                               </View>
-                              <View style={[styles.rightMargin]}>
-                                <Text style={[styles.descriptionText3]}>{value.studentCount} Students</Text>
-                              </View>
-                            </View>
-                          )}
+                            )}
 
+                            {(value.programMethod) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.programMethod}</Text>
+                                </View>
+                              </View>
+                            )}
+
+                            {(value.gradeLevel) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.gradeLevel}</Text>
+                                </View>
+                              </View>
+                            )}
+
+                            {(value.difficultyLevel) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: difficultyIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.difficultyLevel ? value.difficultyLevel : "Beginner"}</Text>
+                                </View>
+                              </View>
+                            )}
+
+                            {(value.rating && value.ratingCount) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: ratingsIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.rating} / 5.0 - {value.ratingCount} Ratings</Text>
+                                </View>
+                              </View>
+                            )}
+
+                            {(value.studentCount) && (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.rightMargin]}>
+                                  <Image source={{ uri: profileIconBlue}} style={[styles.square15,styles.contain]}/>
+                                </View>
+                                <View style={[styles.rightMargin]}>
+                                  <Text style={[styles.descriptionText3]}>{value.studentCount} Students</Text>
+                                </View>
+                              </View>
+                            )}
+                          </View>
 
                           <View style={[styles.halfSpacer]} />
                         </View>
@@ -2766,12 +2827,25 @@ class Courses extends Component {
 
                       <View style={[styles.rowDirection,styles.width60]}>
                         <View style={[styles.width30,styles.topMargin5,styles.alignCenter]} >
-                          <TouchableOpacity onPress={() => this.markCompleted(value, 'course')}>
-                            <Image source={(this.state.completions.includes(value._id) || this.state.completedCourseDetails.some(selectedCourse => selectedCourse.url === value.url)) ? { uri: checkboxChecked} : { uri: checkmarkDarkGreyIcon}} style={[styles.square15,styles.contain]}/>
-                          </TouchableOpacity>
-                          <TouchableOpacity style={[styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.favoriteItem(value,'course') }>
-                            <Image source={(this.state.favorites.includes(value._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === value.url)) ? { uri: favoritesIconBlue} : { uri: favoritesIconDark}} style={[styles.square15,styles.contain]}/>
-                          </TouchableOpacity>
+                          {(value.source === 'Udemy' && !value.orgCode) ? (
+                            <TouchableOpacity onPress={() => this.markCompleted(value, 'course')}>
+                              <Image source={(this.state.completions.includes(value._id) || this.state.completedCourseDetails.some(selectedCourse => selectedCourse.url === value.url)) ? { uri: checkboxChecked} : { uri: checkmarkDarkGreyIcon}} style={[styles.square15,styles.contain]}/>
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity onPress={(e) => this.enrollInCourse(value,'course',e,true)}>
+                              <Image source={(this.state.enrollments && this.state.enrollments.some(enrollment => enrollment.courseId === value._id && enrollment.isCompleted && value._id)) ? { uri: checkboxChecked} : { uri: checkmarkDarkGreyIcon}} style={[styles.square15,styles.contain]}/>
+                            </TouchableOpacity>
+                          )}
+
+                          {(value.source === 'Udemy' && !value.orgCode) ? (
+                            <TouchableOpacity style={[styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.favoriteItem(value,'course') }>
+                              <Image source={(this.state.favorites.includes(value._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === value.url)) ? { uri: favoritesIconBlue} : { uri: favoritesIconDark}} style={[styles.square15,styles.contain]}/>
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity style={[styles.topMargin]} disabled={this.state.isSaving} onPress={() => this.enrollInCourse(value,'course') }>
+                              <Image source={(this.state.enrollments && this.state.enrollments.some(enrollment => enrollment.courseId === value._id && value._id)) ? { uri: addLessonIconBlue} : { uri: addLessonIconDark}} style={[styles.square15,styles.contain]}/>
+                            </TouchableOpacity>
+                          )}
                         </View>
 
                         <View style={[styles.width30,styles.leftPadding]} >
