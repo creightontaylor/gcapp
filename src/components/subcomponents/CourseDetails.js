@@ -38,7 +38,7 @@ class CourseDetails extends Component {
     this.state = {
       subNavSelected: 'All',
       totalPercent: 100,
-      subNavCategories: ['All','Reviews','Comments','People','Similar'],
+      subNavCategories: [],
 
       favorites: [],
       favoritedCourseDetails: [],
@@ -52,8 +52,10 @@ class CourseDetails extends Component {
 
     this.pullCourses = this.pullCourses.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
+    this.enrollInCourse = this.enrollInCourse.bind(this)
 
     this.markCompleted = this.markCompleted.bind(this)
+    this.pullCourseDetails = this.pullCourseDetails.bind(this)
 
   }
 
@@ -197,203 +199,46 @@ class CourseDetails extends Component {
         console.log('got courseId???', this.props.courseId)
         if (this.props.courseId) {
 
-          Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { _id: this.props.courseId, source: 'Udemy', saveCourse: true } })
-          .then((response) => {
-            console.log('Course query attempted');
+          Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { _id: this.props.courseId } })
+        .then((response) => {
+          console.log('Course query attempted with native database', response.data);
 
-            if (response.data.success) {
-              console.log('course query worked')
+          if (response.data.success) {
+            console.log('course query worked natively')
 
-              let selectedCourse = response.data.course
-              if (selectedCourse.udemyId) {
-                selectedCourse['id'] = selectedCourse.udemyId
-              }
-              // selectedCourse['_id'] = selectedCourse.id
+            let selectedCourse = response.data.course
+            this.pullCourseDetails(response.data.course, org, email)
 
-              let shareURL = "https://www.guidedcompass.com/courses/" + selectedCourse.id
+          } else {
+            console.log('course query did not work', response.data.message)
 
-              const shareTitle = 'Check Out ' + selectedCourse.title + ' Course On Guided Compass!'
-              let shareBody = 'Check out the ' + selectedCourse.title + ' course on Guided Compass'
+            // try Udemy
+            Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { _id: this.props.courseId, source: 'Udemy', saveCourse: true } })
+            .then((response) => {
+              console.log('Course query attempted with Udemy', response.data);
 
-              this.setState({ selectedCourse, isLoading: false, shareURL, shareTitle, shareBody })
+              if (response.data.success) {
+                console.log('course query worked')
 
-              this.pullCourses(selectedCourse.title, null, null, null, selectedCourse)
-
-              Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId: selectedCourse._id } })
-              .then((response) => {
-                console.log('Comments query attempted');
-
-                 if (response.data.success) {
-                   console.log('successfully retrieved comments')
-
-                   if (response.data.comments && response.data.comments.length > 0) {
-
-                     this.setState({ comments: response.data.comments })
-                   }
-                 } else {
-                   console.log('no comments data found', response.data.message)
-                 }
-
-              }).catch((error) => {
-                 console.log('Comments query did not work', error);
-              });
-
-              Axios.get('https://www.guidedcompass.com/api/courses/reviews', { params: { _id: selectedCourse.id, source: 'Udemy' } })
-              .then((response) => {
-                console.log('Course reviews query attempted');
-
-                if (response.data.success) {
-                  console.log('course reviews query worked in sub settings')
-
-                  const reviews = response.data.reviews.results
-                  this.setState({ reviews })
+                let selectedCourse = response.data.course
+                if (selectedCourse.udemyId) {
+                  selectedCourse['id'] = selectedCourse.udemyId
                 }
 
-              }).catch((error) => {
-                console.log('Coures reviews query did not work for some reason', error);
-              });
+                this.pullCourseDetails(selectedCourse, org, email)
 
-              // Axios.get('https://www.guidedcompass.com/api/courses/byid', { params: { udemyId: selectedCourse.id } })
-              // .then((response) => {
-              //   console.log('Get course saved in database query attempted');
-              //
-              //   if (response.data.success) {
-              //     console.log('course saved in database query worked in sub settings')
-              //
-              //     // const followers = response.data.followers
-              //     // this.setState({ followers })
-              //     const resLimit = 50
-              //     Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: response.data.course._id, resLimit } })
-              //     .then((response) => {
-              //       console.log('Followers query attempted');
-              //
-              //       if (response.data.success) {
-              //         console.log('followers query worked in sub settings')
-              //
-              //         const followers = response.data.followers
-              //         this.setState({ followers })
-              //       }
-              //
-              //     }).catch((error) => {
-              //       console.log('Followers query did not work for some reason', error);
-              //     });
-              //   }
-              //
-              // }).catch((error) => {
-              //   console.log('Course saved in database query did not work for some reason', error);
-              // });
-
-              const resLimit = 50
-              Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: response.data.course._id, resLimit } })
-              .then((response) => {
-                console.log('Followers query attempted');
-
-                if (response.data.success) {
-                  console.log('followers query worked in sub settings')
-
-                  const followers = response.data.followers
-                  this.setState({ followers })
-                }
-
-              }).catch((error) => {
-                console.log('Followers query did not work for some reason', error);
-              });
-
-              if (selectedCourse.jobFunction) {
-
-                const search = true
-                const searchString = selectedCourse.jobFunction
-                const excludeMissingOutlookData = true
-                const excludeMissingJobZone = true
-                // console.log('show search string: ', searchString)
-                Axios.put('https://www.guidedcompass.com/api/careers/search', { search, searchString, excludeMissingOutlookData, excludeMissingJobZone  })
-                .then((response) => {
-                    console.log('Career details query attempted 2');
-
-                    if (response.data.success) {
-                      console.log('found careers: ', response.data.careers)
-                      if (response.data.careers && response.data.careers.length > 0) {
-                        const selectedCareer = response.data.careers[0]
-                        this.setState({ selectedCareer })
-                      }
-
-                    } else {
-                      console.log('there was an error from back-end, message:');
-                    }
-                });
+              } else {
+                console.log('course query did not work with Udemy', response.data.message)
               }
 
-              Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: org } })
-              .then((response) => {
-                console.log('Org info query attempted 2');
+            }).catch((error) => {
+                console.log('Course query with Udemy did not work for some reason', error);
+            });
+          }
 
-                  if (response.data.success) {
-                    console.log('org info query worked 2')
-
-                    const orgContactEmail = response.data.orgInfo.orgContactEmail
-                    this.setState({ orgContactEmail })
-
-                    const orgCode = org
-                    let placementPartners = []
-                    if (response.data.orgInfo.placementPartners) {
-                      placementPartners = response.data.orgInfo.placementPartners
-                    }
-                    const postType = null
-                    const postTypes = ['Assignment','Problem','Challenge','Internship','Individual','Work']
-                    const pathway = null
-                    const accountCode = null
-                    const recent = true
-                    const active = true
-                    const pullPartnerPosts = true
-                    const csWorkflow = true
-
-                    //only schools see this screen
-                    Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, csWorkflow }})
-                    .then((response) => {
-                      console.log('Posted postings query attempted within subcomponent');
-
-                      if (response.data.success) {
-                        console.log('posted postings query worked')
-
-                        if (response.data.postings.length !== 0) {
-
-                          let projectOpportunities = []
-                          let work = []
-                          for (let i = 1; i <= response.data.postings.length; i++) {
-                            if (response.data.postings[i - 1].postType === 'Assignment' || response.data.postings[i - 1].postType === 'Problem' || response.data.postings[i - 1].postType === 'Work') {
-                              projectOpportunities.push(response.data.postings[i - 1])
-                            } else {
-                              work.push(response.data.postings[i - 1])
-                            }
-                          }
-
-                          this.setState({ projectOpportunities, work })
-
-                        }
-
-                      } else {
-                        console.log('posted postings query did not work', response.data.message)
-                      }
-
-                    }).catch((error) => {
-                        console.log('Posted postings query did not work for some reason', error);
-                    });
-
-                  } else {
-                    console.log('org info query did not work', response.data.message)
-                  }
-
-              }).catch((error) => {
-                  console.log('Org info query did not work for some reason', error);
-              });
-
-            } else {
-              console.log('course query did not work', response.data.message)
-            }
-
-          }).catch((error) => {
-              console.log('Course query did not work for some reason', error);
-          });
+        }).catch((error) => {
+            console.log('Course query in native database did not work for some reason', error);
+        });
         }
       }
      } catch (error) {
@@ -401,6 +246,254 @@ class CourseDetails extends Component {
        console.log('there was an error', error)
      }
   }
+
+  pullCourseDetails(selectedCourse, org, email) {
+      console.log('pullCourseDetails called')
+
+      let courseId = selectedCourse._id
+      if (!courseId && selectedCourse.source === 'Udemy') {
+        courseId = selectedCourse.id
+      }
+
+      let shareURL = "https://www.guidedcompass.com/courses/" + courseId
+
+      const shareTitle = 'Check Out ' + selectedCourse.title + ' Course On Guided Compass!'
+      let shareBody = 'Check out the ' + selectedCourse.title + ' course on Guided Compass'
+
+      let subNavCategories = ['All','About','Comments','Students','Alumni','Similar']
+      if (selectedCourse.source === 'Udemy' && !selectedCourse.orgCode) {
+        subNavCategories = ['All','Reviews','Comments','Students']
+      }
+
+      this.setState({ selectedCourse, isLoading: false, shareURL, shareTitle, shareBody, subNavCategories })
+
+      let courseName = selectedCourse.name
+      if (selectedCourse.title) {
+        courseName = selectedCourse.title
+      }
+
+      this.pullCourses(courseName, null, null, null, selectedCourse, org)
+
+      Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId: selectedCourse._id } })
+      .then((response) => {
+        console.log('Comments query attempted', response.data);
+
+         if (response.data.success) {
+           console.log('successfully retrieved comments')
+
+           if (response.data.comments && response.data.comments.length > 0) {
+
+             this.setState({ comments: response.data.comments })
+           }
+         } else {
+           console.log('no comments data found', response.data.message)
+         }
+
+      }).catch((error) => {
+         console.log('Comments query did not work', error);
+      });
+
+      if (selectedCourse.source === 'Udemy') {
+        Axios.get('https://www.guidedcompass.com/api/courses/reviews', { params: { _id: selectedCourse.id, source: selectedCourse.source } })
+        .then((response) => {
+          console.log('Course reviews query attempted', response.data);
+
+          if (response.data.success) {
+            console.log('course reviews query worked in sub settings')
+
+            const reviews = response.data.reviews.results
+            this.setState({ reviews })
+          }
+
+        }).catch((error) => {
+          console.log('Coures reviews query did not work for some reason', error);
+        });
+      }
+
+      if (selectedCourse.source === 'Udemy' && !selectedCourse.orgCode) {
+        Axios.get('https://www.guidedcompass.com/api/completions', { params: { emailId: email } })
+       .then((response) => {
+         console.log('Completions query attempted', response.data);
+
+         if (response.data.success) {
+           console.log('successfully retrieved completions')
+
+           const completions = response.data.completions
+
+           if (completions && completions.length > 0) {
+             Axios.get('https://www.guidedcompass.com/api/completions/detail', { params: { completions, orgCode: org } })
+             .then((response2) => {
+               console.log('Completions detail query attempted', response2.data);
+
+               if (response2.data.success) {
+                 console.log('successfully retrieved completions detail', response2.data.completions)
+
+                 let completedCourseDetails = []
+
+                 for (let i = 1; i <= response.data.completions.length; i++) {
+                   if (response2.data.types[i - 1] && response2.data.types[i - 1] === 'course') {
+                     const completedCourse = response2.data.completions[i - 1]
+                     completedCourse['completionId'] = response.data.completions[i - 1]
+                     completedCourseDetails.push(completedCourse)
+                   }
+                 }
+
+                 this.setState({ completions, completedCourseDetails })
+
+               } else {
+                 console.log('no completions detail data found', response2.data.message)
+               }
+
+             }).catch((error) => {
+                 console.log('Completions detail query did not work', error);
+             });
+           }
+
+         } else {
+           console.log('no completions data found', response.data.message)
+         }
+
+       }).catch((error) => {
+           console.log('Favorites query did not work', error);
+       });
+
+       const resLimit = 50
+       Axios.get('https://www.guidedcompass.com/api/get-followers', { params: { _id: selectedCourse._id, resLimit } })
+       .then((response) => {
+         console.log('Followers query attempted');
+
+         if (response.data.success) {
+           console.log('followers query worked in sub settings', response.data)
+
+           const followers = response.data.followers
+           this.setState({ followers })
+         }
+
+       }).catch((error) => {
+         console.log('Followers query did not work for some reason', error);
+       });
+      } else {
+        Axios.get('https://www.guidedcompass.com/api/courses/enrollments', { params: { courseId: selectedCourse._id } })
+       .then((response) => {
+         console.log('Enrollments query attempted', response.data);
+
+         if (response.data.success) {
+           console.log('successfully retrieved enrollments')
+
+           let courseEnrollment = null
+           let students = []
+           let alumni = []
+           for (let i = 1; i <= response.data.enrollments.length; i++) {
+             if (response.data.enrollments[i - 1].isCompleted) {
+               alumni.push(response.data.enrollments[i - 1])
+             } else {
+               students.push(response.data.enrollments[i - 1])
+             }
+             if (response.data.enrollments[i - 1].email === email) {
+               courseEnrollment = response.data.enrollments[i - 1]
+             }
+           }
+
+           this.setState({ courseEnrollment, students, alumni })
+
+         } else {
+           console.log('no enrollments data found', response.data.message)
+         }
+
+       }).catch((error) => {
+           console.log('Enrollments query did not work', error);
+       });
+      }
+
+      if (selectedCourse.jobFunction) {
+
+        const search = true
+        const searchString = selectedCourse.jobFunction
+        const excludeMissingOutlookData = true
+        const excludeMissingJobZone = true
+        // console.log('show search string: ', searchString)
+        Axios.put('https://www.guidedcompass.com/api/careers/search', { search, searchString, excludeMissingOutlookData, excludeMissingJobZone  })
+        .then((response) => {
+            console.log('Career details query attempted 2');
+
+            if (response.data.success) {
+              console.log('found careers: ', response.data.careers)
+              if (response.data.careers && response.data.careers.length > 0) {
+                const selectedCareer = response.data.careers[0]
+                this.setState({ selectedCareer })
+              }
+
+            } else {
+              console.log('there was an error from back-end, message:');
+            }
+        });
+      }
+
+      Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: org } })
+      .then((response) => {
+        console.log('Org info query attempted 2', response.data);
+
+          if (response.data.success) {
+            console.log('org info query worked 2')
+
+            const orgName = response.data.orgInfo.orgName
+            const orgContactEmail = response.data.orgInfo.orgContactEmail
+            this.setState({ orgName })
+
+            // const orgCode = org
+            // let placementPartners = []
+            // if (response.data.orgInfo.placementPartners) {
+            //   placementPartners = response.data.orgInfo.placementPartners
+            // }
+            // const postType = null
+            // const postTypes = ['Assignment','Problem','Challenge','Internship','Individual','Work']
+            // const pathway = null
+            // const accountCode = null
+            // const recent = true
+            // const active = true
+            // const pullPartnerPosts = true
+            // const csWorkflow = true
+            //
+            // //only schools see this screen
+            // Axios.get('https://www.guidedcompass.com/api/postings/user', { params: { orgCode, placementPartners, postType, postTypes, pathway, accountCode, recent, active, pullPartnerPosts, csWorkflow }})
+            // .then((response) => {
+            //   console.log('Posted postings query attempted within subcomponent');
+            //
+            //   if (response.data.success) {
+            //     console.log('posted postings query worked')
+            //
+            //     if (response.data.postings.length !== 0) {
+            //
+            //       let projectOpportunities = []
+            //       let work = []
+            //       for (let i = 1; i <= response.data.postings.length; i++) {
+            //         if (response.data.postings[i - 1].postType === 'Assignment' || response.data.postings[i - 1].postType === 'Problem' || response.data.postings[i - 1].postType === 'Work') {
+            //           projectOpportunities.push(response.data.postings[i - 1])
+            //         } else {
+            //           work.push(response.data.postings[i - 1])
+            //         }
+            //       }
+            //
+            //       this.setState({ projectOpportunities, work })
+            //
+            //     }
+            //
+            //   } else {
+            //     console.log('posted postings query did not work', response.data.message)
+            //   }
+            //
+            // }).catch((error) => {
+            //     console.log('Posted postings query did not work for some reason', error);
+            // });
+
+          } else {
+            console.log('org info query did not work', response.data.message)
+          }
+
+      }).catch((error) => {
+          console.log('Org info query did not work for some reason', error);
+      });
+    }
 
   formChangeHandler(event) {
     console.log('formChangeHandler called')
@@ -634,6 +727,120 @@ class CourseDetails extends Component {
     }
   }
 
+  enrollInCourse(item, type,e,isCompleted) {
+      console.log('enrollInCourse called', item, type)
+
+      // e.preventDefault()
+      // e.stopPropagation()
+
+      this.setState({ errorMessage: null, successMessage: null, isSaving: true })
+
+      let _id = null
+      let eIndex = null
+      if (this.state.courseEnrollment) {
+        _id = this.state.courseEnrollment._id
+      }
+      console.log('t0: ', _id, isCompleted)
+
+      if ((isCompleted) || (!_id && !isCompleted)) {
+        console.log('t1: we in')
+
+        const firstName = this.state.cuFirstName
+        const lastName = this.state.cuLastName
+        const email = this.state.emailId
+        const username = this.state.username
+        const pictureURL = this.state.pictureURL
+        const courseId = item._id
+        const courseImageURL = item.imageURL
+        let courseName = item.name
+        if (item.title) {
+          courseName = item.title
+        }
+        const courseCategory = item.category
+        const courseDegreeType = item.degreeType
+        const courseSchoolName = item.schoolName
+        const courseSchoolURL = item.schoolURL
+        const courseDescription = item.description
+        const courseEstimatedHours = item.estimatedHours
+        const courseProgramMethod = item.programMethod
+        const courseDifficultyLevel = item.difficultyLevel
+
+        const orgCode = this.state.orgCode
+        const orgName = this.state.orgName
+
+        const createdAt = new Date()
+        const updatedAt = new Date()
+
+        const courseEnrollment = {
+          _id, firstName, lastName, email, username, pictureURL,
+          courseId, courseImageURL, courseName, courseCategory, courseDegreeType,
+          courseSchoolName, courseSchoolURL, courseDescription, courseEstimatedHours, courseProgramMethod, courseDifficultyLevel,
+          isCompleted, orgCode, orgName, createdAt, updatedAt
+        }
+
+        Axios.post('https://www.guidedcompass.com/api/enrollments', courseEnrollment)
+        .then((response) => {
+          console.log('attempting to save addition to enrollments')
+          if (response.data.success) {
+            console.log('saved addition to enrollments', response.data)
+
+            let itemId = item._id
+
+            // let courseEnrollment = this.state.courseEnrollment
+
+            if (isCompleted) {
+              // courseEnrollment['isCompleted'] = true
+
+              if (item.degreeType === 'Badge' || item.degreeType === 'Certificate' || item.degreeType === 'Certification') {
+                // save as certificate
+
+                const certificate = {
+                  courseId: item._id, name: item.name, imageURL: item.imageURL, category: item.category,
+                  programURL: item.programURL, schoolURL: item.schoolURL, schoolName: item.schoolName,
+                  degreeType: item.degreeType, programMethod: item.programMethod, location: item.location,
+                  estimatedHours: item.estimatedHours, description: item.description, gradeLevel: item.gradeLevel,
+                  knowledgeLevel: item.knowledgeLevel, functions: item.functions, pathways: item.pathways,
+                  price: item.price, isCompleted: true, updateCertificate: true,
+                  email: this.state.emailId, createdAt: new Date(), updatedAt: new Date()
+                }
+
+                Axios.post('https://www.guidedcompass.com/api/certificates', certificate)
+                .then((response) => {
+                  console.log('attempting to post certificate')
+
+                  if (response.data.success) {
+                    console.log('saved post to certificate', response.data)
+
+
+                  } else {
+                    console.log('did not save certificate successfully')
+                    this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+                  }
+                }).catch((error) => {
+                    console.log('saving certificate did not work', error);
+                    this.setState({ errorMessage: 'there was an error saving enrollment certificate', isSaving: false})
+                });
+
+              }
+            } else {
+              // do nothing
+            }
+
+            this.setState({ successMessage: 'Saved enrollment!', courseEnrollment, isSaving: false })
+
+          } else {
+            console.log('did not save enrollment successfully')
+            this.setState({ errorMessage: 'error:' + response.data.message, isSaving: false })
+          }
+        }).catch((error) => {
+            console.log('save did not work', error);
+            this.setState({ errorMessage: 'there was an error saving enrollment', isSaving: false})
+        });
+      } else {
+        this.setState({ isSaving: false, errorMessage: 'You have already enrolled in this course/program'})
+      }
+    }
+
   markCompleted(item, type) {
     console.log('markCompleted called', item, type)
 
@@ -826,33 +1033,53 @@ class CourseDetails extends Component {
                               )}
 
                               <View style={[styles.topPadding,styles.rowDirection,styles.flexWrap]}>
-                                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin,styles.topMargin]} onPress={() => Linking.openURL("https://www.udemy.com" + this.state.selectedCourse.url)}>
+                                <TouchableOpacity style={[styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter,styles.rightMargin,styles.topMargin]} onPress={(this.state.selectedCourse.programURL) ? () => Linking.openURL(this.state.selectedCourse.programURL) : () => Linking.openURL("https://www.udemy.com" + this.state.selectedCourse.url)}>
                                   <View style={[styles.rowDirection]}>
                                     <View>
                                       <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                       <Image source={{ uri: linkIconWhite}} style={[styles.square15,styles.contain]} />
                                     </View>
-                                    <View style={[styles.leftPadding]}><Text style={[styles.descriptionText1]}>Take the Course</Text></View>
+                                    <View style={[styles.leftPadding]}><Text style={[styles.descriptionText1]}>{(this.state.selectedCourse.source === "Udemy" && !this.state.selectedCourse.orgCode) ? "Take the Course" : "View Details"}</Text></View>
                                   </View>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={[styles.btnSquarish,styles.quaternaryBackground,styles.rightMargin,styles.topMargin,styles.rowDirection,styles.flexCenter]} onPress={() => this.favoriteItem(this.state.selectedCourse,'course')}>
-                                  <View>
-                                    <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
-                                    {(this.state.favorites.includes(this.state.selectedCourse._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} /> : <Image source={{ uri: favoritesIconWhite}} style={[styles.square15,styles.contain]} />}
-                                  </View>
-                                  <View style={[styles.leftPadding]}>
-                                    <Text style={[styles.descriptionText1]}>{(this.state.favorites.includes(this.state.selectedCourse._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? "Favorited" : "Favorite"}</Text>
-                                  </View>
+                                <TouchableOpacity style={[styles.btnSquarish,styles.quaternaryBackground,styles.rightMargin,styles.topMargin,styles.rowDirection,styles.flexCenter]} onPress={(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? () => this.favoriteItem(this.state.selectedCourse,'course') : (e) => this.enrollInCourse(this.state.selectedCourse,'course',e,false)}>
+                                  {(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? (
+                                    <View style={[styles.rowDirection,styles.flexCenter]}>
+                                      <View>
+                                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                        {(this.state.favorites.includes(this.state.selectedCourse._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} /> : <Image source={{ uri: favoritesIconWhite}} style={[styles.square15,styles.contain]} />}
+                                      </View>
+                                      <View style={[styles.leftPadding]}>
+                                        <Text style={[styles.descriptionText1]}>{(this.state.favorites.includes(this.state.selectedCourse._id) || this.state.favoritedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? "Favorited" : "Favorite"}</Text>
+                                      </View>
+                                    </View>
+                                  ) : (
+                                    <View style={[styles.rowDirection,styles.flexCenter]}>
+                                      <View>
+                                        <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
+                                        {(this.state.courseEnrollment && this.state.courseEnrollment.courseId === this.state.selectedCourse._id) ? <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} /> : <Image source={{ uri: addLessonIconWhite}} style={[styles.square15,styles.contain]} />}
+                                      </View>
+                                      <View style={[styles.leftPadding]}>
+                                        <Text style={[styles.descriptionText1]}>{(this.state.courseEnrollment && this.state.courseEnrollment.courseId === this.state.selectedCourse._id) ? "Enrolled!" : "Mark as Enrolled"}</Text>
+                                      </View>
+                                    </View>
+                                  )}
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnSquarish,styles.quinaryBackground,styles.rightMargin,styles.topMargin,styles.rowDirection,styles.flexCenter]} onPress={() => this.markCompleted(this.state.selectedCourse,'course')}>
+                                <TouchableOpacity style={[styles.btnSquarish,styles.quinaryBackground,styles.rightMargin,styles.topMargin,styles.rowDirection,styles.flexCenter]} onPress={(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? () => this.markCompleted(this.state.selectedCourse,'course') : (e) => this.enrollInCourse(this.state.selectedCourse,'course',e,true)}>
                                   <View>
                                     <View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} /><View style={[styles.miniSpacer]} />
                                     <Image source={{ uri: checkmarkIconWhite}} style={[styles.square15,styles.contain]} />
                                   </View>
-                                  <View style={[styles.leftPadding]}>
-                                    <Text style={[styles.descriptionText1]}>{(this.state.completions.includes(this.state.selectedCourse._id) || this.state.completedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? "Completed!" : "Mark Completed"}</Text>
-                                  </View>
+                                  {(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? (
+                                    <View style={[styles.leftPadding]}>
+                                      <Text style={[styles.descriptionText1]}>{(this.state.completions.includes(this.state.selectedCourse._id) || this.state.completedCourseDetails.some(selectedCourse => selectedCourse.url === this.state.selectedCourse.url)) ? "Completed!" : "Mark Completed"}</Text>
+                                    </View>
+                                  ) : (
+                                    <View style={[styles.leftPadding]}>
+                                      <Text style={[styles.descriptionText1]}>{(this.state.courseEnrollment && this.state.courseEnrollment.courseId === this.state.selectedCourse._id && this.state.courseEnrollment.isCompleted) ? "Completed!" : "Mark Completed"}</Text>
+                                    </View>
+                                  )}
                                 </TouchableOpacity>
 
                                 <TouchableOpacity style={[styles.btnSquarish,styles.ctaBorder,styles.rightMargin,styles.topMargin,styles.rowDirection,styles.flexCenter]} onPress={() => this.setState({ modalIsOpen: true, showShareButtons: true })}>
@@ -888,7 +1115,7 @@ class CourseDetails extends Component {
                           </ScrollView>
                         </View>
 
-                        {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Reviews') && (
+                        {((this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) && (this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Reviews')) && (
                           <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
                             <View style={[styles.row10]}>
                               <Text style={[styles.headingText3]}>Reviews</Text>
@@ -943,88 +1170,263 @@ class CourseDetails extends Component {
                           </View>
                         )}
 
-                        <View>
-                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Comments') && (
-                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                              <SubComments selectedCourse={this.state.selectedCourse} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments}  orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} pageSource={this.state.pageSource}/>
-
-                            </View>
-                          )}
-
-                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'People') && (
+                        {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'About') && (
+                          <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
                             <View>
-                              {(this.state.followers && this.state.followers.length > 0) ? (
-                                <View>
-                                  <SubRenderProfiles
-                                    favorites={this.state.favorites} members={this.state.followers} friends={this.state.friends}
-                                    pageSource={this.props.pageSource} navigation={this.props.navigation} userType="Peers"
-                                  />
-                                </View>
-                              ) : (
-                                <View />
-                              )}
+                              <Text style={[styles.headingText3]}>About</Text>
+                              <View style={[styles.spacer]} /><View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
 
-                            </View>
-                          )}
+                              <View style={[styles.rowDirection,styles.flexWrap]}>
+                                {(this.state.selectedCourse.description) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Description</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.description}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                          {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Similar') && (
-                            <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
-                              <View>
+                                {(this.state.selectedCourse.source) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Source</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.source}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                {(this.state.courses && this.state.courses.length > 0) && (
-                                  <View style={[styles.bottomMargin20]}>
-                                    <View>
-                                      <Text style={[styles.headingText5]}>Related Courses</Text>
+                                {(this.state.selectedCourse.category) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Category</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.category}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                      <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+                                {(this.state.selectedCourse.degreeType) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Degree Type</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.degreeType}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                      {this.state.courses.map((item, index) =>
-                                        <View key={item}>
-                                          {(index < 3) && (
-                                            <View style={[styles.bottomPadding]}>
-                                              <View style={[styles.spacer]} />
-                                              <View style={[styles.rowDirection]}>
-                                                <TouchableOpacity style={[styles.rowDirection]} onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: item })}>
-                                                  <View style={[styles.width50]}>
-                                                    <Image source={(item.image_480x270) ? { uri: item.image_480x270} : { uri: courseIconBlue}} style={[styles.square50,styles.contain]}/>
-                                                  </View>
-                                                  <View style={[styles.calcColumn150,styles.leftPadding5]}>
-                                                    <Text style={[styles.standardText]}>{item.title}</Text>
-                                                    <Text style={[styles.descriptionText2]}>{item.headline}</Text>
-                                                  </View>
-                                                </TouchableOpacity>
-                                                <View style={[styles.leftPadding]}>
-                                                  <View style={[styles.spacer]}/>
-                                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: item })}>
-                                                    <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
-                                                  </TouchableOpacity>
-                                                </View>
+                                {(this.state.selectedCourse.estimatedHours) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Estimated Hours</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.estimatedHours}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                              </View>
+                                {(this.state.selectedCourse.gradeLevel) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Grade Level</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.gradeLevel}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                              <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                                              <View style={[styles.horizontalLine]} />
+                                {(this.state.selectedCourse.knowledgeLevel) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Knowledge Level</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.knowledgeLevel}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                              <View style={[styles.spacer]} />
-                                            </View>
-                                          )}
-                                        </View>
-                                      )}
+                                {(this.state.selectedCourse.programMethod) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Program Delivery</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.programMethod}</Text>
+                                    </View>
+                                  </View>
+                                )}
 
-                                      {(this.state.courses.length > 0) && (
-                                        <View>
-                                          <TouchableOpacity onPress={() => this.props.navigation.navigate('Courses', { selectedCourse: null })}>
-                                            <Text style={[styles.descriptionText2,styles.ctaColor]}>See More <Text style={[styles.descriptionText2,styles.leftPadding5]}>></Text></Text>
-                                          </TouchableOpacity>
-                                        </View>
-                                      )}
+                                {(this.state.selectedCourse.location) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Location</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.location}</Text>
+                                    </View>
+                                  </View>
+                                )}
+
+                                {(this.state.selectedCourse.mainContactFirstName && this.state.selectedCourse.mainContactLastName) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Main Contact</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.mainContactFirstName} {this.state.selectedCourse.mainContactLastName} {(this.state.selectedCourse.mainContactEmail) && "(" + this.state.selectedCourse.mainContactEmail + ")"}</Text>
+                                    </View>
+                                  </View>
+                                )}
+
+                                {(this.state.selectedCourse.industry) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Industry</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.industry}</Text>
+                                    </View>
+                                  </View>
+                                )}
+
+                                {(this.state.selectedCourse.functions && this.state.selectedCourse.functions.length > 0) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Work Functions</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.functions.join(', ')}</Text>
+                                    </View>
+                                  </View>
+                                )}
+
+                                {(this.state.selectedCourse.pathways && this.state.selectedCourse.pathways.length > 0) && (
+                                  <View style={[styles.bottomMargin20,styles.rowDirection]}>
+                                    <View style={[styles.width140]}>
+                                      <Text style={[styles.descriptionText1,styles.descriptionTextColor]}>Pathways</Text>
+                                    </View>
+                                    <View style={[styles.calcColumn200]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.selectedCourse.pathways.join(', ')}</Text>
                                     </View>
                                   </View>
                                 )}
                               </View>
                             </View>
-                          )}
-                        </View>
+
+                          </View>
+                        )}
+
+                        {(this.state.selectedCourse._id) && (
+                          <View>
+                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Comments') && (
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <SubComments selectedCourse={this.state.selectedCourse} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments}  orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} pageSource={this.state.pageSource}/>
+
+                              </View>
+                            )}
+
+                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Students') && (
+                              <View>
+                                {((this.state.followers && this.state.followers.length > 0) || (this.state.students && this.state.students.length > 0)) ? (
+                                  <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                    <SubRenderProfiles
+                                      favorites={this.state.favorites} members={(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? this.state.followers : this.state.students} friends={this.state.friends}
+                                      pageSource={this.props.pageSource} navigation={this.props.navigation} userType="Peers"
+                                    />
+                                  </View>
+                                ) : (
+                                  <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                    <Text style={[styles.standardText]}>No students have enrolled</Text>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+
+                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Alumni') && (
+                              <View>
+                                {((this.state.followers && this.state.followers.length > 0) || (this.state.alumni && this.state.alumni.length > 0)) ? (
+                                  <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                    <SubRenderProfiles
+                                      favorites={this.state.favorites} members={(this.state.selectedCourse && this.state.selectedCourse.source === 'Udemy' && !this.state.selectedCourse.orgCode) ? this.state.followers : this.state.alumni} friends={this.state.friends}
+                                      pageSource={this.props.pageSource} navigation={this.props.navigation} userType="Peers"
+                                    />
+                                  </View>
+                                ) : (
+                                  <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                    <Text style={[styles.standardText]}>No alumni completed this program</Text>
+                                  </View>
+                                )}
+                              </View>
+                            )}
+
+                            {(this.state.subNavSelected === 'All' || this.state.subNavSelected === 'Similar') && (
+                              <View style={[styles.card,styles.fullScreenWidth,styles.topMargin30]}>
+                                <View>
+
+                                  {(this.state.courses && this.state.courses.length > 0) && (
+                                    <View style={[styles.bottomMargin20]}>
+                                      <View>
+                                        <Text style={[styles.headingText5]}>Related Courses</Text>
+
+                                        <View style={[styles.spacer]} /><View style={[styles.halfSpacer]} />
+
+                                        {this.state.courses.map((item, index) =>
+                                          <View key={item}>
+                                            {(index < 3) && (
+                                              <View style={[styles.bottomPadding]}>
+                                                <View style={[styles.spacer]} />
+                                                <View style={[styles.rowDirection]}>
+                                                  <TouchableOpacity style={[styles.rowDirection]} onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: item })}>
+                                                    <View style={[styles.width50]}>
+                                                      <Image source={(item.image_480x270) ? { uri: item.image_480x270} : { uri: courseIconBlue}} style={[styles.square50,styles.contain]}/>
+                                                    </View>
+                                                    <View style={[styles.calcColumn150,styles.leftPadding5]}>
+                                                      <Text style={[styles.standardText]}>{item.title}</Text>
+                                                      <Text style={[styles.descriptionText2]}>{item.headline}</Text>
+                                                    </View>
+                                                  </TouchableOpacity>
+                                                  <View style={[styles.leftPadding]}>
+                                                    <View style={[styles.spacer]}/>
+                                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: item })}>
+                                                      <Image source={{ uri: arrowIndicatorIcon}} style={[styles.square22,styles.contain]}/>
+                                                    </TouchableOpacity>
+                                                  </View>
+
+                                                </View>
+
+                                                <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+                                                <View style={[styles.horizontalLine]} />
+
+                                                <View style={[styles.spacer]} />
+                                              </View>
+                                            )}
+                                          </View>
+                                        )}
+
+                                        {(this.state.courses.length > 0) && (
+                                          <View>
+                                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Courses', { selectedCourse: null })}>
+                                              <Text style={[styles.descriptionText2,styles.ctaColor]}>See More <Text style={[styles.descriptionText2,styles.leftPadding5]}>></Text></Text>
+                                            </TouchableOpacity>
+                                          </View>
+                                        )}
+                                      </View>
+                                    </View>
+                                  )}
+                                </View>
+                              </View>
+                            )}
+                          </View>
+                        )}
 
                         <View style={[styles.spacer]}/><View style={[styles.spacer]}/><View style={[styles.spacer]}/>
 
