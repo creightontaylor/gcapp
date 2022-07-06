@@ -56,6 +56,7 @@ const commentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
 const skillsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon-blue.png';
 const assessmentsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assessments-icon-blue.png';
+const courseIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png";
 
 import SubComments from '../common/Comments';
 import SubPicker from '../common/SubPicker';
@@ -703,7 +704,7 @@ class Courses extends Component {
         if (this.props.source === 'Udemy') {
           this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
         } else {
-          Axios.get('https://www.guidedcompass.com/api/courses', { params: { orgCode: org } })
+          Axios.get('https://www.guidedcompass.com/api/courses', { params: { orgCode: org, isActive: true } })
           .then((response) => {
             console.log('Org courses info query attempted-----------------------------', response.data.success, org);
 
@@ -794,7 +795,7 @@ class Courses extends Component {
       difficultyLevelValue = difficultyLevelValue.toLowerCase()
     }
 
-    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject } })
+    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, isActive: true } })
     .then((response) => {
       console.log('Courses query attempted');
 
@@ -1152,13 +1153,22 @@ class Courses extends Component {
         difficultyLevelValue = difficultyLevelValue.toLowerCase()
       }
 
+      const queryOrgCourses = this.state.queryOrgCourses
+      const orgCode = this.state.org
+      const filterObject = {
+        selectedSkill: this.state.selectedSkill,
+        priceValue: this.state.priceValue,
+        durationValue: this.state.durationValue,
+        difficultyLevelValue: this.state.difficultyLevelValue
+      }
+
       const self = this
       function officiallyFilter() {
         console.log('officiallyFilter called')
 
         self.setState({ animating: true, errorMessage: null, successMessage: null })
 
-        Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue: searchString, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue } })
+        Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue: searchString, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, isActive: true } })
         .then((response) => {
           console.log('Courses query attempted');
 
@@ -2101,7 +2111,7 @@ class Courses extends Component {
           console.log('officiallyCalculate called')
 
           // query postings on back-end
-          Axios.put('https://www.guidedcompass.com/api/courses/matches', { profile, matchingCriteria, useCases, budget, queryOrgCourses, orgCode })
+          Axios.put('https://www.guidedcompass.com/api/courses/matches', { profile, matchingCriteria, useCases, budget, queryOrgCourses, orgCode, isActive: true })
           .then((response) => {
             console.log('Course matches attempted', response.data);
 
@@ -2688,14 +2698,14 @@ class Courses extends Component {
                     <View style={[styles.spacer]} />
 
                     <View style={[styles.rowDirection]}>
-                      <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: value })} style={[styles.calcColumn120,styles.rowDirection]}>
+                      <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: value, courseId: value._id })} style={[styles.calcColumn120,styles.rowDirection]}>
                         <View style={[styles.width50]}>
                           {(value.matchScore) ? (
                             <View style={[styles.padding5]}>
                               <Progress.Circle progress={value.matchScore / 100} size={styles.width40.width} showsText={true} animated={false} color={styles.ctaColor.color}/>
                             </View>
                           ) : (
-                            <Image source={{ uri: value.image_125_H}} style={[styles.square40,styles.contain]}/>
+                            <Image source={(value.imageURL) ? { uri: value.imageURL } : (value.image_125_H) ? { uri: value.image_125_H } : { uri: courseIconBlue }} style={[styles.square40,styles.contain]}/>
 
                           )}
 
@@ -2749,7 +2759,7 @@ class Courses extends Component {
                                   <Image source={{ uri: moneyIconBlue}} style={[styles.square15,styles.contain]}/>
                                 </View>
                                 <View style={[styles.rightMargin]}>
-                                  <Text style={[styles.descriptionText3]}>{value.price}</Text>
+                                  <Text style={[styles.descriptionText3]}>{(value.price && value.price.startsWith('$')) ? value.price : '$' + value.price}</Text>
                                 </View>
                               </View>
                             )}

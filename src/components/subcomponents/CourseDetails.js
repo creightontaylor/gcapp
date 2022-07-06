@@ -1003,7 +1003,7 @@ class CourseDetails extends Component {
                           <View style={[styles.bottomPadding]}>
                             <View style={[styles.flex1,styles.rowDirection]}>
                               <View style={[styles.flex15,styles.topMargin20]}>
-                                <Text style={[styles.ctaColor,styles.boldText,styles.descriptionText1]}>{this.state.selectedCourse.price}</Text>
+                                <Text style={[styles.ctaColor,styles.boldText,styles.descriptionText1]}>{(this.state.selectedCourse.price && this.state.selectedCourse.price.startsWith('$')) ? this.state.selectedCourse.price : '$' + this.state.selectedCourse.price }</Text>
                               </View>
                               <View style={[styles.flex70,styles.alignCenter]}>
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CourseDetails', { selectedCourse: this.state.selectedCourse })}>
@@ -1011,15 +1011,17 @@ class CourseDetails extends Component {
                                 </TouchableOpacity>
                               </View>
                               <View style={[styles.flex15]}>
-                                <View style={[styles.topMargin20]}>
-                                  <TouchableOpacity onPress={() => Linking.openURL("https://www.udemy.com")}>
-                                    <Image source={{ uri: udemyLogo}} style={[styles.square30,styles.contain]} />
-                                  </TouchableOpacity>
-                                </View>
+                                {(this.state.selectedCourse.source === 'Udemy') && (
+                                  <View style={[styles.topMargin20]}>
+                                    <TouchableOpacity onPress={() => Linking.openURL("https://www.udemy.com")}>
+                                      <Image source={{ uri: udemyLogo}} style={[styles.square30,styles.contain]} />
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
                               </View>
                             </View>
                             <View style={[styles.topPadding]}>
-                              <Text style={[styles.headingText3,styles.centerText]}>{this.state.selectedCourse.title}</Text>
+                              <Text style={[styles.headingText3,styles.centerText]}>{(this.state.selectedCourse.name) ? this.state.selectedCourse.name : this.state.selectedCourse.title}</Text>
                               <Text style={[styles.topPadding,styles.centerText]}>{this.state.selectedCourse.description}.</Text>
                               {(this.state.selectedCourse.visible_instructors && this.state.selectedCourse.visible_instructors.length > 0) && (
                                 <View style={[styles.topPadding15,styles.bottomPadding5,styles.rowDirection,styles.flexWrap,styles.alignCenter]}>
