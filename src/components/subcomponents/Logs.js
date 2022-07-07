@@ -97,7 +97,7 @@ class Logs extends Component {
         });
 
         if (this.props.logType !== 'Goal') {
-          Axios.get('https://www.guidedcompass.com/api/counseling/session', { params: { emailId: email, type: 'Advisee' } })
+          Axios.get('https://www.guidedcompass.com/api/counseling/session', { params: { emailId: email, type: 'Advisee', hiddenToCareerSeeker: false } })
           .then((response) => {
 
               if (response.data.success) {

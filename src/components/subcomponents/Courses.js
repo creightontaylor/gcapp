@@ -713,19 +713,23 @@ class Courses extends Component {
 
               const courses = response.data.courses
               const filteredCourses = courses
-              let queryOrgCourses = true
+              let queryOrgCourses = null
+              if (courses && courses.length > 0) {
+                queryOrgCourses = true
+              }
+
               this.setState({ courses, queryOrgCourses })
 
               if (this.props.pageSource === 'Goal') {
                 if (this.props.competencies && this.props.competencies.length > 0) {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
                 } else {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
                 }
               } else {
-                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, true, org)
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
               }
 
             } else {
@@ -1985,7 +1989,7 @@ class Courses extends Component {
       const courseProgramMethod = item.programMethod
       const courseDifficultyLevel = item.difficultyLevel
 
-      const orgCode = this.state.orgCode
+      const orgCode = this.state.org
       const orgName = this.state.orgName
       console.log('description? ', courseDescription)
       const createdAt = new Date()
