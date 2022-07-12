@@ -1623,10 +1623,12 @@ class TakeAssessment extends Component {
       const cuFirstName = this.state.cuFirstName
       const cuLastName = this.state.cuLastName
       const emailId = this.state.emailId
+      const username = this.state.username
       const remoteAuth = this.state.remoteAuth
+      const orgCode = this.state.activeOrg
       const orgContactEmail = this.state.orgContactEmail
 
-      Axios.put('https://www.guidedcompass.com/api/assessment/results/calculate', { questions: this.state.questions, answers: totalResponses, type: this.state.type, ogSkillAnswers, cuFirstName, cuLastName, emailId, remoteAuth, orgContactEmail })
+      Axios.put('https://www.guidedcompass.com/api/assessment/results/calculate', { questions: this.state.questions, answers: totalResponses, type: this.state.type, ogSkillAnswers, cuFirstName, cuLastName, emailId, username, remoteAuth, orgCode, orgContactEmail })
       .then((response) => {
           console.log('query for assessment results attempted');
 

@@ -37,6 +37,8 @@ const subsidyIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com
 const moneyIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-dark.png';
 const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
 const dropdownArrow = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/dropdown-arrow.png';
+const opportunitiesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/opportunities-icon-dark.png';
+const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
 
 import ProjectDetails from '../subcomponents/ProjectDetails';
 import EditProject from './EditProject';
@@ -89,6 +91,7 @@ class OpportunityDetails extends Component {
 
     this.retrieveData = this.retrieveData.bind(this)
     this.formatDate = this.formatDate.bind(this)
+    this.changeOpportunities = this.changeOpportunities.bind(this)
     this.favoriteItem = this.favoriteItem.bind(this)
     this.voteOnItem = this.voteOnItem.bind(this)
     this.formChangeHandler = this.formChangeHandler.bind(this)
@@ -109,7 +112,7 @@ class OpportunityDetails extends Component {
   componentDidMount() {
     console.log('opp details did mount');
 
-    this.retrieveData()
+    this.retrieveData(this.props.selectedOpportunity)
 
   }
 
@@ -129,7 +132,7 @@ class OpportunityDetails extends Component {
 
       Axios.get('https://www.guidedcompass.com/api/postings/byid', { params: { _id: opportunityId } })
       .then((response) => {
-         console.log('Posting detail by id query attempted', response.data);
+         console.log('Posting detail by id query attempted');
 
          if (response.data.success) {
            console.log('successfully retrieved posting')
@@ -165,7 +168,7 @@ class OpportunityDetails extends Component {
     }
   }
 
-  retrieveData = async() => {
+  retrieveData = async(selectedOpportunity) => {
     try {
 
       // console.log('this is causing the error')
@@ -205,8 +208,8 @@ class OpportunityDetails extends Component {
         //   roleName, activeOrg, orgFocus, orgName, workM
         // })
 
-        if (this.props.selectedOpportunity) {
-          const selectedOpportunity = this.props.selectedOpportunity
+        if (selectedOpportunity) {
+          // const selectedOpportunity = this.props.selectedOpportunity
           // if (!activeOrg || activeOrg === '') {
           //   activeOrg = this.props.activeOrg
           // }
@@ -270,7 +273,7 @@ class OpportunityDetails extends Component {
 
               Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: selectedOpportunity.orgCode } })
               .then((response) => {
-                console.log('Org info query attempted', response.data);
+                console.log('Org info query attempted');
 
                   if (response.data.success) {
                     console.log('org info query worked for post')
@@ -305,7 +308,7 @@ class OpportunityDetails extends Component {
 
               Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email } })
               .then((response) => {
-                console.log('Applications query attempted 1', response.data);
+                console.log('Applications query attempted 1');
 
                   if (response.data.success) {
                     console.log('successfully retrieved applications')
@@ -342,7 +345,7 @@ class OpportunityDetails extends Component {
 
               Axios.get('https://www.guidedcompass.com/api/benchmarks/byid', { params: { _id: selectedOpportunity.benchmarkId } })
               .then((response) => {
-                 console.log('Benchmark query attempted', response.data);
+                 console.log('Benchmark query attempted');
 
                  if (response.data.success) {
                    console.log('successfully retrieved benchmark')
@@ -354,22 +357,21 @@ class OpportunityDetails extends Component {
 
 
                    if (selectedOpportunity.postType !== 'Track') {
-                     console.log('testing 0', selectedOpportunity)
+
                      let parentPostId = ''
                      if (selectedOpportunity.orgName === 'Bixel Exchange' || selectedOpportunity.orgCode === 'bixel') {
                        parentPostId = '5c703cc7c29ab2400a036875'
-                       console.log('testing 1')
+
                      } else if (selectedOpportunity.orgCode === 'unite-la') {
                        parentPostId = '5ee171c929bc432630ac7a95'
                      } else if (selectedOpportunity.orgName === 'LA Promise Fund') {
                        parentPostId = ''
                      }
 
-                     console.log('testing 2', parentPostId)
                      if (selectedOpportunity.isChild) {
                        Axios.get('https://www.guidedcompass.com/api/postings/byid', { params: { _id: parentPostId } })
                        .then((response) => {
-                          console.log('Posting detail by id query attempted', response.data);
+                          console.log('Posting detail by id query attempted');
 
                           if (response.data.success && !selectedOpportunity.isPromotional) {
                             console.log('successfully retrieved parent posting')
@@ -379,22 +381,22 @@ class OpportunityDetails extends Component {
 
                             let parentIndex = 0
                             for (let i = 1; i <= parentPost.tracks.length; i++) {
-                              console.log('testing this: ', parentPost.tracks[i - 1].benchmark.jobFunction, benchmark.jobFunction)
+
                               if (parentPost.tracks[i - 1].benchmark.jobFunction === benchmark.jobFunction) {
                                 parentIndex = i - 1
                               }
                             }
-                            console.log('testing 30', parentPost.tracks[parentIndex])
+
                             if (parentPost.tracks[parentIndex].approvedApplicants) {
-                              console.log('testing 4 ', email, parentPost.tracks[parentIndex])
+
                               if (parentPost.tracks[parentIndex].approvedApplicants.includes(email)) {
-                                console.log('testing 5')
+
                                 isApproved = true
                                 this.setState({ isApproved, parentIndex })
 
                                 Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email } })
                                 .then((response) => {
-                                  console.log('Applications query attempted 2', response.data);
+                                  console.log('Applications query attempted 2');
 
                                     if (response.data.success) {
                                       console.log('successfully retrieved applications')
@@ -443,7 +445,7 @@ class OpportunityDetails extends Component {
                             //this is the parentPost
                             Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email } })
                             .then((response) => {
-                              console.log('Applications query attempted 3', response.data);
+                              console.log('Applications query attempted 3');
 
                                 if (response.data.success) {
                                   console.log('successfully retrieved applications',response.data.applications.length)
@@ -480,7 +482,7 @@ class OpportunityDetails extends Component {
                        //this is the parentPost
                        Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email } })
                        .then((response) => {
-                         console.log('Applications query attempted 3', response.data);
+                         console.log('Applications query attempted 3');
 
                            if (response.data.success) {
                              console.log('successfully retrieved applications',response.data.applications.length)
@@ -488,7 +490,7 @@ class OpportunityDetails extends Component {
                              if (response.data.applications.length > 0) {
                                console.log('the array is greater than 0')
                                for (let i = 1; i <= response.data.applications.length; i++) {
-                                 console.log('compare the two: ', i, response.data.applications[i - 1].postingId, selectedOpportunity._id)
+                                 // console.log('compare the two: ', i, response.data.applications[i - 1].postingId, selectedOpportunity._id)
                                  if (response.data.applications[i - 1].postingId === selectedOpportunity._id) {
                                    const application = response.data.applications[i - 1]
                                    console.log('application: ', application)
@@ -516,7 +518,7 @@ class OpportunityDetails extends Component {
                    //this is the parentPost
                    Axios.get('https://www.guidedcompass.com/api/applications', { params: { emailId: email } })
                    .then((response) => {
-                     console.log('Applications query attempted 4', response.data);
+                     console.log('Applications query attempted 4');
 
                        if (response.data.success) {
                          console.log('successfully retrieved applications 1', response.data.applications.length)
@@ -906,7 +908,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/rsvps/bypost', { params: { postingId: selectedOpportunity._id } })
             .then((response) => {
-              console.log('Rsvp query attempted', response.data);
+              console.log('Rsvp query attempted');
 
               if (response.data.success) {
                 console.log('rsvp query worked')
@@ -934,7 +936,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/comments', { params: { parentPostId: selectedOpportunity._id } })
             .then((response) => {
-              console.log('Comments query attempted', response.data);
+              console.log('Comments query attempted');
 
                if (response.data.success) {
                  console.log('successfully retrieved comments')
@@ -1049,7 +1051,7 @@ class OpportunityDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email } })
             .then((response) => {
-              console.log('Projects query attempted in subcomponent', response.data);
+              console.log('Projects query attempted in subcomponent');
 
               if (response.data.success) {
                 console.log('successfully retrieved projects')
@@ -1400,6 +1402,25 @@ class OpportunityDetails extends Component {
     }
   }
 
+  changeOpportunities(selectedOpportunity) {
+    console.log('changeOpportunities called')
+
+    Axios.get('https://www.guidedcompass.com/api/postings/byid', { params: { _id: selectedOpportunity.postingId } })
+    .then((response) => {
+       console.log('Posting detail by id query attempted');
+
+       if (response.data.success) {
+         console.log('successfully retrieved posting')
+
+         const selectedOpportunity = response.data.posting
+         // this.setState({ selectedOpportunity })
+         this.retrieveData(selectedOpportunity)
+       }
+    }).catch((error) => {
+        console.log('Posting query did not work', error);
+    });
+  }
+
   favoriteItem(item) {
     console.log('favoriteItem called', item)
 
@@ -1420,7 +1441,7 @@ class OpportunityDetails extends Component {
       .then((response) => {
         console.log('attempting to save favorites')
         if (response.data.success) {
-          console.log('saved successfully', response.data)
+          console.log('saved successfully')
           //clear values
           this.setState({
             serverSuccessPlan: true,
@@ -1450,7 +1471,7 @@ class OpportunityDetails extends Component {
       .then((response) => {
         console.log('attempting to save favorites')
         if (response.data.success) {
-          console.log('saved successfully', response.data)
+          console.log('saved successfully')
           //clear values
           this.setState({
             serverSuccessPlan: true,
@@ -1490,7 +1511,7 @@ class OpportunityDetails extends Component {
 
       if (response.data.success) {
         //save values
-        console.log('Problem save worked', response.data);
+        console.log('Problem save worked');
 
         const serverSuccessMessage = 'Problem successfully posted!'
 
@@ -1661,7 +1682,7 @@ class OpportunityDetails extends Component {
 
             if (response.data.success) {
               //save values
-              console.log('Reserve worked', response.data);
+              console.log('Reserve worked');
 
               const message = 'You have successfully registered'
               this.setState({ serverPostSuccess: true, serverSuccessMessage: message, successMessage: message, disableSubmit: false, hasRegistered: true })
@@ -1754,7 +1775,7 @@ class OpportunityDetails extends Component {
 
             if (response.data.success) {
               //save values
-              console.log('Project save worked ', response.data);
+              console.log('Project save worked ');
               //report whether values were successfully saved
 
               let selectedOpportunity = this.state.selectedOpportunity
@@ -1855,7 +1876,7 @@ class OpportunityDetails extends Component {
 
               if (response.data.success) {
                 //save values
-                console.log('Project save worked ', response.data);
+                console.log('Project save worked ');
                 //report whether values were successfully saved
 
                 // this.setState({ serverSuccessMessage: 'Projects saved successfully!', disableSubmit: false })
@@ -1896,7 +1917,7 @@ class OpportunityDetails extends Component {
 
                   if (response.data.success) {
                     //save values
-                    console.log('Project submit worked here ', response.data);
+                    console.log('Project submit worked here ');
                     //report whether values were successfully saved
 
                     let selectedOpportunity = this.state.selectedOpportunity
@@ -2209,7 +2230,7 @@ class OpportunityDetails extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Reserve worked', response.data);
+          console.log('Reserve worked');
           this.setState({ serverPostSuccess: true, serverSuccessMessage: 'You have successfully reserved your spot!', disableSubmit: false, alreadyRSVPd: true })
 
         } else {
@@ -2969,8 +2990,35 @@ class OpportunityDetails extends Component {
                         <Text style={[styles.headingText6,styles.keepLineBreaks]}>{this.state.selectedOpportunity.description}</Text>
 
                         <View style={[styles.spacer]} /><View style={[styles.spacer]} />
-                      </View>
 
+                        {(this.state.selectedOpportunity.taggedPostings && this.state.selectedOpportunity.taggedPostings.length > 0) ? (
+                          <View style={[styles.row20]}>
+                            <Text style={[styles.descriptionText2,styles.bottomMargin]}>Tagged Opportunities</Text>
+                            {this.state.selectedOpportunity.taggedPostings.map((value, index) =>
+                              <View style={[styles.bottomMargin20]}>
+                                <TouchableOpacity style={[styles.flex1, styles.rowDirection]} onPress={() => this.changeOpportunities(value)}>
+                                  <View style={[styles.width30]}>
+                                    <Text style={[styles.descriptionText1,styles.ctaColor]}>{index + 1}.</Text>
+                                  </View>
+                                  <View style={[styles.width40]}>
+                                    <Image source={(value.imageURL) ? { uri: value.imageURL} : { uri: opportunitiesIconDark}} style={[styles.square30,styles.contain]} />
+                                  </View>
+                                  <View style={[styles.calcColumn150]}>
+                                    <Text style={[styles.descriptionText1,styles.ctaColor]}>{value.title}{(value.employerName) && ' @ '+ value.employerName}</Text>
+                                    <Text style={[styles.descriptionText4,styles.topPadding5]}>{value.postType} created on {convertDateToString(value.createdAt,'date')}</Text>
+                                  </View>
+                                  <View style={[styles.width30,styles.topMargin5]}>
+                                    <Image source={{ uri: arrowIndicatorIcon }} style={[styles.square15,styles.contain]} />
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            )}
+                          </View>
+                        ) : (
+                          <View />
+                        )}
+                      </View>
+                      {/*
                       {(this.state.activeOrg !== 'exp') && (
                         <View>
                           <View style={[styles.spacer]}/><View style={[styles.spacer]}/>
@@ -3030,7 +3078,7 @@ class OpportunityDetails extends Component {
                             </View>
                           )}
                         </View>
-                      )}
+                      )}*/}
 
                       {(!this.state.selectedOpportunity.isPromotional && this.state.benchmark && this.state.selectedOpportunity.workflowType !== 'Common App') && (
                         <View>
