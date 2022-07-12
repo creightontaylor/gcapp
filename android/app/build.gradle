@@ -134,8 +134,8 @@ android {
         applicationId "com.guidedcompass"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 70
-        versionName "2.59"
+        versionCode 71
+        versionName "2.60"
     }
     splits {
         abi {
