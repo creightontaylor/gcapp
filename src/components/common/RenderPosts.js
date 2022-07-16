@@ -1629,7 +1629,7 @@ class RenderPosts extends Component {
                           <View style={[styles.spacer]} />
 
                           {(this.state.posts && this.state.activeOrg) && (
-                            <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} navigation={this.props.navigation} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} />
+                            <SubComments selectedGroup={null} selectedGroupPost={this.state.posts[this.state.selectedIndex]} activeOrg={this.state.activeOrg} accountCode={this.state.accountCode} comments={this.state.comments} postingOrgCode={this.state.activeOrg} postingOrgName={this.state.orgName} orgContactEmail={this.state.orgContactEmail} pictureURL={this.state.pictureURL} orgLogo={this.state.orgLogo} navigation={this.props.navigation} pageSource={"newsFeed"} employerLogo={this.props.employerLogo} employerName={this.props.employerName} jobTitle={this.props.jobTitle} closeModal={this.closeModal} />
                           )}
 
                         </View>

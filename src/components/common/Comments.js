@@ -25,6 +25,7 @@ class Comments extends Component {
       this.formChangeHandler = this.formChangeHandler.bind(this)
       this.postComment = this.postComment.bind(this)
       this.renderComments = this.renderComments.bind(this)
+      this.navigateToProfile = this.navigateToProfile.bind(this)
 
     }
 
@@ -57,6 +58,7 @@ class Comments extends Component {
         const cuLastName = await AsyncStorage.getItem('lastName');
         const orgFocus = await AsyncStorage.getItem('orgFocus');
         const roleName = await AsyncStorage.getItem('roleName');
+        const username = await AsyncStorage.getItem('username');
 
         const selectedOpportunity = this.props.selectedOpportunity
         const activeOrg = this.props.activeOrg
@@ -187,6 +189,14 @@ class Comments extends Component {
       }
     }
 
+    navigateToProfile(index) {
+      console.log('navigateToProfile called', index)
+
+      this.props.closeModal()
+      this.props.navigation.navigate("Profile", { username: this.state.comments[index].username})
+
+    }
+
     renderComments() {
       console.log('renderComments called', this.state.comments)
 
@@ -234,17 +244,19 @@ class Comments extends Component {
             <View style={styles.spacer} />
 
             <View style={styles.rowDirection}>
-              <View style={styles.rightPadding8}>
-                <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} style={styles.profileThumbnail50}/>
-              </View>
+              <TouchableOpacity onPress={() => this.navigateToProfile(i - 1)} disabled={(this.state.comments[i - 1].username) ? false : true}>
+                <View style={styles.rightPadding8}>
+                  <Image source={(this.state.comments[i - 1].pictureURL) ? { uri: this.state.comments[i - 1].pictureURL} : { uri: profileIconBig}} style={styles.profileThumbnail50}/>
+                </View>
+              </TouchableOpacity>
 
               <View style={[styles.calcColumn118,styles.commentBubble2,commentBackgroundColor]}>
-                <View style={styles.fullWidth}>
-                  <Text style={styles.descriptionText1}>{this.state.comments[i - 1].firstName} {this.state.comments[i - 1].lastName}</Text>
-
-                  <Text style={styles.descriptionText2}>{this.state.comments[i - 1].roleName}</Text>
-
-                </View>
+                <TouchableOpacity onPress={() => this.navigateToProfile(i - 1)} disabled={(this.state.comments[i - 1].username) ? false : true}>
+                  <View style={styles.fullWidth}>
+                    <Text style={styles.standardText}>{this.state.comments[i - 1].firstName} {this.state.comments[i - 1].lastName}</Text>
+                    <Text style={styles.descriptionText2}>{this.state.comments[i - 1].roleName}</Text>
+                  </View>
+                </TouchableOpacity>
 
                 <View style={[styles.fullWidth,styles.rowDirection]}>
                   <View>
@@ -448,6 +460,7 @@ class Comments extends Component {
       this.setState({ serverErrorMessage: '', serverSuccessMessage: '', disableSubmit: true })
 
       //submit the selected project
+      const username = this.state.username
       const email = this.state.emailId
       let firstName = this.state.cuFirstName
       let lastName = this.state.cuLastName
@@ -482,13 +495,13 @@ class Comments extends Component {
         let pictureURL = this.state.pictureURL
 
         const reply = {
-            firstName, lastName, email, roleName, comment,
+            firstName, lastName, email, username, roleName, comment,
             orgCode, orgName, orgContactEmail,
             pictureURL, createdAt, updatedAt
         }
 
         Axios.post('https://www.guidedcompass.com/api/comments/reply', {
-          _id, firstName, lastName, email,
+          _id, firstName, lastName, email, username, pictureURL,
           orgCode, orgName, orgContactEmail,
           reply
         }).then((response) => {
@@ -548,7 +561,7 @@ class Comments extends Component {
         }
 
         const commentObject = {
-          commentId, commentType, email, firstName, lastName, roleName, comment, pictureURL, likes, replies,
+          commentId, commentType, email, firstName, lastName, username, roleName, comment, pictureURL, likes, replies,
           parentPostId, parentSubmissionId, createdAt, updatedAt, submissionName, contributorFirstName, contributorEmail,
           orgCode, orgName, orgContactEmail
         }
@@ -666,7 +679,7 @@ class Comments extends Component {
         }
 
         const commentObject = {
-          commentId, commentType, email, firstName, lastName, roleName, comment, pictureURL, likes, replies,
+          commentId, commentType, email, firstName, lastName, username, roleName, comment, pictureURL, likes, replies,
           parentPostId, parentCommentId, createdAt, updatedAt, postingTitle, contributorFirstName, contributorEmail,
           isGroup,
           orgCode, orgName, orgContactEmail
@@ -725,7 +738,7 @@ class Comments extends Component {
                       <Image source={(this.state.pictureURL) ? { uri: this.state.pictureURL} : { uri: profileIconBig}} style={[styles.square42,styles.contain,{ borderRadius: 21 }]} />
                     </View>
                   </View>
-                  <View style={[styles.calcColumn180,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
+                  <View style={[styles.calcColumn190,styles.borderRadius10,styles.transparentBorder,styles.padding10]}>
                     <TextInput
                       style={[styles.textInput,styles.flex1]}
                       onChangeText={(text) => this.formChangeHandler('comment',text)}
