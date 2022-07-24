@@ -204,12 +204,17 @@ class AddWorkspaces extends Component {
       e.preventDefault()
     }
 
-    if (value.cta === 'Join Workspace') {
+    let cta = 'Join Workspace'
+    if (!value.isOpen) {
+      cta = 'Request Access'
+    }
+
+    if (cta === 'Join Workspace') {
       if (value.signUpFieldsRequired && value.signUpFieldsRequired.length > 0) {
         if (passedSignUpFields) {
-          const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
+          const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
-          if (returnedValue) {
+          if (returnedValue.success) {
             let myOrgs = this.state.myOrgs
             if (returnedValue.success) {
               if (myOrgs) {
@@ -231,7 +236,11 @@ class AddWorkspaces extends Component {
               this.props.navigation.navigate('OpportunityDetails', { selectedOpportunity: null, objectId: this.props.opportunityId })
             }
           } else {
-            return this.setState({ errorMessage: 'There was an unknown error' })
+            let errorMessage = ''
+            if (returnedValue) {
+              errorMessage = returnedValue.errorMessage
+            }
+            this.setState({ errorMessage: 'There was an error: ', errorMessage })
           }
         } else {
           // this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: true, showOrgDetails: false })
@@ -239,9 +248,9 @@ class AddWorkspaces extends Component {
         }
 
       } else {
-        const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, null)
+        const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, cta, value.contactFirstName, value.contactLastName, value.contactEmail, null)
         console.log('returnedValue: ', returnedValue)
-        if (returnedValue) {
+        if (returnedValue.success) {
           let myOrgs = this.state.myOrgs
           if (returnedValue.success) {
             if (myOrgs) {
@@ -258,18 +267,22 @@ class AddWorkspaces extends Component {
           this.props.passOrgs(value.orgCode, myOrgs, value.orgFocus, value.orgName, value.webLogoURIColor)
 
         } else {
-          this.setState({ errorMessage: 'There was an unknown error' })
+          let errorMessage = ''
+          if (returnedValue) {
+            errorMessage = returnedValue.errorMessage
+          }
+          this.setState({ errorMessage: 'There was an error: ', errorMessage })
         }
       }
 
-    } else if (value.cta === 'Request Access' || value.cta === 'Join Waitlist') {
+    } else  {
       console.log('request access')
 
       if (value.signUpFields && value.signUpFields.length > 0) {
         if (passedSignUpFields) {
-          const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
+          const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, cta, value.contactFirstName, value.contactLastName, value.contactEmail, passedSignUpFields)
           // console.log('returnedValue: ', returnedValue)
-          if (returnedValue) {
+          if (returnedValue.success) {
             let joinRequests = this.state.joinRequests
             if (returnedValue.success) {
               if (joinRequests) {
@@ -281,7 +294,11 @@ class AddWorkspaces extends Component {
 
             this.setState({ errorMessage: returnedValue.errorMessage, successMessage: returnedValue.successMessage, joinRequests, modalIsOpen: false, showSignUpFields: false })
           } else {
-            this.setState({ errorMessage: 'There was an unknown error' })
+            let errorMessage = ''
+            if (returnedValue) {
+              errorMessage = returnedValue.errorMessage
+            }
+            this.setState({ errorMessage: 'There was an error: ', errorMessage })
           }
         } else {
           this.setState({ modalIsOpen: true, orgSelected: value, showSignUpFields: false })
@@ -289,9 +306,9 @@ class AddWorkspaces extends Component {
 
       } else {
 
-        const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, value.cta, value.contactFirstName, value.contactLastName, value.contactEmail, null)
+        const returnedValue = await requestAccessToWorkspace(this.state.emailId, value.orgCode, value.orgName, cta, value.contactFirstName, value.contactLastName, value.contactEmail, null)
         console.log('returnedValue: ', returnedValue)
-        if (returnedValue) {
+        if (returnedValue.success) {
           let joinRequests = this.state.joinRequests
           if (returnedValue.success) {
             if (joinRequests) {
@@ -304,7 +321,11 @@ class AddWorkspaces extends Component {
           this.setState({ errorMessage: returnedValue.errorMessage, successMessage: returnedValue.successMessage, joinRequests })
 
         } else {
-          this.setState({ errorMessage: 'There was an unknown error' })
+          let errorMessage = ''
+          if (returnedValue) {
+            errorMessage = returnedValue.errorMessage
+          }
+          this.setState({ errorMessage: 'There was an error: ', errorMessage })
         }
       }
     }
@@ -859,7 +880,7 @@ class AddWorkspaces extends Component {
                                 </View>
                               </View>
 
-                              {(value.cta === 'Join Workspace') ? (
+                              {(value.isOpen) ? (
                                 <View style={[styles.bottomPadding]}>
                                   <TouchableOpacity style={(this.state.myOrgs && this.state.myOrgs.includes(value.orgCode)) ? [styles.btnSquarish,styles.ctaBorder,styles.flexCenter] : [styles.btnSquarish,styles.ctaBackgroundColor,styles.flexCenter]} disabled={(this.state.myOrgs && this.state.myOrgs.includes(value.orgCode)) ? true : false} onPress={(e) => this.submitRequest(e, value, null, true)}>
                                     <View style={[styles.rowDirection,styles.flexCenter]}>
@@ -880,7 +901,7 @@ class AddWorkspaces extends Component {
                                         <Image source={(this.state.joinRequests && this.state.joinRequests.includes(value.orgCode)) ? { uri: timeIconBlue} : { uri: addIconWhite}} style={[styles.square12,styles.contain]}/>
                                       </View>
                                       <View>
-                                        <Text style={(this.state.joinRequests && this.state.joinRequests.includes(value.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.joinRequests && this.state.joinRequests.includes(value.orgCode)) ? "Requested Access" : value.cta }</Text>
+                                        <Text style={(this.state.joinRequests && this.state.joinRequests.includes(value.orgCode)) ? [styles.descriptionText1,styles.ctaColor] : [styles.descriptionText1,styles.whiteColor]}>{(this.state.joinRequests && this.state.joinRequests.includes(value.orgCode)) ? "Requested Access" : 'Request Access' }</Text>
                                       </View>
                                     </View>
                                   </TouchableOpacity>

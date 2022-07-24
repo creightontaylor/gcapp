@@ -542,7 +542,7 @@ class RenderPosts extends Component {
               {(value.profileItem) && (
                 <View style={styles.bottomPadding}>
                   <View style={styles.ctaBorder}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('profile', { profileId: value.profileItem.objectId })} style={[styles.padding20, styles.fullWidth]}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile', { profileId: value.profileItem.objectId, username: value.username })} style={[styles.padding20, styles.fullWidth]}>
                       <View style={[styles.padding20, styles.rowDirection]}>
                         <View style={styles.width60}>
                           <Image source={(value.profileItem.imageURL) ? { uri: value.profileItem.imageURL } : { uri: defaultProfileItemIcon}} style={styles.square50} />
@@ -558,7 +558,7 @@ class RenderPosts extends Component {
                           {(value.profileItem.category === 'Education') && (
                             <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{value.profileItem.startDate} - {value.profileItem.endDate}</Text>
                           )}
-                          {(value.profileItem.category === 'Career Goal') && (
+                          {(value.profileItem.category === 'Career Goal' && value.profileItem.deadline) && (
                             <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>Deadline: {value.profileItem.deadline}</Text>
                           )}
                           {(value.profileItem.category === 'Passion') && (
@@ -861,7 +861,7 @@ class RenderPosts extends Component {
                       {(value.originalPost.profileItem.category === 'Education') && (
                         <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>{value.originalPost.profileItem.startDate} - {value.originalPost.profileItem.endDate}</Text>
                       )}
-                      {(value.originalPost.profileItem.category === 'Career Goal') && (
+                      {(value.originalPost.profileItem.category === 'Career Goal' && value.originalPost.profileItem.deadline) && (
                         <Text style={[styles.descriptionText3, styles.descriptionTextColor]}>Deadline: {value.originalPost.profileItem.deadline}</Text>
                       )}
                       {(value.originalPost.profileItem.category === 'Passion') && (

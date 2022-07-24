@@ -1343,6 +1343,8 @@ class EditProfileDetails extends Component {
           certificates[index]['pathways'] = selectedCertificateOption.pathways
           certificates[index]['industry'] = selectedCertificateOption.industry
           certificates[index]['price'] = selectedCertificateOption.price
+          certificates[index]['createdAt'] = new Date()
+          certificates[index]['updatedAt'] = new Date()
         }
       }
 
@@ -3639,9 +3641,9 @@ class EditProfileDetails extends Component {
       console.log('adding a certificate')
       let certificates = this.state.certificates
       if (certificates) {
-        certificates.unshift({ name: '' })
+        certificates.unshift({ name: '', createdAt: new Date(), updatedAt: new Date() })
       } else {
-        certificates = [{ name: '' }]
+        certificates = [{ name: '', createdAt: new Date(), updatedAt: new Date() }]
       }
 
       this.setState({ certificates })

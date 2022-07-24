@@ -592,8 +592,8 @@ class Walkthrough extends Component {
                               <Image source={{ uri: socialIconBlue}} style={[styles.square40,styles.contain]} />
                             </View>
                             <View style={[styles.calcColumn105]}>
-                              <Text style={[styles.headingText4,styles.row5]}>Build Your Supportive Community</Text>
-                              <Text style={[styles.descriptionText1]}>Connect with others, join accountability groups, attend career events, get feedback on projects, follow employers, and get support from {this.state.orgName} staff.</Text>
+                              <Text style={[styles.headingText4,styles.row5]}>Build Your Community</Text>
+                              <Text style={[styles.descriptionText1]}>Join groups, attend events, crowdsource suggestions on goals/projects, and get referred for opportunities.</Text>
                             </View>
 
                           </View>
@@ -606,7 +606,7 @@ class Walkthrough extends Component {
                             </View>
                             <View style={[styles.calcColumn105]}>
                               <Text style={[styles.headingText4,styles.row5]}>Prepare for Your Best Life</Text>
-                              <Text style={[styles.descriptionText1]}>Set career goals, take career assessments, explore career paths, make financial plans, get personalized resources, get interview feedback, and submit projects for feedback.</Text>
+                              <Text style={[styles.descriptionText1]}>Explore career paths, set goals, collect feedback goal/project suggestions, and track progress.</Text>
                             </View>
 
                           </View>
@@ -618,8 +618,8 @@ class Walkthrough extends Component {
                               <Image source={{ uri: moneyIconBlue}} style={[styles.square40,styles.contain]} />
                             </View>
                             <View style={[styles.calcColumn105]}>
-                              <Text style={[styles.headingText4,styles.row5]}>Land Paid Work Opportunities</Text>
-                              <Text style={[styles.descriptionText1]}>Activities in your portal strengthen your candidacy, and make it easier to recommend you for specific opportunities. Import your profile to apply for paid work opportunities.</Text>
+                              <Text style={[styles.headingText4,styles.row5]}>Land Paid Opportunities</Text>
+                              <Text style={[styles.descriptionText1]}>Import your continuously improved profile into opportunities, and get referred by advocates.</Text>
                             </View>
 
                           </View>
@@ -638,13 +638,6 @@ class Walkthrough extends Component {
 
                           <View style={[styles.spacer]} />
 
-                          {(this.state.activeOrg === 'guidedcompass') && (
-                            <View style={[styles.calcColumn60]}>
-                              <Text style={[styles.descriptionText2,styles.centerText]}>Were you referred by one of our workforce partners?</Text>
-                              <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
-                              <TouchableOpacity style={[styles.row5]} onPress={() => this.setState({ modalIsOpen: true, showAddWorkspaces: true })}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline,styles.boldText,styles.centerText]}>Join Their Community</Text></TouchableOpacity>
-                            </View>
-                          )}
                         </View>
 
                       </View>
@@ -652,6 +645,17 @@ class Walkthrough extends Component {
 
                     </View>
                   </View>
+
+                  {(this.state.activeOrg === 'guidedcompass') && (
+                    <View style={[styles.calcColumn60]}>
+                      <View style={[styles.lightHorizontalLine]} />
+                      <View style={[styles.spacer]} /><View style={[styles.spacer]} />
+
+                      <Text style={[styles.descriptionText2,styles.centerText]}>Were you referred by one of our workforce partners?</Text>
+                      <View style={[styles.spacer]}/><View style={[styles.halfSpacer]}/>
+                      <TouchableOpacity style={[styles.row5]} onPress={() => this.setState({ modalIsOpen: true, showAddWorkspaces: true })}><Text style={[styles.ctaColor,styles.underlineText,styles.offsetUnderline,styles.boldText,styles.centerText]}>Join Their Community</Text></TouchableOpacity>
+                    </View>
+                  )}
 
                   {(this.state.requireReferrer) && (
                     <View style={[styles.calcColumn60,styles.topMargin20]}>

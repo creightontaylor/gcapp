@@ -3137,7 +3137,7 @@ class Apply extends Component {
                       )}
                     </View>
 
-                    {(this.state.selectedPosting.orgCode === this.state.activeOrg || (this.state.placementPartners && this.state.placementPartners.includes(this.state.activeOrg)) || (this.state.postingOrgCode === 'sandbox') || this.state.selectedPosting.orgCode !== 'unite-la') ? (
+                    {(this.state.selectedPosting.orgCode === this.state.activeOrg || (this.state.placementPartners && this.state.placementPartners.includes(this.state.activeOrg)) || (this.state.postingOrgCode === 'sandbox')) ? (
                       <View>
                         {(this.state.application) && (
                           <View style={[styles.calcColumn60]}>
