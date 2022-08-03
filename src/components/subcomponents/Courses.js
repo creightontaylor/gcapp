@@ -56,9 +56,11 @@ const careerMatchesIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazona
 const favoriteIconSelected = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorite-icon-selected.png';
 const commentIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/comment-icon-dark.png';
 const checkmarkIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon.png';
+const checkmarkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/checkmark-icon-white.png';
 const skillsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/skills-icon-blue.png';
 const assessmentsIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/assessments-icon-blue.png';
 const courseIconBlue = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png";
+const industryIconDark = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/industry-icon-dark.png';
 
 import SubComments from '../common/Comments';
 import SubPicker from '../common/SubPicker';
@@ -715,7 +717,7 @@ class Courses extends Component {
           let excludeOrgCourses = false
           let sources = ['Udemy']
 
-          Axios.get('https://www.guidedcompass.com/api/courses', { orgCode, isActive: true, source, excludeOrgCourses, resLimit: 100 } })
+          Axios.get('https://www.guidedcompass.com/api/courses', { params: { orgCode, isActive: true, source, excludeOrgCourses, resLimit: 100 } })
           .then((response) => {
             console.log('Org courses info query attempted-----------------------------', response.data.success, org);
 
@@ -2299,7 +2301,55 @@ class Courses extends Component {
                           </TouchableOpacity>
                         </View>
                       </View>
+                      {/*
+                      <View style={[styles.fullScreenWidth,styles.ctaHorizontalLine,styles.row15,styles.whiteBackground, styles.leftPadding30]}>
+                        <ScrollView style={[styles.carousel]} horizontal={true}>
+                        </ScrollVieew>
+                      </View>*/}
 
+                      <View style={[styles.fullScreenWidth,styles.topMargin15, styles.leftPadding30]}>
+                        <ScrollView style={[styles.carousel]} horizontal={true}>
+                          {(this.state.orgName) && (
+                            <TouchableOpacity style={(this.state.sources && this.state.sources.includes('OrgCourses')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('OrgCourses')}>
+                              <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo } : { uri: industryIconDark }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                              <Text style={[styles.ctaColor,styles.standardText]}>Recommended</Text>
+                            </TouchableOpacity>
+                          )}
+                          {(this.state.sources && this.state.sources.includes('OrgCourses')) && (
+                            <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.padding3,styles.square22, { borderRadius: 11 }]}>
+                              <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                            </View>
+                          )}
+                          <TouchableOpacity style={(this.state.sources && this.state.sources.includes('Udemy')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('Udemy')}>
+                            <Image source={{ uri: udemyLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                            <Text style={[styles.ctaColor,styles.standardText]}>Udemy</Text>
+                          </TouchableOpacity>
+                          {(this.state.sources && this.state.sources.includes('Udemy')) && (
+                            <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.padding3,styles.square22, { borderRadius: 11 }]}>
+                              <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                            </View>
+                          )}
+                          <TouchableOpacity style={(this.state.sources && this.state.sources.includes('Coursera')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('Coursera')}>
+                            <Image source={{ uri: courseraLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                            <Text style={[styles.ctaColor,styles.standardText]}>Coursera</Text>
+                          </TouchableOpacity>
+                          {(this.state.sources && this.state.sources.includes('Coursera')) && (
+                            <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.padding3,styles.square22, { borderRadius: 11 }]}>
+                              <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                            </View>
+                          )}
+                          <TouchableOpacity style={(this.state.sources && this.state.sources.includes('Udacity')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('Udacity')}>
+                            <Image source={{ uri: udacityLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                            <Text style={[styles.ctaColor,styles.standardText]}>Udacity</Text>
+                          </TouchableOpacity>
+                          {(this.state.sources && this.state.sources.includes('Udacity')) && (
+                            <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.padding3,styles.square22, { borderRadius: 11 }]}>
+                              <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                            </View>
+                          )}
+                        </ScrollView>
+                      </View>
+                      {/*
                       <View style={[styles.topMargin15,styles.rowDirection]}>
                         {(this.state.orgName) && (
                           <TouchableOpacity style={(this.state.sources && this.state.sources.includes('OrgCourses')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('OrgCourses')}>
@@ -2319,7 +2369,7 @@ class Courses extends Component {
                         {(this.state.sources && this.state.sources.includes('Udemy')) && (
                           <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
                             <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
-                          </Text>
+                          </View>
                         )}
                         <TouchableOpacity className={(this.state.sources && this.state.sources.includes('Coursera')) ? "btn btn-squarish-white" : "btn btn-squarish-white right-margin"} onClick={() => this.toggleMetaFilter('Coursera')} data-tip={"Filter for Coursera Courses"}>
                           <Image source={{ uri: courseraLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
@@ -2328,7 +2378,7 @@ class Courses extends Component {
                         {(this.state.sources && this.state.sources.includes('Coursera')) && (
                           <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
                             <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
-                          </Text>
+                          </View>
                         )}
                         <TouchableOpacity className={(this.state.sources && this.state.sources.includes('Udacity')) ? "btn btn-squarish-white" : "btn btn-squarish-white right-margin"} onClick={() => this.toggleMetaFilter('Udacity')} data-tip={"Filter for Udacity Courses"}>
                           <Image source={{ uri: udacityLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
@@ -2337,9 +2387,9 @@ class Courses extends Component {
                         {(this.state.sources && this.state.sources.includes('Udacity')) && (
                           <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
                             <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
-                          </Text>
+                          </View>
                         )}
-                      </View>
+                      </View>*/}
                     </View>
                   )}
                 </View>
