@@ -10,6 +10,8 @@ const addIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImag
 const recommendIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/recommend-icon.png';
 const dragIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/drag-icon.png';
 const udemyLogo = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/udemy-logo.png';
+const courseraLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/coursera-logo.png";
+const udacityLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/udacity-logo.png";
 const timeIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/time-icon-blue.png';
 const moneyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/money-icon-blue.png';
 const difficultyIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/difficulty-icon-blue.png';
@@ -175,6 +177,7 @@ class Courses extends Component {
     this.renderBrowseCourses = this.renderBrowseCourses.bind(this)
     this.closeModal = this.closeModal.bind(this)
     this.enrollInCourse = this.enrollInCourse.bind(this)
+    this.toggleMetaFilter = this.toggleMetaFilter.bind(this)
 
   }
 
@@ -704,7 +707,15 @@ class Courses extends Component {
         if (this.props.source === 'Udemy') {
           this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
         } else {
-          Axios.get('https://www.guidedcompass.com/api/courses', { params: { orgCode: org, isActive: true } })
+
+          let orgCode = org
+          let source = null
+          let queryOrgCourses = null
+          let queryUdemyCourses = true
+          let excludeOrgCourses = false
+          let sources = ['Udemy']
+
+          Axios.get('https://www.guidedcompass.com/api/courses', { orgCode, isActive: true, source, excludeOrgCourses, resLimit: 100 } })
           .then((response) => {
             console.log('Org courses info query attempted-----------------------------', response.data.success, org);
 
@@ -713,23 +724,32 @@ class Courses extends Component {
 
               const courses = response.data.courses
               const filteredCourses = courses
-              let queryOrgCourses = null
-              if (courses && courses.length > 0) {
-                queryOrgCourses = true
+              queryOrgCourses = true
+              queryUdemyCourses = false
+              const source = this.props.source
+
+              if (this.props.source) {
+                sources = [this.props.source]
+              } else {
+                if (excludeOrgCourses) {
+                  sources = []
+                } else {
+                  sources = ['OrgCourses']
+                }
               }
 
-              this.setState({ courses, queryOrgCourses })
+              this.setState({ courses, filteredCourses, queryOrgCourses, queryUdemyCourses, source, sources })
 
               if (this.props.pageSource === 'Goal') {
                 if (this.props.competencies && this.props.competencies.length > 0) {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org, null, queryUdemyCourses, sources)
                 } else {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org, null, queryUdemyCourses, sources)
                 }
               } else {
-                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org)
+                // this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, org, null, queryUdemyCourses, sources)
               }
 
             } else {
@@ -738,13 +758,13 @@ class Courses extends Component {
               if (this.props.pageSource === 'Goal') {
                 if (this.props.competencies && this.props.competencies.length > 0) {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
                 } else {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
                 }
               } else {
-                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
               }
             }
 
@@ -754,13 +774,13 @@ class Courses extends Component {
               if (this.props.pageSource === 'Goal') {
                 if (this.props.competencies && this.props.competencies.length > 0) {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                  this.pullCourses(this.props.competencies[0].name, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
                 } else {
                   // this.getCourseMatches(this.props.selectedGoal)
-                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                  this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
                 }
               } else {
-                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, null, null, null)
+                this.pullCourses(this.state.selectedSkill, this.state.priceValue, this.state.durationValue, this.state.difficultyLevelValue, queryOrgCourses, null, null, queryUdemyCourses, sources)
               }
           });
         }
@@ -771,8 +791,8 @@ class Courses extends Component {
      }
   }
 
-  pullCourses(searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject) {
-    console.log('pullCourses called', searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject)
+  pullCourses(searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, queryUdemyCourses, sources) {
+    console.log('pullCourses called', searchValue, priceValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, queryUdemyCourses, sources)
 
     this.setState({ animating: true, errorMessage: null, successMessage: null })
 
@@ -799,7 +819,19 @@ class Courses extends Component {
       difficultyLevelValue = difficultyLevelValue.toLowerCase()
     }
 
-    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, isActive: true } })
+    let excludeOrgCourses = false
+    if (sources && !sources.includes('OrgCourses')) {
+      orgCode = null
+      excludeOrgCourses = true
+    }
+
+    if (sources && sources.length === 1 && sources[0] === 'Udemy') {
+      queryUdemyCourses = true
+    } else if ((sources && sources.length > 1) || (sources && sources.length === 1 && sources[0] !== 'Udemy')) {
+      queryUdemyCourses = false
+    }
+
+    Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, excludeOrgCourses, orgCode, filterObject, queryUdemyCourses, sources, isActive: true, resLimit: 100 } })
     .then((response) => {
       console.log('Courses query attempted');
 
@@ -810,12 +842,12 @@ class Courses extends Component {
 
             const courses = response.data.responseData.results
             const filteredCourses = courses
-            this.setState({ courses, filteredCourses, animating: false })
+            this.setState({ courses, filteredCourses, sources, queryUdemyCourses, animating: false })
           }
 
         } else {
           console.log('no course data found', response.data.message)
-          this.setState({ animating: false, errorMessage: 'Found no courses that match the criteria'})
+          this.setState({ sources, queryUdemyCourses, animating: false, errorMessage: 'Found no courses that match the criteria'})
         }
 
     }).catch((error) => {
@@ -831,11 +863,11 @@ class Courses extends Component {
       console.log('in search')
       const searchString = eventValue
       this.setState({ searchString, animating: true })
-      this.filterResults(eventValue, '', null, null, true)
+      this.filterResults(eventValue, '', null, null, true, null, this.state.sources)
     } else if (eventName === 'searchReferees') {
       const searchString = eventValue
       this.setState({ searchString, animating: true })
-      this.filterResults(eventValue, '', null, null, true, 'referee')
+      this.filterResults(eventValue, '', null, null, true, 'referee',this.state.sources)
     } else if (eventName.includes('filter|')) {
 
       if (this.state.showFilters) {
@@ -903,7 +935,7 @@ class Courses extends Component {
 
         this.setState({ filters, itemFilters, animating: true, searchString, itemSorters })
 
-        this.filterResults(this.state.searchString, eventValue, filters, index, false)
+        this.filterResults(this.state.searchString, eventValue, filters, index, false, null, this.state.sources)
       }
 
     } else if (eventName.includes('sort|')) {
@@ -1096,8 +1128,8 @@ class Courses extends Component {
     }
   }
 
-  filterResults(searchString, filterString, filters, index, search, searchType) {
-    console.log('filterResults called', searchString, filterString, filters, index, search, searchType)
+  filterResults(searchString, filterString, filters, index, search, searchType, sources) {
+    console.log('filterResults called', searchString, filterString, filters, index, search, searchType, sources)
 
     if (searchType === 'referee') {
 
@@ -1158,7 +1190,20 @@ class Courses extends Component {
       }
 
       const queryOrgCourses = this.state.queryOrgCourses
-      const orgCode = this.state.org
+      let queryUdemyCourses = this.state.queryUdemyCourses
+      if (sources && sources.length === 1 && sources[0] === 'Udemy') {
+        queryUdemyCourses = true
+      } else if ((sources && sources.length > 1) || (sources && sources.length === 1 && sources[0] !== 'Udemy')) {
+        queryUdemyCourses = false
+      }
+
+      let excludeOrgCourses = false
+      let orgCode = this.state.org
+      if (sources && !sources.includes('OrgCourses')) {
+        orgCode = null
+        excludeOrgCourses = true
+      }
+
       const filterObject = {
         selectedSkill: this.state.selectedSkill,
         priceValue: this.state.priceValue,
@@ -1172,7 +1217,7 @@ class Courses extends Component {
 
         self.setState({ animating: true, errorMessage: null, successMessage: null })
 
-        Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue: searchString, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, filterObject, isActive: true } })
+        Axios.get('https://www.guidedcompass.com/api/courses/search', { params: { searchValue: searchString, categoryValue, subcategoryValue, priceValue, ratingValue, durationValue, difficultyLevelValue, queryOrgCourses, orgCode, excludeOrgCourses, filterObject, queryUdemyCourses, sources, isActive: true, resLimit: 100 } })
         .then((response) => {
           console.log('Courses query attempted');
 
@@ -1183,12 +1228,12 @@ class Courses extends Component {
 
                 const courses = response.data.responseData.results
                 const filteredCourses = courses
-                self.setState({ courses, filteredCourses, animating: false })
+                self.setState({ courses, filteredCourses, sources, queryUdemyCourses, animating: false })
               }
 
             } else {
               console.log('no course data found', response.data.message)
-              self.setState({ animating: false, errorMessage: 'No courses were found that match that criteria' })
+              self.setState({ sources, queryUdemyCourses, animating: false, errorMessage: 'No courses were found that match that criteria' })
             }
 
         }).catch((error) => {
@@ -2254,6 +2299,47 @@ class Courses extends Component {
                           </TouchableOpacity>
                         </View>
                       </View>
+
+                      <View style={[styles.topMargin15,styles.rowDirection]}>
+                        {(this.state.orgName) && (
+                          <TouchableOpacity style={(this.state.sources && this.state.sources.includes('OrgCourses')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('OrgCourses')}>
+                            <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo } : { uri: industryIconDark }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                            <Text style={[styles.ctaColor,styles.standardText]}>Recommended</Text>
+                          </TouchableOpacity>
+                        )}
+                        {(this.state.sources && this.state.sources.includes('OrgCourses')) && (
+                          <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
+                            <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                          </View>
+                        )}
+                        <TouchableOpacity style={(this.state.sources && this.state.sources.includes('Udemy')) ? [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rowDirection] : [styles.btnSquarish,styles.whiteBackground,styles.flexCenter,styles.rightMargin,styles.rowDirection]} onPress={() => this.toggleMetaFilter('Udemy')}>
+                          <Image source={{ uri: udemyLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                          <Text style={[styles.ctaColor,styles.standardText]}>Udemy</Text>
+                        </TouchableOpacity>
+                        {(this.state.sources && this.state.sources.includes('Udemy')) && (
+                          <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
+                            <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                          </Text>
+                        )}
+                        <TouchableOpacity className={(this.state.sources && this.state.sources.includes('Coursera')) ? "btn btn-squarish-white" : "btn btn-squarish-white right-margin"} onClick={() => this.toggleMetaFilter('Coursera')} data-tip={"Filter for Coursera Courses"}>
+                          <Image source={{ uri: courseraLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                          <Text style={[styles.ctaColor,styles.standardText]}>Coursera</Text>
+                        </TouchableOpacity>
+                        {(this.state.sources && this.state.sources.includes('Coursera')) && (
+                          <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
+                            <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                          </Text>
+                        )}
+                        <TouchableOpacity className={(this.state.sources && this.state.sources.includes('Udacity')) ? "btn btn-squarish-white" : "btn btn-squarish-white right-margin"} onClick={() => this.toggleMetaFilter('Udacity')} data-tip={"Filter for Udacity Courses"}>
+                          <Image source={{ uri: udacityLogo }} style={[styles.square20,styles.contain,styles.padding3,styles.rightMargin]}/>
+                          <Text style={[styles.ctaColor,styles.standardText]}>Udacity</Text>
+                        </TouchableOpacity>
+                        {(this.state.sources && this.state.sources.includes('Udacity')) && (
+                          <View style={[styles.leftMarginNegative14,styles.rightMargin,styles.ctaBackgroundColor,styles.ctaBorder,styles.topMarginNegative5,styles.padding3,styles.square22]}>
+                            <Image source={{ uri: checkmarkIconWhite }} style={[styles.square14,styles.contain]}/>
+                          </Text>
+                        )}
+                      </View>
                     </View>
                   )}
                 </View>
@@ -2710,9 +2796,23 @@ class Courses extends Component {
                             </View>
                           ) : (
                             <Image source={(value.imageURL) ? { uri: value.imageURL } : (value.image_125_H) ? { uri: value.image_125_H } : { uri: courseIconBlue }} style={[styles.square40,styles.contain]}/>
-
                           )}
 
+                          {(value.source === 'Udemy' || value.id) && (
+                            <View style={[styles.topMargin]}>
+                              <Image source={{ uri: udemyLogo }} style={[styles.square60,styles.contain]} />
+                            </View>
+                          )}
+                          {(value.source === 'Coursera') && (
+                            <View style={[styles.topMargin]}>
+                              <Image source={{ uri: courseraLogo }} style={[styles.square60,styles.contain]} />
+                            </View>
+                          )}
+                          {(value.source === 'Udacity') && (
+                            <View style={[styles.topMargin]}>
+                              <Image source={{ uri: udacityLogo }} style={[styles.square60,styles.contain]} />
+                            </View>
+                          )}
                         </View>
                         <View style={[styles.calcColumn170]}>
                           <Text style={[styles.headingText5]}>{(value.name) ? value.name : value.title}</Text>
@@ -3402,6 +3502,22 @@ class Courses extends Component {
     this.setState({modalIsOpen: false, startRecommendation: false, selectedCourse: null, showMatchingCriteria: false,
       showBrowseCourses: false, showScheduleSetup: false, selectedIndex1: null, selectedIndex2: null, showPicker: false  });
 
+  }
+
+  toggleMetaFilter(type) {
+    console.log('toggleMetaFilter called', type)
+
+    let sources = this.state.sources
+    if (sources && sources.includes(type)) {
+      sources.splice(sources.indexOf(type),1)
+    } else {
+      if (sources) {
+        sources.push(type)
+      } else {
+        sources = [type]
+      }
+    }
+    this.filterResults(this.state.searchString, '', null, null, true, null, sources)
   }
 
   render() {
