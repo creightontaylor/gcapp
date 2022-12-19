@@ -6,6 +6,8 @@ import Modal from 'react-native-modal';
 
 const linkIconWhite = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/link-icon-white.png';
 const udemyLogo = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/udemy-logo.png';
+const courseraLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/coursera-logo.png";
+const udacityLogo = "https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/udacity-logo.png";
 const courseIconBlue = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/course-icon-blue.png';
 const arrowIndicatorIcon = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/arrow-indicator-icon.png';
 const favoritesIconGrey = 'https://guidedcompass-bucket.s3.us-west-2.amazonaws.com/appImages/favorites-icon-grey.png';
@@ -1013,8 +1015,22 @@ class CourseDetails extends Component {
                               <View style={[styles.flex15]}>
                                 {(this.state.selectedCourse.source === 'Udemy') && (
                                   <View style={[styles.topMargin20]}>
-                                    <TouchableOpacity onPress={() => Linking.openURL("https://www.udemy.com")}>
+                                    <TouchableOpacity onPress={(this.state.selectedCourse.programURL) ? () => Linking.openURL(this.state.selectedCourse.programURL) : () => Linking.openURL(this.state.selectedCourse.url)}>
                                       <Image source={{ uri: udemyLogo}} style={[styles.square30,styles.contain]} />
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
+                                {(this.state.selectedCourse.source === 'Coursera') && (
+                                  <View style={[styles.topMargin20]}>
+                                    <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedCourse.programURL)}>
+                                      <Image source={{ uri: courseraLogo}} style={[styles.square30,styles.contain]} />
+                                    </TouchableOpacity>
+                                  </View>
+                                )}
+                                {(this.state.selectedCourse.source === 'Udacity') && (
+                                  <View style={[styles.topMargin20]}>
+                                    <TouchableOpacity onPress={() => Linking.openURL(this.state.selectedCourse.programURL)}>
+                                      <Image source={{ uri: udacityLogo}} style={[styles.square30,styles.contain]} />
                                     </TouchableOpacity>
                                   </View>
                                 )}

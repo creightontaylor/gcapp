@@ -2850,17 +2850,17 @@ class Courses extends Component {
 
                           {(value.source === 'Udemy' || value.id) && (
                             <View style={[styles.topMargin]}>
-                              <Image source={{ uri: udemyLogo }} style={[styles.square60,styles.contain]} />
+                              <Image source={{ uri: udemyLogo }} style={[styles.square40,styles.contain]} />
                             </View>
                           )}
                           {(value.source === 'Coursera') && (
                             <View style={[styles.topMargin]}>
-                              <Image source={{ uri: courseraLogo }} style={[styles.square60,styles.contain]} />
+                              <Image source={{ uri: courseraLogo }} style={[styles.square40,styles.contain]} />
                             </View>
                           )}
                           {(value.source === 'Udacity') && (
                             <View style={[styles.topMargin]}>
-                              <Image source={{ uri: udacityLogo }} style={[styles.square60,styles.contain]} />
+                              <Image source={{ uri: udacityLogo }} style={[styles.square40,styles.contain]} />
                             </View>
                           )}
                         </View>
