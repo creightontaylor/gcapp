@@ -6891,808 +6891,804 @@ class EditProfileDetails extends Component {
                     )}
                   </View>
 
-                  {(!this.props.fromApply) ? (
-                    <View>
-                      {((this.props.fromWalkthrough && this.state.requirePersonalInfo) || !this.props.fromWalkthrough) ? (
+                  <View>
+                    {((this.props.fromWalkthrough && this.state.requirePersonalInfo) || !this.props.fromWalkthrough) ? (
+                      <View>
+                        <View style={styles.spacer} /><View style={styles.spacer} />
+                        <View style={styles.horizontalLine} />
+
+                        <View style={[styles.row10]}>
+                          <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                          <Text style={[styles.headingText3]}>Self-Identification / Personal Info</Text>
+                          <Text style={[styles.standardText,styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
+                        </View>
+
                         <View>
-                          <View style={styles.spacer} /><View style={styles.spacer} />
-                          <View style={styles.horizontalLine} />
-
                           <View style={[styles.row10]}>
-                            <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                            <Text style={[styles.headingText3]}>Self-Identification / Personal Info</Text>
-                            <Text style={[styles.standardText,styles.topMargin20]}>This private information is included for program reporting and opportunity matching purposes. Employers, teachers, and fellow students do not see this information. For more detail, please review our <TouchableOpacity onPress={() => Linking.openURL('https://www.guidedcompass.com/privacy-policy')}><Text style={[styles.standardText,styles.ctaColor,styles.boldText]}>Privacy Policy</Text></TouchableOpacity> or reach out to us with questions.</Text>
+                            <Text style={[styles.standardText,styles.row10]}>Street Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            <TextInput
+                              style={styles.textInput}
+                              onChangeText={(text) => this.formChangeHandler('address', text)}
+                              value={this.state.address}
+                              placeholder="e.g. 111 Business Lane"
+                              placeholderTextColor="grey"
+                            />
+                          </View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>City{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            <TextInput
+                              style={styles.textInput}
+                              onChangeText={(text) => this.formChangeHandler('city', text)}
+                              value={this.state.city}
+                              placeholder="e.g. Los Angeles"
+                              placeholderTextColor="grey"
+                            />
                           </View>
 
-                          <View>
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Street Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              <TextInput
-                                style={styles.textInput}
-                                onChangeText={(text) => this.formChangeHandler('address', text)}
-                                value={this.state.address}
-                                placeholder="e.g. 111 Business Lane"
-                                placeholderTextColor="grey"
-                              />
-                            </View>
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>City{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              <TextInput
-                                style={styles.textInput}
-                                onChangeText={(text) => this.formChangeHandler('city', text)}
-                                value={this.state.city}
-                                placeholder="e.g. Los Angeles"
-                                placeholderTextColor="grey"
-                              />
-                            </View>
+                        </View>
 
+                        <View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>Zip Code{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            <TextInput
+                              style={styles.textInput}
+                              onChangeText={(text) => this.formChangeHandler('zipcode', text)}
+                              value={this.state.zipcode}
+                              placeholder="e.g. 90210"
+                              placeholderTextColor="grey"
+                            />
                           </View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>Mobile Phone{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            <TextInput
+                              style={styles.textInput}
+                              onChangeText={(text) => this.formChangeHandler('phoneNumber', text)}
+                              value={this.state.phoneNumber}
+                              placeholder="e.g. (555) 555-5555"
+                              placeholderTextColor="grey"
+                            />
+                          </View>
+                        </View>
 
+                        {(this.state.includeAlternativeContacts) && (
                           <View>
                             <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Zip Code{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                              <Text style={[styles.standardText,styles.row10]}>Alternative Email</Text>
                               <TextInput
                                 style={styles.textInput}
-                                onChangeText={(text) => this.formChangeHandler('zipcode', text)}
-                                value={this.state.zipcode}
-                                placeholder="e.g. 90210"
+                                onChangeText={(text) => this.formChangeHandler('alternativeEmail', text)}
+                                value={this.state.alternativeEmail}
+                                placeholder="e.g. jon@doe.com"
                                 placeholderTextColor="grey"
                               />
                             </View>
                             <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Mobile Phone{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                              <Text style={[styles.standardText,styles.row10]}>Alternative Phone Number</Text>
                               <TextInput
                                 style={styles.textInput}
-                                onChangeText={(text) => this.formChangeHandler('phoneNumber', text)}
-                                value={this.state.phoneNumber}
+                                onChangeText={(text) => this.formChangeHandler('alternativePhoneNumber', text)}
+                                value={this.state.alternativePhoneNumber}
                                 placeholder="e.g. (555) 555-5555"
                                 placeholderTextColor="grey"
                               />
                             </View>
                           </View>
+                        )}
 
-                          {(this.state.includeAlternativeContacts) && (
-                            <View>
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Alternative Email</Text>
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler('alternativeEmail', text)}
-                                  value={this.state.alternativeEmail}
-                                  placeholder="e.g. jon@doe.com"
-                                  placeholderTextColor="grey"
-                                />
-                              </View>
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Alternative Phone Number</Text>
-                                <TextInput
-                                  style={styles.textInput}
-                                  onChangeText={(text) => this.formChangeHandler('alternativePhoneNumber', text)}
-                                  value={this.state.alternativePhoneNumber}
-                                  placeholder="e.g. (555) 555-5555"
-                                  placeholderTextColor="grey"
-                                />
-                              </View>
-                            </View>
-                          )}
-
-                          <View>
-                            <View style={[styles.row10]}>
-                              {(Platform.OS === 'ios') ? (
-                                <View style={[styles.rowDirection]}>
-                                  <View style={[styles.calcColumn180]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  </View>
-                                  <View style={[styles.width120,styles.topPadding5]}>
-                                    <DateTimePicker
-                                      testID="DateTimePicker"
-                                      value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
-                                      mode={'date'}
-                                      is24Hour={true}
-                                      display="default"
-                                      onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
-                                      minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
-                                      maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
-                                    />
-                                  </View>
+                        <View>
+                          <View style={[styles.row10]}>
+                            {(Platform.OS === 'ios') ? (
+                              <View style={[styles.rowDirection]}>
+                                <View style={[styles.calcColumn180]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
                                 </View>
-                              ) : (
+                                <View style={[styles.width120,styles.topPadding5]}>
+                                  <DateTimePicker
+                                    testID="DateTimePicker"
+                                    value={(this.state.dateOfBirth) ? convertStringToDate(this.state.dateOfBirth,'dateOnly') : new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={(e, d) => this.formChangeHandler("dateOfBirth",d)}
+                                    minimumDate={new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate())}
+                                    maximumDate={new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate())}
+                                  />
+                                </View>
+                              </View>
+                            ) : (
+                              <View>
+                                <View style={[styles.row5]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                </View>
                                 <View>
-                                  <View style={[styles.row5]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Date of Birth{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  </View>
-                                  <View>
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.dateOfBirth}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showDateTimePicker: true, pickerName: 'Date of Birth', selectedIndex: null, selectedName: "dateOfBirth", selectedValue: this.state.dateOfBirth, minimumDate: new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), maximumDate: new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()) })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.dateOfBirth}</Text>
                                       </View>
-                                    </TouchableOpacity>
-                                  </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
                                 </View>
-                              )}
-
-                            </View>
+                              </View>
+                            )}
 
                           </View>
 
-                          {(this.state.activeOrg === 'exp') ? (
+                        </View>
+
+                        {(this.state.activeOrg === 'exp') ? (
+                          <View>
                             <View>
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Last 4 Digits of Social Security Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("lastOfSocialSecurity", text)}
-                                    value={this.state.lastOfSocialSecurity}
-                                    placeholder="e.g. 1234"
-                                    placeholderTextColor="grey"
-                                  />
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>IEP or 504 Plan{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("IEPPlan", text)}
-                                    value={this.state.IEPPlan}
-                                    placeholder="e.g. IEP or 504 Plan"
-                                    placeholderTextColor="grey"
-                                  />
-                                </View>
-
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Last 4 Digits of Social Security Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("lastOfSocialSecurity", text)}
+                                  value={this.state.lastOfSocialSecurity}
+                                  placeholder="e.g. 1234"
+                                  placeholderTextColor="grey"
+                                />
                               </View>
-
-                              <View style={styles.contrastingContainer1}>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.headingText4]}>Parent/Guardian Information</Text>
-                                </View>
-
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Parent/Guardian First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("parentName", text)}
-                                      value={this.state.parentName}
-                                      placeholder="e.g. Jonnie Appleseed"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("parentRelationship", text)}
-                                      value={this.state.parentRelationship}
-                                      placeholder="e.g. Father"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-
-                                </View>
-
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("parentPhone", text)}
-                                      value={this.state.parentPhone}
-                                      placeholder="e.g. (555) 555-5555"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("parentEmail", text)}
-                                      value={this.state.parentEmail}
-                                      placeholder="e.g. jonnie@gmail.com"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-
-                                </View>
-                              </View>
-
-                              <View style={styles.contrastingContainer2}>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.headingText4]}>Emergency Contact Information</Text>
-                                </View>
-
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Emergency Contact First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("emergencyContactName", text)}
-                                      value={this.state.emergencyContactName}
-                                      placeholder="e.g. Jonnie Appleseed"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Emergency Contact Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("emergencyContactRelationship", text)}
-                                      value={this.state.emergencyContactRelationship}
-                                      placeholder="e.g. Father"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-
-                                </View>
-
-                                <View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Emergency Contact Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("emergencyContactPhone", text)}
-                                      value={this.state.emergencyContactPhone}
-                                      placeholder="e.g. (555) 555-5555"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Emergency Contact Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("emergencyContactEmail", text)}
-                                      value={this.state.emergencyContactEmail}
-                                      placeholder="e.g. jonnie@gmail.com"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-
-                                </View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>IEP or 504 Plan{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("IEPPlan", text)}
+                                  value={this.state.IEPPlan}
+                                  placeholder="e.g. IEP or 504 Plan"
+                                  placeholderTextColor="grey"
+                                />
                               </View>
 
                             </View>
-                          ) : (
-                            <View />
-                          )}
 
-                          <View>
-                          {(this.state.allowMultipleRaces) ? (
+                            <View style={styles.contrastingContainer1}>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.headingText4]}>Parent/Guardian Information</Text>
+                              </View>
+
                               <View>
                                 <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
-
-                                  {this.state.raceOptions.map((value, optionIndex) =>
-                                    <View key={value + optionIndex} style={styles.rowDirection}>
-                                      {(optionIndex > 0) && (
-                                        <View style={[styles.rightPadding,styles.topPadding]}>
-                                          {(this.state.races && this.state.races.includes(value)) ? (
-                                            <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'race')}>
-                                              <View>
-                                                <View>
-                                                  <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
-                                                </View>
-                                              </View>
-                                            </TouchableOpacity>
-                                          ) : (
-                                            <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'race')}>
-                                              <View>
-                                                <View>
-                                                  <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
-                                                </View>
-                                              </View>
-                                            </TouchableOpacity>
-                                          )}
-                                        </View>
-                                      )}
-                                    </View>
-                                  )}
+                                  <Text style={[styles.standardText,styles.row10]}>Parent/Guardian First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("parentName", text)}
+                                    value={this.state.parentName}
+                                    placeholder="e.g. Jonnie Appleseed"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("parentRelationship", text)}
+                                    value={this.state.parentRelationship}
+                                    placeholder="e.g. Father"
+                                    placeholderTextColor="grey"
+                                  />
                                 </View>
 
-                                {/*
-                                <div className="row-10">
-                                  <label className="profile-label">Race{(this.state.requirePersonalInfo) && <label className="error-color bold-text"> *</label>}</label>
-                                  {this.state.raceOptions.map((value, optionIndex) =>
-                                    <div key={value + optionIndex}>
-                                      {(optionIndex > 0) && (
-                                        <div className="float-left right-padding top-padding">
-                                          {(this.state.races && this.state.races.includes(value)) ? (
-                                            <button type="button" className="background-button selected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
-                                              <div>
-                                                <div className="float-left">
-                                                  <p className="description-text-2 white-text nowrap">{value}</p>
-                                                </div>
-                                              </div>
-                                            </button>
-                                          ) : (
-                                            <button type="button" className="background-button unselected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
-                                              <div>
-                                                <div className="float-left">
-                                                  <p className="description-text-2 nowrap">{value}</p>
-                                                </div>
-                                              </div>
-                                            </button>
-                                          )}
-                                        </div>
-                                      )}
+                              </View>
 
-                                    </div>
-                                  )}
-                                  <div className="clear" />
-                                </div>*/}
-                                {(this.state.races && this.state.races.includes('Prefer to self-describe')) ? (
-                                  <View style={[styles.row10]}>
-                                    <Text style={[styles.standardText,styles.row10]}>Please describe your race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
-                                    <TextInput
-                                      style={styles.textInput}
-                                      onChangeText={(text) => this.formChangeHandler("selfDescribedRace", text)}
-                                      value={this.state.selfDescribedRace}
-                                      placeholder="e.g., Black and Latino"
-                                      placeholderTextColor="grey"
-                                    />
-                                  </View>
-                                ) : (
-                                  <View />
-                                )}
+                              <View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("parentPhone", text)}
+                                    value={this.state.parentPhone}
+                                    placeholder="e.g. (555) 555-5555"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Parent/Guardian Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("parentEmail", text)}
+                                    value={this.state.parentEmail}
+                                    placeholder="e.g. jonnie@gmail.com"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
 
                               </View>
-                            ) : (
+                            </View>
+
+                            <View style={styles.contrastingContainer2}>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.headingText4]}>Emergency Contact Information</Text>
+                              </View>
+
+                              <View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Emergency Contact First Name and Last Name{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("emergencyContactName", text)}
+                                    value={this.state.emergencyContactName}
+                                    placeholder="e.g. Jonnie Appleseed"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Emergency Contact Relationship to Student{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("emergencyContactRelationship", text)}
+                                    value={this.state.emergencyContactRelationship}
+                                    placeholder="e.g. Father"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+
+                              </View>
+
+                              <View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Emergency Contact Phone Number{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("emergencyContactPhone", text)}
+                                    value={this.state.emergencyContactPhone}
+                                    placeholder="e.g. (555) 555-5555"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Emergency Contact Email Address{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("emergencyContactEmail", text)}
+                                    value={this.state.emergencyContactEmail}
+                                    placeholder="e.g. jonnie@gmail.com"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+
+                              </View>
+                            </View>
+
+                          </View>
+                        ) : (
+                          <View />
+                        )}
+
+                        <View>
+                        {(this.state.allowMultipleRaces) ? (
+                            <View>
                               <View style={[styles.row10]}>
                                 <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
 
-                                {(Platform.OS === 'ios') ? (
-                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Race', selectedIndex: null, selectedName: "race", selectedValue: this.state.race, selectedOptions: this.state.raceOptions, selectedSubKey: null })}>
-                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn115]}>
-                                        <Text style={[styles.descriptionText1]}>{this.state.race}</Text>
-                                      </View>
-                                      <View style={[styles.width20,styles.topMargin5]}>
-                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.standardBorder]}>
-                                    <Picker
-                                      selectedValue={this.state.race}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("race",itemValue)
-                                      }>
-                                      {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
-                                  </View>
-                                )}
-                              </View>
-                            )}
-
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-
-                              {(Platform.OS === 'ios') ? (
-                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Gender', selectedIndex: null, selectedName: "gender", selectedValue: this.state.gender, selectedOptions: this.state.genderOptions, selectedSubKey: null })}>
-                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                    <View style={[styles.calcColumn115]}>
-                                      <Text style={[styles.descriptionText1]}>{this.state.gender}</Text>
-                                    </View>
-                                    <View style={[styles.width20,styles.topMargin5]}>
-                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                    </View>
-                                  </View>
-                                </TouchableOpacity>
-                              ) : (
-                                <View style={[styles.standardBorder]}>
-                                  <Picker
-                                    selectedValue={this.state.gender}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("gender",itemValue)
-                                    }>
-                                    {this.state.genderOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
-                                </View>
-                              )}
-
-                            </View>
-
-                          </View>
-
-                          <View>
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Authorized to work in the U.S.?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              {(this.state.activeOrg === 'exp') && (
-                                <Text style={[styles.descriptionText2,styles.row5]}>Note: You will not be automatically rejected from the program if you are not authorized.</Text>
-                              )}
-
-                              {(Platform.OS === 'ios') ? (
-                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Authorization', selectedIndex: null, selectedName: "workAuthorization", selectedValue: this.state.workAuthorization, selectedOptions: this.state.workAuthorizationOptions, selectedSubKey: null })}>
-                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                    <View style={[styles.calcColumn115]}>
-                                      <Text style={[styles.descriptionText1]}>{this.state.workAuthorization}</Text>
-                                    </View>
-                                    <View style={[styles.width20,styles.topMargin5]}>
-                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                    </View>
-                                  </View>
-                                </TouchableOpacity>
-                              ) : (
-                                <View style={[styles.standardBorder]}>
-                                  <Picker
-                                    selectedValue={this.state.workAuthorization}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("workAuthorization",itemValue)
-                                    }>
-                                    {this.state.workAuthorizationOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
-                                </View>
-                              )}
-
-                            </View>
-                            {(!this.state.remoteAuth && this.state.activeOrg !== 'unite-la') && (
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Veteran Status{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                {(Platform.OS === 'ios') ? (
-                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Veteran Status', selectedIndex: null, selectedName: "veteranStatus", selectedValue: this.state.veteranStatus, selectedOptions: this.state.veteranStatusOptions, selectedSubKey: null })}>
-                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn115]}>
-                                        <Text style={[styles.descriptionText1]}>{this.state.veteranStatus}</Text>
-                                      </View>
-                                      <View style={[styles.width20,styles.topMargin5]}>
-                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.standardBorder]}>
-                                    <Picker
-                                      selectedValue={this.state.veteranStatus}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("veteranStatus",itemValue)
-                                      }>
-                                      {this.state.veteranStatusOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
-                                  </View>
-                                )}
-
-                              </View>
-                            )}
-
-
-                          </View>
-
-                          {(this.state.activeOrg === 'c2c') && (
-                            <View style={[styles.row10]}>
-                              <Text style={[styles.standardText,styles.row10]}>Do you have DACA status?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                              {(Platform.OS === 'ios') ? (
-                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'DACA Status', selectedIndex: null, selectedName: "dacaStatus", selectedValue: this.state.dacaStatus, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
-                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                    <View style={[styles.calcColumn115]}>
-                                      <Text style={[styles.descriptionText1]}>{this.state.dacaStatus}</Text>
-                                    </View>
-                                    <View style={[styles.width20,styles.topMargin5]}>
-                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                    </View>
-                                  </View>
-                                </TouchableOpacity>
-                              ) : (
-                                <View style={[styles.standardBorder]}>
-                                  <Picker
-                                    selectedValue={this.state.dacaStatus}
-                                    onValueChange={(itemValue, itemIndex) =>
-                                      this.formChangeHandler("dacaStatus",itemValue)
-                                    }>
-                                    {this.state.binaryOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                  </Picker>
-                                </View>
-                              )}
-
-                            </View>
-                          )}
-
-                          {(this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'guidedcompass') && (
-                            <View>
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Number of Members in Household{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  {(Platform.OS === 'ios') ? (
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Members in Household', selectedIndex: null, selectedName: "numberOfMembers", selectedValue: this.state.numberOfMembers, selectedOptions: this.state.basicCountOptions, selectedSubKey: null })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.numberOfMembers}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
-                                      </View>
-                                    </TouchableOpacity>
-                                  ) : (
-                                    <View style={[styles.standardBorder]}>
-                                      <Picker
-                                        selectedValue={this.state.numberOfMembers}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("numberOfMembers",itemValue)
-                                        }>
-                                        {this.state.basicCountOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Estimated Household Income{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  {(Platform.OS === 'ios') ? (
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Household Income', selectedIndex: null, selectedName: "householdIncome", selectedValue: this.state.householdIncome, selectedOptions: this.state.householdIncomeOptions, selectedSubKey: null })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.householdIncome}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
-                                      </View>
-                                    </TouchableOpacity>
-                                  ) : (
-                                    <View style={[styles.standardBorder]}>
-                                      <Picker
-                                        selectedValue={this.state.householdIncome}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("householdIncome",itemValue)
-                                        }>
-                                        {this.state.householdIncomeOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-
-                              </View>
-                              {/*
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-
-                                  {(Platform.OS === 'ios') ? (
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Foster Youth', selectedIndex: null, selectedName: "fosterYouth", selectedValue: this.state.fosterYouth, selectedOptions: this.state.fosterYouthOptions, selectedSubKey: null })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.fosterYouth}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
-                                      </View>
-                                    </TouchableOpacity>
-                                  ) : (
-                                    <View style={[styles.standardBorder]}>
-                                      <Picker
-                                        selectedValue={this.state.fosterYouth}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("fosterYouth",itemValue)
-                                        }>
-                                        {this.state.fosterYouthOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Are you currently or formerly homeless?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-
-                                  {(Platform.OS === 'ios') ? (
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Homeless', selectedIndex: null, selectedName: "homeless", selectedValue: this.state.homeless, selectedOptions: this.state.homelessOptions, selectedSubKey: null })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.homeless}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
-                                      </View>
-                                    </TouchableOpacity>
-                                  ) : (
-                                    <View style={[styles.standardBorder]}>
-                                      <Picker
-                                        selectedValue={this.state.homeless}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("homeless",itemValue)
-                                        }>
-                                        {this.state.homelessOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-
-                              </View>
-
-                              <View>
-                                <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Were you previously incarcerated?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-                                  {(Platform.OS === 'ios') ? (
-                                    <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Incarcerated', selectedIndex: null, selectedName: "incarcerated", selectedValue: this.state.incarcerated, selectedOptions: this.state.incarceratedOptions, selectedSubKey: null })}>
-                                      <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                        <View style={[styles.calcColumn115]}>
-                                          <Text style={[styles.descriptionText1]}>{this.state.incarcerated}</Text>
-                                        </View>
-                                        <View style={[styles.width20,styles.topMargin5]}>
-                                          <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                        </View>
-                                      </View>
-                                    </TouchableOpacity>
-                                  ) : (
-                                    <View style={[styles.standardBorder]}>
-                                      <Picker
-                                        selectedValue={this.state.incarcerated}
-                                        onValueChange={(itemValue, itemIndex) =>
-                                          this.formChangeHandler("incarcerated",itemValue)
-                                        }>
-                                        {this.state.incarceratedOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                      </Picker>
-                                    </View>
-                                  )}
-
-                                </View>
-
-                              </View>*/}
-
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Designate all that apply.{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
-
-                                {this.state.adversityListOptions.map((value, optionIndex) =>
+                                {this.state.raceOptions.map((value, optionIndex) =>
                                   <View key={value + optionIndex} style={styles.rowDirection}>
-                                    <View style={[styles.rightPadding,styles.topPadding]}>
-                                      {(this.state.adversityList && this.state.adversityList.includes(value)) ? (
-                                        <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
-                                          <View>
+                                    {(optionIndex > 0) && (
+                                      <View style={[styles.rightPadding,styles.topPadding]}>
+                                        {(this.state.races && this.state.races.includes(value)) ? (
+                                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'race')}>
                                             <View>
-                                              <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
+                                              <View>
+                                                <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
+                                              </View>
                                             </View>
-                                          </View>
-                                        </TouchableOpacity>
-                                      ) : (
-                                        <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
-                                          <View>
+                                          </TouchableOpacity>
+                                        ) : (
+                                          <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'race')}>
                                             <View>
-                                              <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
+                                              <View>
+                                                <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
+                                              </View>
                                             </View>
-                                          </View>
-                                        </TouchableOpacity>
-                                      )}
-                                    </View>
+                                          </TouchableOpacity>
+                                        )}
+                                      </View>
+                                    )}
                                   </View>
                                 )}
                               </View>
+
+                              {/*
+                              <div className="row-10">
+                                <label className="profile-label">Race{(this.state.requirePersonalInfo) && <label className="error-color bold-text"> *</label>}</label>
+                                {this.state.raceOptions.map((value, optionIndex) =>
+                                  <div key={value + optionIndex}>
+                                    {(optionIndex > 0) && (
+                                      <div className="float-left right-padding top-padding">
+                                        {(this.state.races && this.state.races.includes(value)) ? (
+                                          <button type="button" className="background-button selected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
+                                            <div>
+                                              <div className="float-left">
+                                                <p className="description-text-2 white-text nowrap">{value}</p>
+                                              </div>
+                                            </div>
+                                          </button>
+                                        ) : (
+                                          <button type="button" className="background-button unselected-tag-container-1" onClick={() => this.optionClicked(optionIndex,'race')}>
+                                            <div>
+                                              <div className="float-left">
+                                                <p className="description-text-2 nowrap">{value}</p>
+                                              </div>
+                                            </div>
+                                          </button>
+                                        )}
+                                      </div>
+                                    )}
+
+                                  </div>
+                                )}
+                                <div className="clear" />
+                              </div>*/}
+                              {(this.state.races && this.state.races.includes('Prefer to self-describe')) ? (
+                                <View style={[styles.row10]}>
+                                  <Text style={[styles.standardText,styles.row10]}>Please describe your race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
+                                  <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={(text) => this.formChangeHandler("selfDescribedRace", text)}
+                                    value={this.state.selfDescribedRace}
+                                    placeholder="e.g., Black and Latino"
+                                    placeholderTextColor="grey"
+                                  />
+                                </View>
+                              ) : (
+                                <View />
+                              )}
+
+                            </View>
+                          ) : (
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Race{(this.state.requirePersonalInfo) ? <Text style={[styles.errorColor,styles.boldText]}> *</Text> : ""}</Text>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Race', selectedIndex: null, selectedName: "race", selectedValue: this.state.race, selectedOptions: this.state.raceOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.race}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.race}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("race",itemValue)
+                                    }>
+                                    {this.state.raceOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
                             </View>
                           )}
 
-                          {(this.state.activeOrg === 'c2c') && (
-                            <View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>Gender{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
 
-                              <View style={styles.spacer} /><View style={styles.spacer} />
-                              <View style={styles.horizontalLine} />
-
-                              <View style={[styles.row10]}>
-                                  <View style={styles.spacer}/><View style={styles.halfSpacer}/>
-                                  <Text style={[styles.headingText3]}>Political Information</Text>
-                              </View>
-
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Political Alignment<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                {(Platform.OS === 'ios') ? (
-                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Political Alignment', selectedIndex: null, selectedName: "politicalAlignment", selectedValue: this.state.politicalAlignment, selectedOptions: this.state.politicalAlignmentOptions, selectedSubKey: null })}>
-                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn115]}>
-                                        <Text style={[styles.descriptionText1]}>{this.state.politicalAlignment}</Text>
-                                      </View>
-                                      <View style={[styles.width20,styles.topMargin5]}>
-                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.standardBorder]}>
-                                    <Picker
-                                      selectedValue={this.state.politicalAlignment}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("politicalAlignment",itemValue)
-                                      }>
-                                      {this.state.politicalAlignmentOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Gender', selectedIndex: null, selectedName: "gender", selectedValue: this.state.gender, selectedOptions: this.state.genderOptions, selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.gender}</Text>
                                   </View>
-                                )}
-
-                              </View>
-
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>U.S. State Registered to Vote<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                {(Platform.OS === 'ios') ? (
-                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'State Registration', selectedIndex: null, selectedName: "stateRegistration", selectedValue: this.state.stateRegistration, selectedOptions: this.state.registrationOptions, selectedSubKey: null })}>
-                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn115]}>
-                                        <Text style={[styles.descriptionText1]}>{this.state.stateRegistration}</Text>
-                                      </View>
-                                      <View style={[styles.width20,styles.topMargin5]}>
-                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.standardBorder]}>
-                                    <Picker
-                                      selectedValue={this.state.stateRegistration}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("stateRegistration",itemValue)
-                                      }>
-                                      {this.state.registrationOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
                                   </View>
-                                )}
-
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <View style={[styles.standardBorder]}>
+                                <Picker
+                                  selectedValue={this.state.gender}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("gender",itemValue)
+                                  }>
+                                  {this.state.genderOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                </Picker>
                               </View>
+                            )}
 
-                              <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Current Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                          </View>
 
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("currentCongressionalDistrict", text)}
-                                    value={this.state.currentCongressionalDistrict}
-                                    placeholder="e.g. 12"
-                                    placeholderTextColor="grey"
-                                  />
-
-                              </View>
-
-                              <View style={[styles.row10]}>
-                                <Text style={[styles.standardText,styles.row10]}>Hometown (U.S. State)<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-
-                                {(Platform.OS === 'ios') ? (
-                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Hometown', selectedIndex: null, selectedName: "hometown", selectedValue: this.state.hometown, selectedOptions: this.state.hometownOptions, selectedSubKey: null })}>
-                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
-                                      <View style={[styles.calcColumn115]}>
-                                        <Text style={[styles.descriptionText1]}>{this.state.hometown}</Text>
-                                      </View>
-                                      <View style={[styles.width20,styles.topMargin5]}>
-                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
-                                      </View>
-                                    </View>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <View style={[styles.standardBorder]}>
-                                    <Picker
-                                      selectedValue={this.state.hometown}
-                                      onValueChange={(itemValue, itemIndex) =>
-                                        this.formChangeHandler("hometown",itemValue)
-                                      }>
-                                      {this.state.hometownOptions.map(value => <Picker.Item label={value} value={value} />)}
-                                    </Picker>
-                                  </View>
-                                )}
-
-                              </View>
-
-                              <View style={[styles.row10]}>
-                                  <Text style={[styles.standardText,styles.row10]}>Hometown Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
-                                  <TextInput
-                                    style={styles.textInput}
-                                    onChangeText={(text) => this.formChangeHandler("homeCongressionalDistrict", text)}
-                                    value={this.state.homeCongressionalDistrict}
-                                    placeholder="e.g. 12"
-                                    placeholderTextColor="grey"
-                                  />
-                              </View>
-
-                            </View>
-                          )}
                         </View>
-                      ) : (
-                        <View />
-                      )}
-                    </View>
-                  ) : (
-                    <View />
-                  )}
+
+                        <View>
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>Authorized to work in the U.S.?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            {(this.state.activeOrg === 'exp') && (
+                              <Text style={[styles.descriptionText2,styles.row5]}>Note: You will not be automatically rejected from the program if you are not authorized.</Text>
+                            )}
+
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Work Authorization', selectedIndex: null, selectedName: "workAuthorization", selectedValue: this.state.workAuthorization, selectedOptions: this.state.workAuthorizationOptions, selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.workAuthorization}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <View style={[styles.standardBorder]}>
+                                <Picker
+                                  selectedValue={this.state.workAuthorization}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("workAuthorization",itemValue)
+                                  }>
+                                  {this.state.workAuthorizationOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                </Picker>
+                              </View>
+                            )}
+
+                          </View>
+                          {(!this.state.remoteAuth && this.state.activeOrg !== 'unite-la') && (
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Veteran Status{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Veteran Status', selectedIndex: null, selectedName: "veteranStatus", selectedValue: this.state.veteranStatus, selectedOptions: this.state.veteranStatusOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.veteranStatus}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.veteranStatus}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("veteranStatus",itemValue)
+                                    }>
+                                    {this.state.veteranStatusOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+
+                            </View>
+                          )}
+
+
+                        </View>
+
+                        {(this.state.activeOrg === 'c2c') && (
+                          <View style={[styles.row10]}>
+                            <Text style={[styles.standardText,styles.row10]}>Do you have DACA status?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                            {(Platform.OS === 'ios') ? (
+                              <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'DACA Status', selectedIndex: null, selectedName: "dacaStatus", selectedValue: this.state.dacaStatus, selectedOptions: this.state.binaryOptions, selectedSubKey: null })}>
+                                <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                  <View style={[styles.calcColumn115]}>
+                                    <Text style={[styles.descriptionText1]}>{this.state.dacaStatus}</Text>
+                                  </View>
+                                  <View style={[styles.width20,styles.topMargin5]}>
+                                    <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <View style={[styles.standardBorder]}>
+                                <Picker
+                                  selectedValue={this.state.dacaStatus}
+                                  onValueChange={(itemValue, itemIndex) =>
+                                    this.formChangeHandler("dacaStatus",itemValue)
+                                  }>
+                                  {this.state.binaryOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                </Picker>
+                              </View>
+                            )}
+
+                          </View>
+                        )}
+
+                        {(this.state.activeOrg === 'unite-la' || this.state.activeOrg === 'guidedcompass') && (
+                          <View>
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Number of Members in Household{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Members in Household', selectedIndex: null, selectedName: "numberOfMembers", selectedValue: this.state.numberOfMembers, selectedOptions: this.state.basicCountOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.numberOfMembers}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.numberOfMembers}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("numberOfMembers",itemValue)
+                                      }>
+                                      {this.state.basicCountOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+
+                              </View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Estimated Household Income{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Household Income', selectedIndex: null, selectedName: "householdIncome", selectedValue: this.state.householdIncome, selectedOptions: this.state.householdIncomeOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.householdIncome}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.householdIncome}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("householdIncome",itemValue)
+                                      }>
+                                      {this.state.householdIncomeOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+
+                              </View>
+
+                            </View>
+                            {/*
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Have you ever been a foster youth?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Foster Youth', selectedIndex: null, selectedName: "fosterYouth", selectedValue: this.state.fosterYouth, selectedOptions: this.state.fosterYouthOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.fosterYouth}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.fosterYouth}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("fosterYouth",itemValue)
+                                      }>
+                                      {this.state.fosterYouthOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+
+                              </View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Are you currently or formerly homeless?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Homeless', selectedIndex: null, selectedName: "homeless", selectedValue: this.state.homeless, selectedOptions: this.state.homelessOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.homeless}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.homeless}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("homeless",itemValue)
+                                      }>
+                                      {this.state.homelessOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+
+                              </View>
+
+                            </View>
+
+                            <View>
+                              <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Were you previously incarcerated?{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+                                {(Platform.OS === 'ios') ? (
+                                  <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Incarcerated', selectedIndex: null, selectedName: "incarcerated", selectedValue: this.state.incarcerated, selectedOptions: this.state.incarceratedOptions, selectedSubKey: null })}>
+                                    <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                      <View style={[styles.calcColumn115]}>
+                                        <Text style={[styles.descriptionText1]}>{this.state.incarcerated}</Text>
+                                      </View>
+                                      <View style={[styles.width20,styles.topMargin5]}>
+                                        <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                      </View>
+                                    </View>
+                                  </TouchableOpacity>
+                                ) : (
+                                  <View style={[styles.standardBorder]}>
+                                    <Picker
+                                      selectedValue={this.state.incarcerated}
+                                      onValueChange={(itemValue, itemIndex) =>
+                                        this.formChangeHandler("incarcerated",itemValue)
+                                      }>
+                                      {this.state.incarceratedOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                    </Picker>
+                                  </View>
+                                )}
+
+                              </View>
+
+                            </View>*/}
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Designate all that apply.{(this.state.requirePersonalInfo) && <Text style={[styles.errorColor,styles.boldText]}> *</Text>}</Text>
+
+                              {this.state.adversityListOptions.map((value, optionIndex) =>
+                                <View key={value + optionIndex} style={styles.rowDirection}>
+                                  <View style={[styles.rightPadding,styles.topPadding]}>
+                                    {(this.state.adversityList && this.state.adversityList.includes(value)) ? (
+                                      <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
+                                        <View>
+                                          <View>
+                                            <Text style={[styles.descriptionText2,styles.whiteColor,styles.nowrap]}>{value}</Text>
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    ) : (
+                                      <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners, styles.lightBorder,styles.lightBackground]} onPress={() => this.optionClicked(optionIndex,'adversityList')}>
+                                        <View>
+                                          <View>
+                                            <Text style={[styles.descriptionText2,styles.nowrap]}>{value}</Text>
+                                          </View>
+                                        </View>
+                                      </TouchableOpacity>
+                                    )}
+                                  </View>
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        )}
+
+                        {(this.state.activeOrg === 'c2c') && (
+                          <View>
+
+                            <View style={styles.spacer} /><View style={styles.spacer} />
+                            <View style={styles.horizontalLine} />
+
+                            <View style={[styles.row10]}>
+                                <View style={styles.spacer}/><View style={styles.halfSpacer}/>
+                                <Text style={[styles.headingText3]}>Political Information</Text>
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Political Alignment<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Political Alignment', selectedIndex: null, selectedName: "politicalAlignment", selectedValue: this.state.politicalAlignment, selectedOptions: this.state.politicalAlignmentOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.politicalAlignment}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.politicalAlignment}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("politicalAlignment",itemValue)
+                                    }>
+                                    {this.state.politicalAlignmentOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>U.S. State Registered to Vote<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'State Registration', selectedIndex: null, selectedName: "stateRegistration", selectedValue: this.state.stateRegistration, selectedOptions: this.state.registrationOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.stateRegistration}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.stateRegistration}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("stateRegistration",itemValue)
+                                    }>
+                                    {this.state.registrationOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Current Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("currentCongressionalDistrict", text)}
+                                  value={this.state.currentCongressionalDistrict}
+                                  placeholder="e.g. 12"
+                                  placeholderTextColor="grey"
+                                />
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                              <Text style={[styles.standardText,styles.row10]}>Hometown (U.S. State)<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+
+                              {(Platform.OS === 'ios') ? (
+                                <TouchableOpacity onPress={() => this.setState({ modalIsOpen: true, showPicker: true, pickerName: 'Hometown', selectedIndex: null, selectedName: "hometown", selectedValue: this.state.hometown, selectedOptions: this.state.hometownOptions, selectedSubKey: null })}>
+                                  <View style={[styles.rowDirection,styles.standardBorder,styles.row10,styles.horizontalPadding20]}>
+                                    <View style={[styles.calcColumn115]}>
+                                      <Text style={[styles.descriptionText1]}>{this.state.hometown}</Text>
+                                    </View>
+                                    <View style={[styles.width20,styles.topMargin5]}>
+                                      <Image source={{ uri: dropdownArrow }} style={[styles.square12,styles.leftMargin,styles.contain]} />
+                                    </View>
+                                  </View>
+                                </TouchableOpacity>
+                              ) : (
+                                <View style={[styles.standardBorder]}>
+                                  <Picker
+                                    selectedValue={this.state.hometown}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                      this.formChangeHandler("hometown",itemValue)
+                                    }>
+                                    {this.state.hometownOptions.map(value => <Picker.Item label={value} value={value} />)}
+                                  </Picker>
+                                </View>
+                              )}
+
+                            </View>
+
+                            <View style={[styles.row10]}>
+                                <Text style={[styles.standardText,styles.row10]}>Hometown Congressional District<Text style={[styles.errorColor,styles.boldText]}>*</Text></Text>
+                                <TextInput
+                                  style={styles.textInput}
+                                  onChangeText={(text) => this.formChangeHandler("homeCongressionalDistrict", text)}
+                                  value={this.state.homeCongressionalDistrict}
+                                  placeholder="e.g. 12"
+                                  placeholderTextColor="grey"
+                                />
+                            </View>
+
+                          </View>
+                        )}
+                      </View>
+                    ) : (
+                      <View />
+                    )}
+                  </View>
 
                   {(!this.props.fromApply) && (
                     <View>

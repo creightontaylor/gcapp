@@ -792,6 +792,7 @@ class Apply extends Component {
             const homeless = response.data.user.homeless
             const incarcerated = response.data.user.incarcerated
             const adversityList = response.data.user.adversityList
+            const address = response.data.user.address
 
             let basicInfo = { firstName, lastName, schoolName, gradYear }
             if (education) {
@@ -963,6 +964,7 @@ class Apply extends Component {
               certificates, linkedInURL, customWebsiteURL, videoResumeURL, isPortfolio, pictureURL, zipcode,
               dateOfBirth, pathway, race, races, selfDescribedRace, gender, veteran, workAuthorization,
               numberOfMembers, householdIncome, fosterYouth, homeless, incarcerated, adversityList,
+              address,
               politicalAlignment, stateRegistration, currentCongressionalDistrict, hometown, homeCongressionalDistrict,
               dacaStatus,
               publicProfile, publicProfileExtent
@@ -1228,7 +1230,7 @@ class Apply extends Component {
   }
 
   formChangeHandler = (eventName, eventValue) => {
-    console.log('show data: ')
+    console.log('show data: ', eventName, eventValue)
 
     // this.setState({ selectedValue: eventValue })
 
@@ -1453,7 +1455,7 @@ class Apply extends Component {
       let responses = this.state.responses
       responses[this.state.questionIndex] = eventValue
       this.setState({ selectedAnswer: eventValue, responses })
-    } else if (eventName.includes('listedAnswer')) {
+    } else if (eventName && eventName.includes('listedAnswer')) {
       let responses = this.state.responses
       if (eventName.split("|")[3] === 'thirdPartyAssessments') {
         responses = this.state.tpaResponses
@@ -1606,18 +1608,18 @@ class Apply extends Component {
 
       if (res.ok) {
 
-        const serverSuccessResume = true
-        const serverSuccessMessageResume = category.charAt(0).toUpperCase() + category.slice(1) + ' saved successfully!'
+        const successResume = true
+        const successMessageResume = category.charAt(0).toUpperCase() + category.slice(1) + ' saved successfully!'
         if (category === 'resume') {
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, resumeFile: passedFile, resumeName: fileName })
+          this.setState({ successResume, successMessageResume, resumeFile: passedFile, resumeName: fileName })
         } else if (category === 'coverLetter') {
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, coverLetterFile: passedFile, coverLetterName: fileName })
+          this.setState({ successResume, successMessageResume, coverLetterFile: passedFile, coverLetterName: fileName })
         } else if (category === 'letterOfRecommendation') {
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, lorFile: passedFile, lorName: fileName })
+          this.setState({ successResume, successMessageResume, lorFile: passedFile, lorName: fileName })
         } else if (category === 'identification') {
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, idFile: passedFile, idName: fileName })
+          this.setState({ successResume, successMessageResume, idFile: passedFile, idName: fileName })
         } else if (category === 'transcript') {
-          this.setState({ serverSuccessResume, serverSuccessMessageResume, transcriptFile: passedFile, transcriptName: fileName })
+          this.setState({ successResume, successMessageResume, transcriptFile: passedFile, transcriptName: fileName })
         }
 
         const self = this
@@ -1657,43 +1659,35 @@ class Apply extends Component {
                   //save values
                   console.log('File delete worked');
 
-                  const serverPostSuccess = true
-                  const serverSuccessMessage = 'File was saved successfully'
+                  const successMessage = 'File was saved successfully'
 
                   if (category === 'resume') {
-                    self.setState({ serverPostSuccess, serverSuccessMessage, resumeURL: newFilePath })
+                    self.setState({ successMessage, resumeURL: newFilePath })
                   } else if (category === 'coverLetter') {
-                    self.setState({ serverPostSuccess, serverSuccessMessage, coverLetterURL: newFilePath })
+                    self.setState({ successMessage, coverLetterURL: newFilePath })
                   } else if (category === 'letterOfRecommendation') {
-                    self.setState({ serverPostSuccess, serverSuccessMessage, letterOfRecommendationURL: newFilePath })
+                    self.setState({ successMessage, letterOfRecommendationURL: newFilePath })
                   } else if (category === 'identification') {
-                    self.setState({ serverPostSuccess, serverSuccessMessage, identificationURL: newFilePath  })
+                    self.setState({ successMessage, identificationURL: newFilePath  })
                   } else if (category === 'transcript') {
-                    self.setState({ serverPostSuccess, serverSuccessMessage, transcriptURL: newFilePath  })
+                    self.setState({ successMessage, transcriptURL: newFilePath  })
                   }
 
                 } else {
                   console.error('there was an error saving the file');
-                  self.setState({
-                    serverPostSuccess: false,
-                    serverErrorMessage: response.data.message,
-                  })
+                  self.setState({ errorMessage: response.data.message })
                 }
               }).catch((error) => {
                   console.log('The saving did not work', error);
-                  self.setState({
-                    serverPostSuccess: false,
-                    serverErrorMessage: error,
-                  })
+                  self.setState({ errorMessage: error })
               });
             } else {
               console.log('save new file', category, newFilePath)
 
-              const serverPostSuccess = true
-              const serverSuccessMessage = 'File was saved successfully'
+              const successMessage = 'File was saved successfully'
 
               if (category === 'resume') {
-                self.setState({ serverPostSuccess, serverSuccessMessage, resumeURL: newFilePath })
+                self.setState({ successMessage, resumeURL: newFilePath })
 
                 let tasks = self.state.tasks
                 for (let i = 1; i <= tasks.length; i++) {
@@ -1705,7 +1699,7 @@ class Apply extends Component {
                 self.checkCompleteness(tasks)
 
               } else if (category === 'coverLetter') {
-                self.setState({ serverPostSuccess, serverSuccessMessage, coverLetterURL: newFilePath })
+                self.setState({ successMessage, coverLetterURL: newFilePath })
 
                 let tasks = self.state.tasks
                 for (let i = 1; i <= tasks.length; i++) {
@@ -1716,7 +1710,7 @@ class Apply extends Component {
                 }
                 self.checkCompleteness(tasks)
               } else if (category === 'letterOfRecommendation') {
-                self.setState({ serverPostSuccess, serverSuccessMessage, letterOfRecommendationURL: newFilePath })
+                self.setState({ successMessage, letterOfRecommendationURL: newFilePath })
 
                 let tasks = self.state.tasks
                 for (let i = 1; i <= tasks.length; i++) {
@@ -1727,7 +1721,7 @@ class Apply extends Component {
                 }
                 self.checkCompleteness(tasks)
               } else if (category === 'identification') {
-                self.setState({ serverPostSuccess, serverSuccessMessage, identificationURL: newFilePath  })
+                self.setState({ successMessage, identificationURL: newFilePath  })
 
                 let tasks = self.state.tasks
                 for (let i = 1; i <= tasks.length; i++) {
@@ -1738,7 +1732,7 @@ class Apply extends Component {
                 }
                 self.checkCompleteness(tasks)
               } else if (category === 'transcript') {
-                self.setState({ serverPostSuccess, serverSuccessMessage, transcriptURL: newFilePath  })
+                self.setState({ successMessage, transcriptURL: newFilePath  })
 
                 let tasks = self.state.tasks
                 for (let i = 1; i <= tasks.length; i++) {
@@ -1753,11 +1747,10 @@ class Apply extends Component {
           } else {
             console.log('no existing file')
 
-            const serverPostSuccess = true
-            const serverSuccessMessage = 'File was saved successfully'
+            const successMessage = 'File was saved successfully'
 
             if (category === 'resume') {
-              self.setState({ serverPostSuccess, serverSuccessMessage, resumeURL: newFilePath })
+              self.setState({ successMessage, resumeURL: newFilePath })
               let tasks = self.state.tasks
               for (let i = 1; i <= tasks.length; i++) {
                 if (tasks[i - 1].shorthand === category) {
@@ -1767,7 +1760,7 @@ class Apply extends Component {
               }
               self.checkCompleteness(tasks)
             } else if (category === 'coverLetter') {
-              self.setState({ serverPostSuccess, serverSuccessMessage, coverLetterURL: newFilePath })
+              self.setState({ successMessage, coverLetterURL: newFilePath })
               let tasks = self.state.tasks
               for (let i = 1; i <= tasks.length; i++) {
                 if (tasks[i - 1].shorthand === category) {
@@ -1777,7 +1770,7 @@ class Apply extends Component {
               }
               self.checkCompleteness(tasks)
             } else if (category === 'letterOfRecommendation') {
-              self.setState({ serverPostSuccess, serverSuccessMessage, letterOfRecommendationURL: newFilePath })
+              self.setState({ successMessage, letterOfRecommendationURL: newFilePath })
               let tasks = self.state.tasks
               for (let i = 1; i <= tasks.length; i++) {
                 if (tasks[i - 1].shorthand === category) {
@@ -1787,7 +1780,7 @@ class Apply extends Component {
               }
               self.checkCompleteness(tasks)
             } else if (category === 'identification') {
-              self.setState({ serverPostSuccess, serverSuccessMessage, identificationURL: newFilePath  })
+              self.setState({ successMessage, identificationURL: newFilePath  })
               let tasks = self.state.tasks
               for (let i = 1; i <= tasks.length; i++) {
                 if (tasks[i - 1].shorthand === category) {
@@ -1797,7 +1790,7 @@ class Apply extends Component {
               }
               self.checkCompleteness(tasks)
             } else if (category === 'transcript') {
-              self.setState({ serverPostSuccess, serverSuccessMessage, transcriptURL: newFilePath  })
+              self.setState({ successMessage, transcriptURL: newFilePath  })
               let tasks = self.state.tasks
               for (let i = 1; i <= tasks.length; i++) {
                 if (tasks[i - 1].shorthand === category) {
@@ -1812,16 +1805,12 @@ class Apply extends Component {
 
       } else if (res.status === 401) {
         //unauthorized
-        this.setState({
-            serverSuccessProfilePic: false,
-            serverErrorMessageProfilePic: 'There was an error saving profile pic: Unauthorized save.'
+        this.setState({ errorMessage: 'There was an error saving profile pic: Unauthorized save.'
         })
       }
     }.bind(this), function (e) {
       //there was an error
-      this.setState({
-          serverSuccessProfilePic: false,
-          serverErrorMessageProfilePic: 'There was an error saving profile pic:' + e
+      this.setState({ errorMessage: 'There was an error saving profile pic:' + e
       })
     }.bind(this));
   }
@@ -1869,7 +1858,7 @@ class Apply extends Component {
 
     }).catch((error) => {
         console.log('Login did not work for some reason', error);
-        return { serverErrorMessage: error }
+        return { errorMessage: error }
     });
   }
 
@@ -2017,7 +2006,7 @@ class Apply extends Component {
           }
         }
       }
-
+      console.log('l mo?')
       let _id = null
       if (this.state.application) {
         if (this.state.application._id) {
@@ -2222,10 +2211,10 @@ class Apply extends Component {
         if (response.data.success) {
           console.log('saved successfully', response.data.message)
 
-          let serverSuccessMessage = 'Application submitted successfully!'
+          let successMessage = 'Application submitted successfully!'
 
           if (_id) {
-            serverSuccessMessage = 'Application successfully updated!'
+            successMessage = 'Application successfully updated!'
           }
           // degree, zipcode
 
@@ -2237,10 +2226,7 @@ class Apply extends Component {
 
           const applicationSubmitted = true
 
-          this.setState({
-            serverSuccess: true,
-            serverSuccessMessage, tasks, applicationSubmitted, isSaving: false
-          })
+          this.setState({ successMessage, tasks, applicationSubmitted, isSaving: false })
 
           if (this.state.basicFormHasChanged) {
 
@@ -2266,11 +2252,11 @@ class Apply extends Component {
               } else {
                 console.log('profile save was not successful')
 
-                this.setState({ serverError: true, serverErrorMessage: response.data.error })
+                this.setState({ errorMessage: response.data.error })
               }
             }).catch((error) => {
                 console.log('Saving the info did not work', error);
-                this.setState({ serverError: true, serverErrorMessage: error.toString() })
+                this.setState({ errorMessage: error.toString() })
 
             });
           }
@@ -2279,21 +2265,18 @@ class Apply extends Component {
           console.log('did not save successfully', response.data)
 
           this.setState({
-            serverSuccess: false,
-            serverErrorMessage: 'error: ' + response.data.message.toString(), isSaving: false
+            errorMessage: 'error: ' + response.data.message.toString(), isSaving: false
           })
         }
       }).catch((error) => {
           console.log('save did not work', error);
           this.setState({
-            serverSuccess: false,
-            serverErrorMessage: 'There was an error submitting your application', isSaving: false
+            errorMessage: 'There was an error submitting your application', isSaving: false
           })
       });
     } else {
       this.setState({
-        serverSuccess: false,
-        serverErrorMessage: 'All required information for the application has not yet been successfully imported!'
+        errorMessage: 'All required information for the application has not yet been successfully imported!'
       })
     }
   }
@@ -2536,7 +2519,7 @@ class Apply extends Component {
   }
 
   renderExpandedTask(task, index) {
-    console.log('renderExpandedTask called', task, index)
+    console.log('renderExpandedTask called')
 
     if (task.shorthand === 'basicInfo') {
       // schoolName, major, gradYear, linkedIn, github, portfolioLink, phoneNumber,
@@ -2734,7 +2717,7 @@ class Apply extends Component {
 
     let rows = []
     if (items && items.length > 0) {
-      console.log('show items: ', items)
+      // console.log('show items: ', items)
       for (let i = 1; i <= items.length; i++) {
         const index = i - 1
         const question = items[index]
@@ -2884,9 +2867,12 @@ class Apply extends Component {
     if (type === 'multipleChoice') {
 
       if (answerChoices) {
-
+        // let keyName = value
+        // if (screening) {
+        //   keyName = value.name
+        // }
         rows.push(
-          <View key={answerChoices + passedIndex} style={[styles.topPadding]}>
+          <View key={type + passedIndex} style={[styles.topPadding]}>
             {(answerChoices) && (
               <View style={[styles.rowDirection,styles.flexWrap]}>
                 {answerChoices.map((value, optionIndex) =>
@@ -2896,13 +2882,13 @@ class Apply extends Component {
                         <View>
                           {(responses[passedIndex] === answerChoices[optionIndex].name) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler("listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, answerChoices[optionIndex].name) }>
                                 <Text style={[styles.descriptionText1,styles.whiteColor]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, value: answerChoices[optionIndex].name }}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("listedAnswer|multipleChoice|" + passedIndex + "|" + taskShorthand, answerChoices[optionIndex].name) }>
                                 <Text style={[styles.descriptionText2]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
@@ -2912,13 +2898,13 @@ class Apply extends Component {
                         <View>
                           {(responses[passedIndex] === answerChoices[optionIndex]) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler("listedAnswer|multipleChoice|" + passedIndex , answerChoices[optionIndex]) }>
                                 <Text style={[styles.descriptionText1,styles.whiteColor]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleChoice|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("listedAnswer|multipleChoice|" + passedIndex, answerChoices[optionIndex]) }>
                                 <Text style={[styles.descriptionText2]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
@@ -2941,7 +2927,7 @@ class Apply extends Component {
       if (answerChoices) {
 
         rows.push(
-          <View key={answerChoices + passedIndex} style={[styles.topPadding]}>
+          <View key={type + passedIndex} style={[styles.topPadding]}>
             {(answerChoices) && (
               <View style={[styles.rowDirection,styles.flexWrap]}>
                 {answerChoices.map((value, optionIndex) =>
@@ -2952,13 +2938,13 @@ class Apply extends Component {
                         <View>
                           {(Array.isArray(responses[passedIndex]) && responses[passedIndex].includes(answerChoices[optionIndex].name)) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler("listedAnswer|multipleAnswer|" + passedIndex, answerChoices[optionIndex].name) }>
                                 <Text style={[styles.descriptionText1,styles.whiteColor]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex].name}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("listedAnswer|multipleAnswer|" + passedIndex, answerChoices[optionIndex].name) }>
                                 <Text style={[styles.descriptionText2]}>{value.name}</Text>
                               </TouchableOpacity>
                             </View>
@@ -2968,13 +2954,13 @@ class Apply extends Component {
                         <View>
                           {(Array.isArray(responses[passedIndex]) && responses[passedIndex].includes(answerChoices[optionIndex])) ? (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: this.state.customAssessment.questions[passedIndex].answerChoices[optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder,styles.ctaBackgroundColor]} onPress={() => this.formChangeHandler("listedAnswer|multipleAnswer|" + passedIndex, this.state.customAssessment.questions[passedIndex].answerChoices[optionIndex]) }>
                                 <Text style={[styles.descriptionText1,styles.whiteColor]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
                           ) : (
                             <View>
-                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler({ target: { name: "listedAnswer|multipleAnswer|" + passedIndex, value: answerChoices[optionIndex]}}) }>
+                              <TouchableOpacity style={[styles.row5,styles.horizontalPadding20,styles.roundedCorners,styles.ctaBorder]} onPress={() => this.formChangeHandler("listedAnswer|multipleAnswer|" + passedIndex, answerChoices[optionIndex]) }>
                                 <Text style={[styles.descriptionText2]}>{value}</Text>
                               </TouchableOpacity>
                             </View>
@@ -3102,7 +3088,7 @@ class Apply extends Component {
     // console.log('show myOrgs: ', myOrgs)
     if (myOrgs && myOrgs.includes(this.state.selectedPosting.orgCode)) {
 
-      this.setState({ serverSuccessMessage: null, serverErrorMessage: null })
+      this.setState({ successMessage: null, errorMessage: null })
 
       const emailId = this.state.emailId
       const activeOrg = this.state.selectedPosting.orgCode
@@ -3183,16 +3169,9 @@ class Apply extends Component {
                         </View>
 
                         <View style={[styles.calcColumn60,styles.row20]}>
-                          { (this.state.clientErrorMessage!== '') && <Text style={[styles.errorColor,styles.bottomPadding20]}>{this.state.clientErrorMessage}</Text> }
-                          { (this.state.serverSuccess) ? (
-                            <View>
-                              {(this.state.serverSuccessMessage) && <Text style={[styles.ctaColor,styles.bottomPadding20]}>{this.state.serverSuccessMessage}</Text>}
-                            </View>
-                          ) : (
-                            <View>
-                              {(this.state.serverErrorMessage) && <Text style={[styles.errorColor,styles.bottomPadding20]}>{this.state.serverErrorMessage}</Text>}
-                            </View>
-                          )}
+
+                          {(this.state.errorMessage) ? <Text style={[styles.standardText, styles.errorColor,styles.bottomPadding20]}>{this.state.errorMessage}</Text> : <View />}
+                          {(this.state.successMessage) ? <Text style={[styles.standardText, styles.ctaColor,styles.bottomPadding20]}>{this.state.successMessage}</Text> : <View />}
 
                           {(this.state.isSaving) ? (
                             <View style={[styles.leftPadding20]}>

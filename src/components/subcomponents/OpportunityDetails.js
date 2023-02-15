@@ -3170,11 +3170,13 @@ class OpportunityDetails extends Component {
                                               ) : (
                                                 <View>
 
+                                                  <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Apply</Text></TouchableOpacity>
+                                                  {/*
                                                   {(this.state.selectedOpportunity.direct) ? (
                                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Apply</Text></TouchableOpacity>
                                                   ) : (
                                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Apply', { selectedPosting: this.state.selectedOpportunity, application: this.state.application })} style={[styles.btnPrimary,styles.ctaBackgroundColor,styles.flexCenter]}><Text style={[styles.standardText,styles.whiteColor]}>Request a Referral</Text></TouchableOpacity>
-                                                  )}
+                                                  )}*/}
                                                 </View>
                                               )}
                                             </View>
