@@ -308,8 +308,10 @@ class Apply extends Component {
                 const postingOrgName = response.data.orgInfo.orgName
                 const postingOrgContactEmail = response.data.orgInfo.contactEmail
                 const placementPartners = response.data.orgInfo.placementPartners
+                const signUpFieldsRequired = response.data.orgInfo.signUpFieldsRequired
 
-                this.setState({ postingOrgCode, postingOrgName, postingOrgContactEmail, placementPartners });
+                this.setState({ postingOrgCode, postingOrgName, postingOrgContactEmail,
+                  placementPartners, signUpFieldsRequired });
 
               } else {
                 console.log('org info query did not work', response.data.message)
@@ -1987,7 +1989,34 @@ class Apply extends Component {
 
     if (this.state.applicationComplete && this.state.emailId) {
 
-      this.setState({ isSaving: true })
+      this.setState({ isSaving: true, errorMessage: null, successMessage: null })
+
+      if (this.state.signUpFieldsRequired && this.state.signUpFieldsRequired.length > 0) {
+        for (let i = 1; i <= this.state.signUpFieldsRequired.length; i++) {
+          console.log('l1')
+          const item = this.state.signUpFieldsRequired[i - 1]
+
+          if (item.required) {
+            console.log('l2')
+            // multiple answer is array
+            if (item.questionType === 'Multiple Answer' && (!this.state[item.shorthand] || this.state[item.shorthand].length === 0)) {
+              return this.setState({ errorMessage: 'Please add answer(s) for ' + item.name, isSaving: false })
+            } else if (!item.shorthand.includes("|") && (!this.state[item.shorthand] || !this.state[item.shorthand] === '')) {
+              return this.setState({ errorMessage: 'Please add an answer for ' + item.name, isSaving: false })
+            } else if (item.shorthand.includes("|") && (!this.state[item.shorthand.split("|")[0]] || this.state[item.shorthand.split("|")[0]].length === 0)) {
+              return this.setState({ errorMessage: 'Please add answer(s) for the education fields', isSaving: false })
+            } else if (item.shorthand.includes("|")) {
+              console.log('l3')
+              if (!this.state[item.shorthand.split("|")[0]] || this.state[item.shorthand.split("|")[0]].length === 0) {
+                return this.setState({ errorMessage: 'Please add answer(s) for the education fields', isSaving: false })
+              } else if (!this.state[item.shorthand.split("|")[0]][0][item.shorthand.split("|")[1]]) {
+                return this.setState({ errorMessage: 'Please add answer(s) for each of the education fields', isSaving: false })
+              }
+              console.log('l4')
+            }
+          }
+        }
+      }
 
       let _id = null
       if (this.state.application) {
