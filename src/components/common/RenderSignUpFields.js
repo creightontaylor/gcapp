@@ -339,20 +339,48 @@ class RenderSignUpFields extends Component {
       console.log('submitSignUpFields called')
 
       const signUpFieldsRequired = this.props.orgSelected.signUpFieldsRequired
+      // if (signUpFieldsRequired && signUpFieldsRequired.length > 0) {
+      //   for (let i = 1; i <= signUpFieldsRequired.length; i++) {
+      //     console.log('l1')
+      //     if (signUpFieldsRequired[i - 1].required) {
+      //       console.log('l2', signUpFieldsRequired[i - 1].shorthand, this.state.education, this.state[signUpFieldsRequired[i - 1].shorthand])
+      //       // multiple answer is array
+      //       if (signUpFieldsRequired[i - 1].questionType === 'Multiple Answer' && (!this.state[signUpFieldsRequired[i - 1].shorthand] || this.state[signUpFieldsRequired[i - 1].shorthand].length === 0)) {
+      //         return this.setState({ errorMessage: 'Please add answer(s) for ' + signUpFieldsRequired[i - 1].name })
+      //       } else if (!signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand] || !this.state[signUpFieldsRequired[i - 1].shorthand] === '')) {
+      //         return this.setState({ errorMessage: 'Please add an answer for ' + signUpFieldsRequired[i - 1].name })
+      //       } else if (signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]] || this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]].length === 0)) {
+      //         console.log('show education signUpFieldsRequired: ', signUpFieldsRequired[i - 1])
+      //         return this.setState({ errorMessage: 'Please add answer(s) for the education fields' })
+      //         // return this.setState({ errorMessage: 'Please add answer(s) for the ' + signUpFieldsRequired[i - 1].name + ' field' })
+      //       }
+      //     }
+      //   }
+      // }
+
       if (signUpFieldsRequired && signUpFieldsRequired.length > 0) {
         for (let i = 1; i <= signUpFieldsRequired.length; i++) {
           console.log('l1')
-          if (signUpFieldsRequired[i - 1].required) {
-            console.log('l2', signUpFieldsRequired[i - 1].shorthand, this.state.education, this.state[signUpFieldsRequired[i - 1].shorthand])
+          const item = signUpFieldsRequired[i - 1]
+
+          if (item.required) {
+            console.log('l2')
+
             // multiple answer is array
-            if (signUpFieldsRequired[i - 1].questionType === 'Multiple Answer' && (!this.state[signUpFieldsRequired[i - 1].shorthand] || this.state[signUpFieldsRequired[i - 1].shorthand].length === 0)) {
-              return this.setState({ errorMessage: 'Please add answer(s) for ' + signUpFieldsRequired[i - 1].name })
-            } else if (!signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand] || !this.state[signUpFieldsRequired[i - 1].shorthand] === '')) {
-              return this.setState({ errorMessage: 'Please add an answer for ' + signUpFieldsRequired[i - 1].name })
-            } else if (signUpFieldsRequired[i - 1].shorthand.includes("|") && (!this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]] || this.state[signUpFieldsRequired[i - 1].shorthand.split("|")[0]].length === 0)) {
-              console.log('show education signUpFieldsRequired: ', signUpFieldsRequired[i - 1])
+            if (item.questionType === 'Multiple Answer' && (!this.state[item.shorthand] || this.state[item.shorthand].length === 0)) {
+              return this.setState({ errorMessage: 'Please add answer(s) for ' + item.name })
+            } else if (!item.shorthand.includes("|") && (!this.state[item.shorthand] || !this.state[item.shorthand] === '')) {
+              return this.setState({ errorMessage: 'Please add an answer for ' + item.name })
+            } else if (item.shorthand.includes("|") && (!this.state[item.shorthand.split("|")[0]] || this.state[item.shorthand.split("|")[0]].length === 0)) {
               return this.setState({ errorMessage: 'Please add answer(s) for the education fields' })
-              // return this.setState({ errorMessage: 'Please add answer(s) for the ' + signUpFieldsRequired[i - 1].name + ' field' })
+            } else if (item.shorthand.includes("|")) {
+              console.log('l3')
+              if (!this.state[item.shorthand.split("|")[0]] || this.state[item.shorthand.split("|")[0]].length === 0) {
+                return this.setState({ errorMessage: 'Please add answer(s) for the education fields' })
+              } else if (!this.state[item.shorthand.split("|")[0]][0][item.shorthand.split("|")[1]]) {
+                return this.setState({ errorMessage: 'Please add answer(s) for each of the education fields' })
+              }
+              console.log('l4')
             }
           }
         }

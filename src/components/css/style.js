@@ -1,7 +1,7 @@
 'use strict';
 import { StyleSheet, Dimensions } from 'react-native';
 
-const primaryColor = '#52A6E5'
+const primaryColor = '#1F82CC'
 const primaryColorLight = 'rgba(82,166,229,0.2)'
 const backupPrimaryColor = '#52A6E5'
 const backupPrimaryColorLight = 'rgba(82,166,229,0.2)'

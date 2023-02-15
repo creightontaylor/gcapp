@@ -794,10 +794,11 @@ class Apply extends Component {
             const adversityList = response.data.user.adversityList
             const address = response.data.user.address
 
-            let basicInfo = { firstName, lastName, schoolName, gradYear }
-            if (education) {
-              basicInfo = { firstName, lastName, schoolName, gradYear }
-            }
+            let basicInfo = response.data.user
+            // let basicInfo = { firstName, lastName, schoolName, gradYear }
+            // if (education) {
+            //   basicInfo = { firstName, lastName, schoolName, gradYear }
+            // }
 
             let requiredBasicValues = this.state.requiredBasicValues
 
@@ -1879,7 +1880,7 @@ class Apply extends Component {
           pointTracker = pointTracker + incrementalPoint
         } else if (requiredComponents[i - 1] === 'lastName' && value.lastName && value.lastName !== '') {
           pointTracker = pointTracker + incrementalPoint
-        } else if (requiredComponents[i - 1] === 'schoolName' && value.schoolName && value.schoolName !== '') {
+        } else if ((requiredComponents[i - 1] === 'schoolName' && value.schoolName && value.schoolName !== '') || requiredComponents[i - 1] === 'school' && value.school && value.school !== '') {
           pointTracker = pointTracker + incrementalPoint
         } else if (requiredComponents[i - 1] === 'gradYear' && value.gradYear && value.gradYear !== '') {
           pointTracker = pointTracker + incrementalPoint
@@ -2500,10 +2501,25 @@ class Apply extends Component {
       if (source === 'basic') {
         this.setState({ [name]: value, basicFormHasChanged: true })
 
+        // let basicInfo = {
+        //   firstName: this.state.firstName, lastName: this.state.lastName,
+        //   schoolName: this.state.schoolName, gradYear: this.state.gradYear,
+        //   educationStatus: this.state.educationStatus,
+        //   education: this.state.education, certificates: this.state.certificates,
+        //   dateOfBirth: this.state.dateOfBirth, pathway: this.state.pathway,
+        //   race: this.state.race, races: this.state.races, selfDescribedRace: this.state.selfDescribedRace,
+        //   gender: this.state.gender, veteran: this.state.veteran, workAuthorization: this.state.workAuthorization,
+        //   numberOfMembers: this.state.numberOfMembers, householdIncome: this.state.householdIncome,
+        //   fosterYouth: this.state.fosterYouth, homeless: this.state.homeless,
+        //   incarcerated: this.state.incarcerated, adversityList: this.state.adversityList,
+        //   address: this.state.address
+        // }
+
         let basicInfo = {
           firstName: this.state.firstName, lastName: this.state.lastName,
-          schoolName: this.state.schoolName, gradYear: this.state.gradYear, education: this.state.education,
-          certificates: this.state.certificates
+          schoolName: this.state.schoolName, gradYear: this.state.gradYear,
+          educationStatus: this.state.educationStatus,
+          education: this.state.education, certificates: this.state.certificates
         }
         basicInfo[name] = value
 
