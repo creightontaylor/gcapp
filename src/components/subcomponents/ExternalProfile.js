@@ -428,7 +428,7 @@ class ExternalProfile extends Component {
                 }
 
                 if (assessmentPublicPreference === 'All' || assessmentPublicPreference === 'Some') {
-                  Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId } })
+                  Axios.get('https://www.guidedcompass.com/api/assessment/results', { params: { emailId: profileEmail } })
                    .then((response) => {
                      console.log('query for assessment results worked');
 

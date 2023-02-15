@@ -83,6 +83,8 @@ class Walkthrough extends Component {
     this.passPosts = this.passPosts.bind(this)
     this.saveToProfile = this.saveToProfile.bind(this)
 
+    this.child = React.createRef();
+
   }
 
   componentDidMount() {
@@ -93,7 +95,7 @@ class Walkthrough extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate called within SubWalkthrough', this.props.activeOrg, prevProps.activeOrg)
+    console.log('componentDidUpdate called within SubWalkthrough')
 
     if (this.props.accountCode !== prevProps.accountCode) {
       this.retrieveData()
@@ -150,7 +152,7 @@ class Walkthrough extends Component {
         // career-seeker
         Axios.get('https://www.guidedcompass.com/api/workoptions')
         .then((response) => {
-          console.log('Work options query tried', response.data);
+          console.log('Work options query tried');
 
           if (response.data.success) {
             console.log('Work options query succeeded')
@@ -203,7 +205,7 @@ class Walkthrough extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
             .then((response) => {
-              console.log('Org info query attempted cc', response.data);
+              console.log('Org info query attempted cc');
 
                 if (response.data.success) {
                   console.log('org info query worked')
@@ -243,7 +245,7 @@ class Walkthrough extends Component {
            console.log('query for assessment results worked');
 
            if (response.data.success) {
-             console.log('actual assessment results', response.data)
+             console.log('actual assessment results')
 
              let newSkillAnswers = null
              if (response.data.results.newSkillAnswers && response.data.results.newSkillAnswers.length > 0) {
@@ -259,7 +261,7 @@ class Walkthrough extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/groups', { params: { orgCode: activeOrg, emailId: email, type: 'myGroups' }})
         .then((response) => {
-         console.log('My groups query worked', response.data);
+         console.log('My groups query worked');
 
           if (response.data.success) {
 
@@ -294,7 +296,7 @@ class Walkthrough extends Component {
     .then((response) => {
 
         if (response.data.success) {
-          console.log('User profile query worked', response.data);
+          console.log('User profile query worked');
 
           const referrerName = response.data.user.referrerName
           const referrerEmail = response.data.user.referrerEmail
@@ -335,7 +337,7 @@ class Walkthrough extends Component {
     }
   }
 
-  movePage(forward) {
+  movePage(forward, callSubmit) {
     console.log('moveForward called', this.state.pageIndex)
 
     this.setState({ isSaving: true, errorMessage: null, successMessage: null })
@@ -360,8 +362,13 @@ class Walkthrough extends Component {
         }
       } else if (this.state.pageIndex === 2) {
         // this is handled by EditProfileDetails
+        // console.log('supposed to be handled by editProfileDetails')
 
-        this.setState({ pageIndex: this.state.pageIndex + 1, isSaving: false })
+        if (callSubmit) {
+          this.child.current.handleSubmit();
+        } else {
+          this.setState({ pageIndex: this.state.pageIndex + 1, isSaving: false })
+        }
 
         // window.scrollTo(0, 0)
         // this.setState({ pageIndex: this.state.pageIndex + 1, isSaving: false })
@@ -407,7 +414,7 @@ class Walkthrough extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Account update worked', response.data);
+          console.log('Account update worked');
 
           // window.scrollTo(0, 0)
           this.setState({ successMessage: 'Account information saved successfully!', pageIndex: this.state.pageIndex + 1, isSaving: false })
@@ -542,8 +549,8 @@ class Walkthrough extends Component {
               <Image source={(this.state.orgLogo) ? { uri: this.state.orgLogo} : { uri: industryIconDark}} style={(this.state.activeOrg === 'guidedcompass') ? [styles.square50,styles.contain] : [styles.square80,styles.contain]}/>
             </View>
             <View style={[styles.flex20,styles.alignEnd]}>
-              <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.movePage(true)} style={[styles.rowDirection]}>
-                <Text onPress={() => this.movePage(true)} style={[styles.ctaColor,styles.descriptionText2,styles.boldText,styles.rightText]}>Next</Text>
+              <TouchableOpacity disabled={this.state.isSaving} onPress={() => this.movePage(true, true)} style={[styles.rowDirection]}>
+                <Text onPress={() => this.movePage(true, true)} style={[styles.ctaColor,styles.descriptionText2,styles.boldText,styles.rightText]}>Next</Text>
                 <Image source={{ uri: rightCarrotBlue }} style={[styles.square10,styles.contain,styles.leftMargin5,styles.topMargin5]} />
               </TouchableOpacity>
             </View>
@@ -570,7 +577,6 @@ class Walkthrough extends Component {
               ) : (
                 <View />
               )}
-
             </View>
           </View>
         </View>
@@ -735,7 +741,7 @@ class Walkthrough extends Component {
                   <Text style={[styles.headingText2]}>Who you are</Text>
 
                   <View>
-                    <SubEditProfileDetails activeOrg={this.state.activeOrg} navigation={this.props.navigation} location={this.props.location} passedType="Basic" movePage={this.movePage} fromWalkthrough={true} />
+                    <SubEditProfileDetails activeOrg={this.state.activeOrg} navigation={this.props.navigation} location={this.props.location} passedType="Basic" movePage={this.movePage} fromWalkthrough={true} ref={this.child} />
                   </View>
                 </View>
               </View>

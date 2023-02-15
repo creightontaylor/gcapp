@@ -364,7 +364,7 @@ class EditProfileDetails extends Component {
 
         Axios.get('https://www.guidedcompass.com/api/org', { params: { orgCode: activeOrg } })
         .then((response) => {
-          console.log('Org info query attempted cc', response.data);
+          console.log('Org info query attempted cc');
 
             if (response.data.success) {
               console.log('org info query worked')
@@ -645,7 +645,7 @@ class EditProfileDetails extends Component {
 
           Axios.get('https://www.guidedcompass.com/api/projects', { params: { emailId: email, includeCollaborations: true } })
           .then((response) => {
-            console.log('Projects query attempted', response.data);
+            console.log('Projects query attempted');
 
               if (response.data.success) {
                 console.log('successfully retrieved projects')
@@ -813,7 +813,7 @@ class EditProfileDetails extends Component {
             .then((response) => {
 
                 if (response.data.success) {
-                  console.log('Goals received query worked', response.data);
+                  console.log('Goals received query worked');
 
                   let goalOptions = [{ title: 'Select a goal'}].concat(response.data.goals)
                   this.setState({ goalOptions })
@@ -831,7 +831,7 @@ class EditProfileDetails extends Component {
             .then((response) => {
 
                 if (response.data.success) {
-                  console.log('Passions received query worked', response.data);
+                  console.log('Passions received query worked');
 
                   let passionOptions = [{ passionTitle: 'Select a passion'}].concat(response.data.passions)
                   this.setState({ passionOptions })
@@ -850,7 +850,7 @@ class EditProfileDetails extends Component {
 
                if (response.data.success) {
 
-                 console.log('actual assessment results', response.data)
+                 console.log('actual assessment results')
 
                  if (response.data.results) {
 
@@ -876,7 +876,7 @@ class EditProfileDetails extends Component {
                  }
 
                } else {
-                 console.log('error response', response.data)
+                 console.log('error response')
 
                  this.setState({ resultsErrorMessage: response.data.message })
                }
@@ -888,7 +888,7 @@ class EditProfileDetails extends Component {
             // retrieve endorsements
             Axios.get('https://www.guidedcompass.com/api/story', { params: { emailId: email } })
             .then((response) => {
-                console.log('Story query worked', response.data);
+                console.log('Story query worked');
 
                 if (response.data.success) {
 
@@ -2345,7 +2345,7 @@ class EditProfileDetails extends Component {
 
               Axios.put('https://www.guidedcompass.com/api/file', { deleteKey })
               .then((response) => {
-                console.log('tried to delete', response.data)
+                console.log('tried to delete')
                 if (response.data.success) {
                   //save values
                   console.log('File delete worked');
@@ -2484,7 +2484,8 @@ class EditProfileDetails extends Component {
         if (response.data.success) {
           //save values
 
-          console.log('Public preferences save worked ', response.data);
+          console.log('Public preferences save worked ');
+
           this.setState({ publicProfile: false, publicPreferencesSuccessMessage: 'Public preferences saved successfully', isSaving: false })
 
         } else {
@@ -2524,7 +2525,7 @@ class EditProfileDetails extends Component {
 
             Axios.get('https://www.guidedcompass.com/api/profile/confirm-unique-username', { params: { emailId, username } })
             .then((response) => {
-              console.log('Confirm unique username query attempted', response.data);
+              console.log('Confirm unique username query attempted');
 
                 if (response.data.success) {
                   console.log('unique username query worked')
@@ -2603,7 +2604,8 @@ class EditProfileDetails extends Component {
             if (response.data.success) {
               //save values
 
-              console.log('Public preferences save worked ', response.data);
+              console.log('Public preferences save worked ');
+
               this.setState({ publicProfile: true, publicPreferencesSuccessMessage: 'Public preferences saved successfully', isSaving: false })
               if (this.props.fromWalkthrough && segue) {
                 this.segueToApp()
@@ -2778,6 +2780,7 @@ class EditProfileDetails extends Component {
         } else if (this.state.requirePersonalInfo && (!this.state.adversityList || this.state.adversityList.length === 0)) {
           this.setState({ serverErrorMessageText: 'Please "designate all that apply" for program and matching purposes.'})
         } else {
+
           let liu = ''
 
           if (this.state.linkedInURL) {
@@ -2833,6 +2836,7 @@ class EditProfileDetails extends Component {
           let gradYear = this.state.gradYear
           const educationStatus = this.state.educationStatus
           const education = this.state.education
+
           if (education && education.length > 0) {
             let selectedEducation = null
             for (let i = 1; i <= education.length; i++) {
@@ -2840,6 +2844,7 @@ class EditProfileDetails extends Component {
                 selectedEducation = education[i - 1]
               } else if (education[i - 1].endDate && education[i - 1].endDate.split(" ")) {
                 const endYear = Number(education[i - 1].endDate.split(" ")[1])
+                console.log('show endYear: ', endYear)
                 if (!selectedEducation) {
                   selectedEducation = education[i - 1]
                 } else if (endYear > Number(selectedEducation.endDate.split(" ")[1])) {
@@ -2847,17 +2852,65 @@ class EditProfileDetails extends Component {
                 }
               }
             }
-            if (selectedEducation) {
-              school = selectedEducation.name
-              degree = selectedEducation.degree
-              major = selectedEducation.major
-              if (selectedEducation.endDate) {
-                const endYear = Number(selectedEducation.endDate.split(" ")[1])
-                gradYear = endYear
-                console.log('show gradYear: ', gradYear)
+
+            if (!selectedEducation) {
+              if (this.state.requirePersonalInfo) {
+                return this.setState({ serverErrorMessageText: 'Please complete the form for at least one school / certificate in the education section'})
+              }
+            } else {
+              if (this.state.requirePersonalInfo) {
+                if ((!selectedEducation.name || selectedEducation.name === '') || (!selectedEducation.major || selectedEducation.major === '')) {
+                  return this.setState({ serverErrorMessageText: 'Please complete the form for at least one school / certificate in the education section'})
+                } else {
+                  school = selectedEducation.name
+                  degree = selectedEducation.degree
+                  major = selectedEducation.major
+                  if (selectedEducation.endDate) {
+                    const endYear = Number(selectedEducation.endDate.split(" ")[1])
+                    gradYear = endYear
+                  }
+                }
+              } else {
+                school = selectedEducation.name
+                degree = selectedEducation.degree
+                major = selectedEducation.major
+                if (selectedEducation.endDate) {
+                  const endYear = Number(selectedEducation.endDate.split(" ")[1])
+                  gradYear = endYear
+                }
               }
             }
+          } else {
+            if (this.state.requirePersonalInfo) {
+              return this.setState({ serverErrorMessageText: 'Please add at least one school / certificate to education'})
+            }
           }
+
+          // if (education && education.length > 0) {
+          //   let selectedEducation = null
+          //   for (let i = 1; i <= education.length; i++) {
+          //     if (education[i - 1].isContinual) {
+          //       selectedEducation = education[i - 1]
+          //     } else if (education[i - 1].endDate && education[i - 1].endDate.split(" ")) {
+          //       const endYear = Number(education[i - 1].endDate.split(" ")[1])
+          //       if (!selectedEducation) {
+          //         selectedEducation = education[i - 1]
+          //       } else if (endYear > Number(selectedEducation.endDate.split(" ")[1])) {
+          //         selectedEducation = education[i - 1]
+          //       }
+          //     }
+          //   }
+          //   if (selectedEducation) {
+          //     school = selectedEducation.name
+          //     degree = selectedEducation.degree
+          //     major = selectedEducation.major
+          //     if (selectedEducation.endDate) {
+          //       const endYear = Number(selectedEducation.endDate.split(" ")[1])
+          //       gradYear = endYear
+          //       console.log('show gradYear: ', gradYear)
+          //     }
+          //   }
+          // }
 
           const certificates = this.state.certificates
 
@@ -3126,7 +3179,7 @@ class EditProfileDetails extends Component {
               console.log('test 4')
               if (response.data.success) {
                 //save values
-                console.log('Project save worked ', response.data);
+                console.log('Project save worked ');
                 //report whether values were successfully saved
 
                 let projectHasChangedArray = this.state.projectHasChangedArray
@@ -3290,7 +3343,7 @@ class EditProfileDetails extends Component {
 
               if (response.data.success) {
                 //save values
-                console.log('Experience save worked worked', response.data);
+                console.log('Experience save worked worked');
                 //report whether values were successfully saved
 
                 let experienceHasChangedArray = this.state.experienceHasChangedArray
@@ -3437,7 +3490,7 @@ class EditProfileDetails extends Component {
 
                 if (response.data.success) {
                   //save values
-                  console.log('Extracurricular save worked worked', response.data);
+                  console.log('Extracurricular save worked worked');
                   //report whether values were successfully saved
 
                   let extracurricularHasChangedArray = this.state.extracurricularHasChangedArray
@@ -3509,7 +3562,7 @@ class EditProfileDetails extends Component {
 
                 if (response.data.success) {
                   //save values
-                  console.log('Award save worked worked', response.data);
+                  console.log('Award save worked worked');
                   //report whether values were successfully saved
 
                   let awardHasChangedArray = this.state.awardHasChangedArray
@@ -3873,7 +3926,7 @@ class EditProfileDetails extends Component {
         .then((response) => {
 
             if (response.data.success) {
-              console.log('User profile query worked', response.data);
+              console.log('User profile query worked');
 
               const pictureURL = response.data.user.pictureURL
               const firstName = response.data.user.firstName
@@ -4908,7 +4961,7 @@ class EditProfileDetails extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Project delete worked ', response.data);
+          console.log('Project delete worked ');
 
           projects.splice(index, 1)
           this.setState({ projects, serverSuccessText: true, serverSuccessMessageText: 'Projects saved successfully!' })
@@ -4935,7 +4988,7 @@ class EditProfileDetails extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Experience delete worked ', response.data);
+          console.log('Experience delete worked ');
 
           experience.splice(index, 1)
           this.setState({ experience, serverSuccessText: true, serverSuccessMessageText: 'Projects saved successfully!' })
@@ -4966,7 +5019,7 @@ class EditProfileDetails extends Component {
 
         if (response.data.success) {
           //save values
-          console.log('Extra delete worked ', response.data);
+          console.log('Extra delete worked ');
 
           if (type === 'extracurricular') {
             extras.splice(index, 1)
@@ -5009,7 +5062,7 @@ class EditProfileDetails extends Component {
 
       Axios.put('https://www.guidedcompass.com/api/file', { emailId, originalURL, deleteKey })
       .then((response) => {
-        console.log('tried to delete', response.data)
+        console.log('tried to delete')
         if (response.data.success) {
           //save values
           console.log('File delete worked');
@@ -5111,7 +5164,7 @@ class EditProfileDetails extends Component {
     } else {
       Axios.get('https://www.guidedcompass.com/api/schools/search', { params: { searchString } })
       .then((response) => {
-        console.log('Schools search query attempted', response.data);
+        console.log('Schools search query attempted');
 
           if (response.data.success) {
             console.log('schools search query worked')
@@ -5735,6 +5788,10 @@ class EditProfileDetails extends Component {
 
       return (
           <ScrollView style={(this.props.fromWalkthrough) ? [] : [styles.card]}>
+
+              {(this.state.serverSuccessMessageText) ? <Text style={[styles.standardText, styles.ctaColor]}>{this.state.serverSuccessMessageText}</Text> : <View />}
+              {(this.state.serverErrorMessageText) ? <Text style={[styles.standardText, styles.errorColor]}>{this.state.serverErrorMessageText}</Text> : <View />}
+
               <View>
                   {(!this.props.fromApply) && (
                     <View style={[styles.rowDirection]}>

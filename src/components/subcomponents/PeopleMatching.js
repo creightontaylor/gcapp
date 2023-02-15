@@ -118,13 +118,14 @@ class PeopleMatching extends Component {
         }
 
         const orgCode = activeOrg
-        const onlyPics = true
+        const onlyPics = false
+        const prioritizePics = true
         const limit = 100
 
         console.log('org: ', orgCode)
 
         if (this.props.pageSource !== 'Goal') {
-          Axios.get('https://www.guidedcompass.com/api/org/members', { params: { orgCode, roleNames, onlyPics, limit } })
+          Axios.get('https://www.guidedcompass.com/api/org/members', { params: { orgCode, roleNames, onlyPics, prioritizePics, limit } })
           .then((response) => {
             console.log('Members query attempted');
 
@@ -373,7 +374,7 @@ class PeopleMatching extends Component {
       } else {
         console.log('filter results: ', searchString, orgCode, filterName, filterValue)
 
-        const onlyPics = true
+        const onlyPics = false
         const profile = self.state.profile
         let users = self.state.members
         // if (self.state.members && self.state.members[0] && self.state.members[0].matchScore) {
@@ -436,7 +437,7 @@ class PeopleMatching extends Component {
           roleNames = ['Mentor']
         }
         const orgCode = this.state.activeOrg
-        const onlyPics = true
+        const onlyPics = false
 
         console.log('show our profile: ', this.state.profile)
 
